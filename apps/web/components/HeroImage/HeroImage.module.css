@@ -1,0 +1,12 @@
+.root {
+  position: relative;
+  overflow: hidden;
+  height: 50vh;
+  width: 100%;
+  border: 3px solid transparent;
+  border-radius: 6px;
+  background-image: linear-gradient(#fcfcfc, #fcfcfc),
+    linear-gradient(#ffd166, #9f5e25);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}

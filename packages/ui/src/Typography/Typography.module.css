@@ -1,0 +1,96 @@
+/* marker fix */
+.mgui-typography li::marker {
+  display: none;
+  content: "";
+}
+
+/* .mgui-typography-container {
+  @apply prose prose-sm lg:prose-lg;
+} */
+
+.mgui-typography {
+  @apply text-base;
+  @apply text-gray-400;
+}
+
+/* .mgui-typography--prose-sm {
+  @apply prose prose-sm;
+}
+
+.mgui-typography--prose-lg {
+  @apply prose prose-lg;
+}
+
+.mgui-typography--prose-xl {
+  @apply prose prose-xl;
+}
+
+.mgui-typography--prose-2xl {
+  @apply prose prose-2xl;
+} */
+
+.mgui-typography code {
+  padding: 0.2em 0.4em 0.1em;
+  background: hsla(0, 0%, 58.8%, 0.1);
+  border: 1px solid hsla(0, 0%, 39.2%, 0.2);
+  border-radius: 3px;
+}
+
+/*
+  dark mode styles
+
+  default styles are handled by tailwind config
+*/
+
+.dark .mgui-typography {
+  @apply text-gray-200;
+}
+
+.dark .mgui-typography h1 {
+  @apply text-white;
+}
+
+.dark .mgui-typography h2 {
+  @apply text-white;
+}
+
+.dark .mgui-typography h3 {
+  @apply text-white;
+}
+
+.dark .mgui-typography h4 {
+  @apply text-white;
+}
+
+.dark .mgui-typography h5 {
+  @apply text-white;
+}
+
+.dark .mgui-typography strong {
+  @apply text-white;
+}
+
+.dark .mgui-typography li::before {
+  @apply text-gray-300;
+}
+
+.dark .mgui-typography a {
+  @apply text-white;
+}
+
+.dark .mgui-typography blockquote {
+  @apply text-white;
+}
+
+.dark .mgui-typography code {
+  color: white;
+}
+
+.dark .mgui-typography figcaption {
+  @apply text-gray-600;
+}
+
+.dark .mgui-typography::selection {
+  /* @apply bg-brand-500; */
+  backgroundcolor: "#6f7bb635";
+}

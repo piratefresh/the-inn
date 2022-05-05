@@ -1,0 +1,13 @@
+.root {
+  @apply rounded-md mt-2 p-2;
+  border: 3px solid transparent;
+  background-image: linear-gradient(#fcfcfc, #fcfcfc),
+    linear-gradient(#ffd166, #9f5e25);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.input-file {
+  @apply p-16 border-dashed bg-white;
+  display: none;
+}

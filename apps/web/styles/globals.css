@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .bg-main {
+    position: relative;
+    background: linear-gradient(
+      270deg,
+      #0e0a00 0%,
+      #25120e 14.45%,
+      #25120e 89.9%,
+      #0d0a00 102.74%
+    );
+
+    &::before {
+      content: "";
+      display: block;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: url("https://res.cloudinary.com/film-it/image/upload/v1648261306/The%20inn/concrete-stylized.png");
+      background-repeat: repeat;
+      background-size: cover;
+      mix-blend-mode: screen;
+      opacity: 0.12;
+    }
+  }
+  .bg-games {
+    @apply bg-gamesBg;
+    position: relative;
+    &::before {
+      content: "";
+      display: block;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: url("https://res.cloudinary.com/film-it/image/upload/v1648261306/The%20inn/concrete-stylized.png");
+      background-repeat: repeat;
+      background-size: cover;
+      mix-blend-mode: screen;
+      opacity: 0.12;
+    }
+  }
+  .bg-createCampaign {
+    position: relative;
+    background: linear-gradient(
+      179.62deg,
+      #0e0a00 -79.35%,
+      #25120e -3.81%,
+      #25120e 25.17%,
+      #0d0a00 68.63%
+    );
+    &::before {
+      content: "";
+      display: block;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: url("https://res.cloudinary.com/film-it/image/upload/v1648261306/The%20inn/concrete-stylized.png");
+      background-repeat: repeat;
+      background-size: cover;
+      mix-blend-mode: screen;
+      opacity: 0.1;
+    }
+  }
+  .goldenBorder {
+    border: 3px solid transparent;
+    background-image: linear-gradient(#fcfcfc, #fcfcfc),
+      linear-gradient(#ffd166, #9f5e25);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+  }
+  .px-100 {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #fcfcfc;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:focus {
+  outline: none;
+}
+::-moz-focus-inner {
+  border: 0;
+}
