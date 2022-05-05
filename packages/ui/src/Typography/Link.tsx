@@ -37,7 +37,7 @@ export function Link({
       rel="noopener noreferrer"
       style={style}
     >
-      {children}
+      test
     </a>
   );
 }

@@ -1,37 +1,37 @@
-import { client, ssrCache } from "@utils/createUrqlClient";
-import type { NextPage } from "next";
-import { GetListingsDocument, useGetListingsQuery } from "generated/graphql";
+// import { client, ssrCache } from "@utils/createUrqlClient";
+// import { GetListingsDocument, useGetListingsQuery } from "generated/graphql";
 import { HeroImage } from "@components/HeroImage";
-import { Layout } from "../layouts";
-import Link from "next/link";
-import { CampaignCard } from "@components/CampaignCard";
+import { RootLayout } from "../layouts";
+// import Link from "next/link";
+// import { CampaignCard } from "@components/CampaignCard";
+import type { NextPageWithLayout } from "./_app";
 
-export async function getStaticProps() {
-  const listings = await client
-    .query(GetListingsDocument, {
-      limit: 15,
-      cursor: null,
-    })
-    .toPromise();
+// export async function getStaticProps() {
+//   const listings = await client
+//     .query(GetListingsDocument, {
+//       limit: 15,
+//       cursor: null,
+//     })
+//     .toPromise();
 
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
+//   // By returning { props: { posts } }, the Blog component
+//   // will receive `posts` as a prop at build time
 
-  console.log("listings: ", listings);
-  return {
-    props: {
-      urqlState: ssrCache.extractData(),
-    },
-  };
-}
+//   console.log("listings: ", listings);
+//   return {
+//     props: {
+//       urqlState: ssrCache.extractData(),
+//     },
+//   };
+// }
 
-const Home: NextPage = () => {
-  const [{ data }] = useGetListingsQuery({
-    variables: {
-      limit: 15,
-      cursor: null,
-    },
-  });
+const Home: NextPageWithLayout = () => {
+  // const [{ data }] = useGetListingsQuery({
+  //   variables: {
+  //     limit: 15,
+  //     cursor: null,
+  //   },
+  // });
 
   return (
     <>
@@ -47,7 +47,7 @@ const Home: NextPage = () => {
           Upcoming Games
         </h2>
         <div className="grid grid-cols-4 gap-4">
-          {data.getListings.listings.map((p) =>
+          {/* {data.getListings.listings.map((p) =>
             !p ? null : (
               <Link
                 href="/listing/[id]"
@@ -67,7 +67,7 @@ const Home: NextPage = () => {
                 />
               </Link>
             )
-          )}
+          )} */}
         </div>
       </div>
     </>
@@ -78,7 +78,7 @@ Home.layoutProps = {
   meta: {
     title: "Create Campaign",
   },
-  Layout,
+  Layout: RootLayout,
 };
 
 export default Home;

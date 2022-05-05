@@ -9,20 +9,33 @@ import { store } from "../store/store";
 import { withUrqlClient } from "next-urql";
 import { NextComponentType, NextPage, NextPageContext } from "next";
 import { SessionProvider } from "next-auth/react";
+import { RootLayout } from "@layouts/RootLayout";
 
 interface NoopProps extends React.FC {
   children: React.ReactNode;
 }
 
-type LayoutProps = {
-  Layout: ReactElement;
+type TMeta = {
+  title?: string;
+  metaTitle?: string;
+  description?: string;
+  metaDescription?: string;
 };
 
-type NextPageWithLayout = NextPage & {
+export type TLayout = {
+  children: ReactNode;
+};
+
+type LayoutProps = {
+  Layout?: ({ children }: TLayout) => JSX.Element;
+  meta?: TMeta;
+};
+
+export type NextPageWithLayout = NextPage & {
   layoutProps?: LayoutProps;
 };
 
-type AppPropsWithLayout = AppProps & {
+export type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
@@ -39,7 +52,7 @@ Router.events.on("routeChangeStart", () => progress.start());
 Router.events.on("routeChangeComplete", () => progress.finish());
 Router.events.on("routeChangeError", () => progress.finish());
 
-function App({ Component, pageProps }: AppPropsWithLayout) {
+function App({ Component, pageProps, router }: AppPropsWithLayout) {
   const [navIsOpen, setNavIsOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -53,10 +66,13 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     };
   }, [navIsOpen]);
 
-  const Layout = Component.layoutProps?.Layout || React.Fragment;
+  const Layout = Component.layoutProps?.Layout || RootLayout;
   const layoutProps = Component.layoutProps?.Layout
-    ? { layoutProps: Component.layoutProps, navIsOpen, setNavIsOpen }
+    ? { layoutProps: Component.layoutProps }
     : {};
+  const meta = Component.layoutProps?.meta || {};
+  const description =
+    meta.metaDescription || meta.description || "Website for Chatting.";
 
   return (
     <MantineProvider

@@ -88,7 +88,8 @@ export const CreateCampaigns = () => {
         </Typography.Title>
       </div>
 
-      <InputWrapper className="my-8" label="" error={errors?.image}>
+      {/* <InputWrapper className="my-8" label="" error={errors?.image}> */}
+      <InputWrapper className="my-8" label="">
         <Controller
           control={control}
           name="image"

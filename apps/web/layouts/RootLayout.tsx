@@ -1,5 +1,5 @@
 import React from "react";
-import layoutStyles from "./layout.module.css";
+import layoutStyles from "./RootLayout.module.css";
 // import Footer from "@components/Footer";
 import { Nav } from "@components/Nav";
 
@@ -7,7 +7,7 @@ export interface ILayoutProps {
   children: React.ReactNode;
 }
 
-export const Layout: React.FC = ({ children }: ILayoutProps) => {
+export const RootLayout: React.FC = ({ children }: ILayoutProps) => {
   return (
     <div>
       <Nav />
