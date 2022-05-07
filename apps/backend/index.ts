@@ -16,7 +16,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 
 const startServer = async () => {
   const PORT = 4000;
-  const app = express();
+  const app: express.Application = (module.exports = express());
   const RedisStore = connectRedis(session);
   const redis = new Redis({
     host: "theinn.redis.cache.windows.net",
