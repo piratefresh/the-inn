@@ -1,6 +1,24 @@
 import { User } from "api/models/User";
-import { Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Field,
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
+} from "type-graphql";
 import { MyContext } from "../types/MyContext";
+
+@InputType()
+export class UsernamePasswordInput {
+  @Field()
+  username: string;
+  @Field()
+  password: string;
+  @Field()
+  email: string;
+}
 
 @Resolver()
 export class UserResolver {
@@ -10,14 +28,15 @@ export class UserResolver {
   }
 
   @Mutation((_type) => User)
-  async signup(@Ctx() { prisma }: MyContext) {
-    const password = await bcrypt.hash(args.password, 10);
-
-    const user = await context.prisma.createUser({ ...args, password });
+  async signup(
+    @Arg("options") options: UsernamePasswordInput,
+    @Ctx() { prisma, res }: MyContext
+  ) {
+    const user = await prisma.user.create({ ...options, password: "test" });
 
     const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
-    context.response.cookie("token", token, {
+    res.cookie("token", token, {
       httpOnly: false,
       // secure: false,
       maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year cookie
