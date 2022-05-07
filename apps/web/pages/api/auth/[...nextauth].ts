@@ -16,9 +16,44 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   return await NextAuth(req, res, {
     adapter: PrismaAdapter(prisma),
     providers: [
-      EmailProvider({
-        server: process.env.EMAIL_SERVER,
-        from: process.env.EMAIL_FROM,
+      //credentials for store
+      CredentialsProvider({
+        id: "web_login",
+        name: "web_credentials",
+        credentials: {
+          email: {
+            label: "username",
+            type: "text",
+            placeholder: "username",
+          },
+          password: { label: "password", type: "password" },
+        },
+        authorize: async (credentials, req) => {
+          //return a user or null if there are problems with the credentials
+          //database lookup
+          const user = await prisma.user.findUnique({
+            where: {
+              email: credentials.email,
+            },
+          });
+
+          if (user) {
+            return user;
+          }
+
+          return null;
+          //   if (credentials.password === user.) {
+          //     const storeObj = {
+          //       id: store.id,
+          //       username: store.username,
+          //       role: store.role,
+          //     };
+          //     return storeObj;
+          //   } else {
+          //     //login failed
+          //     return null;
+          //   }
+        },
       }),
     ],
 
