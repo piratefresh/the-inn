@@ -10,7 +10,7 @@
     {
       "src": "/(.*)",
 
-      "dest": "public/dist/index.ts"
+      "dest": "src/index.ts"
     }
   ]
 }
