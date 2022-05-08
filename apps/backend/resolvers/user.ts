@@ -1,4 +1,3 @@
-import { User } from "api/models/User";
 import {
   Arg,
   Ctx,
@@ -8,7 +7,6 @@ import {
   Query,
   Resolver,
 } from "type-graphql";
-import { MyContext } from "../types/MyContext";
 
 @InputType()
 export class UsernamePasswordInput {
@@ -22,9 +20,9 @@ export class UsernamePasswordInput {
 
 @Resolver()
 export class UserResolver {
-  @Query((_type) => [User], { nullable: true })
-  async users(@Ctx() { prisma }: MyContext) {
-    return prisma.user.findMany();
+  @Query((_type) => String, { nullable: true })
+  async helloworld() {
+    return "hello world";
   }
 
   // @Mutation((_type) => User)

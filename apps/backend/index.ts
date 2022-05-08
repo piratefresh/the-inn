@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { createServer } from "http";
 import { buildSchema } from "type-graphql";
-import { prisma } from "api/src";
+import { PrismaClient } from "@prisma/client";
 import { pusher, pubsub } from "./pusher";
 import { UserResolver } from "./resolvers/user";
 import express from "express";
@@ -13,6 +13,10 @@ import connectRedis from "connect-redis";
 import { ApolloServer } from "apollo-server-express";
 import { redisClient } from "./pubSub";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+
+export const prisma = new PrismaClient({
+  log: ["query"],
+});
 
 const startServer = async () => {
   const PORT = 4000;
