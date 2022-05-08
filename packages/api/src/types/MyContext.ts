@@ -11,4 +11,4 @@ interface MyContext {
   userId?: string;
 }
 
-export { MyContext };
+export type { MyContext };
