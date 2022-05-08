@@ -1,0 +1,237 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+enum Difficulty {
+  Low
+  Medium
+  High
+  Any
+}
+
+enum Experiance {
+  Beginner
+  Advanced
+  All
+}
+
+enum StatusType {
+  ONLINE
+  IDLE
+  DND
+  OFFLINE
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// generator PrismaTypeGraphQLTypesGenerator {
+//   provider     = "npx prisma-typegraphql-types-generator"
+//   modelsOutput = "./models"
+//   enumsOutput  = "./types"
+//   useYarn      = true
+// }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String  @map("user_id")
+  type               String
+  provider           String
+  providerAccountId  String  @map("provider_account_id")
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  name          String
+  experience    String
+
+  // Social Media
+  twitter  String?
+  facebook String?
+  discord  String?
+  youtube  String?
+
+  status StatusType @default(ONLINE)
+
+  accounts Account[]
+  sessions Session[]
+  reviews  Review[]
+
+  Campaign   Campaign[] @relation("players")
+  Hosted     Campaign[] @relation("game_master")
+  campaignId String?
+
+  @@map(name: "users")
+}
+
+model Campaign {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  gmId String
+
+  summary            String
+  additional_details String?
+  note               String?
+  image              String
+  isOnline           Boolean
+
+  // location
+  city            String
+  state           String
+  lat             Float
+  lng             Float
+  geolocation_lat Float?
+  geolocation_lng Float?
+
+  // time
+  startDate    DateTime
+  endDate      DateTime
+  days         String[]
+  time_periods String[]
+
+  // game
+  game_system String
+  experiance  Experiance @default(All)
+  voip_system String?
+  max_seats   Int
+  puzzles     Difficulty @default(Any)
+  combat      Difficulty @default(Any)
+  roleplay    Difficulty @default(Any)
+
+  game_master User   @relation("game_master", fields: [gmId], references: [id])
+  players     User[] @relation("players")
+
+  // extra
+  tags  String[]
+  price Float?
+
+
+
+  @@map("campaigns")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rating    Int
+  comment   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("reviews")
+}
+
+// model Media {
+//   id        String    @id @default(uuid())
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   roomId    String?
+//   fileName  String
+//   campaign  Campaign? @relation("header_image", fields: [roomId], references: [id])
+
+//   @@map("media")
+// }
+
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+// model Comment {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   rating    Int
+//   comment   String
+//   userId    String
+//   user      User     @relation(fields: [userId], references: [id])
+
+//   @@map("comments")
+// }
+
+// model Reservation {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   userId    String?
+//   startDate DateTime
+//   endDate   DateTime
+//   price     Int
+//   total     Int
+//   roomId    String?
+//   room      Room?    @relation(fields: [roomId], references: [id])
+//   user      User?    @relation(fields: [userId], references: [id])
+
+//   @@map("reservations")
+// }
+
+// model Room {
+//   id                 String        @id @default(uuid())
+//   createdAt          DateTime      @default(now())
+//   updatedAt          DateTime      @updatedAt
+//   totalOccupancy     Int           @default(5)
+//   totalBedrooms      Int           @default(5)
+//   totalBathrooms     Int           @default(5)
+//   summary            String?
+//   address            String
+//   isSmoking          Boolean       @default(false)
+//   hasTV              Boolean       @default(true)
+//   hasAirConditioning Boolean       @default(true)
+//   hasHeating         Boolean       @default(true)
+//   hasWIFI            Boolean       @default(true)
+//   price              Int
+//   media              Media[]
+//   reservations       Reservation[]
+
+//   @@map("rooms")
+// }
