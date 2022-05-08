@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { createServer } from "http";
 import { buildSchema } from "type-graphql";
-import { prisma } from "api/index";
+import { prisma } from "api/src";
 import { pusher, pubsub } from "./pusher";
 import { UserResolver } from "./resolvers/user";
 import express from "express";
