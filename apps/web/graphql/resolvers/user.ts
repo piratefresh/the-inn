@@ -1,5 +1,5 @@
 import { User } from "api/dist/models/User";
-import { MyContext } from "api/dist/types/MyContext";
+import { MyContext } from "../types/MyContext";
 import { Ctx, Field, InputType, Query, Resolver } from "type-graphql";
 
 @InputType()
