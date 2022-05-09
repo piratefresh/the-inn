@@ -45,8 +45,8 @@ export default async function handler(
     emitSchemaFile: true,
   });
   const server = createServer({
-    cors: false,
-    schema,
+    // cors: false,
+    // schema,
     endpoint: "/api/graphql",
     context: async ({ req, res }) => {
       const session = await getSession({ req });
