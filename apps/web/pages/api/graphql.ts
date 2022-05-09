@@ -21,7 +21,7 @@ const server = createServer<{
   req: NextApiRequest;
   res: NextApiResponse;
 }>({
-  endpoint: "/api",
+  endpoint: "/api/graphql",
 });
 
 export default server.requestListener;
