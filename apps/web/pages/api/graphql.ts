@@ -1,6 +1,6 @@
 // https://github.com/cpetzold/wormsleague-old/blob/e87a69c1dac2827720da3b93d46c0ca623463ef1/website/pages/api/graphql.ts
 import "reflect-metadata";
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { ApolloServer } from "apollo-server-micro";
 import { buildSchema } from "type-graphql";

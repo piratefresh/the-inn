@@ -1,4 +1,4 @@
-import { MyContext } from "@graphql/types/MyContext";
+import type { MyContext } from "@graphql/types/MyContext";
 import { Ctx, Field, InputType, Query, Resolver } from "type-graphql";
 
 @InputType()
