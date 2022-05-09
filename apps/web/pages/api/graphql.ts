@@ -4,7 +4,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { ApolloServer } from "apollo-server-micro";
 import { buildSchema } from "type-graphql";
-import { prisma } from "backend/dist/index";
+import { prisma } from "api/src";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { UserResolver } from "@graphql/resolvers/user";
 import cors from "micro-cors";
