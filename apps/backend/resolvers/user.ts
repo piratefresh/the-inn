@@ -20,7 +20,7 @@ export class UsernamePasswordInput {
 
 @Resolver()
 export class UserResolver {
-  @Query((_type) => String, { nullable: true })
+  @Query(() => String)
   async helloworld() {
     return "hello world";
   }
