@@ -5,7 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { createClient } from "urql";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "api/src";
+import { prisma } from "backend/index";
 
 const client = createClient({
   url: "https://localhost:4000/graphql",
