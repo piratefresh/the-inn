@@ -45,6 +45,15 @@ export default async function handler(
     emitSchemaFile: true,
   });
   const server = createServer({
+    cors: (request) => {
+      const requestOrigin = request.headers.get("origin");
+      return {
+        origin: requestOrigin,
+        credentials: true,
+        allowedHeaders: ["X-Custom-Header"],
+        methods: ["POST"],
+      };
+    },
     schema,
     endpoint: "/api/graphql",
     context: async ({ req, res }) => {
