@@ -3,7 +3,7 @@ import { COOKIE_NAME, __prod__ } from "./constants";
 import { createServer } from "http";
 import { buildSchema } from "type-graphql";
 import { PrismaClient } from "@prisma/client";
-import { pusher, pubsub } from "./pusher";
+
 import { UserResolver } from "./resolvers/user";
 import express from "express";
 import Redis from "ioredis";
@@ -11,7 +11,7 @@ import cors from "cors";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { ApolloServer } from "apollo-server-express";
-import { redisClient } from "./pubSub";
+
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 export const prisma = new PrismaClient({

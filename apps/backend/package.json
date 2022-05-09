@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec ts-node index.ts",
     "build": "tsc",
-    "build:swc": "swc . -d dist --source-maps --copy-files"
+    "build:swc": "swc -d dist"
   },
   "dependencies": {
     "@types/connect-redis": "^0.0.18",
@@ -20,7 +20,8 @@
     "graphql-redis-subscriptions": "^2.4.2",
     "ioredis": "^5.0.4",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^1.1.1"
+    "type-graphql": "^1.1.1",
+    "api": "*"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.57",

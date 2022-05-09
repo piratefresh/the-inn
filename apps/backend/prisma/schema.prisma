@@ -25,12 +25,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// generator PrismaTypeGraphQLTypesGenerator {
-//   provider     = "npx prisma-typegraphql-types-generator"
-//   modelsOutput = "./models"
-//   enumsOutput  = "./types"
-//   useYarn      = true
-// }
+generator PrismaTypeGraphQLTypesGenerator {
+  provider     = "npx prisma-typegraphql-types-generator"
+  modelsOutput = "./models"
+  enumsOutput  = "./types"
+  useYarn      = true
+}
 
 datasource db {
   provider = "postgresql"
