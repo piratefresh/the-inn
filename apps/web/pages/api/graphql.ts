@@ -3,7 +3,7 @@ import "reflect-metadata";
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { ApolloServer } from "apollo-server-micro";
-import { buildSchema } from "type-graphql";
+import { buildSchema, buildSchemaSync } from "type-graphql";
 import { prisma } from "api/src";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { UserResolver } from "@graphql/resolvers/user";
@@ -16,7 +16,10 @@ const server = createServer<{
   req: NextApiRequest;
   res: NextApiResponse;
 }>({
-  // schema,
+  schema: buildSchemaSync({
+    resolvers: [UserResolver],
+    emitSchemaFile: true,
+  }),
   context: async ({ req, res }) => {
     const session = await getSession({ req });
 
