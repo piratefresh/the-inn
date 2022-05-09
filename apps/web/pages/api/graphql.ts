@@ -17,14 +17,15 @@ const schema = buildSchema({
   validate: false,
 });
 
-const server = createServer<{
-  req: NextApiRequest;
-  res: NextApiResponse;
-}>({
-  endpoint: "/api/graphql",
-});
+// const server = createServer<{
+//   req: NextApiRequest;
+//   res: NextApiResponse;
+// }>({
+//   schema,
+//   endpoint: "/api/graphql",
+// });
 
-export default server.requestListener;
+// export default server.requestListener;
 
 // import Cors from "cors";
 
@@ -40,56 +41,78 @@ export default server.requestListener;
 //     });
 // }
 
-// const getApolloServerHandler = async (
-//   req: NextApiRequest,
-//   res: NextApiResponse
-// ) => {
-//   const schema = await buildSchema({
-//     resolvers: [UserResolver],
-//     validate: false,
-//   });
+const getApolloServerHandler = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const schema = await buildSchema({
+    resolvers: [UserResolver],
+    validate: false,
+  });
 
-//   const apolloServer = new ApolloServer({
-//     schema,
-//     context: async ({ req, res }) => {
-//       const session = await getSession({ req });
+  // const apolloServer = new ApolloServer({
+  //   schema,
+  //   context: async ({ req, res }) => {
+  //     const session = await getSession({ req });
 
-//       return {
-//         prisma,
-//         req,
-//         res,
-//         // redis,
-//         user: session?.user,
-//         session,
-//       };
-//     },
-//     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-//   });
+  //     return {
+  //       prisma,
+  //       req,
+  //       res,
+  //       // redis,
+  //       user: session?.user,
+  //       session,
+  //     };
+  //   },
+  //   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+  // });
 
-//   await apolloServer.start();
+  // await apolloServer.start();
 
-//   return apolloServer.createHandler({ path: "/api/graphql" });
-// };
+  // return apolloServer.createHandler({ path: "/api/graphql" });
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+  const server = createServer<{
+    req: NextApiRequest;
+    res: NextApiResponse;
+  }>({
+    schema,
+    endpoint: "/api/graphql",
+    context: async ({ req, res }) => {
+      const session = await getSession({ req });
 
-// const handler: NextApiHandler = async (req, res) => {
-//   const apolloServerHandler = await getApolloServerHandler(req, res);
+      return {
+        prisma,
+        req,
+        res,
+        // redis,
+        user: session?.user,
+        session,
+      };
+    },
+  });
 
-//   if (typeof apolloServerHandler !== "function") {
-//     throw new Error("Unable to initialize Apollo server");
-//   }
+  return server.requestListener;
+};
 
-//   if (req.method === "OPTIONS") {
-//     res.end();
-//     return;
-//   }
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
-//   return apolloServerHandler(req, res);
-// };
+const handler = async (req, res) => {
+  const apolloServerHandler = await getApolloServerHandler(req, res);
 
-// export default cors()(handler);
+  if (typeof apolloServerHandler !== "function") {
+    throw new Error("Unable to initialize Apollo server");
+  }
+
+  if (req.method === "OPTIONS") {
+    res.end();
+    return;
+  }
+
+  return apolloServerHandler;
+};
+
+export default cors()(handler);
