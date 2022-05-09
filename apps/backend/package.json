@@ -5,9 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --exec ts-node index.ts",
-    "build": "tsc",
-    "build:swc": "swc -d dist",
-    "postinstall": "npx prisma generate"
+    "build": "prisma generate && prisma migrate deploy && tsc",
+    "build:swc": "swc -d dist"
   },
   "dependencies": {
     "@types/connect-redis": "^0.0.18",
