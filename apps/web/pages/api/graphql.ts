@@ -31,7 +31,6 @@ const getApolloServerHandler = async (
 ) => {
   const schema = await buildSchema({
     resolvers: [UserResolver],
-    emitSchemaFile: process.env.NODE_ENV === "development",
     validate: false,
   });
 
