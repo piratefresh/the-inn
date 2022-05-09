@@ -1,3 +1,4 @@
+import { MyContext } from "@graphql/types/MyContext";
 import { Ctx, Field, InputType, Query, Resolver } from "type-graphql";
 
 @InputType()
@@ -12,8 +13,8 @@ export class UsernamePasswordInput {
 
 @Resolver()
 export class UserResolver {
-  @Query((_type) => String, { nullable: true })
-  async helloworld() {
+  @Query(() => String)
+  async helloworld(@Ctx() { prisma, res }: MyContext) {
     return "hello world";
   }
 
