@@ -66,6 +66,7 @@ const startServer = async () => {
       };
     },
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    introspection: true,
   });
 
   await apolloServer.start();
