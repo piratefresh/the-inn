@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon --exec ts-node index.ts",
     "build": "tsc",
-    "build:swc": "swc -d dist"
+    "build:swc": "swc -d dist",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@types/connect-redis": "^0.0.18",
