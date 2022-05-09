@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { COOKIE_NAME, __prod__ } from "./constants";
-import { createServer } from "http";
 import { buildSchema } from "type-graphql";
 import { PrismaClient } from "@prisma/client";
 
@@ -77,9 +76,7 @@ const startServer = async () => {
     cors: false,
   });
 
-  const httpServer = createServer(app);
-
-  httpServer.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(
       `🚀 Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`
     );
