@@ -18,7 +18,6 @@ const server = createServer<{
 }>({
   schema: buildSchemaSync({
     resolvers: [UserResolver],
-    emitSchemaFile: true,
   }),
   context: async ({ req, res }) => {
     const session = await getSession({ req });
