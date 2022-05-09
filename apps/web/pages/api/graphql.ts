@@ -48,7 +48,7 @@ export default async function handler(
     cors: (request) => {
       const requestOrigin = request.headers.get("origin");
       return {
-        origin: requestOrigin,
+        origin: ["http://localhost:3000", "https://the-inn.vercel.app"],
         credentials: true,
         allowedHeaders: ["X-Custom-Header"],
         methods: ["POST"],
