@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec ts-node index.ts",
     "build": "tsc",
-    "build:swc": "npx swc"
+    "build:swc": "swc . -d dist --source-maps --copy-files"
   },
   "dependencies": {
     "@types/connect-redis": "^0.0.18",
