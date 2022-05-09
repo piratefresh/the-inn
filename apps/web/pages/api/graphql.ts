@@ -45,15 +45,7 @@ export default async function handler(
     emitSchemaFile: true,
   });
   const server = createServer({
-    cors: (request) => {
-      const requestOrigin = request.headers.get("origin");
-      return {
-        origin: ["http://localhost:3000", "https://the-inn.vercel.app"],
-        credentials: true,
-        allowedHeaders: ["X-Custom-Header"],
-        methods: ["POST"],
-      };
-    },
+    cors: false,
     schema,
     endpoint: "/api/graphql",
     context: async ({ req, res }) => {

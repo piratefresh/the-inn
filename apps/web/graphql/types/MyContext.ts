@@ -7,7 +7,7 @@ interface MyContext {
   pubsub: PusherChannel;
   req: Request;
   res: Response;
-  wsHeaders: any;
+  wsHeaders?: any;
   userId?: string;
 }
 
