@@ -31,7 +31,7 @@ const startServer = async () => {
 
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: ["http://localhost:3000", "https://the-inn-graphql.vercel.app/"],
       credentials: true,
     })
   );
@@ -73,7 +73,6 @@ const startServer = async () => {
   apolloServer.applyMiddleware({
     app,
     cors: false,
-    path: "/graphql",
   });
 
   const httpServer = createServer(app);
