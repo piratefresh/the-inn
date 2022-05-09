@@ -12,15 +12,27 @@ import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import { createServer } from "@graphql-yoga/node";
 
-// const server = createServer<{
-//   req: NextApiRequest;
-//   res: NextApiResponse;
-// }>({
-//   schema,
-//   endpoint: "/api/graphql",
-// });
+const server = createServer<{
+  req: NextApiRequest;
+  res: NextApiResponse;
+}>({
+  // schema,
+  context: async ({ req, res }) => {
+    const session = await getSession({ req });
 
-// export default server.requestListener;
+    return {
+      prisma,
+      req,
+      res,
+      // redis,
+      user: session?.user,
+      session,
+    };
+  },
+  endpoint: "/api/graphql",
+});
+
+export default server.requestListener;
 
 // import Cors from "cors";
 
@@ -36,34 +48,34 @@ import { createServer } from "@graphql-yoga/node";
 //     });
 // }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const schema = await buildSchema({
-    resolvers: [UserResolver],
-    emitSchemaFile: true,
-  });
-  const server = createServer({
-    // cors: false,
-    // schema,
-    endpoint: "/api/graphql",
-    context: async ({ req, res }) => {
-      const session = await getSession({ req });
+// export default async function handler(
+//   req: NextApiRequest,
+//   res: NextApiResponse
+// ) {
+//   const schema = await buildSchema({
+//     resolvers: [UserResolver],
+//     emitSchemaFile: true,
+//   });
+//   const server = createServer({
+//     // cors: false,
+//     // schema,
+//     endpoint: "/api/graphql",
+//     context: async ({ req, res }) => {
+//       const session = await getSession({ req });
 
-      return {
-        prisma,
-        req,
-        res,
-        // redis,
-        user: session?.user,
-        session,
-      };
-    },
-  });
+//       return {
+//         prisma,
+//         req,
+//         res,
+//         // redis,
+//         user: session?.user,
+//         session,
+//       };
+//     },
+//   });
 
-  return server.requestListener(req, res);
-}
+//   return server.requestListener(req, res);
+// }
 
 // const getApolloServerHandler = async (
 //   req: NextApiRequest,
