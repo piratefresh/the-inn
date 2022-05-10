@@ -12,7 +12,7 @@ export class UsernamePasswordInput {
   email: string;
 }
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
   @Query(() => String)
   async helloworld(@Ctx() { prisma, res }: MyContext) {
