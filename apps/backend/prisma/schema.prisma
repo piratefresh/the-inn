@@ -1,6 +1,23 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Generator is a bit buggy on overwrties
+// generator PrismaTypeGraphQLTypesGenerator {
+//   provider     = "npx prisma-typegraphql-types-generator"
+//   modelsOutput = "./models"
+//   enumsOutput  = "./types"
+//   useYarn      = true
+// }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 enum Difficulty {
   Low
   Medium
@@ -19,21 +36,6 @@ enum StatusType {
   IDLE
   DND
   OFFLINE
-}
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-generator PrismaTypeGraphQLTypesGenerator {
-  provider     = "npx prisma-typegraphql-types-generator"
-  modelsOutput = "./models"
-  enumsOutput  = "./types"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Account {
