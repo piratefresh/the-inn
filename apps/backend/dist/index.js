@@ -34,6 +34,7 @@ const startServer = async () => {
             "http://localhost:3000",
             "https://the-inn-graphql.vercel.app/",
             "https://the-inn-server.herokuapp.com/",
+            "https://the-inn.herokuapp.com/",
         ],
         credentials: true,
     }));
@@ -69,7 +70,7 @@ const startServer = async () => {
     await apolloServer.start();
     apolloServer.applyMiddleware({
         app,
-        path: "/graphql",
+        cors: false,
     });
     app.listen(PORT, () => {
         console.log(`🚀 Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
