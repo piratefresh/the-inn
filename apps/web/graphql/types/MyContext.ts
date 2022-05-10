@@ -4,9 +4,8 @@ import { PusherChannel } from "graphql-pusher-subscriptions";
 
 interface MyContext {
   prisma: PrismaClient;
-  pubsub: PusherChannel;
-  req: Request;
-  res: Response;
+  req: any;
+  res: any;
   wsHeaders?: any;
   userId?: string;
 }

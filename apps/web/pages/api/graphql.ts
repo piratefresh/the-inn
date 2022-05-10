@@ -10,12 +10,18 @@ import { UserResolver } from "@graphql/resolvers/user";
 import cors from "micro-cors";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
-import { createServer } from "@graphql-yoga/node";
+import { createServer, createPubSub } from "@graphql-yoga/node";
+import { MyContext } from "@graphql/types/MyContext";
 
-const server = createServer<{
-  req: NextApiRequest;
-  res: NextApiResponse;
-}>({
+const pubsub = createPubSub();
+
+const server = createServer<
+  {
+    req: NextApiRequest;
+    res: NextApiResponse;
+  },
+  MyContext
+>({
   schema: buildSchemaSync({
     resolvers: [UserResolver],
   }),
@@ -26,6 +32,7 @@ const server = createServer<{
       prisma,
       req,
       res,
+      pubsub,
       // redis,
       user: session?.user,
       session,
