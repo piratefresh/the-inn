@@ -1,19 +1,15 @@
 // https://github.com/cpetzold/wormsleague-old/blob/e87a69c1dac2827720da3b93d46c0ca623463ef1/website/pages/api/graphql.ts
 import "reflect-metadata";
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
-import { ApolloServer } from "apollo-server-micro";
-import { buildSchema, buildSchemaSync } from "type-graphql";
+
+import { buildSchemaSync } from "type-graphql";
 import { prisma } from "api/src";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+
 import { UserResolver } from "@graphql/resolvers/user";
-import cors from "micro-cors";
-import connectRedis from "connect-redis";
-import Redis from "ioredis";
+
 import { createServer, createPubSub } from "@graphql-yoga/node";
 import { MyContext } from "@graphql/types/MyContext";
-
-const pubsub = createPubSub();
 
 const schema = buildSchemaSync({
   resolvers: [UserResolver],
@@ -26,7 +22,25 @@ const server = createServer<
   },
   MyContext
 >({
-  schema,
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
+      }
+      type User {
+        id: string
+        createdAt: Date
+        updatedAt: Date
+        email: string
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => "Hello Hello Hello",
+        getUsers: (_, _ctx, { prisma }) => prisma.user.findMany({}),
+      },
+    },
+  },
   context: async ({ req, res }) => {
     const session = await getSession({ req });
 
@@ -34,7 +48,6 @@ const server = createServer<
       prisma,
       req,
       res,
-      // redis,
       user: session?.user,
       session,
     };
