@@ -31,6 +31,11 @@ generator PrismaTypeGraphQLTypesGenerator {
   enumsOutput  = "./types"
 }
 
+generator typegraphql {
+  provider = "typegraphql-prisma"
+  output   = "./generated/typegraphql-prisma"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

@@ -18,4 +18,3 @@ export class spatial_ref_sys {
   proj4text?: string
 
   // skip overwrite 👇
-}

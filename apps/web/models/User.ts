@@ -65,4 +65,3 @@ export class User {
   campaignId?: string
 
   // skip overwrite 👇
-}

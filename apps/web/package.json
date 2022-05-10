@@ -31,7 +31,9 @@
     "backend": "*",
     "cors": "^2.8.5",
     "graphql": "15.5.0",
+    "graphql-fields": "^2.0.3",
     "graphql-pusher-subscriptions": "^0.1.1",
+    "graphql-scalars": "^1.17.0",
     "graphql-ws": "^5.7.0",
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
@@ -64,6 +66,7 @@
     "@graphql-codegen/typescript-urql": "^3.5.7",
     "@graphql-codegen/urql-introspection": "2.1.1",
     "@prisma/client": "^3.13.0",
+    "@types/graphql-fields": "^1.3.4",
     "@types/node": "^17.0.31",
     "@types/react": "^18.0.0",
     "@types/react-dom": "18.0.0",
@@ -86,6 +89,7 @@
     "tailwindcss": "^3.0.23",
     "ts-node": "^10.7.0",
     "tsconfig": "*",
+    "typegraphql-prisma": "^0.20.2",
     "typescript": "^4.6.4",
     "yarn": "^1.22.18"
   }

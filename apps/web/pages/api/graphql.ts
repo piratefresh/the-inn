@@ -3,18 +3,19 @@ import "reflect-metadata";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-// import { buildSchemaSync } from "type-graphql";
+import { buildSchemaSync } from "type-graphql";
 import { prisma } from "api/src";
 
 // import { UserResolver } from "@graphql/resolvers/user";
 
 import { createServer, createPubSub } from "@graphql-yoga/node";
 import { MyContext } from "@graphql/types/MyContext";
+import { User } from "prisma/generated/typegraphql-prisma";
 
-// const schema = buildSchemaSync({
-//   resolvers: [UserResolver],
-// });
-// console.log("schema: ", schema);
+const schema = buildSchemaSync({
+  resolvers: [User],
+});
+console.log("schema: ", schema);
 const server = createServer<
   {
     req: NextApiRequest;
@@ -22,25 +23,7 @@ const server = createServer<
   },
   MyContext
 >({
-  schema: {
-    typeDefs: /* GraphQL */ `
-      type Query {
-        hello: String
-      }
-      type User {
-        id: string
-        createdAt: Date
-        updatedAt: Date
-        email: string
-      }
-    `,
-    resolvers: {
-      Query: {
-        hello: () => "Hello Hello Hello",
-        getUsers: (_, _ctx, { prisma }) => prisma.user.findMany({}),
-      },
-    },
-  },
+  schema,
   context: async ({ req, res }) => {
     const session = await getSession({ req });
 

@@ -96,4 +96,3 @@ export class Campaign {
   price?: number
 
   // skip overwrite 👇
-}
