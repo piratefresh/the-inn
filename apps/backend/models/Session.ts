@@ -1,22 +1,24 @@
 import { Field, ObjectType, ID } from "type-graphql";
 import { User } from "./User";
+import { Field, ObjectType, ID } from 'type-graphql'
+import { User } from './User'
 
 @ObjectType()
 export class Session {
   @Field((_type) => ID)
-  id: string;
+  id: string
 
   @Field()
-  sessionToken: string;
+  sessionToken: string
 
   @Field()
-  userId: string;
+  userId: string
 
   @Field()
-  expires: Date;
+  expires: Date
 
   @Field((_type) => User)
-  user: User;
+  user: User
 
   // skip overwrite 👇
 }
