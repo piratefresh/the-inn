@@ -30,6 +30,10 @@ export class UserResolver {
   async getUsers(@Ctx() { prisma, res }: MyContext) {
     return prisma.user.findMany({});
   }
+  @Query(() => [User])
+  async getUser(@Ctx() { prisma, res }: MyContext) {
+    return prisma.user.findFirst({});
+  }
 
   // @Mutation((_type) => User)
   // async signup(
