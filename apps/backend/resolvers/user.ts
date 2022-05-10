@@ -7,6 +7,8 @@ import {
   Query,
   Resolver,
 } from "type-graphql";
+import { User } from "../models/User";
+import { MyContext } from "../types/MyContext";
 
 @InputType()
 export class UsernamePasswordInput {
@@ -23,6 +25,10 @@ export class UserResolver {
   @Query(() => String)
   async helloworld() {
     return "hello world";
+  }
+  @Query(() => [User])
+  async getUsers(@Ctx() { prisma, res }: MyContext) {
+    return prisma.user.findMany({});
   }
 
   // @Mutation((_type) => User)
