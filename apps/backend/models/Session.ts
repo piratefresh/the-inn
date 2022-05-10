@@ -17,4 +17,6 @@ export class Session {
 
   @Field((_type) => User)
   user: User;
+
+  // skip overwrite 👇
 }

@@ -16,4 +16,6 @@ export class spatial_ref_sys {
 
   @Field({ nullable: true })
   proj4text?: string;
+
+  // skip overwrite 👇
 }

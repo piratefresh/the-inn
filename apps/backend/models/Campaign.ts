@@ -94,4 +94,6 @@ export class Campaign {
 
   @Field((_type) => Float, { nullable: true })
   price?: number;
+
+  // skip overwrite 👇
 }

@@ -23,4 +23,6 @@ export class Review {
 
   @Field((_type) => User)
   user: User;
+
+  // skip overwrite 👇
 }

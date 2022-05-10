@@ -47,4 +47,6 @@ export class Account {
 
   @Field((_type) => User)
   user: User;
+
+  // skip overwrite 👇
 }

@@ -10,4 +10,6 @@ export class VerificationToken {
 
   @Field()
   expires: Date;
+
+  // skip overwrite 👇
 }

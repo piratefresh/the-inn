@@ -26,7 +26,10 @@ export class User {
   image?: string;
 
   @Field()
-  name: string;
+  firstName: string;
+
+  @Field()
+  lastName: string;
 
   @Field()
   experience: string;
@@ -63,4 +66,6 @@ export class User {
 
   @Field({ nullable: true })
   campaignId?: string;
+
+  // skip overwrite 👇
 }
