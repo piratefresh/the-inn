@@ -1,51 +1,52 @@
-import { Field, ObjectType, ID, Int } from 'type-graphql'
-import { User } from './User'
+import { Field, ObjectType, ID, Int } from "type-graphql";
+import { User } from "./User";
 
 @ObjectType()
 export class Account {
   @Field((_type) => ID)
-  id: string
+  id: string;
 
   @Field()
-  userId: string
+  userId: string;
 
   @Field()
-  type: string
+  type: string;
 
   @Field()
-  provider: string
+  provider: string;
 
   @Field()
-  providerAccountId: string
+  providerAccountId: string;
 
   @Field({ nullable: true })
-  refresh_token?: string
+  refresh_token?: string;
 
   @Field({ nullable: true })
-  access_token?: string
+  access_token?: string;
 
   @Field((_type) => Int, { nullable: true })
-  expires_at?: number
+  expires_at?: number;
 
   @Field({ nullable: true })
-  token_type?: string
+  token_type?: string;
 
   @Field({ nullable: true })
-  scope?: string
+  scope?: string;
 
   @Field({ nullable: true })
-  id_token?: string
+  id_token?: string;
 
   @Field({ nullable: true })
-  session_state?: string
+  session_state?: string;
 
   @Field({ nullable: true })
-  oauth_token_secret?: string
+  oauth_token_secret?: string;
 
   @Field({ nullable: true })
-  oauth_token?: string
+  oauth_token?: string;
 
   @Field((_type) => User)
-  user: User
+  user: User;
 
   // skip overwrite 👇
+}
