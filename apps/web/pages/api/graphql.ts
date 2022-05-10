@@ -18,7 +18,7 @@ const pubsub = createPubSub();
 const schema = buildSchemaSync({
   resolvers: [UserResolver],
 });
-
+console.log("schema: ", schema);
 const server = createServer<
   {
     req: NextApiRequest;
