@@ -15,6 +15,10 @@ export class UsernamePasswordInput {
   @Field()
   username: string;
   @Field()
+  firstName: string;
+  @Field()
+  lastName: string;
+  @Field()
   password: string;
   @Field()
   email: string;
@@ -40,7 +44,10 @@ export class UserResolver {
   //   @Arg("options") options: UsernamePasswordInput,
   //   @Ctx() { prisma, res }: MyContext
   // ) {
-  //   const user = await prisma.user.create({ ...options, password: "test" });
+  //   const user = await prisma.user.create({ data: {
+  //     ...options,
+  //     password:
+  //   } });
 
   //   const token = jwt.sign({ userId: user.id }, APP_SECRET);
 

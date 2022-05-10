@@ -24,6 +24,14 @@ __decorate([
 __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "firstName", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "lastName", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
 ], UsernamePasswordInput.prototype, "password", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
@@ -40,6 +48,9 @@ let UserResolver = class UserResolver {
     async getUsers({ prisma, res }) {
         return prisma.user.findMany({});
     }
+    async getUser({ prisma, res }) {
+        return prisma.user.findFirst({});
+    }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => String),
@@ -54,6 +65,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "getUsers", null);
+__decorate([
+    (0, type_graphql_1.Query)(() => [User_1.User]),
+    __param(0, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "getUser", null);
 UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], UserResolver);
