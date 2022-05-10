@@ -3,18 +3,18 @@ import "reflect-metadata";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-import { buildSchemaSync } from "type-graphql";
+// import { buildSchemaSync } from "type-graphql";
 import { prisma } from "api/src";
 
-import { UserResolver } from "@graphql/resolvers/user";
+// import { UserResolver } from "@graphql/resolvers/user";
 
 import { createServer, createPubSub } from "@graphql-yoga/node";
 import { MyContext } from "@graphql/types/MyContext";
 
-const schema = buildSchemaSync({
-  resolvers: [UserResolver],
-});
-console.log("schema: ", schema);
+// const schema = buildSchemaSync({
+//   resolvers: [UserResolver],
+// });
+// console.log("schema: ", schema);
 const server = createServer<
   {
     req: NextApiRequest;
