@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.prisma = void 0;
 require("reflect-metadata");
 const constants_1 = require("./constants");
-const http_1 = require("http");
 const type_graphql_1 = require("type-graphql");
 const client_1 = require("@prisma/client");
 const user_1 = require("./resolvers/user");
@@ -31,7 +30,11 @@ const startServer = async () => {
         tls: true,
     });
     app.use((0, cors_1.default)({
-        origin: ["http://localhost:3000", "https://the-inn-graphql.vercel.app/"],
+        origin: [
+            "http://localhost:3000",
+            "https://the-inn-graphql.vercel.app/",
+            "https://the-inn-server.herokuapp.com/",
+        ],
         credentials: true,
     }));
     const sessionMiddleware = (0, express_session_1.default)({
@@ -61,14 +64,14 @@ const startServer = async () => {
             };
         },
         plugins: [(0, apollo_server_core_1.ApolloServerPluginLandingPageGraphQLPlayground)()],
+        introspection: true,
     });
     await apolloServer.start();
     apolloServer.applyMiddleware({
         app,
-        cors: false,
+        path: "/graphql",
     });
-    const httpServer = (0, http_1.createServer)(app);
-    httpServer.listen(PORT, () => {
+    app.listen(PORT, () => {
         console.log(`🚀 Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
     });
 };

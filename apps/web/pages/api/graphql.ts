@@ -10,12 +10,11 @@ import { prisma } from "api/src";
 
 import { createServer, createPubSub } from "@graphql-yoga/node";
 import { MyContext } from "@graphql/types/MyContext";
-import { User } from "prisma/generated/typegraphql-prisma";
 
-const schema = buildSchemaSync({
-  resolvers: [User],
-});
-console.log("schema: ", schema);
+// const schema = buildSchemaSync({
+//   resolvers: [User],
+// });
+// console.log("schema: ", schema);
 const server = createServer<
   {
     req: NextApiRequest;
@@ -23,7 +22,6 @@ const server = createServer<
   },
   MyContext
 >({
-  schema,
   context: async ({ req, res }) => {
     const session = await getSession({ req });
 

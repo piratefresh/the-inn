@@ -35,7 +35,7 @@ let UserResolver = class UserResolver {
     }
 };
 __decorate([
-    (0, type_graphql_1.Query)((_type) => String, { nullable: true }),
+    (0, type_graphql_1.Query)(() => String),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

@@ -30,7 +30,11 @@ const startServer = async () => {
 
   app.use(
     cors({
-      origin: ["http://localhost:3000", "https://the-inn-graphql.vercel.app/"],
+      origin: [
+        "http://localhost:3000",
+        "https://the-inn-graphql.vercel.app/",
+        "https://the-inn-server.herokuapp.com/",
+      ],
       credentials: true,
     })
   );
