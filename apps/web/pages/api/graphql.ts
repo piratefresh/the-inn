@@ -15,6 +15,10 @@ import { MyContext } from "@graphql/types/MyContext";
 
 const pubsub = createPubSub();
 
+const schema = buildSchemaSync({
+  resolvers: [UserResolver],
+});
+
 const server = createServer<
   {
     req: NextApiRequest;
@@ -22,9 +26,7 @@ const server = createServer<
   },
   MyContext
 >({
-  schema: buildSchemaSync({
-    resolvers: [UserResolver],
-  }),
+  schema,
   context: async ({ req, res }) => {
     const session = await getSession({ req });
 
