@@ -13,6 +13,9 @@
     "removeComments": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "."
+    "rootDir": ".",
+    "paths": {
+      "@models/*": ["models/*"]
+    }
   }
 }
