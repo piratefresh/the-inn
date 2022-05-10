@@ -32,7 +32,6 @@ const server = createServer<
       prisma,
       req,
       res,
-      pubsub,
       // redis,
       user: session?.user,
       session,
