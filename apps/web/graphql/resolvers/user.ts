@@ -18,10 +18,10 @@ export class UserResolver {
   async helloworld(@Ctx() { prisma, res }: MyContext) {
     return "hello world";
   }
-  // @Query(() => [User])
-  // async users(@Ctx() { prisma, res }: MyContext) {
-  //   return prisma.user.findMany();
-  // }
+  @Query((_type) => [User])
+  async users(@Ctx() { prisma, res }: MyContext) {
+    return prisma.user.findMany();
+  }
 
   // @Mutation((_type) => User)
   // async signup(
