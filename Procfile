@@ -1,1 +1,1 @@
-web: yarn workspace backend yarn start
+web: yarn workspace backend node dist/index.js
