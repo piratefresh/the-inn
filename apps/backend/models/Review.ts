@@ -1,30 +1,28 @@
 import { Field, ObjectType, ID, Int } from "type-graphql";
 import { User } from "./User";
-import { Field, ObjectType, ID, Int } from 'type-graphql'
-import { User } from './User'
 
 @ObjectType()
 export class Review {
   @Field((_type) => ID)
-  id: string
+  id: string;
 
   @Field()
-  createdAt: Date
+  createdAt: Date;
 
   @Field()
-  updatedAt: Date
+  updatedAt: Date;
 
   @Field((_type) => Int)
-  rating: number
+  rating: number;
 
   @Field()
-  comment: string
+  comment: string;
 
   @Field()
-  userId: string
+  userId: string;
 
   @Field((_type) => User)
-  user: User
+  user: User;
 
   // skip overwrite 👇
 }
