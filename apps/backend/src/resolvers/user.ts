@@ -14,8 +14,8 @@ import jwt from "jsonwebtoken";
 
 @InputType()
 export class UsernamePasswordInput {
-  @Field()
-  username: string;
+  // @Field()
+  // username: string;
   @Field()
   firstName: string;
   @Field()
