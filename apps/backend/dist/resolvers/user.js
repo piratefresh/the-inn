@@ -89,14 +89,22 @@ let UserResolver = class UserResolver {
     }
     async signup(options, { prisma , res  }) {
         const hashedPassword = await _argon2.default.hash(options.password);
-        const user = await prisma.user.create({
+        const createdUser = await prisma.user.create({
             data: _objectSpread({}, options, {
                 experience: "Beginner",
                 password: hashedPassword
             })
         });
+        await prisma.account.create({
+            data: {
+                userId: createdUser.id,
+                type: "credentials",
+                provider: "Credentials",
+                providerAccountId: createdUser.id
+            }
+        });
         const token = _jsonwebtoken.default.sign({
-            userId: user.id
+            userId: createdUser.id
         }, "keyboard cat");
         res.cookie("token", token, {
             httpOnly: false,
@@ -104,7 +112,7 @@ let UserResolver = class UserResolver {
         });
         return _objectSpread({
             token
-        }, user);
+        }, createdUser);
     }
 };
 exports.UserResolver = UserResolver;

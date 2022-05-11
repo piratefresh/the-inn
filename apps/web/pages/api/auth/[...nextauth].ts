@@ -1,3 +1,5 @@
+//https://github.com/tericcabrel/tech-career-growth/blob/e5cd22c8184b7324b952a352c35697cc52c5faad/src/pages/api/auth/%5B...nextauth%5D.ts
+
 import { LoginDocument } from "generated/graphql";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextAuth from "next-auth";

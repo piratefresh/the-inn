@@ -45,7 +45,7 @@ export class UserResolver {
     @Ctx() { prisma, res }: MyContext
   ) {
     const hashedPassword = await argon2.hash(options.password);
-    const user = await prisma.user.create({
+    const createdUser = await prisma.user.create({
       data: {
         ...options,
         experience: "Beginner",
@@ -53,7 +53,16 @@ export class UserResolver {
       },
     });
 
-    const token = jwt.sign({ userId: user.id }, "keyboard cat");
+    await prisma.account.create({
+      data: {
+        userId: createdUser.id,
+        type: "credentials",
+        provider: "Credentials",
+        providerAccountId: createdUser.id,
+      },
+    });
+
+    const token = jwt.sign({ userId: createdUser.id }, "keyboard cat");
 
     res.cookie("token", token, {
       httpOnly: false,
@@ -62,7 +71,7 @@ export class UserResolver {
     });
     return {
       token,
-      ...user,
+      ...createdUser,
     };
   }
 }
