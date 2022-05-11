@@ -5,6 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 // Generator is a bit buggy on overwrties
 // generator PrismaTypeGraphQLTypesGenerator {
 //   provider     = "npx prisma-typegraphql-types-generator"
