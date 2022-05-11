@@ -67,7 +67,11 @@ export class UserResolver {
     res.cookie("token", token, {
       httpOnly: false,
       // secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year cookie
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year cookie,
+      domain:
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:4000"
+          : "https://the-inn-graphql.vercel.app",
     });
     return {
       token,
