@@ -18,7 +18,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = exports.UsernamePasswordInput = void 0;
 const type_graphql_1 = require("type-graphql");
 const argon2_1 = __importDefault(require("argon2"));
-const User_1 = require("../models/User");
+const User_1 = require("@models/User");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 let UsernamePasswordInput = class UsernamePasswordInput {
 };
 __decorate([
@@ -64,6 +65,15 @@ let UserResolver = class UserResolver {
                 password: hashedPassword,
             },
         });
+        const token = jsonwebtoken_1.default.sign({ userId: user.id }, "keyboard cat");
+        res.cookie("token", token, {
+            httpOnly: false,
+            maxAge: 1000 * 60 * 60 * 24 * 365,
+        });
+        return {
+            token,
+            user,
+        };
     }
 };
 __decorate([

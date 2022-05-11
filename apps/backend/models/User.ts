@@ -1,74 +1,74 @@
-import { Field, ObjectType, ID } from 'type-graphql'
-import { StatusType } from '../types/StatusType'
-import { Account } from './Account'
-import { Session } from './Session'
-import { Review } from './Review'
-import { Campaign } from './Campaign'
+import { Field, ObjectType, ID } from "type-graphql";
+import { StatusType } from "../types/StatusType";
+import { Account } from "./Account";
+import { Session } from "./Session";
+import { Review } from "./Review";
+import { Campaign } from "./Campaign";
 
 @ObjectType()
 export class User {
   @Field((_type) => ID)
-  id: string
+  id: string;
 
   @Field()
-  password: string
+  password: string;
 
   @Field()
-  createdAt: Date
+  createdAt: Date;
 
   @Field()
-  updatedAt: Date
+  updatedAt: Date;
 
   @Field({ nullable: true })
-  email?: string
+  email?: string;
 
   @Field({ nullable: true })
-  emailVerified?: Date
+  emailVerified?: Date;
 
   @Field({ nullable: true })
-  image?: string
+  image?: string;
 
   @Field()
-  firstName: string
+  firstName: string;
 
   @Field()
-  lastName: string
+  lastName: string;
 
   @Field()
-  experience: string
+  experience: string;
 
   @Field({ nullable: true })
-  twitter?: string
+  twitter?: string;
 
   @Field({ nullable: true })
-  facebook?: string
+  facebook?: string;
 
   @Field({ nullable: true })
-  discord?: string
+  discord?: string;
 
   @Field({ nullable: true })
-  youtube?: string
+  youtube?: string;
 
   @Field((_type) => StatusType)
-  status: StatusType
+  status: StatusType;
 
   @Field((_type) => [Account])
-  accounts: Account[]
+  accounts: Account[];
 
   @Field((_type) => [Session])
-  sessions: Session[]
+  sessions: Session[];
 
   @Field((_type) => [Review])
-  reviews: Review[]
+  reviews: Review[];
 
   @Field((_type) => [Campaign])
-  Campaign: Campaign[]
+  Campaign: Campaign[];
 
   @Field((_type) => [Campaign])
-  Hosted: Campaign[]
+  Hosted: Campaign[];
 
   @Field({ nullable: true })
-  campaignId?: string
+  campaignId?: string;
 
   // skip overwrite 👇
 }

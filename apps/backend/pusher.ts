@@ -1,12 +1,11 @@
 import { PusherChannel } from "graphql-pusher-subscriptions";
-import Pusher from "pusher";
+import Pusher from "pusher-js";
 
-export const pusher = new Pusher({
-  appId: "1338472",
-  key: "4aa7a9d626b176d0e11f",
-  secret: "8c81d2e93d50343e51cd",
+export const pusher = new Pusher("4aa7a9d626b176d0e11f", {
+  // key: "4aa7a9d626b176d0e11f",
+  // secret: "8c81d2e93d50343e51cd",
   cluster: "us2",
-  useTLS: true,
+  // useTLS: true,
 });
 
 export const pubsub = new PusherChannel({

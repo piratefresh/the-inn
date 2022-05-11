@@ -14254,6 +14254,13 @@ pusher-js@^6.0.3:
   dependencies:
     tweetnacl "^1.0.3"
 
+pusher-js@^7.1.0-beta:
+  version "7.1.0-beta"
+  resolved "https://registry.yarnpkg.com/pusher-js/-/pusher-js-7.1.0-beta.tgz#288ced24eef1e2c67606883f141d32ad860f6b56"
+  integrity sha512-vs9R5Guy2VW1O3nI0OTa9NQWHkfbEvmkyWDOC469WubhVFwQ5Pa38OgRQetQzA5Ege2SF3iErZBGzY/xXNiKyw==
+  dependencies:
+    tweetnacl "^1.0.3"
+
 pusher@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/pusher/-/pusher-3.0.1.tgz#9fbed49cf0f9ee9879ae6b75a38f8dda7a98eded"
@@ -14262,6 +14269,17 @@ pusher@^3.0.1:
     "@types/request" "^2.47.1"
     is-base64 "^1.1.0"
     request "2.88.0"
+    tweetnacl "^1.0.0"
+    tweetnacl-util "^0.15.0"
+
+pusher@^5.1.0-beta:
+  version "5.1.0-beta"
+  resolved "https://registry.yarnpkg.com/pusher/-/pusher-5.1.0-beta.tgz#567395a4b94bc3051f5a9a0086935a23bd91d513"
+  integrity sha512-ujM7BHA77/sHdIuhAbRdWdnaY+KhSuGZg/1OVjKxiIqnTV8BgSL7+heBCtkRMF9pjvy9jElR8s0eCUlSfJ1FAg==
+  dependencies:
+    abort-controller "^3.0.0"
+    is-base64 "^1.1.0"
+    node-fetch "^2.6.1"
     tweetnacl "^1.0.0"
     tweetnacl-util "^0.15.0"
 
