@@ -53,8 +53,6 @@ export class UserResolver {
       },
     });
 
-    console.log("user: ", user);
-
     const token = jwt.sign({ userId: user.id }, "keyboard cat");
 
     res.cookie("token", token, {
