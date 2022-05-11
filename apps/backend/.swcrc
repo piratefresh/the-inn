@@ -2,7 +2,7 @@
   "jsc": {
     "parser": {
       "syntax": "typescript",
-      "tsx": true,
+      "tsx": false,
       "dynamicImport": true,
       "decorators": true
     },
@@ -17,6 +17,22 @@
     "minify": {
       "compress": false,
       "mangle": false
+    },
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"],
+      "@config": ["config"],
+      "@databases": ["databases"],
+      "@dtos/*": ["dtos/*"],
+      "@models/*": ["models/*"],
+      "@entities/*": ["entities/*"],
+      "@exceptions/*": ["exceptions/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@repositories/*": ["repositories/*"],
+      "@resolvers/*": ["resolvers/*"],
+      "@typedefs/*": ["typedefs/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "module": {

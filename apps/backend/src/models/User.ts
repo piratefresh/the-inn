@@ -1,5 +1,5 @@
 import { Field, ObjectType, ID } from "type-graphql";
-import { StatusType } from "../types/StatusType";
+import { StatusType } from "@typedefs/StatusType";
 import { Account } from "./Account";
 import { Session } from "./Session";
 import { Review } from "./Review";

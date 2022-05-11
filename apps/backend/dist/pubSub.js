@@ -1,18 +1,27 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.pubsub = exports.redisClient = void 0;
-const ioredis_1 = __importDefault(require("ioredis"));
-const graphql_redis_subscriptions_1 = require("graphql-redis-subscriptions");
-const redisClient = new ioredis_1.default({ host: "theinn.redis.cache.windows.net" });
-exports.redisClient = redisClient;
-const pubsub = new graphql_redis_subscriptions_1.RedisPubSub({
-    connection: { host: "theinn.redis.cache.windows.net" },
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
-exports.pubsub = pubsub;
-redisClient.on("error", (error) => {
+exports.pubsub = exports.redisClient = void 0;
+var _ioredis = _interopRequireDefault(require("ioredis"));
+var _graphqlRedisSubscriptions = require("graphql-redis-subscriptions");
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const redisClient = new _ioredis.default({
+    host: "theinn.redis.cache.windows.net"
+});
+const pubsub = new _graphqlRedisSubscriptions.RedisPubSub({
+    connection: {
+        host: "theinn.redis.cache.windows.net"
+    }
+});
+redisClient.on("error", (error)=>{
     console.error(error);
 });
+exports.redisClient = redisClient;
+exports.pubsub = pubsub;
+
 //# sourceMappingURL=pubSub.js.map

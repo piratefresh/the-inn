@@ -1,82 +1,97 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.prisma = void 0;
 require("reflect-metadata");
-const constants_1 = require("./constants");
-const type_graphql_1 = require("type-graphql");
-const client_1 = require("@prisma/client");
-const user_1 = require("./resolvers/user");
-const express_1 = __importDefault(require("express"));
-const ioredis_1 = __importDefault(require("ioredis"));
-const cors_1 = __importDefault(require("cors"));
-const express_session_1 = __importDefault(require("express-session"));
-const connect_redis_1 = __importDefault(require("connect-redis"));
-const apollo_server_express_1 = require("apollo-server-express");
-const apollo_server_core_1 = require("apollo-server-core");
-exports.prisma = new client_1.PrismaClient({
-    log: ["query"],
+var _constants = require("./constants");
+var _typeGraphql = require("type-graphql");
+var _client = require("@prisma/client");
+var _user = require("./resolvers/user");
+var _express = _interopRequireDefault(require("express"));
+var _ioredis = _interopRequireDefault(require("ioredis"));
+var _cors = _interopRequireDefault(require("cors"));
+var _expressSession = _interopRequireDefault(require("express-session"));
+var _connectRedis = _interopRequireDefault(require("connect-redis"));
+var _apolloServerExpress = require("apollo-server-express");
+var _apolloServerCore = require("apollo-server-core");
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const prisma = new _client.PrismaClient({
+    log: [
+        "query"
+    ]
 });
-const startServer = async () => {
+exports.prisma = prisma;
+const startServer = async ()=>{
     const PORT = 4000;
-    const app = (module.exports = (0, express_1.default)());
-    const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
-    const redis = new ioredis_1.default({
+    const app = module.exports = (0, _express).default();
+    const RedisStore = (0, _connectRedis).default(_expressSession.default);
+    const redis = new _ioredis.default({
         host: "theinn.redis.cache.windows.net",
         port: 6380,
         password: "xpkqdr9nlXOUBVCXkrMbHihzDvVitpQaJAzCaIve6YY=",
-        tls: true,
+        tls: true
     });
-    app.use((0, cors_1.default)({
+    app.use((0, _cors).default({
         origin: [
             "http://localhost:3000",
             "https://the-inn-graphql.vercel.app/",
             "https://the-inn-server.herokuapp.com/",
-            "https://the-inn.herokuapp.com/",
+            "https://the-inn.herokuapp.com/", 
         ],
-        credentials: true,
+        credentials: true
     }));
-    const sessionMiddleware = (0, express_session_1.default)({
-        name: constants_1.COOKIE_NAME,
-        store: new RedisStore({ client: redis, disableTouch: true }),
+    const sessionMiddleware = (0, _expressSession).default({
+        name: _constants.COOKIE_NAME,
+        store: new RedisStore({
+            client: redis,
+            disableTouch: true
+        }),
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
             httpOnly: true,
             sameSite: "lax",
-            secure: constants_1.__prod__,
+            secure: _constants.__prod__
         },
         saveUninitialized: false,
         secret: "keyboard cat",
-        resave: false,
+        resave: false
     });
     app.use(sessionMiddleware);
-    const apolloServer = new apollo_server_express_1.ApolloServer({
-        schema: await (0, type_graphql_1.buildSchema)({
-            resolvers: [user_1.UserResolver],
-            validate: false,
+    const apolloServer = new _apolloServerExpress.ApolloServer({
+        schema: await (0, _typeGraphql).buildSchema({
+            resolvers: [
+                _user.UserResolver
+            ],
+            validate: false
         }),
-        context: async ({ req, res }) => {
+        context: async ({ req , res  })=>{
             return {
-                prisma: exports.prisma,
+                prisma,
                 req,
-                res,
+                res
             };
         },
-        plugins: [(0, apollo_server_core_1.ApolloServerPluginLandingPageGraphQLPlayground)()],
-        introspection: true,
+        plugins: [
+            (0, _apolloServerCore).ApolloServerPluginLandingPageGraphQLPlayground()
+        ],
+        introspection: true
     });
     await apolloServer.start();
     apolloServer.applyMiddleware({
         app,
-        cors: false,
+        cors: false
     });
-    app.listen(PORT, () => {
+    app.listen(PORT, ()=>{
         console.log(`🚀 Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
     });
 };
-startServer().catch((err) => {
+startServer().catch((err)=>{
     console.error(err);
 });
+
 //# sourceMappingURL=index.js.map

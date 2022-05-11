@@ -1,6 +1,6 @@
 import { Field, ObjectType, ID, Float, Int } from "type-graphql";
-import { Experiance } from "../types/Experiance";
-import { Difficulty } from "../types/Difficulty";
+import { Experiance } from "@typedefs/Experiance";
+import { Difficulty } from "@typedefs/Difficulty";
 import { User } from "./User";
 
 @ObjectType()

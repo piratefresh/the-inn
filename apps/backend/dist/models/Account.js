@@ -1,81 +1,105 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Account = void 0;
+var _typeGraphql = require("type-graphql");
+var _user = require("./User");
+var __decorate = (void 0) && (void 0).__decorate || function(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    else for(var i = decorators.length - 1; i >= 0; i--)if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
+var __metadata = (void 0) && (void 0).__metadata || function(k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Account = void 0;
-const type_graphql_1 = require("type-graphql");
-const User_1 = require("./User");
 let Account = class Account {
 };
+exports.Account = Account;
 __decorate([
-    (0, type_graphql_1.Field)((_type) => type_graphql_1.ID),
+    (0, _typeGraphql).Field((_type)=>_typeGraphql.ID
+    ),
     __metadata("design:type", String)
 ], Account.prototype, "id", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(),
+    (0, _typeGraphql).Field(),
     __metadata("design:type", String)
 ], Account.prototype, "userId", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(),
+    (0, _typeGraphql).Field(),
     __metadata("design:type", String)
 ], Account.prototype, "type", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(),
+    (0, _typeGraphql).Field(),
     __metadata("design:type", String)
 ], Account.prototype, "provider", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(),
+    (0, _typeGraphql).Field(),
     __metadata("design:type", String)
 ], Account.prototype, "providerAccountId", void 0);
 __decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Account.prototype, "refresh_token", void 0);
 __decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Account.prototype, "access_token", void 0);
 __decorate([
-    (0, type_graphql_1.Field)((_type) => type_graphql_1.Int, { nullable: true }),
+    (0, _typeGraphql).Field((_type)=>_typeGraphql.Int
+    , {
+        nullable: true
+    }),
     __metadata("design:type", Number)
 ], Account.prototype, "expires_at", void 0);
 __decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Account.prototype, "token_type", void 0);
 __decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Account.prototype, "scope", void 0);
 __decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Account.prototype, "id_token", void 0);
 __decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Account.prototype, "session_state", void 0);
 __decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Account.prototype, "oauth_token_secret", void 0);
 __decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Account.prototype, "oauth_token", void 0);
 __decorate([
-    (0, type_graphql_1.Field)((_type) => User_1.User),
-    __metadata("design:type", User_1.User)
+    (0, _typeGraphql).Field((_type)=>_user.User
+    ),
+    __metadata("design:type", typeof _user.User === "undefined" ? Object : _user.User)
 ], Account.prototype, "user", void 0);
-Account = __decorate([
-    (0, type_graphql_1.ObjectType)()
+exports.Account = Account = __decorate([
+    (0, _typeGraphql).ObjectType()
 ], Account);
-exports.Account = Account;
+
 //# sourceMappingURL=Account.js.map

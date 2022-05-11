@@ -14,9 +14,10 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": ".",
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "paths": {
-      "@models/*": ["models/*"]
+      "@models/*": ["models/*"],
+      "@typedefs/*": ["typedefs/*"]
     }
   }
 }

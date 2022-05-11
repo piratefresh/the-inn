@@ -9,7 +9,7 @@ import {
 } from "type-graphql";
 import argon2 from "argon2";
 import { User } from "@models/User";
-import { MyContext } from "../types/MyContext";
+import { MyContext } from "@typedefs/MyContext";
 import jwt from "jsonwebtoken";
 
 @InputType()
