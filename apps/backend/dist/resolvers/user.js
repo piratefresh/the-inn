@@ -61,10 +61,6 @@ exports.UsernamePasswordInput = UsernamePasswordInput;
 __decorate([
     (0, _typeGraphql).Field(),
     __metadata("design:type", String)
-], UsernamePasswordInput.prototype, "username", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
 ], UsernamePasswordInput.prototype, "firstName", void 0);
 __decorate([
     (0, _typeGraphql).Field(),
