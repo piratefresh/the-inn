@@ -102,10 +102,9 @@ let UserResolver = class UserResolver {
             httpOnly: false,
             maxAge: 1000 * 60 * 60 * 24 * 365
         });
-        return {
-            token,
-            user
-        };
+        return _objectSpread({
+            token
+        }, user);
     }
 };
 exports.UserResolver = UserResolver;
