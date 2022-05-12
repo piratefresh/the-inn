@@ -106,9 +106,10 @@ let UserResolver = class UserResolver {
         const token = _jsonwebtoken.default.sign({
             userId: createdUser.id
         }, "keyboard cat");
-        res.cookie("token", token, {
+        res.cookie("rid", token, {
             httpOnly: false,
-            maxAge: 1000 * 60 * 60 * 24 * 365
+            maxAge: 1000 * 60 * 60 * 24 * 365,
+            domain: process.env.NODE_ENV === "development" ? "http://localhost:4000" : "https://the-inn-graphql.vercel.app"
         });
         return _objectSpread({
             token
