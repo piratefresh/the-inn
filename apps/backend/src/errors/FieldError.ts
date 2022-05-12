@@ -16,6 +16,7 @@ export class FieldError implements IError {
   static from(validationError: ValidationError) {
     return new FieldError({
       path: validationError.property,
+      // @ts-ignore
       message: Object.values(validationError.constraints)[0],
     });
   }
