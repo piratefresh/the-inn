@@ -155,7 +155,7 @@ let UserResolver = class UserResolver {
         (0, _setToken).setToken(user, res);
         req.session.userId = user.id;
         return {
-            user
+            user: user
         };
     }
 };
