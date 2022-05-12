@@ -32,7 +32,8 @@
       "@repositories/*": ["repositories/*"],
       "@resolvers/*": ["resolvers/*"],
       "@typedefs/*": ["typedefs/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@errors/*": ["errors/*"]
     }
   },
   "module": {

@@ -2,12 +2,18 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.UserResolver = exports.UsernamePasswordInput = void 0;
+exports.UserResolver = exports.UsernamePasswordInput = exports.CreateUserResult = exports.AuthResult = void 0;
 var _typeGraphql = require("type-graphql");
 var _argon2 = _interopRequireDefault(require("argon2"));
 var _user = require("../models/User");
 var _myContext = require("../typedefs/MyContext");
-var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
+var _classValidator = require("class-validator");
+var _setToken = require("../utils/setToken");
+var _exisitingUserError = require("../errors/ExisitingUserError");
+var _fieldsValidationError = require("../errors/FieldsValidationError");
+var _badCredentialsError = require("../errors/BadCredentialsError");
+var _nonUserExists = require("../errors/NonUserExists");
+var _runtime = require("@prisma/client/runtime");
 function _defineProperty(obj, key, value) {
     if (key in obj) {
         Object.defineProperty(obj, key, {
@@ -55,6 +61,25 @@ var __param = (void 0) && (void 0).__param || function(paramIndex, decorator) {
         decorator(target, key, paramIndex);
     };
 };
+const AuthResult = (0, _typeGraphql).createUnionType({
+    name: "AuthResult",
+    types: ()=>[
+            _user.User,
+            _fieldsValidationError.FieldsValidationError,
+            _nonUserExists.NonExistingUserError,
+            _badCredentialsError.BadCredentialsError, 
+        ]
+});
+exports.AuthResult = AuthResult;
+const CreateUserResult = (0, _typeGraphql).createUnionType({
+    name: "CreateUserResult",
+    types: ()=>[
+            _user.User,
+            _fieldsValidationError.FieldsValidationError,
+            _exisitingUserError.ExistingUserError
+        ]
+});
+exports.CreateUserResult = CreateUserResult;
 let UsernamePasswordInput = class UsernamePasswordInput {
 };
 exports.UsernamePasswordInput = UsernamePasswordInput;
@@ -88,35 +113,46 @@ let UserResolver = class UserResolver {
         return prisma.user.findFirst({});
     }
     async signup(options, { prisma , res  }) {
+        const errors = await (0, _classValidator).validate(options);
+        if (errors.length > 0) return _fieldsValidationError.FieldsValidationError.from(errors);
         const hashedPassword = await _argon2.default.hash(options.password);
-        const createdUser = await prisma.user.create({
-            data: _objectSpread({}, options, {
-                experience: "Beginner",
-                password: hashedPassword
-            })
-        });
-        await prisma.account.create({
-            data: {
-                userId: createdUser.id,
-                type: "credentials",
-                provider: "Credentials",
-                providerAccountId: createdUser.id
+        try {
+            const createdUser = await prisma.user.create({
+                data: _objectSpread({}, options, {
+                    experience: "Beginner",
+                    password: hashedPassword
+                })
+            });
+            await prisma.account.create({
+                data: {
+                    userId: createdUser.id,
+                    type: "credentials",
+                    provider: "Credentials",
+                    providerAccountId: createdUser.id
+                }
+            });
+            (0, _setToken).setToken(createdUser, res);
+            return _objectSpread({}, createdUser);
+        } catch (err) {
+            if (err instanceof _runtime.PrismaClientKnownRequestError && err.code === "P2002") {
+                return new _exisitingUserError.ExistingUserError();
+            } else {
+                throw err;
+            }
+        }
+    }
+    async signin(usernameOrEmail, password, { prisma , res , req  }) {
+        const user = await prisma.user.findUnique({
+            where: {
+                email: usernameOrEmail
             }
         });
-        const token = _jsonwebtoken.default.sign({
-            userId: createdUser.id,
-            email: createdUser.email,
-            firstName: createdUser.firstName,
-            lastName: createdUser.lastName
-        }, "keyboard cat");
-        res.cookie("rid", token, {
-            httpOnly: false,
-            maxAge: 1000 * 60 * 60 * 24 * 365,
-            domain: process.env.NODE_ENV === "development" ? "http://localhost:4000" : "https://the-inn-graphql.vercel.app"
-        });
-        return _objectSpread({
-            token
-        }, createdUser);
+        if (!user) return new _nonUserExists.NonExistingUserError();
+        const authenticated = await _argon2.default.verify(user.password, password);
+        if (!authenticated) return new _badCredentialsError.BadCredentialsError();
+        (0, _setToken).setToken(user, res);
+        req.session.userId = user.id;
+        return _objectSpread({}, user);
     }
 };
 exports.UserResolver = UserResolver;
@@ -149,7 +185,7 @@ __decorate([
     ])
 ], UserResolver.prototype, "getUser", null);
 __decorate([
-    (0, _typeGraphql).Mutation((_type)=>_user.User
+    (0, _typeGraphql).Mutation((_type)=>CreateUserResult
     ),
     __param(0, (0, _typeGraphql).Arg("options")),
     __param(1, (0, _typeGraphql).Ctx()),
@@ -159,6 +195,19 @@ __decorate([
         typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
     ])
 ], UserResolver.prototype, "signup", null);
+__decorate([
+    (0, _typeGraphql).Mutation((_type)=>AuthResult
+    ),
+    __param(0, (0, _typeGraphql).Arg("usernameOrEmail")),
+    __param(1, (0, _typeGraphql).Arg("password")),
+    __param(2, (0, _typeGraphql).Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [
+        String,
+        String,
+        typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
+    ])
+], UserResolver.prototype, "signin", null);
 exports.UserResolver = UserResolver = __decorate([
     (0, _typeGraphql).Resolver()
 ], UserResolver);
