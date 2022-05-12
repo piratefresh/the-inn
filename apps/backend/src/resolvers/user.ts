@@ -93,7 +93,7 @@ export class UserResolver {
       setToken(createdUser, res);
 
       return {
-        ...createdUser,
+        user: createdUser,
       };
     } catch (err) {
       if (
@@ -129,7 +129,7 @@ export class UserResolver {
     req.session.userId = user.id;
 
     return {
-      ...user,
+      user,
     };
   }
 }

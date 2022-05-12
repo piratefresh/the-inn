@@ -132,7 +132,9 @@ let UserResolver = class UserResolver {
                 }
             });
             (0, _setToken).setToken(createdUser, res);
-            return _objectSpread({}, createdUser);
+            return {
+                user: createdUser
+            };
         } catch (err) {
             if (err instanceof _runtime.PrismaClientKnownRequestError && err.code === "P2002") {
                 return new _exisitingUserError.ExistingUserError();
@@ -152,7 +154,9 @@ let UserResolver = class UserResolver {
         if (!authenticated) return new _badCredentialsError.BadCredentialsError();
         (0, _setToken).setToken(user, res);
         req.session.userId = user.id;
-        return _objectSpread({}, user);
+        return {
+            user
+        };
     }
 };
 exports.UserResolver = UserResolver;
