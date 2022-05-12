@@ -104,7 +104,10 @@ let UserResolver = class UserResolver {
             }
         });
         const token = _jsonwebtoken.default.sign({
-            userId: createdUser.id
+            userId: createdUser.id,
+            email: createdUser.email,
+            firstName: createdUser.firstName,
+            lastName: createdUser.lastName
         }, "keyboard cat");
         res.cookie("rid", token, {
             httpOnly: false,

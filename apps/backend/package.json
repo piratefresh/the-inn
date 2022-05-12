@@ -11,7 +11,7 @@
     "postinstall": "tsc"
   },
   "dependencies": {
-    "@prisma/client": "^3.13.0",
+    "@prisma/client": "^3.14.0",
     "api": "*",
     "apollo-server-core": "3.0.1",
     "apollo-server-express": "^3.6.7",
@@ -37,7 +37,7 @@
     "@types/express-session": "^1.17.4",
     "@types/ioredis": "^4.28.10",
     "nodemon": "^2.0.16",
-    "prisma": "^3.13.0",
+    "prisma": "^3.14.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^4.0.0",

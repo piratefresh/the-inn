@@ -62,7 +62,15 @@ export class UserResolver {
       },
     });
 
-    const token = jwt.sign({ userId: createdUser.id }, "keyboard cat");
+    const token = jwt.sign(
+      {
+        userId: createdUser.id,
+        email: createdUser.email,
+        firstName: createdUser.firstName,
+        lastName: createdUser.lastName,
+      },
+      "keyboard cat"
+    );
 
     res.cookie("rid", token, {
       httpOnly: false,
