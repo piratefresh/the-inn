@@ -64,7 +64,7 @@ export class UserResolver {
 
     const token = jwt.sign({ userId: createdUser.id }, "keyboard cat");
 
-    res.cookie("token", token, {
+    res.cookie("rid", token, {
       httpOnly: false,
       // secure: false,
       maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year cookie,
