@@ -132,6 +132,7 @@ let UserResolver = class UserResolver {
                 }
             });
             (0, _setToken).setToken(createdUser, res);
+            console.log("user: ", createdUser);
             return {
                 user: createdUser
             };
@@ -154,9 +155,7 @@ let UserResolver = class UserResolver {
         if (!authenticated) return new _badCredentialsError.BadCredentialsError();
         (0, _setToken).setToken(user, res);
         req.session.userId = user.id;
-        return {
-            user: user
-        };
+        return Object.assign(new _user.User(), user);
     }
 };
 exports.UserResolver = UserResolver;
