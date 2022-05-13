@@ -11,7 +11,7 @@ import {
 import argon2 from "argon2";
 import { User } from "@models/User";
 import { MyContext } from "@typedefs/MyContext";
-import jwt from "jsonwebtoken";
+import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 import { setToken } from "@utils/setToken";
 import { ExistingUserError } from "@errors/ExisitingUserError";
@@ -92,6 +92,8 @@ export class UserResolver {
 
       setToken(createdUser, res);
 
+      console.log("user: ", createdUser);
+
       return {
         user: createdUser,
       };
@@ -112,6 +114,12 @@ export class UserResolver {
     @Arg("password") password: string,
     @Ctx() { prisma, res, req }: MyContext
   ) {
+    // const inputUserEmailErrors = await validate(usernameOrEmail);
+    // if (inputUserEmailErrors.length > 0)
+    //   return FieldsValidationError.from(inputUserEmailErrors);
+    // const inputPassword = await validate(password);
+    // if (inputPassword.length > 0)
+    //   return FieldsValidationError.from(inputPassword);
     const user = await prisma.user.findUnique({
       where: {
         email: usernameOrEmail,
@@ -128,8 +136,6 @@ export class UserResolver {
 
     req.session.userId = user.id;
 
-    return {
-      user: user,
-    };
+    return Object.assign(new User(), user);
   }
 }
