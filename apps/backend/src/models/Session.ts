@@ -19,4 +19,3 @@ export class Session {
   user: User
 
   // skip overwrite 👇
-}

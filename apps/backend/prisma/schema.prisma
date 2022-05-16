@@ -6,12 +6,12 @@ generator client {
 }
 
 // Generator is a bit buggy on overwrties
-// generator PrismaTypeGraphQLTypesGenerator {
-//   provider     = "npx prisma-typegraphql-types-generator"
-//   modelsOutput = "./models"
-//   enumsOutput  = "./types"
-//   useYarn      = true
-// }
+generator PrismaTypeGraphQLTypesGenerator {
+  provider     = "npx prisma-typegraphql-types-generator"
+  modelsOutput = "./src/models"
+  enumsOutput  = "./src/typedefs"
+  // useYarn      = true
+}
 
 datasource db {
   provider = "postgresql"
@@ -102,22 +102,28 @@ model User {
   accounts Account[]
   sessions Session[]
   reviews  Review[]
-
-  Campaign   Campaign[] @relation("players")
-  Hosted     Campaign[] @relation("game_master")
-  campaignId String?
+  players  Player[]
+  Hosted   Campaign[] @relation("game_master")
 
   @@map(name: "users")
 }
 
+model Player {
+  id         Int      @id @default(autoincrement())
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  campaignId String
+  userId     String
+
+  @@unique([campaignId, userId])
+}
+
 model Campaign {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-
-  gmId String
-
+  id                 String   @id @default(uuid())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  title              String
+  gmId               String
   summary            String
   additional_details String?
   note               String?
@@ -147,15 +153,11 @@ model Campaign {
   combat      Difficulty @default(Any)
   roleplay    Difficulty @default(Any)
 
-  game_master User   @relation("game_master", fields: [gmId], references: [id])
-  players     User[] @relation("players")
-
+  game_master User     @relation("game_master", fields: [gmId], references: [id])
+  players     Player[]
   // extra
-  tags  String[]
-  price Float?
-
-
-
+  tags        String[]
+  price       Float?
   @@map("campaigns")
 }
 

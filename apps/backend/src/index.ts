@@ -12,6 +12,7 @@ import connectRedis from "connect-redis";
 import { ApolloServer } from "apollo-server-express";
 
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import { CampaignResolver } from "resolvers/campaign";
 
 export const prisma = new PrismaClient({
   log: ["query"],
@@ -58,7 +59,7 @@ const startServer = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, CampaignResolver],
       validate: false,
       //   pubSub: pubsub,
     }),

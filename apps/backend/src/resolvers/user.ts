@@ -59,6 +59,19 @@ export class UserResolver {
     return prisma.user.findMany({});
   }
   @Query(() => [User])
+  async getUsersById(
+    @Arg("playerIds", () => [String]) playerIds: string[],
+    @Ctx() { prisma, res }: MyContext
+  ) {
+    return prisma.user.findMany({
+      where: {
+        id: {
+          in: playerIds,
+        },
+      },
+    });
+  }
+  @Query(() => [User])
   async getUser(@Ctx() { prisma, res }: MyContext) {
     return prisma.user.findFirst({});
   }
