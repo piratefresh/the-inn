@@ -69,3 +69,4 @@ export class User {
   Hosted: Campaign[]
 
   // skip overwrite 👇
+}

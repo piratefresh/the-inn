@@ -16,7 +16,7 @@
     "rootDir": ".",
     "baseUrl": "src",
     "paths": {
-      "@models/*": ["src/models/*"],
+      "@models/*": ["models/*"],
       "@typedefs/*": ["typedefs/*"],
       "@utils/*": ["utils/*"],
       "@errors/*": ["errors/*"]

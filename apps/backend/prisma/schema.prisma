@@ -105,17 +105,17 @@ model User {
   players  Player[]
   Hosted   Campaign[] @relation("game_master")
 
+
   @@map(name: "users")
 }
 
 model Player {
-  id         Int      @id @default(autoincrement())
-  campaign   Campaign @relation(fields: [campaignId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
   campaignId String
   userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
-  @@unique([campaignId, userId])
+  @@id([campaignId, userId])
 }
 
 model Campaign {
@@ -155,9 +155,11 @@ model Campaign {
 
   game_master User     @relation("game_master", fields: [gmId], references: [id])
   players     Player[]
+
   // extra
-  tags        String[]
-  price       Float?
+  tags  String[]
+  price Float?
+
   @@map("campaigns")
 }
 
@@ -172,17 +174,6 @@ model Review {
 
   @@map("reviews")
 }
-
-// model Media {
-//   id        String    @id @default(uuid())
-//   createdAt DateTime  @default(now())
-//   updatedAt DateTime  @updatedAt
-//   roomId    String?
-//   fileName  String
-//   campaign  Campaign? @relation("header_image", fields: [roomId], references: [id])
-
-//   @@map("media")
-// }
 
 model spatial_ref_sys {
   srid      Int     @id
@@ -239,4 +230,15 @@ model spatial_ref_sys {
 //   reservations       Reservation[]
 
 //   @@map("rooms")
+// }
+
+// model Media {
+//   id        String    @id @default(uuid())
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   roomId    String?
+//   fileName  String
+//   campaign  Campaign? @relation("header_image", fields: [roomId], references: [id])
+
+//   @@map("media")
 // }

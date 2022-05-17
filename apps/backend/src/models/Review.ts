@@ -25,3 +25,4 @@ export class Review {
   user: User
 
   // skip overwrite 👇
+}

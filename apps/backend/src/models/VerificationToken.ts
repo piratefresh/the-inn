@@ -12,3 +12,4 @@ export class VerificationToken {
   expires: Date
 
   // skip overwrite 👇
+}

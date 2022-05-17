@@ -3,7 +3,6 @@ import {
   createUnionType,
   Ctx,
   Field,
-  FieldResolver,
   InputType,
   Mutation,
   Query,
@@ -18,7 +17,6 @@ import { Campaign } from "@models/Campaign";
 import { NonExistingCampaignError } from "@errors/NonExistingCampaignError";
 import { Experiance } from "@typedefs/Experiance";
 import { Difficulty } from "@typedefs/Difficulty";
-import { User } from "@models/User";
 
 export const AuthResult = createUnionType({
   name: "AuthResult",
@@ -90,28 +88,6 @@ export class AddPlayerCampaignInput {
 
 @Resolver(Campaign)
 export class CampaignResolver {
-  @FieldResolver(() => User)
-  game_master(
-    @Root() campaign: Campaign,
-    @Ctx() { prisma, res, req }: MyContext
-  ) {
-    return prisma.user.findUnique({
-      where: {
-        id: campaign.gmId,
-      },
-    });
-  }
-  // @FieldResolver(() => User)
-  // players(@Root() campaign: Campaign, @Ctx() { prisma, res, req }: MyContext) {
-  //   console.log("players: ", campaign.players);
-  //   const playerIds = campaign.players.map((player) => player.id);
-  //   return prisma.user.findMany({
-  //     where: {
-  //       id: { in: playerIds },
-  //     },
-  //   });
-  // }
-
   @Query(() => String)
   async hellogame() {
     return "hello game";
@@ -125,6 +101,15 @@ export class CampaignResolver {
     return prisma.campaign.findUnique({
       where: {
         id,
+      },
+      include: {
+        game_master: true,
+        players: {
+          select: {
+            user: true,
+            campaign: true,
+          },
+        },
       },
     });
   }
@@ -160,28 +145,35 @@ export class CampaignResolver {
         },
       });
 
-      console.log("players: ", players);
+      const playersArr = await players.map((player) => ({
+        userId: player.id,
+        campaignId: addPlayerCampaignInput.campaignId,
+      }));
 
-      await prisma.player.createMany({
-        data: {
-          user: players,
-          campaignId: addPlayerCampaignInput.campaignId,
-        },
+      const createdPlayers = await prisma.player.createMany({
+        data: playersArr,
         skipDuplicates: true,
       });
+      if (createdPlayers) {
+        const foundCampaign = await prisma.campaign.findUnique({
+          where: {
+            id: addPlayerCampaignInput.campaignId,
+          },
+          include: {
+            players: {
+              select: {
+                user: true,
+                campaign: true,
+              },
+            },
+            game_master: true,
+          },
+        });
 
-      const foundCampaign = await prisma.campaign.update({
-        where: {
-          id: addPlayerCampaignInput.campaignId,
-        },
-        data: {
-          players: {},
-        },
-      });
+        console.log("foundCampaign: ", foundCampaign);
 
-      console.log("foundCampaign: ", foundCampaign);
-
-      return Object.assign(new Campaign(), foundCampaign);
+        return Object.assign(new Campaign(), foundCampaign);
+      }
     } catch (err) {
       throw err;
     }

@@ -107,9 +107,7 @@ export class UserResolver {
 
       console.log("user: ", createdUser);
 
-      return {
-        user: createdUser,
-      };
+      return Object.assign(new User(), createdUser);
     } catch (err) {
       if (
         err instanceof PrismaClientKnownRequestError &&

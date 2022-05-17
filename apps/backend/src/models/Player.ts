@@ -1,22 +1,20 @@
-import { Field, ObjectType, Int } from 'type-graphql'
-import { Campaign } from './Campaign'
+import { Field, ObjectType } from 'type-graphql'
 import { User } from './User'
+import { Campaign } from './Campaign'
 
 @ObjectType()
 export class Player {
-  @Field((_type) => Int)
-  id: number
-
-  @Field((_type) => Campaign)
-  campaign: Campaign
-
-  @Field((_type) => User)
-  user: User
-
   @Field()
   campaignId: string
 
   @Field()
   userId: string
 
+  @Field((_type) => User)
+  user: User
+
+  @Field((_type) => Campaign)
+  campaign: Campaign
+
   // skip overwrite 👇
+}
