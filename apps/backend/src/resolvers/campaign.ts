@@ -4,19 +4,22 @@ import {
   Ctx,
   Field,
   InputType,
+  Int,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
-  Root,
 } from "type-graphql";
 import { MyContext } from "@typedefs/MyContext";
-import { ExistingUserError } from "@errors/ExisitingUserError";
 import { FieldsValidationError } from "@errors/FieldsValidationError";
 import { BadCredentialsError } from "@errors/BadCredentialsError";
 import { Campaign } from "@models/Campaign";
 import { NonExistingCampaignError } from "@errors/NonExistingCampaignError";
 import { Experiance } from "@typedefs/Experiance";
 import { Difficulty } from "@typedefs/Difficulty";
+import { v2 as cloudinary } from "cloudinary";
+import { Player } from "@models/Player";
+import { User } from "@prisma/client";
 
 export const AuthResult = createUnionType({
   name: "AuthResult",
@@ -86,6 +89,15 @@ export class AddPlayerCampaignInput {
   playerIds: string[];
 }
 
+@ObjectType()
+class ImageSignature {
+  @Field((_type) => String)
+  signature!: string;
+
+  @Field((_type) => Int)
+  timestamp!: number;
+}
+
 @Resolver(Campaign)
 export class CampaignResolver {
   @Query(() => String)
@@ -145,7 +157,7 @@ export class CampaignResolver {
         },
       });
 
-      const playersArr = await players.map((player) => ({
+      const playersArr = await players.map((player: User) => ({
         userId: player.id,
         campaignId: addPlayerCampaignInput.campaignId,
       }));
@@ -177,5 +189,16 @@ export class CampaignResolver {
     } catch (err) {
       throw err;
     }
+  }
+  @Mutation((_returns) => ImageSignature)
+  createImageSignature(): ImageSignature {
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const signature: string = cloudinary.utils.api_sign_request(
+      {
+        timestamp,
+      },
+      "J3sbYn9Kz2vYmW4peAyCn2SAsMA"
+    );
+    return { timestamp, signature };
   }
 }

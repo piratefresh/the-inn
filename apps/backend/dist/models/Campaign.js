@@ -7,6 +7,7 @@ var _typeGraphql = require("type-graphql");
 var _experiance = require("../typedefs/Experiance");
 var _difficulty = require("../typedefs/Difficulty");
 var _user = require("./User");
+var _player = require("./Player");
 var __decorate = (void 0) && (void 0).__decorate || function(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -32,6 +33,10 @@ __decorate([
     (0, _typeGraphql).Field(),
     __metadata("design:type", typeof Date === "undefined" ? Object : Date)
 ], Campaign.prototype, "updatedAt", void 0);
+__decorate([
+    (0, _typeGraphql).Field(),
+    __metadata("design:type", String)
+], Campaign.prototype, "title", void 0);
 __decorate([
     (0, _typeGraphql).Field(),
     __metadata("design:type", String)
@@ -156,7 +161,7 @@ __decorate([
 ], Campaign.prototype, "game_master", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>[
-            _user.User
+            _player.Player
         ]
     ),
     __metadata("design:type", Array)

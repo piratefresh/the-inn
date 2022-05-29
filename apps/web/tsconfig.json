@@ -17,7 +17,8 @@
       "@features/*": ["features/*"],
       "@hooks/*": ["hooks/*"],
       "@layouts/*": ["layouts/*"],
-      "@views/*": ["views/*"]
+      "@views/*": ["views/*"],
+      "@generated/*": ["generated/*"]
     }
   }
 }

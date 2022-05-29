@@ -12,9 +12,10 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "dev:backend": "yarn workspace backend yarn dev",
-    "dev:web": "yarn workspace backend yarn web",
+    "dev:web": "yarn workspace web yarn dev",
     "backend:prisma:generate": "cd apps/backend && npx prisma generate",
-    "backend:prisma:migrate": "cd apps/backend && npx prisma migrate dev"
+    "backend:prisma:migrate": "cd apps/backend && npx prisma migrate dev",
+    "gen:web": "yarn workspace web yarn gen"
   },
   "devDependencies": {
     "prettier": "^2.5.1",

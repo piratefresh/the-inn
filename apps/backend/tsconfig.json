@@ -17,6 +17,7 @@
     "baseUrl": "src",
     "paths": {
       "@models/*": ["models/*"],
+      "@resolvers/*": ["resolvers/*"],
       "@typedefs/*": ["typedefs/*"],
       "@utils/*": ["utils/*"],
       "@errors/*": ["errors/*"]

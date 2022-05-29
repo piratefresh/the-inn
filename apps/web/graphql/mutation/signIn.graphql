@@ -1,0 +1,20 @@
+mutation SignIn($usernameOrEmail: String!, $password: String!) {
+  signin(usernameOrEmail: $usernameOrEmail, password: $password) {
+    ... on User {
+      id
+      email
+      firstName
+      lastName
+      image
+    }
+    ... on NonExistingUserError {
+      message
+    }
+    ... on BadCredentialsError {
+      message
+    }
+    ... on FieldsValidationError {
+      message
+    }
+  }
+}

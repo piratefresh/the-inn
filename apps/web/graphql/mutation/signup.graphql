@@ -1,0 +1,28 @@
+mutation SignUp(
+  $email: String!
+  $password: String!
+  $firstName: String!
+  $lastName: String!
+) {
+  signup(
+    options: {
+      firstName: $firstName
+      lastName: $lastName
+      password: $password
+      email: $email
+    }
+  ) {
+    ... on User {
+      id
+      email
+      firstName
+      lastName
+    }
+    ... on ExistingUserError {
+      message
+    }
+    ... on FieldsValidationError {
+      message
+    }
+  }
+}

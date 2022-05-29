@@ -2,8 +2,9 @@ import "reflect-metadata";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { buildSchema } from "type-graphql";
 import { PrismaClient } from "@prisma/client";
-
-import { UserResolver } from "./resolvers/user";
+import { UserResolver } from "@resolvers/user";
+import { CampaignResolver } from "@resolvers/campaign";
+import { ReviewResolver } from "@resolvers/review";
 import express from "express";
 import Redis from "ioredis";
 import cors from "cors";
@@ -12,7 +13,6 @@ import connectRedis from "connect-redis";
 import { ApolloServer } from "apollo-server-express";
 
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
-import { CampaignResolver } from "resolvers/campaign";
 
 export const prisma = new PrismaClient({
   log: ["query"],
@@ -23,10 +23,9 @@ const startServer = async () => {
   const app: express.Application = (module.exports = express());
   const RedisStore = connectRedis(session);
   const redis = new Redis({
-    host: "theinn.redis.cache.windows.net",
-    port: 6380,
-    password: "xpkqdr9nlXOUBVCXkrMbHihzDvVitpQaJAzCaIve6YY=",
-    tls: true as any,
+    host: "redis-13673.c56.east-us.azure.cloud.redislabs.com",
+    port: 13673,
+    password: "QUVqyaYtox5FMjk5bbXLUrqwUm4es2ux",
   });
 
   app.use(
@@ -59,7 +58,7 @@ const startServer = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, CampaignResolver],
+      resolvers: [UserResolver, CampaignResolver, ReviewResolver],
       validate: false,
       //   pubSub: pubsub,
     }),

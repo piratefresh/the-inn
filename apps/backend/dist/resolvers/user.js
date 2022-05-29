@@ -109,6 +109,15 @@ let UserResolver = class UserResolver {
     async getUsers({ prisma , res  }) {
         return prisma.user.findMany({});
     }
+    async getUsersById(playerIds, { prisma , res  }) {
+        return prisma.user.findMany({
+            where: {
+                id: {
+                    in: playerIds
+                }
+            }
+        });
+    }
     async getUser({ prisma , res  }) {
         return prisma.user.findFirst({});
     }
@@ -133,9 +142,7 @@ let UserResolver = class UserResolver {
             });
             (0, _setToken).setToken(createdUser, res);
             console.log("user: ", createdUser);
-            return {
-                user: createdUser
-            };
+            return Object.assign(new _user.User(), createdUser);
         } catch (err) {
             if (err instanceof _runtime.PrismaClientKnownRequestError && err.code === "P2002") {
                 return new _exisitingUserError.ExistingUserError();
@@ -155,6 +162,7 @@ let UserResolver = class UserResolver {
         if (!authenticated) return new _badCredentialsError.BadCredentialsError();
         (0, _setToken).setToken(user, res);
         req.session.userId = user.id;
+        console.log("user: ", user);
         return Object.assign(new _user.User(), user);
     }
 };
@@ -176,6 +184,22 @@ __decorate([
         typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
     ])
 ], UserResolver.prototype, "getUsers", null);
+__decorate([
+    (0, _typeGraphql).Query(()=>[
+            _user.User
+        ]
+    ),
+    __param(0, (0, _typeGraphql).Arg("playerIds", ()=>[
+            String
+        ]
+    )),
+    __param(1, (0, _typeGraphql).Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [
+        Array,
+        typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
+    ])
+], UserResolver.prototype, "getUsersById", null);
 __decorate([
     (0, _typeGraphql).Query(()=>[
             _user.User

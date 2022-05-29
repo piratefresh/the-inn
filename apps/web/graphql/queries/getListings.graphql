@@ -1,8 +1,0 @@
-query GetListings($limit: Int!, $cursor: String) {
-  getListings(limit: $limit, cursor: $cursor) {
-    hasMore
-    listings {
-      ...ListingSnippet
-    }
-  }
-}

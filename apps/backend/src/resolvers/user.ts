@@ -147,6 +147,8 @@ export class UserResolver {
 
     req.session.userId = user.id;
 
+    console.log("user: ", user);
+
     return Object.assign(new User(), user);
   }
 }

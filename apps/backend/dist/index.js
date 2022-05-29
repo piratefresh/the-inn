@@ -8,6 +8,8 @@ var _constants = require("./constants");
 var _typeGraphql = require("type-graphql");
 var _client = require("@prisma/client");
 var _user = require("./resolvers/user");
+var _campaign = require("./resolvers/campaign");
+var _review = require("./resolvers/review");
 var _express = _interopRequireDefault(require("express"));
 var _ioredis = _interopRequireDefault(require("ioredis"));
 var _cors = _interopRequireDefault(require("cors"));
@@ -31,10 +33,9 @@ const startServer = async ()=>{
     const app = module.exports = (0, _express).default();
     const RedisStore = (0, _connectRedis).default(_expressSession.default);
     const redis = new _ioredis.default({
-        host: "theinn.redis.cache.windows.net",
-        port: 6380,
-        password: "xpkqdr9nlXOUBVCXkrMbHihzDvVitpQaJAzCaIve6YY=",
-        tls: true
+        host: "redis-13673.c56.east-us.azure.cloud.redislabs.com",
+        port: 13673,
+        password: "QUVqyaYtox5FMjk5bbXLUrqwUm4es2ux"
     });
     app.use((0, _cors).default({
         origin: [
@@ -65,7 +66,9 @@ const startServer = async ()=>{
     const apolloServer = new _apolloServerExpress.ApolloServer({
         schema: await (0, _typeGraphql).buildSchema({
             resolvers: [
-                _user.UserResolver
+                _user.UserResolver,
+                _campaign.CampaignResolver,
+                _review.ReviewResolver
             ],
             validate: false
         }),

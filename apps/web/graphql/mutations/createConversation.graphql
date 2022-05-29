@@ -1,5 +1,0 @@
-mutation CreateConversation($input: CreateConversationInput!) {
-  createConversation(input: $input) {
-    ...ConversationSnippet
-  }
-}

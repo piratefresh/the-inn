@@ -1,30 +1,22 @@
 import NavStyles from "./Nav.module.css";
 import { NavItem } from "./NavItem";
-import { isServer } from "@utils/isServer";
-import { useLogoutMutation, useMeQuery } from "generated/graphql";
+import { useSession } from "next-auth/react";
+import { Avatar } from "@mantine/core";
 
 export const Nav = () => {
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
-  });
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  // console.log("user: ", data);
-  const user = data?.me?.username ? (
-    <>
-      <NavItem label={data.me.username} />
-      <NavItem
-        label="Logout"
-        onClick={() => {
-          logout();
-        }}
-      />
-    </>
-  ) : (
-    <>
-      <NavItem label="Login" href="/login" />
-      <NavItem label="Sign up" href="/signup" />
-    </>
+  const { data: session } = useSession();
+
+  const userInfo = session?.user && (
+    <div className="flex justify-end col-start-11 col-end-13">
+      <div className="flex items-center">
+        <div className="text-white mr-4"> {session.user.name}</div>
+
+        <Avatar src={session.user.image} />
+      </div>
+    </div>
   );
+
+  console.log("session: ", session);
   return (
     <nav className={`${NavStyles["nav"]}`}>
       <div className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack col-start-1 col-end-3">
@@ -36,7 +28,7 @@ export const Nav = () => {
         <NavItem label="Game Rules" href="/gamerules" />
       </div>
 
-      <div className="flex justify-end col-start-11 col-end-13">{user}</div>
+      {userInfo}
     </nav>
   );
 };

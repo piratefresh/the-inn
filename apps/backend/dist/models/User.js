@@ -8,6 +8,7 @@ var _statusType = require("../typedefs/StatusType");
 var _account = require("./Account");
 var _session = require("./Session");
 var _review = require("./Review");
+var _player = require("./Player");
 var _campaign = require("./Campaign");
 var __decorate = (void 0) && (void 0).__decorate || function(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -120,11 +121,11 @@ __decorate([
 ], User.prototype, "reviews", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>[
-            _campaign.Campaign
+            _player.Player
         ]
     ),
     __metadata("design:type", Array)
-], User.prototype, "Campaign", void 0);
+], User.prototype, "players", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>[
             _campaign.Campaign
@@ -132,12 +133,6 @@ __decorate([
     ),
     __metadata("design:type", Array)
 ], User.prototype, "Hosted", void 0);
-__decorate([
-    (0, _typeGraphql).Field({
-        nullable: true
-    }),
-    __metadata("design:type", String)
-], User.prototype, "campaignId", void 0);
 exports.User = User = __decorate([
     (0, _typeGraphql).ObjectType()
 ], User);

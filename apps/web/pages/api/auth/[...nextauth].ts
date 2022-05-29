@@ -1,64 +1,74 @@
 //https://github.com/tericcabrel/tech-career-growth/blob/e5cd22c8184b7324b952a352c35697cc52c5faad/src/pages/api/auth/%5B...nextauth%5D.ts
 
-import { LoginDocument } from "generated/graphql";
 import type { NextApiRequest, NextApiResponse } from "next";
-import NextAuth from "next-auth";
+import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { createClient } from "urql";
-import EmailProvider from "next-auth/providers/email";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "backend/dist/index";
-
-const client = createClient({
-  url: "https://localhost:4000/graphql",
-});
+import { client } from "@utils/createUrqlClient";
+import { SignInDocument } from "@generated/graphql";
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Do whatever you want here, before the request is passed down to `NextAuth`
   return await NextAuth(req, res, {
-    adapter: PrismaAdapter(prisma),
     providers: [
       //credentials for store
       CredentialsProvider({
-        id: "web_login",
-        name: "web_credentials",
         credentials: {
           email: {
-            label: "username",
+            label: "email",
             type: "text",
-            placeholder: "username",
           },
           password: { label: "password", type: "password" },
         },
         authorize: async (credentials, req) => {
           //return a user or null if there are problems with the credentials
           //database lookup
-          const user = await prisma.user.findUnique({
-            where: {
-              email: credentials.email,
-            },
-          });
+          const { email, password } = credentials;
 
-          if (user) {
-            return user;
+          const { data, error } = await client
+            .mutation(SignInDocument, {
+              usernameOrEmail: email,
+              password: password,
+            })
+            .toPromise();
+
+          console.log("data: ", data);
+
+          if (!data) {
+            throw new Error("Invalid Credentials");
+          }
+
+          if (data) {
+            return data.signin;
           }
 
           return null;
-          //   if (credentials.password === user.) {
-          //     const storeObj = {
-          //       id: store.id,
-          //       username: store.username,
-          //       role: store.role,
-          //     };
-          //     return storeObj;
-          //   } else {
-          //     //login failed
-          //     return null;
-          //   }
         },
       }),
     ],
+    callbacks: {
+      async jwt({ token, user, account, profile, isNewUser }) {
+        if (user) {
+          token.id = user.id;
+          token.name = `${user.firstName} ${user.lastName}`;
+          token.picture = user.image;
+        }
 
+        return token;
+      },
+
+      async session({ session, token, user }) {
+        const newSession: Session = {
+          ...session,
+          user: {
+            ...session.user,
+            //@ts-ignore
+            id: token.id as string,
+          },
+        };
+
+        return newSession;
+      },
+    },
     pages: {
       signIn: "/auth/signin",
     },
