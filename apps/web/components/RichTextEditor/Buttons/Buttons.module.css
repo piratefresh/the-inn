@@ -1,0 +1,9 @@
+.fontSizeContainer {
+  width: 100px;
+}
+.toggleButton {
+  @apply p-1;
+}
+.isActive {
+  @apply bg-black text-white rounded-md;
+}

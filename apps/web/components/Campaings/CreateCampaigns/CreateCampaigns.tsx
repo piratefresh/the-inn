@@ -1,47 +1,49 @@
 import { IStep1 } from "@features/createCampaign/createCampaignSlice";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 import { Typography } from "ui";
 import Image from "next/image";
 import React from "react";
 import { useRouter } from "next/router";
-import { Editor } from "@tiptap/react";
+import { Editor, JSONContent } from "@tiptap/react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCreateImageSignatureMutation } from "generated/graphql";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import { InputWrapper } from "@mantine/core";
+import { Button, InputWrapper } from "@mantine/core";
 import { Input } from "@components/ui/Input";
 import createCampaignStyles from "./CreateCampaign.module.css";
+import { Dropzone } from "@components/Dropzone/Dropzone";
+import InputGroup from "@components/ui/InputGroup";
+import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 
-const schema = yup
-  .object({
-    title: yup
-      .string()
-      .required("Title is required")
-      .min(1, "Title cannot be empty"),
-    description: yup
-      .string()
-      .required("Description is required")
-      .min(1, "Description cannot be empty"),
-    image: yup
-      .string()
-      .required("Header image is required")
-      .min(1, "Header cant be empty"),
-    gameSystem: yup.string().required("Please choose a game system"),
-    maxPartySize: yup.mixed().required("Party size needs be choosen"),
-    recommendedSkillLevel: yup
-      .string()
-      .required("Recommended skill level cant be empty"),
-  })
-  .required();
+// const schema = yup
+//   .object({
+//     title: yup
+//       .string()
+//       .required("Title is required")
+//       .min(1, "Title cannot be empty"),
+//     description: yup
+//       .string()
+//       .required("Description is required")
+//       .min(1, "Description cannot be empty"),
+//     image: yup
+//       .string()
+//       .required("Header image is required")
+//       .min(1, "Header cant be empty"),
+//     gameSystem: yup.string().required("Please choose a game system"),
+//     maxPartySize: yup.mixed().required("Party size needs be choosen"),
+//     recommendedSkillLevel: yup
+//       .string()
+//       .required("Recommended skill level cant be empty"),
+//   })
+//   .required();
 
 export const CreateCampaigns = () => {
-  const router = useRouter();
-  const richTextEditorRef = React.useRef<Editor>();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [, createImageSignature] = useCreateImageSignatureMutation();
-  const dispatch = useAppDispatch();
+  const richTextEditorRef = React.useRef<Editor>();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
+
   const {
     handleSubmit,
     control,
@@ -50,35 +52,11 @@ export const CreateCampaigns = () => {
     formState: { errors },
   } = useForm<IStep1>({
     defaultValues: createCampaignData,
-    resolver: yupResolver(schema),
   });
 
-  const imageFile = watch("image");
-
-  const handleOpenFile = React.useCallback(() => {
-    if (fileInputRef?.current) {
-      fileInputRef.current.click();
-    }
-  }, []);
-
-  const previewComponent =
-    (imageFile && imageFile.length > 0) || createCampaignData?.imageUrl ? (
-      <div
-        className={createCampaignStyles.previewComponent}
-        onClick={handleOpenFile}
-      >
-        <Image
-          src={
-            imageFile && imageFile.length > 0
-              ? URL.createObjectURL(imageFile[0])
-              : createCampaignData.imageUrl
-          }
-          alt="Header Image"
-          layout="fill"
-          objectFit="cover"
-        />
-      </div>
-    ) : null;
+  const onSubmit: SubmitHandler<IStep1> = async (data) => {
+    console.log("data: ", data);
+  };
 
   return (
     <div className="relative mx-auto" style={{ width: "700px" }}>
@@ -89,27 +67,74 @@ export const CreateCampaigns = () => {
       </div>
 
       {/* <InputWrapper className="my-8" label="" error={errors?.image}> */}
-      <InputWrapper className="my-8" label="">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <InputGroup className="my-8" label="*Title" error={errors?.title}>
+          <Controller
+            control={control}
+            name="title"
+            render={({ field }) => (
+              <Input
+                placeholder="title"
+                value={field.value}
+                onChange={(e) => field.onChange(e)}
+              />
+            )}
+          />
+        </InputGroup>
+
+        <InputGroup
+          className="my-8"
+          label="*What kinda quest do you have for our adventurers?"
+          error={errors.description}
+        >
+          <Controller
+            control={control}
+            name="jsonDescription"
+            render={({ field }) => (
+              <RichTextEditor
+                ref={richTextEditorRef}
+                onChange={(e) => {
+                  field.onChange(e);
+                  if (richTextEditorRef?.current) {
+                    setValue(
+                      "description",
+                      richTextEditorRef?.current.getText()
+                    );
+                  }
+                }}
+                value={field.value}
+                onBlur={field.onBlur}
+                name="jsonDescription"
+              />
+            )}
+          />
+          <span className="text-red-800">
+            {errors.description && errors.description.message}
+          </span>
+        </InputGroup>
+
+        <InputGroup
+          className="my-8"
+          label="*Header Image"
+          error={errors?.image}
+        ></InputGroup>
         <Controller
-          control={control}
           name="image"
-          render={({ field }) => (
-            <Input.File
-              ref={fileInputRef}
-              type="file"
-              onChange={(e) => {
-                const { files } = e.currentTarget;
-                if (files) {
-                  field.onChange(e.currentTarget.files);
-                }
+          control={control}
+          render={({ field: { onChange } }) => (
+            <Dropzone
+              onChange={(file: File) => {
+                console.log("file: ", file);
+                onChange(file);
               }}
             />
           )}
         />
-        <span className="text-red-800">
-          {errors.image && errors.image.message}
-        </span>
-      </InputWrapper>
+
+        <Button className="text-white" type="submit">
+          Next
+        </Button>
+      </form>
     </div>
   );
 };

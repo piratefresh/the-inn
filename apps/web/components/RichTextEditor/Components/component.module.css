@@ -1,0 +1,7 @@
+.selected {
+  @apply border-2 border-blue-500 z-10;
+}
+
+.wrapper {
+  @apply relative inline-block;
+}

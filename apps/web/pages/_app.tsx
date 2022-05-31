@@ -1,13 +1,14 @@
 import "../styles/globals.css";
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { Provider } from "react-redux";
 import Router from "next/router";
 import type { AppProps } from "next/app";
 import { MantineProvider } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 import ProgressBar from "@badrap/bar-of-progress";
 import { store } from "../store/store";
 import { withUrqlClient } from "next-urql";
-import { NextComponentType, NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import { SessionProvider } from "next-auth/react";
 import { RootLayout } from "@layouts/RootLayout";
 
@@ -82,9 +83,11 @@ function App({ Component, pageProps, router }: AppPropsWithLayout) {
     >
       <SessionProvider session={pageProps.session}>
         <Provider store={store}>
-          <Layout {...layoutProps}>
-            <Component {...pageProps} />
-          </Layout>
+          <NotificationsProvider position="top-center">
+            <Layout {...layoutProps}>
+              <Component {...pageProps} />
+            </Layout>
+          </NotificationsProvider>
         </Provider>
       </SessionProvider>
     </MantineProvider>
@@ -93,7 +96,7 @@ function App({ Component, pageProps, router }: AppPropsWithLayout) {
 
 export default withUrqlClient(
   () => ({
-    url: "https://localhost:4000/graphql",
+    url: "http://localhost:4000/graphql",
   }),
   { ssr: false }
 )(App);

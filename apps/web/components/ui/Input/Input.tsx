@@ -11,6 +11,7 @@ interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputRef?: string;
   name?: string;
   register?: any;
+  children?: React.ReactNode;
 }
 interface ITextAreaProps
   extends React.InputHTMLAttributes<HTMLTextAreaElement> {
@@ -128,6 +129,7 @@ const InputFile = React.forwardRef<HTMLInputElement, IInputProps>(
       placeholder,
       register,
       id,
+      children,
       ...props
     },
     ref
@@ -157,14 +159,7 @@ const InputFile = React.forwardRef<HTMLInputElement, IInputProps>(
           ref={ref}
           {...props}
         />
-        <div className="grid content-center h-full w-full">
-          <Text
-            className="font-trejanSans uppercase font-bold text-5xl"
-            align="center"
-          >
-            Upload Image
-          </Text>
-        </div>
+        <div className="grid content-center h-full w-full">{children}</div>
       </label>
     );
   }

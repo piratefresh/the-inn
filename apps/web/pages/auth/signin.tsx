@@ -1,6 +1,11 @@
 import { Input } from "@components/ui/Input";
+import InputGroup from "@components/ui/InputGroup";
+import { AuthLayout } from "@layouts/AuthLayout";
+
 import { Button } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 export interface SignInFormValues {
@@ -22,49 +27,84 @@ const SignIn = () => {
     console.log("data: ", data);
     const { usernameOrEmail, password } = data;
 
-    await signIn("credentials", {
+    const res = await signIn("credentials", {
       email: usernameOrEmail,
       password,
     });
+
+    if (res.ok) {
+      const name = `${session.user.name}`;
+      showNotification({
+        title: `Welcome back ${name}`,
+        message: "Enjoy your stay",
+      });
+    }
+    if (res.error) {
+      showNotification({
+        title: `Only accepted adventures can enter`,
+        message: `Reason for not accepted inn: ${res.error}`,
+      });
+    }
   };
 
-  console.log("session: ", session);
-
   return (
-    <div>
+    <div className="flex flex-col place-items-center justify-center items-center h-screen">
+      <div className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack">
+        The Inn
+      </div>
       <form
-        className="mt-8 space-y-6 bg-white"
+        className="flex flex-col mt-8 space-y-6 w-100 max-w-xl"
+        style={{ width: "600px" }}
         onSubmit={handleSubmit(onSubmit)}
       >
         <h2>SignIn</h2>
-        <Controller
-          control={control}
-          name="usernameOrEmail"
-          render={({ field }) => (
-            <Input
-              placeholder="Your email"
-              value={field.value}
-              onChange={(e) => field.onChange(e)}
-            />
-          )}
-        />
+        <InputGroup
+          className="my-8"
+          label="*Username or email"
+          error={errors?.usernameOrEmail}
+        >
+          <Controller
+            control={control}
+            name="usernameOrEmail"
+            render={({ field }) => (
+              <Input
+                placeholder="Your email"
+                value={field.value}
+                onChange={(e) => field.onChange(e)}
+              />
+            )}
+          />
+        </InputGroup>
 
-        <Controller
-          control={control}
-          name="password"
-          render={({ field }) => (
-            <Input
-              placeholder="password"
-              value={field.value}
-              onChange={(e) => field.onChange(e)}
-            />
-          )}
-        />
+        <InputGroup className="my-8" label="*Password" error={errors?.password}>
+          <Controller
+            control={control}
+            name="password"
+            render={({ field }) => (
+              <Input
+                placeholder="password"
+                value={field.value}
+                onChange={(e) => field.onChange(e)}
+              />
+            )}
+          />
+        </InputGroup>
 
         <Button type="submit">Sign-In</Button>
+
+        <p className="underline text-white">
+          Dont have an account? <Link href="/auth/signup">Sign up here</Link>
+        </p>
       </form>
     </div>
   );
+};
+
+SignIn.layoutProps = {
+  meta: {
+    title: "The Inn - Sign In",
+  },
+  Layout: AuthLayout,
 };
 
 export default SignIn;

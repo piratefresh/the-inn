@@ -77,7 +77,6 @@ const startServer = async () => {
 
   apolloServer.applyMiddleware({
     app,
-    cors: false,
   });
 
   app.listen(PORT, () => {

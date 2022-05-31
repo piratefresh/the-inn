@@ -1,0 +1,20 @@
+.root {
+  @apply sticky top-0 flex flex-row items-center py-2 bg-white rounded-md rounded-br-none rounded-bl-none z-10;
+  border-bottom: 3px solid transparent;
+  background-image: linear-gradient(#fcfcfc, #fcfcfc),
+    linear-gradient(90deg, #ffd166, #9f5e25);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.button {
+  box-sizing: border-box;
+  height: 28px;
+  min-height: 28px;
+  width: 28px;
+  min-width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

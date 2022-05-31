@@ -32,9 +32,9 @@ const ssrCache = ssrExchange({ isClient: !isServer });
 
 const client = createClient({
   url: process.env.API_SERVER,
-  fetchOptions: {
-    credentials: "include" as const,
-  },
+  // fetchOptions: {
+  //   credentials: "include" as const,
+  // },
   exchanges: [
     devtoolsExchange,
     dedupExchange,

@@ -1,0 +1,10 @@
+.mainSideSpacing {
+  padding: 0 100px;
+}
+
+.mainLayout {
+  @apply bg-black;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+}

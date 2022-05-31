@@ -1,17 +1,16 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "@store/store";
-import { JSONContent } from "@tiptap/react";
 
-interface IOption {
+export interface IFontOption {
   label: string;
   value: string;
-  id: number;
+  id: number | string;
 }
 
 // Define a type for the slice state
 export interface RichTextEditorState {
   activeEffect: string[];
-  fontSize: IOption;
+  fontSize: IFontOption;
 }
 
 // Define the initial state using that type
@@ -36,7 +35,7 @@ export const richTextEditorSlice = createSlice({
 
       state.activeEffect = filteredActiveEffect;
     },
-    setFontSize: (state, action: PayloadAction<{ font: IOption }>) => {
+    setFontSize: (state, action: PayloadAction<{ font: IFontOption }>) => {
       state.fontSize = action.payload.font;
     },
   },

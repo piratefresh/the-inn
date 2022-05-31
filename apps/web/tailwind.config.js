@@ -107,6 +107,8 @@ module.exports = {
   },
   variants: {
     typography: ["dark"],
+    margin: ["first", "last", "responsive"],
+    padding: ["first", "last", "responsive"],
   },
   plugins: [require("@tailwindcss/typography")],
 };

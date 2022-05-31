@@ -1,4 +1,4 @@
-//https://github.com/tericcabrel/tech-career-growth/blob/e5cd22c8184b7324b952a352c35697cc52c5faad/src/pages/api/auth/%5B...nextauth%5D.ts
+// https://github.com/tericcabrel/tech-career-growth/blob/e5cd22c8184b7324b952a352c35697cc52c5faad/src/pages/api/auth/%5B...nextauth%5D.ts
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { Session } from "next-auth";
@@ -46,6 +46,12 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       }),
     ],
     callbacks: {
+      async signIn({ user, account, profile, email, credentials }) {
+        return true;
+      },
+      async redirect({ url, baseUrl }) {
+        return `${baseUrl}`;
+      },
       async jwt({ token, user, account, profile, isNewUser }) {
         if (user) {
           token.id = user.id;
