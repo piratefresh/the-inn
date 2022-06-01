@@ -18,8 +18,13 @@ import { NonExistingCampaignError } from "@errors/NonExistingCampaignError";
 import { Experiance } from "@typedefs/Experiance";
 import { Difficulty } from "@typedefs/Difficulty";
 import { v2 as cloudinary } from "cloudinary";
-import { Player } from "@models/Player";
 import { User } from "@prisma/client";
+
+cloudinary.config({
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+});
 
 export const AuthResult = createUnionType({
   name: "AuthResult",
@@ -196,8 +201,9 @@ export class CampaignResolver {
     const signature: string = cloudinary.utils.api_sign_request(
       {
         timestamp,
+        folder: "The inn/campaignmedia",
       },
-      "J3sbYn9Kz2vYmW4peAyCn2SAsMA"
+      process.env.CLOUDINARY_API_SECRET as string
     );
     return { timestamp, signature };
   }

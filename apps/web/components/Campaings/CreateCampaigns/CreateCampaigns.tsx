@@ -1,4 +1,8 @@
-import { IStep1 } from "@features/createCampaign/createCampaignSlice";
+import {
+  IStep1,
+  setImageUrl,
+  step1,
+} from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Typography } from "ui";
@@ -16,6 +20,7 @@ import createCampaignStyles from "./CreateCampaign.module.css";
 import { Dropzone } from "@components/Dropzone/Dropzone";
 import InputGroup from "@components/ui/InputGroup";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
+import { useItemFinishListener, useUploady } from "@rpldy/uploady";
 
 // const schema = yup
 //   .object({
@@ -42,7 +47,9 @@ import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 export const CreateCampaigns = () => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const richTextEditorRef = React.useRef<Editor>();
+  const { processPending } = useUploady();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
+  const dispatch = useAppDispatch();
 
   const {
     handleSubmit,
@@ -55,8 +62,24 @@ export const CreateCampaigns = () => {
   });
 
   const onSubmit: SubmitHandler<IStep1> = async (data) => {
+    const res = processPending();
+    console.log("res: ", res);
     console.log("data: ", data);
+
+    dispatch(step1(data));
   };
+
+  useItemFinishListener((item) => {
+    console.log("item: ", item);
+    const secureUrl = item.uploadResponse?.data.secure_url;
+    setValue("imageUrl", secureUrl);
+
+    dispatch(
+      setImageUrl({
+        imageUrl: secureUrl,
+      })
+    );
+  });
 
   return (
     <div className="relative mx-auto" style={{ width: "700px" }}>
@@ -113,11 +136,6 @@ export const CreateCampaigns = () => {
           </span>
         </InputGroup>
 
-        <InputGroup
-          className="my-8"
-          label="*Header Image"
-          error={errors?.image}
-        ></InputGroup>
         <Controller
           name="image"
           control={control}

@@ -1,3 +1,4 @@
+import React from "react";
 import NavStyles from "./Nav.module.css";
 import { NavItem } from "./NavItem";
 import { useSession } from "next-auth/react";
@@ -7,24 +8,27 @@ import Link from "next/link";
 export const Nav = () => {
   const { data: session } = useSession();
 
-  const userInfo = session?.user ? (
-    <div className="flex items-center">
-      <div className="text-white mr-4"> {session.user.name}</div>
+  const userInfo = React.useMemo(
+    () =>
+      session?.user ? (
+        <div className="flex items-center">
+          <div className="text-white mr-4"> {session.user.name}</div>
 
-      <Avatar src={session.user.image} />
-    </div>
-  ) : (
-    <div className="flex flex-row text-white">
-      <div className="mr-4">
-        <Link href="/auth/signin">Sign In</Link>
-      </div>
-      <div>
-        <Link href="/auth/signup">Sign Up</Link>
-      </div>
-    </div>
+          <Avatar src={session.user.image} />
+        </div>
+      ) : (
+        <div className="flex flex-row text-white">
+          <div className="mr-4">
+            <Link href="/auth/signin">Sign In</Link>
+          </div>
+          <div>
+            <Link href="/auth/signup">Sign Up</Link>
+          </div>
+        </div>
+      ),
+    [session]
   );
 
-  console.log("session: ", session);
   return (
     <nav className={`${NavStyles["nav"]}`}>
       <div className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack col-start-1 col-end-3">

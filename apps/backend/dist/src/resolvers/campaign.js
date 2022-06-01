@@ -21,6 +21,11 @@ const NonExistingCampaignError_1 = require("@errors/NonExistingCampaignError");
 const Experiance_1 = require("@typedefs/Experiance");
 const Difficulty_1 = require("@typedefs/Difficulty");
 const cloudinary_1 = require("cloudinary");
+cloudinary_1.v2.config({
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+});
 exports.AuthResult = (0, type_graphql_1.createUnionType)({
     name: "AuthResult",
     types: () => [
@@ -226,7 +231,8 @@ let CampaignResolver = class CampaignResolver {
         const timestamp = Math.round(new Date().getTime() / 1000);
         const signature = cloudinary_1.v2.utils.api_sign_request({
             timestamp,
-        }, "J3sbYn9Kz2vYmW4peAyCn2SAsMA");
+            folder: "The inn/campaignmedia",
+        }, process.env.CLOUDINARY_API_SECRET);
         return { timestamp, signature };
     }
 };

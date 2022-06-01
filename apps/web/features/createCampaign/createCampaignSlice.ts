@@ -107,10 +107,13 @@ export const createCampaignSlice = createSlice({
       state.extraNote = action.payload.extraNote;
       state.jsonExtraNote = action.payload.jsonExtraNote;
     },
+    setImageUrl: (state, action: PayloadAction<{ imageUrl: string }>) => {
+      state.imageUrl = action.payload.imageUrl;
+    },
   },
 });
 
-export const { step1, step2, step3 } = createCampaignSlice.actions;
+export const { step1, step2, step3, setImageUrl } = createCampaignSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCreateCampaignState = (state: RootState) =>
