@@ -18,7 +18,7 @@ export const Dropzone = ({
 }: {
   onChange: (...event: any[]) => void;
 }) => {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([undefined, undefined, undefined]);
 
   const handleOnDrop = useCallback((item: { files: any[] }) => {
     // Do something with the files
@@ -69,9 +69,9 @@ export const Dropzone = ({
         {files.length > 0 &&
           files.map((file, index) => (
             <FileCard
-              key={file.name}
+              key={file?.name ?? ""}
               index={index}
-              id={file.name}
+              id={file?.name ?? ""}
               file={file}
               onRemoveCard={handleRemoveCard}
               onMoveCard={handleMoveCard}
