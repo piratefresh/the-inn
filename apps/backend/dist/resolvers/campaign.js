@@ -54,6 +54,11 @@ var __param = (void 0) && (void 0).__param || function(paramIndex, decorator) {
         decorator(target, key, paramIndex);
     };
 };
+_cloudinary.v2.config({
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME
+});
 const AuthResult = (0, _typeGraphql).createUnionType({
     name: "AuthResult",
     types: ()=>[
@@ -281,8 +286,9 @@ let CampaignResolver = class CampaignResolver {
     createImageSignature() {
         const timestamp = Math.round(new Date().getTime() / 1000);
         const signature = _cloudinary.v2.utils.api_sign_request({
-            timestamp
-        }, "J3sbYn9Kz2vYmW4peAyCn2SAsMA");
+            timestamp,
+            folder: "The inn/campaignmedia"
+        }, process.env.CLOUDINARY_API_SECRET);
         return {
             timestamp,
             signature

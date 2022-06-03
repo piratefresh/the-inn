@@ -86,8 +86,7 @@ const startServer = async ()=>{
     });
     await apolloServer.start();
     apolloServer.applyMiddleware({
-        app,
-        cors: false
+        app
     });
     app.listen(PORT, ()=>{
         console.log(`🚀 Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);

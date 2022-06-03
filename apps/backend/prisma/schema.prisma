@@ -6,12 +6,12 @@ generator client {
 }
 
 // Generator is a bit buggy on overwrties
-// generator PrismaTypeGraphQLTypesGenerator {
-//   provider     = "npx prisma-typegraphql-types-generator"
-//   modelsOutput = "./src/models"
-//   enumsOutput  = "./src/typedefs"
-//   // useYarn      = true
-// }
+generator PrismaTypeGraphQLTypesGenerator {
+  provider     = "npx prisma-typegraphql-types-generator"
+  modelsOutput = "./src/models"
+  enumsOutput  = "./src/typedefs"
+  // useYarn      = true
+}
 
 datasource db {
   provider = "postgresql"
@@ -157,8 +157,9 @@ model Campaign {
   players     Player[]
 
   // extra
-  tags  String[]
-  price Float?
+  tags       String[]
+  price      Float?
+  extraImage String[]
 
   @@map("campaigns")
 }

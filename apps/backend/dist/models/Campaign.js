@@ -180,6 +180,13 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Campaign.prototype, "price", void 0);
+__decorate([
+    (0, _typeGraphql).Field((_type)=>[
+            String
+        ]
+    ),
+    __metadata("design:type", Array)
+], Campaign.prototype, "extraImage", void 0);
 exports.Campaign = Campaign = __decorate([
     (0, _typeGraphql).ObjectType()
 ], Campaign);

@@ -99,5 +99,8 @@ export class Campaign {
   @Field((_type) => Float, { nullable: true })
   price?: number
 
+  @Field((_type) => [String])
+  extraImage: string[]
+
   // skip overwrite 👇
 }

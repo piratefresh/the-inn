@@ -1,0 +1,8 @@
+.root {
+  border-bottom: 3px solid transparent;
+  border-radius: 6px;
+  background-image: linear-gradient(#fcfcfc, #fcfcfc),
+    linear-gradient(#ffd166, #9f5e25);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}

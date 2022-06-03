@@ -1,4 +1,4 @@
-import { CreateCampaigns } from "@components/Campaings/CreateCampaigns";
+import { General } from "@components/Campaings/CreateCampaigns/General";
 import Uploady from "@rpldy/uploady";
 
 const links = [
@@ -7,7 +7,7 @@ const links = [
   { title: "Extra", href: "/campaign/createcampaign3" },
 ];
 
-const CreateCampaign = () => {
+const CreateGeneralCampaign = () => {
   return (
     <div className="bg-createCampaign px-100 py-10">
       <Uploady
@@ -21,10 +21,10 @@ const CreateCampaign = () => {
         autoUpload={false}
         noPortal
       >
-        <CreateCampaigns />
+        <General />
       </Uploady>
     </div>
   );
 };
 
-export default CreateCampaign;
+export default CreateGeneralCampaign;

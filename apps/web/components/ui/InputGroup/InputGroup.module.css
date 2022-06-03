@@ -13,7 +13,7 @@
   @apply inline-flex;
 }
 .mgui-input-label {
-  @apply block text-lg font-medium dark:text-gray-400;
+  @apply block text-brandYellow text-2xl font-medium dark:text-gray-400 mb-2;
 }
 .mgui-input-black-text {
   @apply text-black;

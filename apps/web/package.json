@@ -36,6 +36,7 @@
     "@urql/exchange-graphcache": "^4.3.6",
     "backend": "*",
     "cloudinary": "^1.30.0",
+    "clsx": "^1.1.1",
     "dnd-core": "^16.0.1",
     "graphql": "15.5.0",
     "graphql-fields": "^2.0.3",

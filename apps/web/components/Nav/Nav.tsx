@@ -35,7 +35,7 @@ export const Nav = () => {
         The Inn
       </div>
       <div className="flex justify-center col-start-5 col-end-9">
-        <NavItem label="Campaigns" href="/campaigns/createcampaign" />
+        <NavItem label="Campaigns" href="/campaigns/createcampaign/general" />
         <NavItem label="Homebrews" href="/homebrews" />
         <NavItem label="Game Rules" href="/gamerules" />
       </div>

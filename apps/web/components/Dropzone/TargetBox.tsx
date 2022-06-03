@@ -139,8 +139,10 @@ export const DropZone = ({
         type="file"
         autoComplete="off"
       />
-      <div className="h-full w-full flex place-items-center">
-        <p> {isActive ? "Release to drop" : "Drop File(s) Here"}</p>
+      <div className="h-full w-full flex place-items-center justify-center">
+        <h6 className="font-trejanSans font-black text-5xl">
+          {isActive ? "Upload Image" : "Drop Image Here"}
+        </h6>
       </div>
     </div>
   );

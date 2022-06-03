@@ -4,13 +4,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import update from "immutability-helper";
 import { DndProvider } from "react-dnd";
 import DropZoneStyles from "./Dropzone.module.css";
-import Uploady from "@rpldy/uploady";
+import { useRequestPreSend } from "@rpldy/uploady";
 import { DropZone } from "./TargetBox";
 import { FileCard } from "./FileCard";
-import { SignedUploadButton } from "./UploadButton";
 
-const CLOUD_NAME = "da91pbpmj",
-  API_KEY = "446621691525293";
+import clsx from "clsx";
+import { useCreateImageSignatureMutation } from "@generated/graphql";
 
 export const Dropzone = ({
   onChange,
@@ -18,7 +17,27 @@ export const Dropzone = ({
 }: {
   onChange: (...event: any[]) => void;
 }) => {
-  const [files, setFiles] = useState<File[]>([undefined, undefined, undefined]);
+  const [files, setFiles] = useState<File[]>([]);
+  const [, createImageSignature] = useCreateImageSignatureMutation();
+  useRequestPreSend(async ({ options }) => {
+    const { data: signatureData } = await createImageSignature();
+
+    if (signatureData) {
+      const { signature, timestamp } = signatureData.createImageSignature;
+
+      return {
+        options: {
+          destination: {
+            params: {
+              signature,
+              timestamp,
+              api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+            },
+          },
+        },
+      };
+    }
+  });
 
   const handleOnDrop = useCallback((item: { files: any[] }) => {
     // Do something with the files
@@ -54,10 +73,6 @@ export const Dropzone = ({
     setFiles(filteredFiles);
   };
 
-  console.log(
-    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`
-  );
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div
@@ -80,10 +95,11 @@ export const Dropzone = ({
 
         <DropZone
           onDrop={handleOnDrop}
-          className="col-span-3 relative h-48 bg-white p-5 border-dashed border-2 border-brandYellow cursor-pointer rounded-md overflow-hidden"
+          className={clsx(
+            "col-span-3 relative h-48 bg-white p-5 cursor-pointer rounded-md overflow-hidden border-dashed border-2 border-brandYellow",
+            DropZoneStyles["dropzoneHeight"]
+          )}
         />
-
-        <SignedUploadButton />
       </div>
     </DndProvider>
   );

@@ -141,6 +141,10 @@ __decorate([
     (0, type_graphql_1.Field)((_type) => type_graphql_1.Float, { nullable: true }),
     __metadata("design:type", Number)
 ], Campaign.prototype, "price", void 0);
+__decorate([
+    (0, type_graphql_1.Field)((_type) => [String]),
+    __metadata("design:type", Array)
+], Campaign.prototype, "extraImage", void 0);
 Campaign = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], Campaign);
