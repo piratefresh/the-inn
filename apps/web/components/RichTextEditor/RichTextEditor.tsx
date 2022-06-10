@@ -4,7 +4,7 @@ import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
-import { Editor, EditorContent, useEditor } from "@tiptap/react";
+import { Content, Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useCreateImageSignatureMutation } from "generated/graphql";
 import { ControllerRenderProps } from "react-hook-form";
@@ -16,6 +16,10 @@ import RichTextEditorStyles from "./RichTextEditor.module.css";
 import Toolbar from "./Toolbar";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { setFontSize } from "@features/richTextEditorSlice/richTextEditorSlice";
+import { ParseOptions } from "prosemirror-model";
+import { Indent } from "./Extensions/wix-indent";
+import ReactComponent from "./Extensions/react-component";
+// import { Indent } from "./Extensions/indent";
 
 interface GetSelectedNodesProps {
   editor: Editor;
@@ -23,6 +27,14 @@ interface GetSelectedNodesProps {
 
 interface RichTextEditorProps extends ControllerRenderProps<any> {
   content?: string;
+}
+
+interface InsertContentProps {
+  value: Content;
+  options?: {
+    parseOptions?: ParseOptions;
+    updateSelection?: boolean;
+  };
 }
 
 export const getSelectedNodes = ({ editor }: GetSelectedNodesProps) => {
@@ -41,6 +53,7 @@ export const RichTextEditor = React.forwardRef(
     const { onChange, value, onBlur } = props;
     const dispatch = useAppDispatch();
     const fontSize = useAppSelector((state) => state.richTextEditor.fontSize);
+    const pressedKeys = React.useRef<Record<string, any>>({});
 
     let classes = [
       RichTextEditorStyles["wrapper"],
@@ -78,7 +91,9 @@ export const RichTextEditor = React.forwardRef(
         Float.configure({
           types: ["image", "img"],
         }),
+        Indent,
         CustomImage(upload),
+        ReactComponent,
       ],
       content: value ? value : " ",
       onBlur() {
@@ -107,6 +122,23 @@ export const RichTextEditor = React.forwardRef(
       getJSON: () => {
         const json = editorRef.current?.getJSON();
         return json;
+      },
+      insertContent: (
+        value: InsertContentProps["value"],
+        options: InsertContentProps["options"]
+      ) => {
+        editorRef.current?.commands.insertContent(value, options);
+      },
+      insertContentAt: (
+        position: number | Range,
+        value: InsertContentProps["value"],
+        options: InsertContentProps["options"]
+      ) => {
+        editorRef.current?.commands.insertContentAt(
+          editor?.state.selection.to,
+          value,
+          options
+        );
       },
     }));
 
@@ -176,6 +208,18 @@ export const RichTextEditor = React.forwardRef(
             className={RichTextEditorStyles["root"]}
             editor={editor}
             onClick={handleOnClick}
+            onKeyDown={(e) => {
+              pressedKeys.current[e.key] = e.key;
+              if (
+                (pressedKeys.current["["] || pressedKeys.current["]"]) &&
+                pressedKeys.current.Meta
+              ) {
+                e.preventDefault();
+              }
+            }}
+            onKeyUp={() => {
+              pressedKeys.current = {};
+            }}
           />
         </div>
       </>

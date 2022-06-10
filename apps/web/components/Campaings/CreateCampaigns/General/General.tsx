@@ -5,7 +5,7 @@ import {
 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Typography } from "ui";
-import React from "react";
+import React, { useCallback } from "react";
 import { Editor } from "@tiptap/react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -97,6 +97,15 @@ export const General = () => {
     router.push("./location");
   };
 
+  const handleOnSnipping = useCallback(() => {
+    console.log(richTextEditorRef);
+    // richTextEditorRef.current?.insertContent("text");
+
+    richTextEditorRef.current?.insertContent(
+      "<react-component label='test'><p>This is editable.</p></react-component>"
+    );
+  }, [richTextEditorRef]);
+
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">
@@ -136,6 +145,8 @@ export const General = () => {
             )}
           />
         </InputGroup>
+
+        <Button onClick={handleOnSnipping}>Add Text to edtiro</Button>
 
         <InputGroup
           className="my-8"

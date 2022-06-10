@@ -1,0 +1,1 @@
+https://github.com/zofiag/text-editors-playground/tree/7fedf8b9885665ea2c94a4eada6a4f73c7a4be1f/src/tiptap/extensions/mention
