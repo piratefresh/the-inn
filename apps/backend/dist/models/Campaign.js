@@ -7,7 +7,10 @@ var _typeGraphql = require("type-graphql");
 var _experiance = require("../typedefs/Experiance");
 var _difficulty = require("../typedefs/Difficulty");
 var _user = require("./User");
-var _player = require("./Player");
+var _membership = require("./Membership");
+var _domain = require("./Domain");
+var _item = require("./Item");
+var _npc = require("./Npc");
 var __decorate = (void 0) && (void 0).__decorate || function(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -161,11 +164,18 @@ __decorate([
 ], Campaign.prototype, "game_master", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>[
-            _player.Player
+            _membership.Membership
         ]
     ),
     __metadata("design:type", Array)
-], Campaign.prototype, "players", void 0);
+], Campaign.prototype, "memberships", void 0);
+__decorate([
+    (0, _typeGraphql).Field((_type)=>[
+            _domain.Domain
+        ]
+    ),
+    __metadata("design:type", Array)
+], Campaign.prototype, "Domain", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>[
             String
@@ -187,6 +197,32 @@ __decorate([
     ),
     __metadata("design:type", Array)
 ], Campaign.prototype, "extraImage", void 0);
+__decorate([
+    (0, _typeGraphql).Field((_type)=>_item.Item
+    , {
+        nullable: true
+    }),
+    __metadata("design:type", typeof _item.Item === "undefined" ? Object : _item.Item)
+], Campaign.prototype, "Item", void 0);
+__decorate([
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], Campaign.prototype, "itemId", void 0);
+__decorate([
+    (0, _typeGraphql).Field((_type)=>_npc.Npc
+    , {
+        nullable: true
+    }),
+    __metadata("design:type", typeof _npc.Npc === "undefined" ? Object : _npc.Npc)
+], Campaign.prototype, "Npc", void 0);
+__decorate([
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], Campaign.prototype, "npcId", void 0);
 exports.Campaign = Campaign = __decorate([
     (0, _typeGraphql).ObjectType()
 ], Campaign);

@@ -3,6 +3,10 @@ import { Experiance } from '../typedefs/Experiance'
 import { Difficulty } from '../typedefs/Difficulty'
 import { User } from './User'
 import { Player } from './Player'
+import { Membership } from './Membership'
+import { Domain } from './Domain'
+import { Item } from './Item'
+import { Npc } from './Npc'
 
 @ObjectType()
 export class Campaign {
@@ -90,8 +94,11 @@ export class Campaign {
   @Field((_type) => User)
   game_master: User
 
-  @Field((_type) => [Player])
-  players: Player[]
+  @Field((_type) => [Membership])
+  memberships: Membership[]
+
+  @Field((_type) => [Domain])
+  Domain: Domain[]
 
   @Field((_type) => [String])
   tags: string[]
@@ -100,6 +107,18 @@ export class Campaign {
   price?: number
 
   @Field((_type) => [String])
-  extraImage: string[]
+  gallery: string[]
+
+  @Field((_type) => Item, { nullable: true })
+  Item?: Item
+
+  @Field({ nullable: true })
+  itemId?: string
+
+  @Field((_type) => Npc, { nullable: true })
+  Npc?: Npc
+
+  @Field({ nullable: true })
+  npcId?: string
 
   // skip overwrite 👇

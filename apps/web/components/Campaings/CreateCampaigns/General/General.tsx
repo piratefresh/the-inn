@@ -102,7 +102,7 @@ export const General = () => {
     // richTextEditorRef.current?.insertContent("text");
 
     richTextEditorRef.current?.insertContent(
-      "<react-component label='test'><p>This is editable.</p></react-component>"
+      "<react-component label='test' title='Thunderfury, Blessed Blade of the Windseeker' description='Blasts your enemy with lightning, dealing 15 Nature damage and then jumping to additional nearby enemies.  Each jump reduces that victim's Nature resistance by 1. Affects 5 targets. Your primary target is also consumed by a cyclone, slowing its attack speed by 20% for 12 sec.'><p>This is editable.</p></react-component>"
     );
   }, [richTextEditorRef]);
 

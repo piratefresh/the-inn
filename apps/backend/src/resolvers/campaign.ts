@@ -19,6 +19,7 @@ import { Experiance } from "@typedefs/Experiance";
 import { Difficulty } from "@typedefs/Difficulty";
 import { v2 as cloudinary } from "cloudinary";
 import { User } from "@prisma/client";
+import { MembershipRole } from "@typedefs/MembershipRole";
 
 cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -121,7 +122,7 @@ export class CampaignResolver {
       },
       include: {
         game_master: true,
-        players: {
+        memberships: {
           select: {
             user: true,
             campaign: true,
@@ -156,18 +157,19 @@ export class CampaignResolver {
     @Ctx() { prisma, res, req }: MyContext
   ) {
     try {
-      const players = await prisma.user.findMany({
+      const members = await prisma.user.findMany({
         where: {
           id: { in: addPlayerCampaignInput.playerIds },
         },
       });
 
-      const playersArr = await players.map((player: User) => ({
+      const playersArr = await members.map((player: User) => ({
         userId: player.id,
         campaignId: addPlayerCampaignInput.campaignId,
+        role: MembershipRole.PLAYER,
       }));
 
-      const createdPlayers = await prisma.player.createMany({
+      const createdPlayers = await prisma.membership.createMany({
         data: playersArr,
         skipDuplicates: true,
       });
@@ -177,7 +179,7 @@ export class CampaignResolver {
             id: addPlayerCampaignInput.campaignId,
           },
           include: {
-            players: {
+            memberships: {
               select: {
                 user: true,
                 campaign: true,

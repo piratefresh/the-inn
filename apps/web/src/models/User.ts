@@ -5,6 +5,8 @@ import { Session } from './Session'
 import { Review } from './Review'
 import { Player } from './Player'
 import { Campaign } from './Campaign'
+import { Domain } from './Domain'
+import { Membership } from './Membership'
 
 @ObjectType()
 export class User {
@@ -62,10 +64,13 @@ export class User {
   @Field((_type) => [Review])
   reviews: Review[]
 
-  @Field((_type) => [Player])
-  players: Player[]
-
   @Field((_type) => [Campaign])
   Hosted: Campaign[]
+
+  @Field((_type) => [Domain])
+  domain: Domain[]
+
+  @Field((_type) => [Membership])
+  memberships: Membership[]
 
   // skip overwrite 👇
