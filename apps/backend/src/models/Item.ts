@@ -1,16 +1,23 @@
-import { Field, ObjectType, ID, Float, Int } from 'type-graphql'
-import { Campaign } from './Campaign'
+import { Field, ObjectType, Int, Float } from 'type-graphql'
+import { Spell } from './Spell'
+import { GameSystem } from './GameSystem'
 
 @ObjectType()
 export class Item {
-  @Field((_type) => ID)
-  id: string
+  @Field((_type) => Int)
+  id: number
 
   @Field()
   name: string
 
   @Field((_type) => [String])
   stats: string[]
+
+  @Field((_type) => [String])
+  attributes: string[]
+
+  @Field()
+  location: string
 
   @Field((_type) => Float, { nullable: true })
   sell_price?: number
@@ -21,17 +28,23 @@ export class Item {
   @Field()
   description: string
 
-  @Field((_type) => [Campaign])
-  Campaign: Campaign[]
+  @Field((_type) => [Spell])
+  spells: Spell[]
 
-  @Field((_type) => Int)
-  campaignId: number
+  @Field()
+  rarity: string
+
+  @Field()
+  equipment_slot: string
 
   @Field()
   createdAt: Date
 
   @Field()
   updatedAt: Date
+
+  @Field((_type) => [GameSystem])
+  gameSystem: GameSystem[]
 
   // skip overwrite 👇
 }

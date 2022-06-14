@@ -2,7 +2,7 @@
 CREATE TYPE "Difficulty" AS ENUM ('Low', 'Medium', 'High', 'Any');
 
 -- CreateEnum
-CREATE TYPE "Experiance" AS ENUM ('Beginner', 'Advanced', 'All');
+CREATE TYPE "Experience" AS ENUM ('Beginner', 'Advanced', 'All');
 
 -- CreateEnum
 CREATE TYPE "StatusType" AS ENUM ('ONLINE', 'IDLE', 'DND', 'OFFLINE');
@@ -47,21 +47,30 @@ CREATE TABLE "verificationtokens" (
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
-    "name" TEXT NOT NULL,
-    "experience" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "experience" "Experience" NOT NULL DEFAULT E'All',
     "twitter" TEXT,
     "facebook" TEXT,
     "discord" TEXT,
     "youtube" TEXT,
     "status" "StatusType" NOT NULL DEFAULT E'ONLINE',
-    "campaignId" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Player" (
+    "campaignId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "Player_pkey" PRIMARY KEY ("campaignId","userId")
 );
 
 -- CreateTable
@@ -69,7 +78,7 @@ CREATE TABLE "campaigns" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "gmId" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "summary" TEXT NOT NULL,
     "additional_details" TEXT,
     "note" TEXT,
@@ -85,8 +94,9 @@ CREATE TABLE "campaigns" (
     "endDate" TIMESTAMP(3) NOT NULL,
     "days" TEXT[],
     "time_periods" TEXT[],
+    "gmId" TEXT NOT NULL,
     "game_system" TEXT NOT NULL,
-    "experiance" "Experiance" NOT NULL DEFAULT E'All',
+    "experience" "Experience" NOT NULL DEFAULT E'All',
     "voip_system" TEXT,
     "max_seats" INTEGER NOT NULL,
     "puzzles" "Difficulty" NOT NULL DEFAULT E'Any',
@@ -94,6 +104,7 @@ CREATE TABLE "campaigns" (
     "roleplay" "Difficulty" NOT NULL DEFAULT E'Any',
     "tags" TEXT[],
     "price" DOUBLE PRECISION,
+    "extraImage" TEXT[],
 
     CONSTRAINT "campaigns_pkey" PRIMARY KEY ("id")
 );
@@ -108,12 +119,6 @@ CREATE TABLE "reviews" (
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "_players" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
 );
 
 -- CreateIndex
@@ -131,12 +136,6 @@ CREATE UNIQUE INDEX "verificationtokens_identifier_token_key" ON "verificationto
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
--- CreateIndex
-CREATE UNIQUE INDEX "_players_AB_unique" ON "_players"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_players_B_index" ON "_players"("B");
-
 -- AddForeignKey
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -144,13 +143,13 @@ ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Player" ADD CONSTRAINT "Player_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Player" ADD CONSTRAINT "Player_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "campaigns" ADD CONSTRAINT "campaigns_gmId_fkey" FOREIGN KEY ("gmId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_players" ADD CONSTRAINT "_players_A_fkey" FOREIGN KEY ("A") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_players" ADD CONSTRAINT "_players_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

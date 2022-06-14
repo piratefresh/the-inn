@@ -1,10 +1,10 @@
 import { Field, ObjectType, ID } from 'type-graphql'
+import { Experience } from '../typedefs/Experience'
 import { StatusType } from '../typedefs/StatusType'
 import { Account } from './Account'
 import { Session } from './Session'
 import { Review } from './Review'
 import { Campaign } from './Campaign'
-import { Domain } from './Domain'
 import { Membership } from './Membership'
 
 @ObjectType()
@@ -36,8 +36,8 @@ export class User {
   @Field()
   lastName: string
 
-  @Field()
-  experience: string
+  @Field((_type) => Experience)
+  experience: Experience
 
   @Field({ nullable: true })
   twitter?: string
@@ -65,9 +65,6 @@ export class User {
 
   @Field((_type) => [Campaign])
   Hosted: Campaign[]
-
-  @Field((_type) => [Domain])
-  domain: Domain[]
 
   @Field((_type) => [Membership])
   memberships: Membership[]

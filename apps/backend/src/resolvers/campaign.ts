@@ -15,11 +15,12 @@ import { FieldsValidationError } from "@errors/FieldsValidationError";
 import { BadCredentialsError } from "@errors/BadCredentialsError";
 import { Campaign } from "@models/Campaign";
 import { NonExistingCampaignError } from "@errors/NonExistingCampaignError";
-import { Experiance } from "@typedefs/Experiance";
+
 import { Difficulty } from "@typedefs/Difficulty";
 import { v2 as cloudinary } from "cloudinary";
 import { User } from "@prisma/client";
 import { MembershipRole } from "@typedefs/MembershipRole";
+import { Experience } from "@typedefs/Experience";
 
 cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -73,8 +74,8 @@ export class CreateCampaignInput {
   game_system: string;
   @Field()
   max_seats: number;
-  @Field(() => Experiance)
-  experiance: Experiance;
+  @Field(() => Experience)
+  experience: Experience;
   @Field(() => Difficulty)
   puzzles: Difficulty;
   @Field(() => Difficulty)

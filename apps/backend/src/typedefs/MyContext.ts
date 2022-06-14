@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { Redis } from "ioredis";
 import { PusherChannel } from "graphql-pusher-subscriptions";
-
 interface MyContext {
   prisma: PrismaClient;
   pubsub: PusherChannel;
@@ -12,5 +11,4 @@ interface MyContext {
   wsHeaders: any;
   userId?: string;
 }
-
 export { MyContext };

@@ -13,6 +13,7 @@ import connectRedis from "connect-redis";
 import { ApolloServer } from "apollo-server-express";
 
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import { seedDB } from "../prisma/seed";
 
 export const prisma = new PrismaClient({
   log: ["query"],
@@ -88,7 +89,7 @@ const startServer = async () => {
     // );
   });
 };
-
+seedDB();
 startServer().catch((err) => {
   console.error(err);
 });

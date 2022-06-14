@@ -1,11 +1,9 @@
 import { Field, ObjectType, ID, Float, Int } from 'type-graphql'
-import { Experiance } from '../typedefs/Experiance'
+import { Experience } from '../typedefs/Experience'
 import { Difficulty } from '../typedefs/Difficulty'
 import { User } from './User'
 import { Membership } from './Membership'
-import { Domain } from './Domain'
-import { Item } from './Item'
-import { Npc } from './Npc'
+import { GameSystem } from './GameSystem'
 
 @ObjectType()
 export class Campaign {
@@ -20,9 +18,6 @@ export class Campaign {
 
   @Field()
   title: string
-
-  @Field()
-  gmId: string
 
   @Field()
   summary: string
@@ -51,12 +46,6 @@ export class Campaign {
   @Field((_type) => Float)
   lng: number
 
-  @Field((_type) => Float, { nullable: true })
-  geolocation_lat?: number
-
-  @Field((_type) => Float, { nullable: true })
-  geolocation_lng?: number
-
   @Field()
   startDate: Date
 
@@ -69,11 +58,8 @@ export class Campaign {
   @Field((_type) => [String])
   time_periods: string[]
 
-  @Field()
-  game_system: string
-
-  @Field((_type) => Experiance)
-  experiance: Experiance
+  @Field((_type) => Experience)
+  experience: Experience
 
   @Field({ nullable: true })
   voip_system?: string
@@ -90,14 +76,11 @@ export class Campaign {
   @Field((_type) => Difficulty)
   roleplay: Difficulty
 
+  @Field()
+  gmId: string
+
   @Field((_type) => User)
   game_master: User
-
-  @Field((_type) => [Membership])
-  memberships: Membership[]
-
-  @Field((_type) => [Domain])
-  Domain: Domain[]
 
   @Field((_type) => [String])
   tags: string[]
@@ -105,20 +88,11 @@ export class Campaign {
   @Field((_type) => Float, { nullable: true })
   price?: number
 
-  @Field((_type) => [String])
-  gallery: string[]
+  @Field((_type) => [Membership])
+  memberships: Membership[]
 
-  @Field((_type) => Item, { nullable: true })
-  Item?: Item
-
-  @Field({ nullable: true })
-  itemId?: string
-
-  @Field((_type) => Npc, { nullable: true })
-  Npc?: Npc
-
-  @Field({ nullable: true })
-  npcId?: string
+  @Field((_type) => [GameSystem])
+  GameSystem: GameSystem[]
 
   // skip overwrite 👇
 }

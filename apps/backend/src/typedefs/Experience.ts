@@ -1,10 +1,10 @@
 import { registerEnumType } from 'type-graphql'
 
-export enum Experiance {
+export enum Experience {
   Beginner = 'Beginner',
   Advanced = 'Advanced',
   All = 'All'
 }
-registerEnumType(Experiance, {
-    name: 'Experiance',
+registerEnumType(Experience, {
+    name: 'Experience',
 })

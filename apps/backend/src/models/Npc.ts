@@ -1,10 +1,11 @@
-import { Field, ObjectType, ID, Float, Int } from 'type-graphql'
-import { Campaign } from './Campaign'
+import { Field, ObjectType, Int } from 'type-graphql'
+import { Family } from './Family'
+import { GameSystem } from './GameSystem'
 
 @ObjectType()
 export class Npc {
-  @Field((_type) => ID)
-  id: string
+  @Field((_type) => Int)
+  id: number
 
   @Field()
   name: string
@@ -12,17 +13,14 @@ export class Npc {
   @Field((_type) => [String])
   stats: string[]
 
-  @Field((_type) => Float, { nullable: true })
-  sell_price?: number
-
-  @Field((_type) => Float, { nullable: true })
-  buy_price?: number
+  @Field()
+  location: string
 
   @Field()
   description: string
 
-  @Field((_type) => [Campaign])
-  Campaign: Campaign[]
+  @Field((_type) => Family)
+  family: Family
 
   @Field((_type) => Int)
   campaignId: number
@@ -32,6 +30,12 @@ export class Npc {
 
   @Field()
   updatedAt: Date
+
+  @Field()
+  familyId: string
+
+  @Field((_type) => [GameSystem])
+  gameSystem: GameSystem[]
 
   // skip overwrite 👇
 }
