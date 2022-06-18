@@ -89,7 +89,7 @@ const startServer = async () => {
     // );
   });
 };
-seedDB();
+// seedDB();
 startServer().catch((err) => {
   console.error(err);
 });

@@ -19,6 +19,7 @@ import { setFontSize } from "@features/richTextEditorSlice/richTextEditorSlice";
 import { ParseOptions } from "prosemirror-model";
 import { Indent } from "./Extensions/wix-indent";
 import ReactComponent from "./Extensions/react-component";
+import { uploadImage } from "@utils/uploadImage";
 // import { Indent } from "./Extensions/indent";
 
 interface GetSelectedNodesProps {
@@ -29,7 +30,7 @@ interface RichTextEditorProps extends ControllerRenderProps<any> {
   content?: string;
 }
 
-interface InsertContentProps {
+export interface InsertContentProps {
   value: Content;
   options?: {
     parseOptions?: ParseOptions;
@@ -143,26 +144,14 @@ export const RichTextEditor = React.forwardRef(
     }));
 
     async function upload(file: File) {
-      const url = `https://api.cloudinary.com/v1_1/da91pbpmj/upload`;
       const { data: signatureData } = await createImageSignature();
 
       if (signatureData) {
         const { signature, timestamp } = signatureData.createImageSignature;
-        let formData = new FormData();
-        formData.append("file", file);
 
-        formData.append("signature", signature);
-        formData.append("timestamp", timestamp.toString());
-        formData.append("api_key", "446621691525293");
-        const response = await fetch(url, {
-          method: "post",
-          body: formData,
-        });
-        const data = await response.json();
-
+        const data = await uploadImage(file, signature, timestamp);
         return data.secure_url;
       }
-      //   return response.data.src;
     }
 
     const handleOnClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

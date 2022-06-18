@@ -42,6 +42,10 @@ import GeneralStyles from "./General.module.css";
 //   })
 //   .required();
 
+export interface CustomEditorProps extends Editor {
+  insertContent: (string) => void;
+}
+
 const games = [
   { label: "Dungeons and Dragons", value: "Dungeons and Dragons" },
   { label: "Pathfinder", value: "Pathfinder" },
@@ -63,7 +67,7 @@ const skillLevels = [
 
 export const General = () => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const richTextEditorRef = React.useRef<Editor>();
+  const richTextEditorRef = React.useRef<CustomEditorProps>();
   const { processPending } = useUploady();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
@@ -116,7 +120,7 @@ export const General = () => {
 
       {/* <InputWrapper className="my-8" label="" error={errors?.image}> */}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
+        {/* <Controller
           name="image"
           control={control}
           render={({ field: { onChange } }) => (
@@ -126,7 +130,7 @@ export const General = () => {
               }}
             />
           )}
-        />
+        /> */}
 
         <InputGroup
           className="my-8"

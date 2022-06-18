@@ -105,6 +105,8 @@ export const ResizeImageComponent = ({
       as="span"
       className={wrapperClases.join(" ")}
       style={{ float: node?.attrs.textAlign ?? "none" }}
+      height={props.node?.attrs.height}
+      width={props.node?.attrs.width}
     >
       {/* <span
         onMouseDown={handler}

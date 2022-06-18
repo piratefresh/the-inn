@@ -3,13 +3,14 @@ export const uploadImage = async (
   signature: string,
   timestamp: number
 ) => {
-  const url = `https://api.cloudinary.com/v1_1/da91pbpmj/upload`;
+  const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`;
 
   const formData = new FormData();
   formData.append("file", picture);
   formData.append("signature", signature);
   formData.append("timestamp", timestamp.toString());
-  formData.append("api_key", "446621691525293");
+  formData.append("folder", "The inn/campaignmedia");
+  formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
 
   const response = await fetch(url, {
     method: "post",

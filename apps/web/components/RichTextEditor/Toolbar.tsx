@@ -63,11 +63,12 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
     const { data: signatureData } = await createImageSignature();
     if (signatureData && files && files.length > 0) {
       const { signature, timestamp } = signatureData.createImageSignature;
+      console.log("ffile:", files[0]);
       const image = await uploadImage(files[0], signature, timestamp);
 
       return editor.chain().focus().setImage({ src: image.secure_url }).run();
     }
-  }, [editor, fileInput]);
+  }, [editor, fileInput, createImageSignature]);
 
   const openFileBrowser = React.useCallback(
     () => fileInput.current?.click(),
