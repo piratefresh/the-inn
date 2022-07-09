@@ -1,7 +1,8 @@
+// @ts-nocheck
 import { Editor, NodeViewWrapper } from "@tiptap/react";
 import React from "react";
 import Resizer, { Direction } from "../Resizer/resizer";
-import resizeImageComponentStyles from "./ResizeImage.module";
+import resizeImageComponentStyles from "./ResizeImage.module.css";
 
 interface IResizeImageComponent {
   isDraggable: boolean;
@@ -108,6 +109,7 @@ export const ResizeImageComponent = ({
         draggable={true}
         data-drag-handle
         onLoad={(e) => handleAspectRatio(e)}
+        alt="test"
       />
     </NodeViewWrapper>
   );

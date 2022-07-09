@@ -9,9 +9,10 @@ var _fieldsValidationError = require("../errors/FieldsValidationError");
 var _badCredentialsError = require("../errors/BadCredentialsError");
 var _campaign = require("../models/Campaign");
 var _nonExistingCampaignError = require("../errors/NonExistingCampaignError");
-var _experiance = require("../typedefs/Experiance");
 var _difficulty = require("../typedefs/Difficulty");
 var _cloudinary = require("cloudinary");
+var _membershipRole = require("../typedefs/MembershipRole");
+var _experience = require("../typedefs/Experience");
 function _defineProperty(obj, key, value) {
     if (key in obj) {
         Object.defineProperty(obj, key, {
@@ -143,10 +144,10 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateCampaignInput.prototype, "max_seats", void 0);
 __decorate([
-    (0, _typeGraphql).Field(()=>_experiance.Experiance
+    (0, _typeGraphql).Field(()=>_experience.Experience
     ),
-    __metadata("design:type", typeof _experiance.Experiance === "undefined" ? Object : _experiance.Experiance)
-], CreateCampaignInput.prototype, "experiance", void 0);
+    __metadata("design:type", typeof _experience.Experience === "undefined" ? Object : _experience.Experience)
+], CreateCampaignInput.prototype, "experience", void 0);
 __decorate([
     (0, _typeGraphql).Field(()=>_difficulty.Difficulty
     ),
@@ -222,7 +223,7 @@ let CampaignResolver = class CampaignResolver {
             },
             include: {
                 game_master: true,
-                players: {
+                memberships: {
                     select: {
                         user: true,
                         campaign: true
@@ -245,19 +246,20 @@ let CampaignResolver = class CampaignResolver {
     }
     async addCampaignPlayer(addPlayerCampaignInput, { prisma , res , req  }) {
         try {
-            const players = await prisma.user.findMany({
+            const members = await prisma.user.findMany({
                 where: {
                     id: {
                         in: addPlayerCampaignInput.playerIds
                     }
                 }
             });
-            const playersArr = await players.map((player)=>({
+            const playersArr = await members.map((player)=>({
                     userId: player.id,
-                    campaignId: addPlayerCampaignInput.campaignId
+                    campaignId: addPlayerCampaignInput.campaignId,
+                    role: _membershipRole.MembershipRole.PLAYER
                 })
             );
-            const createdPlayers = await prisma.player.createMany({
+            const createdPlayers = await prisma.membership.createMany({
                 data: playersArr,
                 skipDuplicates: true
             });
@@ -267,7 +269,7 @@ let CampaignResolver = class CampaignResolver {
                         id: addPlayerCampaignInput.campaignId
                     },
                     include: {
-                        players: {
+                        memberships: {
                             select: {
                                 user: true,
                                 campaign: true

@@ -11,7 +11,6 @@ import {
 import argon2 from "argon2";
 import { User } from "@models/User";
 import { MyContext } from "@typedefs/MyContext";
-import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 import { setToken } from "@utils/setToken";
 import { ExistingUserError } from "@errors/ExisitingUserError";
@@ -136,7 +135,7 @@ export class UserResolver {
         email: usernameOrEmail,
       },
     });
-
+    console.log("user: ", user);
     if (!user) return new NonExistingUserError();
 
     const authenticated = await argon2.verify(user.password, password);
@@ -146,8 +145,6 @@ export class UserResolver {
     setToken(user, res);
 
     req.session.userId = user.id;
-
-    console.log("user: ", user);
 
     return Object.assign(new User(), user);
   }

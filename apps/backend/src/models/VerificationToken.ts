@@ -1,15 +1,15 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class VerificationToken {
   @Field()
-  identifier: string
+  identifier: string;
 
   @Field()
-  token: string
+  token: string;
 
   @Field()
-  expires: Date
+  expires: Date;
 
   // skip overwrite 👇
 }

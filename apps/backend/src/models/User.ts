@@ -1,73 +1,73 @@
-import { Field, ObjectType, ID } from 'type-graphql'
-import { Experience } from '../typedefs/Experience'
-import { StatusType } from '../typedefs/StatusType'
-import { Account } from './Account'
-import { Session } from './Session'
-import { Review } from './Review'
-import { Campaign } from './Campaign'
-import { Membership } from './Membership'
+import { Field, ObjectType, ID } from "type-graphql";
+import { Experience } from "../typedefs/Experience";
+import { StatusType } from "../typedefs/StatusType";
+import { Account } from "./Account";
+import { Session } from "./Session";
+import { Review } from "./Review";
+import { Campaign } from "./Campaign";
+import { Membership } from "./Membership";
 
 @ObjectType()
 export class User {
   @Field((_type) => ID)
-  id: string
+  id: string;
 
   @Field()
-  password: string
+  password: string;
 
   @Field()
-  createdAt: Date
+  createdAt: Date;
 
   @Field()
-  updatedAt: Date
+  updatedAt: Date;
 
   @Field({ nullable: true })
-  email?: string
+  email?: string;
 
   @Field({ nullable: true })
-  emailVerified?: Date
+  emailVerified?: Date;
 
   @Field({ nullable: true })
-  image?: string
+  image?: string;
 
   @Field()
-  firstName: string
+  firstName: string;
 
   @Field()
-  lastName: string
+  lastName: string;
 
   @Field((_type) => Experience)
-  experience: Experience
+  experience: Experience;
 
   @Field({ nullable: true })
-  twitter?: string
+  twitter?: string;
 
   @Field({ nullable: true })
-  facebook?: string
+  facebook?: string;
 
   @Field({ nullable: true })
-  discord?: string
+  discord?: string;
 
   @Field({ nullable: true })
-  youtube?: string
+  youtube?: string;
 
   @Field((_type) => StatusType)
-  status: StatusType
+  status: StatusType;
 
   @Field((_type) => [Account])
-  accounts: Account[]
+  accounts: Account[];
 
   @Field((_type) => [Session])
-  sessions: Session[]
+  sessions: Session[];
 
   @Field((_type) => [Review])
-  reviews: Review[]
+  reviews: Review[];
 
   @Field((_type) => [Campaign])
-  Hosted: Campaign[]
+  Hosted: Campaign[];
 
   @Field((_type) => [Membership])
-  memberships: Membership[]
+  memberships: Membership[];
 
   // skip overwrite 👇
 }

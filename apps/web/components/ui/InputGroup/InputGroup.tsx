@@ -44,7 +44,7 @@ const InputGroup = ({
     labelClasses.push(labelClassName);
   }
   if (color) {
-    labelClasses.push(`text-${color}`);
+    labelClasses.unshift(`text-${color}`);
   }
   if (error) {
     labelClasses.push("text-red-800");

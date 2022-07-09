@@ -4,12 +4,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.User = void 0;
 var _typeGraphql = require("type-graphql");
+var _experience = require("../typedefs/Experience");
 var _statusType = require("../typedefs/StatusType");
 var _account = require("./Account");
 var _session = require("./Session");
 var _review = require("./Review");
 var _campaign = require("./Campaign");
-var _domain = require("./Domain");
 var _membership = require("./Membership");
 var __decorate = (void 0) && (void 0).__decorate || function(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -67,8 +67,9 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
+    (0, _typeGraphql).Field((_type)=>_experience.Experience
+    ),
+    __metadata("design:type", typeof _experience.Experience === "undefined" ? Object : _experience.Experience)
 ], User.prototype, "experience", void 0);
 __decorate([
     (0, _typeGraphql).Field({
@@ -127,13 +128,6 @@ __decorate([
     ),
     __metadata("design:type", Array)
 ], User.prototype, "Hosted", void 0);
-__decorate([
-    (0, _typeGraphql).Field((_type)=>[
-            _domain.Domain
-        ]
-    ),
-    __metadata("design:type", Array)
-], User.prototype, "domain", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>[
             _membership.Membership

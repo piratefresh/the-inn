@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Editor, NodeViewWrapper } from "@tiptap/react";
 import React from "react";
 import Resizer from "./Resizer";

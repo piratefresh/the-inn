@@ -1,7 +1,7 @@
 import React from "react";
 import NavStyles from "./Nav.module.css";
 import { NavItem } from "./NavItem";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Avatar } from "@mantine/core";
 import Link from "next/link";
 
@@ -15,6 +15,11 @@ export const Nav = () => {
           <div className="text-white mr-4"> {session.user.name}</div>
 
           <Avatar src={session.user.image} />
+          <div className="ml-4">
+            <a className="text-white cursor-pointer" onClick={() => signOut()}>
+              Sign Out
+            </a>
+          </div>
         </div>
       ) : (
         <div className="flex flex-row text-white">

@@ -24,7 +24,6 @@ const SignIn = () => {
   } = useForm<SignInFormValues>();
 
   const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
-    console.log("data: ", data);
     const { usernameOrEmail, password } = data;
 
     const res = await signIn("credentials", {
@@ -32,14 +31,14 @@ const SignIn = () => {
       password,
     });
 
-    if (res.ok) {
-      const name = `${session.user.name}`;
+    if (res?.ok) {
+      const name = `${session?.user.name}`;
       showNotification({
         title: `Welcome back ${name}`,
         message: "Enjoy your stay",
       });
     }
-    if (res.error) {
+    if (res?.error) {
       showNotification({
         title: `Only accepted adventures can enter`,
         message: `Reason for not accepted inn: ${res.error}`,

@@ -162,7 +162,6 @@ let UserResolver = class UserResolver {
         if (!authenticated) return new _badCredentialsError.BadCredentialsError();
         (0, _setToken).setToken(user, res);
         req.session.userId = user.id;
-        console.log("user: ", user);
         return Object.assign(new _user.User(), user);
     }
 };

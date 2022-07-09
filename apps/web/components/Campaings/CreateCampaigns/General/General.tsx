@@ -83,7 +83,6 @@ export const General = () => {
   });
 
   useItemFinishListener((item) => {
-    console.log("item: ", item);
     const secureUrl = item.uploadResponse?.data.secure_url;
     setValue("imageUrl", secureUrl);
 
@@ -101,15 +100,6 @@ export const General = () => {
     router.push("./location");
   };
 
-  const handleOnSnipping = useCallback(() => {
-    console.log(richTextEditorRef);
-    // richTextEditorRef.current?.insertContent("text");
-
-    richTextEditorRef.current?.insertContent(
-      "<react-component label='test' title='Thunderfury, Blessed Blade of the Windseeker' description='Blasts your enemy with lightning, dealing 15 Nature damage and then jumping to additional nearby enemies.  Each jump reduces that victim's Nature resistance by 1. Affects 5 targets. Your primary target is also consumed by a cyclone, slowing its attack speed by 20% for 12 sec.'><p>This is editable.</p></react-component>"
-    );
-  }, [richTextEditorRef]);
-
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">
@@ -120,7 +110,7 @@ export const General = () => {
 
       {/* <InputWrapper className="my-8" label="" error={errors?.image}> */}
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* <Controller
+        <Controller
           name="image"
           control={control}
           render={({ field: { onChange } }) => (
@@ -130,7 +120,7 @@ export const General = () => {
               }}
             />
           )}
-        /> */}
+        />
 
         <InputGroup
           className="my-8"
@@ -142,15 +132,13 @@ export const General = () => {
             name="title"
             render={({ field }) => (
               <Input
-                placeholder="title"
+                placeholder="Campaign Name"
                 value={field.value}
                 onChange={(e) => field.onChange(e)}
               />
             )}
           />
         </InputGroup>
-
-        <Button onClick={handleOnSnipping}>Add Text to edtiro</Button>
 
         <InputGroup
           className="my-8"

@@ -3,6 +3,17 @@ import { CheckBox } from "@components/ui/CheckBox";
 import InputGroup from "@components/ui/InputGroup";
 import { useController } from "react-hook-form";
 
+interface CheckboxesProps {
+  options: any;
+  control: any;
+  name: string;
+  size?: "medium" | "small" | "tiny" | "large" | "xlarge";
+  type?: string;
+  direction?: "column" | "row" | "row-reverse";
+  color?: string;
+  className?: string;
+}
+
 export const CheckBoxes = ({
   options,
   control,
@@ -11,7 +22,8 @@ export const CheckBoxes = ({
   type = "primary",
   direction = "column",
   color = "white",
-}) => {
+  className,
+}: CheckboxesProps) => {
   const { field } = useController({
     control,
     name,
@@ -33,8 +45,8 @@ export const CheckBoxes = ({
 
   const classes =
     type === "primary"
-      ? "items-center flex-inline"
-      : "items-center flex-inline bg-white font-b rounded-md mr-4 p-4 border border-Brandblue";
+      ? "cursor-pointer items-center flex-inline"
+      : "cursor-pointer items-center flex-inline bg-white font-b rounded-md mr-4 p-4 border border-Brandblue";
   return (
     <>
       {options.map((option, index) => (
@@ -42,18 +54,18 @@ export const CheckBoxes = ({
           direction={direction}
           inline
           color={color}
-          className={classes}
+          className={`${classes} ${className}`}
           label={option}
           key={option}
         >
           <CheckBox
-            className="bg-gray-400"
             onChange={(e) => onChange(e, index)}
             key={option}
             label={option}
             checked={value.includes(option)}
             value={option}
             size={size}
+            hidden
           />
         </InputGroup>
       ))}

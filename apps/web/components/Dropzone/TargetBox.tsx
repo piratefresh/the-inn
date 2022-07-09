@@ -135,7 +135,6 @@ export const DropZone = ({
       <input
         ref={inputFile}
         style={{ display: "none" }}
-        multiple
         type="file"
         autoComplete="off"
       />

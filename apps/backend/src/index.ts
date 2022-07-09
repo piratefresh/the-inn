@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { buildSchema } from "type-graphql";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "database";
 import { UserResolver } from "@resolvers/user";
 import { CampaignResolver } from "@resolvers/campaign";
 import { ReviewResolver } from "@resolvers/review";
@@ -14,10 +14,6 @@ import { ApolloServer } from "apollo-server-express";
 
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { seedDB } from "../prisma/seed";
-
-export const prisma = new PrismaClient({
-  log: ["query"],
-});
 
 const startServer = async () => {
   const PORT = 4000;

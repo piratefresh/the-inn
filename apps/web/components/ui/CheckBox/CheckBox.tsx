@@ -38,12 +38,12 @@ export function CheckBox({
   ref,
   ...props
 }: InputProps) {
-  let classes = [CheckboxStyles["sbui-checkbox"]];
+  let classes = [CheckboxStyles["mgui-checkbox"]];
   if (className) {
     classes.push(className);
   }
   if (size) {
-    classes.push(CheckboxStyles[`sbui-checkbox-container--${size}`]);
+    classes.push(CheckboxStyles[`mgui-checkbox-container--${size}`]);
   }
   const inputName = name;
   // if id does not exist, use label

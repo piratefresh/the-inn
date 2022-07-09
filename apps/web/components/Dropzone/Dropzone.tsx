@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import update from "immutability-helper";
 import { DndProvider } from "react-dnd";
+import { v4 as uuidv4 } from "uuid";
 import DropZoneStyles from "./Dropzone.module.css";
 import { useRequestPreSend } from "@rpldy/uploady";
 import { DropZone } from "./TargetBox";
@@ -84,7 +85,7 @@ export const Dropzone = ({
         {files.length > 0 &&
           files.map((file, index) => (
             <FileCard
-              key={file?.name ?? ""}
+              key={uuidv4()}
               index={index}
               id={file?.name ?? ""}
               file={file}

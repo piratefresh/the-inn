@@ -5,10 +5,19 @@ import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { client } from "@utils/createUrqlClient";
 import { SignInDocument } from "@generated/graphql";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { prisma } from "database";
+
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Do whatever you want here, before the request is passed down to `NextAuth`
   return await NextAuth(req, res, {
+    debug: true,
     providers: [
       //credentials for store
       CredentialsProvider({
@@ -22,6 +31,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         authorize: async (credentials, req) => {
           //return a user or null if there are problems with the credentials
           //database lookup
+          console.log("credentials: ", credentials);
           const { email, password } = credentials;
 
           const { data, error } = await client
@@ -30,12 +40,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
               password: password,
             })
             .toPromise();
-
-          console.log("data: ", data);
-
-          if (!data) {
-            throw new Error("Invalid Credentials");
-          }
 
           if (data) {
             return data.signin;
@@ -78,5 +82,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     pages: {
       signIn: "/auth/signin",
     },
+    secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
+    // adapter: PrismaAdapter(prisma),
   });
 }
