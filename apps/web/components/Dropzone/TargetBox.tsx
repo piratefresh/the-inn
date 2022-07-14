@@ -1,4 +1,5 @@
 import { Input } from "@components/ui/Input";
+import { FilePlusIcon } from "@radix-ui/react-icons";
 import { useUploady } from "@rpldy/uploady";
 import React from "react";
 import { DropTargetMonitor, useDrop } from "react-dnd";
@@ -139,9 +140,14 @@ export const DropZone = ({
         autoComplete="off"
       />
       <div className="h-full w-full flex place-items-center justify-center">
-        <h6 className="font-trejanSans font-black text-5xl">
-          {isActive ? "Upload Image" : "Drop Image Here"}
-        </h6>
+        <div className="flex flex-col justify-center items-center">
+          <div className="inline-flex self-center rounded-full p-2 bg-yellow-500">
+            <FilePlusIcon width={22} height={22} className="text-white" />
+          </div>
+          <h6 className="font-trejanSans font-black text-base">
+            {isActive ? "Upload Image" : "Drop and Drop Image Here, or Browse"}
+          </h6>
+        </div>
       </div>
     </div>
   );

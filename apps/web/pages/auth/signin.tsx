@@ -6,6 +6,7 @@ import { Button } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 export interface SignInFormValues {
@@ -14,6 +15,7 @@ export interface SignInFormValues {
 }
 
 const SignIn = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const {
     register,
@@ -27,21 +29,24 @@ const SignIn = () => {
     const { usernameOrEmail, password } = data;
 
     const res = await signIn("credentials", {
+      redirect: false,
       email: usernameOrEmail,
       password,
     });
-
-    if (res?.ok) {
+    console.log("res: ", res);
+    if (!res?.error) {
       const name = `${session?.user.name}`;
       showNotification({
         title: `Welcome back ${name}`,
         message: "Enjoy your stay",
       });
+      router.push("/");
     }
     if (res?.error) {
       showNotification({
         title: `Only accepted adventures can enter`,
         message: `Reason for not accepted inn: ${res.error}`,
+        color: "red",
       });
     }
   };

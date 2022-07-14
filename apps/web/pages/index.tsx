@@ -1,6 +1,7 @@
 // import { client, ssrCache } from "@utils/createUrqlClient";
 // import { GetListingsDocument, useGetListingsQuery } from "generated/graphql";
 import { HeroImage } from "@components/HeroImage";
+import { useEffect } from "react";
 import { RootLayout } from "../layouts";
 // import Link from "next/link";
 // import { CampaignCard } from "@components/CampaignCard";
@@ -32,6 +33,22 @@ const Home: NextPageWithLayout = () => {
   //     cursor: null,
   //   },
   // });
+  useEffect(() => {
+    const parser = new DOMParser();
+
+    const htmlString =
+      '<p><a class="immutableLink" href="https://playdev.setvi.com/shared/index.html?cid=kxeGlzgsYcD0n%2b8ZLLKRCQ%3d%3d" target="_blank">Presentation</a></p><p><a class="immutableLink" href="https://playdev.setvi.com/shared/index.html?cid=2GivJXyNQeygp1mm9lc1BQ%3d%3d" target="_blank">Resources</a></p><p><a class="immutableLink" href="https://playdev.setvi.com/shared/index.html?cid=yR9WA9qq5SzaspOjg1j%2bAQ%3d%3d" target="_blank">My Resources</a></p><p><a class="immutableLink" href="https://playdev.setvi.com/shared/index.html?cid=xu7i3O7MIfjOO8bd8Ft7GA%3d%3d" target="_blank">My Favorites</a></p><br><br><br>';
+    const htmlEle = parser.parseFromString(htmlString, "text/html");
+
+    htmlEle.querySelectorAll("a.immutableLink").forEach((e) => {
+      console.log("e: ", e);
+      const viewLink = e.getAttribute("data-preview");
+      // If not removed the immutablelink will override this.
+      e.classList.remove("immutableLink");
+      e.setAttribute("rel", "noopener noreferrer");
+      e.setAttribute("href", viewLink);
+    });
+  }, []);
 
   return (
     <>

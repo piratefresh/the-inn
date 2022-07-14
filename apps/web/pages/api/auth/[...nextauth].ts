@@ -40,12 +40,13 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
               password: password,
             })
             .toPromise();
-
-          if (data) {
+          console.log("error: ", error);
+          console.log("data: ", data);
+          if (data.signin?.email) {
             return data.signin;
           }
 
-          return null;
+          throw new Error(data.signin.message);
         },
       }),
     ],
@@ -67,12 +68,13 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       },
 
       async session({ session, token, user }) {
+        if (token) {
+        }
         const newSession: Session = {
           ...session,
+          id: token?.id,
           user: {
             ...session.user,
-            //@ts-ignore
-            id: token.id as string,
           },
         };
 

@@ -27,7 +27,7 @@ export const Location = () => {
 
   const onSubmit: SubmitHandler<IStep2> = async (data) => {
     dispatch(step2(data));
-    router.push("./general");
+    router.push("./extra");
   };
 
   const campaignIsOnline = watch("isOnline");
