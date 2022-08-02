@@ -1,8 +1,14 @@
 import { Location } from "@components/Campaings/CreateCampaigns/Location";
+import { css } from "@stitches/react";
+
+const root = css({
+  background:
+    "linear-gradient(180deg, #25120E 0%, #273435 51.56%, #273435 100%)",
+});
 
 const CreateLocationCampaign = () => {
   return (
-    <div className="bg-createCampaign px-100 py-10">
+    <div className={`${root()} px-100 py-10`}>
       <Location />
     </div>
   );

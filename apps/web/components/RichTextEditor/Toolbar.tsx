@@ -30,6 +30,7 @@ import ToolbarStyles from "./Toolbar.module.css";
 
 const Toolbar = ({ editor }: { editor: Editor }) => {
   let classes = [ToolbarStyles["root"]];
+
   const fileInput = React.useRef<HTMLInputElement>(null);
   const [, createImageSignature] = useCreateImageSignatureMutation();
 
@@ -77,7 +78,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
 
   const onFontSizeChange = (fontSize: string | null) => {
     editor.chain().focus().setFontSize(`${fontSize}px`).run();
-    editor.chain().focus();
+    editor.chain().focus().run();
   };
   const onFontFamilyChange = (fontFamily: string | null) => {
     editor
@@ -187,7 +188,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
           <FontSizeButton editor={editor} onChange={onFontSizeChange} />
         </Tooltip>
         <Tooltip label="Font Family" position="bottom" withArrow>
-          <FontFamilyButton onChange={onFontFamilyChange} />
+          <FontFamilyButton onChange={onFontFamilyChange} editor={editor} />
         </Tooltip>
       </div>
 

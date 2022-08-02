@@ -33,6 +33,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 export const FontSizeButton = ({ onChange, editor }: IFontSizeProps) => {
   const { classes } = useStyles();
+
   const dispatch = useAppDispatch();
   const fontSize = useAppSelector((state) => state.richTextEditor.fontSize);
 
@@ -56,7 +57,11 @@ export const FontSizeButton = ({ onChange, editor }: IFontSizeProps) => {
         onChange={(e) => handleOnChange(e)}
         data={FONT_SIZES}
         className={classes.wrapper}
-        value={fontSize.value}
+        value={
+          editor.isActive("textStyle", { fontFamily: fontSize.value })
+            ? fontSize.value
+            : "12px"
+        }
       />
     </div>
   );
