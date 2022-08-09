@@ -1,18 +1,22 @@
-import { useCreateImageSignatureMutation } from "@generated/graphql";
-import { Button } from "@mantine/core";
 import UploadDropZone from "@rpldy/upload-drop-zone";
-import { useRequestPreSend } from "@rpldy/uploady";
-import { forwardRef } from "react";
+import { useBatchAddListener, useRequestPreSend } from "@rpldy/uploady";
+import clsx from "clsx";
+import { forwardRef, useCallback, useState } from "react";
 import DropZoneStyles from "./Dropzone.module.css";
+import { useCreateImageSignatureMutation } from "@generated/graphql";
+import Image from "next/image";
+import React from "react";
 
-interface ISignedUploadButtone extends HTMLButtonElement {
-  onChange: (file: FileLike) => void;
+interface IClickableDropZone extends HTMLButtonElement {
   onClick: () => void;
+  previewImage?: string;
 }
 
-export const SignedUploadButton = forwardRef(
-  ({ onClick, onChange, ...buttonProps }: ISignedUploadButtone, ref: any) => {
+export const ClickableDropZone = forwardRef(
+  ({ onClick, previewImage, ...buttonProps }: IClickableDropZone) => {
     const [, createImageSignature] = useCreateImageSignatureMutation();
+    const [image, setImage] = useState(previewImage);
+
     useRequestPreSend(async ({ options }) => {
       const { data: signatureData } = await createImageSignature();
 
@@ -33,19 +37,21 @@ export const SignedUploadButton = forwardRef(
       }
     });
 
-    const onZoneClick = useCallback(
-      (e) => {
-        if (onClick) {
-          onClick(e);
-        }
-      },
-      [onClick]
-    );
+    useBatchAddListener((batch) => {
+      // Not sure how to convert FileLike to Blob
+      // @ts-ignore
+      setImage(URL.createObjectURL(batch.items[0].file));
+    });
+
+    const onZoneClick = useCallback(() => {
+      if (onClick) {
+        onClick();
+      }
+    }, [onClick]);
 
     return (
       <UploadDropZone
         {...buttonProps}
-        ref={ref}
         onDragOverClassName="drag-over"
         extraProps={{ onClick: onZoneClick }}
       >
@@ -58,7 +64,16 @@ export const SignedUploadButton = forwardRef(
           )}
         >
           <div className="h-full w-full flex place-items-center justify-center">
-            Drag File(s) Here
+            {image ? (
+              <Image
+                src={image}
+                alt="Preview image"
+                layout="fill"
+                objectFit="cover"
+              />
+            ) : (
+              "Drag File(s) Here"
+            )}
           </div>
         </div>
       </UploadDropZone>
@@ -66,4 +81,4 @@ export const SignedUploadButton = forwardRef(
   }
 );
 
-SignedUploadButton.displayName = "SignedUploadButton";
+ClickableDropZone.displayName = "ClickableDropzone";

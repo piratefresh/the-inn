@@ -20,7 +20,7 @@ export const Dropzone = ({
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [, createImageSignature] = useCreateImageSignatureMutation();
-  useRequestPreSend(async ({ options }) => {
+  const presend = useRequestPreSend(async ({ options }) => {
     const { data: signatureData } = await createImageSignature();
 
     if (signatureData) {
@@ -97,9 +97,10 @@ export const Dropzone = ({
         <DropZone
           onDrop={handleOnDrop}
           className={clsx(
-            "col-span-3 relative h-48 bg-white p-5 cursor-pointer rounded-md overflow-hidden border-dashed border-2 border-brandYellow",
+            "col-span-3 relative h-48 bg-white p-5 cursor-pointer rounded-md overflow-hidden",
             DropZoneStyles["dropzoneHeight"]
           )}
+          onChange={onChange}
         />
       </div>
     </DndProvider>

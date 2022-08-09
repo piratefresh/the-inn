@@ -7,6 +7,7 @@ import { NativeTypes } from "react-dnd-html5-backend";
 
 export interface TargetBoxProps {
   onDrop: (item: { files: any[] }) => void;
+  onChange?: (...event: any[]) => void;
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -78,6 +79,7 @@ export const TargetBox = ({
 
 export const DropZone = ({
   onDrop,
+  onChange,
   className,
   style,
   ...props
@@ -135,6 +137,7 @@ export const DropZone = ({
     >
       <input
         ref={inputFile}
+        onChange={onChange}
         style={{ display: "none" }}
         type="file"
         autoComplete="off"

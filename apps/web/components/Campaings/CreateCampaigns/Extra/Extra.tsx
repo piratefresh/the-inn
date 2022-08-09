@@ -1,39 +1,58 @@
-import { IStep2, step2 } from "@features/createCampaign/createCampaignSlice";
+import { IStep3, step3 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Typography } from "ui";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import { Button, Checkbox, Chips, createStyles } from "@mantine/core";
-
+import { Button, Chips } from "@mantine/core";
+import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
+import { blackA } from "@radix-ui/colors";
 import InputGroup from "@components/ui/InputGroup";
 import router from "next/router";
 import { Chip } from "@components/ui/Chips/Chip/Chip";
+import { styled } from "@components/Theme/Theme";
+import { Input } from "@components/ui/Input";
 
-const useStyles = createStyles((theme, _params, getRef) => ({
-  root: {
-    border: "1px solid #FFD166",
-    backgroundColor: "#fff",
+const StyledToggleGroup = styled(ToggleGroupPrimitive.Root, {
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  borderRadius: 5,
+});
+
+const StyledItem = styled(ToggleGroupPrimitive.Item, {
+  all: "unset",
+  backgroundColor: "white",
+  border: "1px solid $yellowBrand",
+  color: blackA.blackA11,
+  height: 100,
+  width: 250,
+  display: "flex",
+  fontSize: 26,
+  lineHeight: 1,
+  alignItems: "center",
+  justifyContent: "center",
+  marginLeft: 1,
+  "&:first-child": {
+    marginLeft: 0,
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
   },
-  outline: {
-    border: "none",
+  "&:last-child": { borderTopRightRadius: 4, borderBottomRightRadius: 4 },
+  "&:hover": { backgroundColor: "$yellowBrand" },
+  "&[data-state=on]": {
+    backgroundColor: "$yellowBrand",
+    color: "Black",
   },
-  label: {
-    paddingLeft: "32px !important",
-    paddingRight: "32px !important",
-  },
-  checked: {
-    border: "none !important",
-    [`& .${getRef("iconWrapper")}`]: {
-      display: "none",
-    },
-    [`& .${getRef("root")}`]: {
-      backgroundColor: "#FFD166 !important",
-    },
-  },
-}));
+  "&:focus": { position: "relative", boxShadow: `0 0 0 2px black` },
+});
+
+const StyledTextArea = styled("textarea", {
+  border: "1px solid $yellowBrand",
+});
+
+export const ToggleGroup = StyledToggleGroup;
+export const ToggleGroupItem = StyledItem;
 
 export const Extra = () => {
-  const { classes } = useStyles();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
 
@@ -41,18 +60,18 @@ export const Extra = () => {
     handleSubmit,
     control,
     watch,
-    setValue,
     formState: { errors },
-  } = useForm<IStep2>({
+  } = useForm<IStep3>({
     defaultValues: createCampaignData,
   });
 
-  const onSubmit: SubmitHandler<IStep2> = async (data) => {
-    dispatch(step2(data));
+  const [action, roleplay, puzzles] = watch(["action", "roleplay", "puzzles"]);
+
+  const onSubmit: SubmitHandler<IStep3> = async (data) => {
+    dispatch(step3(data));
+    console.log("createCampaignData: ", createCampaignData);
     router.push("./general");
   };
-
-  const campaignIsOnline = watch("isOnline");
 
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
@@ -63,51 +82,84 @@ export const Extra = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <InputGroup className="my-8" label="*Times?">
+        <InputGroup className="my-8" label="*Action?">
           <Controller
             control={control}
-            name="times"
+            name="action"
             render={({ field }) => (
-              <Chips
-                classNames={classes}
-                value={field.value}
-                onChange={(e) => field.onChange(e)}
-                multiple
-                size="xl"
-                radius="xs"
+              <ToggleGroup
+                type="single"
+                value={action}
+                onValueChange={(value) => {
+                  if (value) field.onChange(value);
+                }}
               >
-                <Chip id="low" value="Low">
-                  Low
-                </Chip>
-                <Chip id="medium" value="Medium">
-                  Medium
-                </Chip>
-                <Chip id="high" value="High">
-                  High
-                </Chip>
-              </Chips>
+                <ToggleGroupItem value="Low">Low</ToggleGroupItem>
+                <ToggleGroupItem value="Medium">Medium</ToggleGroupItem>
+                <ToggleGroupItem value="High">High</ToggleGroupItem>
+              </ToggleGroup>
             )}
           />
         </InputGroup>
 
-        <InputGroup className="my-8" label="*Times?">
+        <InputGroup className="my-8" label="*Roleplay?">
           <Controller
             control={control}
-            name="times"
+            name="roleplay"
             render={({ field }) => (
-              <Chips
-                value={field.value}
-                onChange={(e) => field.onChange(e)}
-                multiple
+              <ToggleGroup
+                type="single"
+                value={roleplay}
+                onValueChange={(value) => {
+                  if (value) field.onChange(value);
+                }}
               >
-                <Chip value="Morning">Morning</Chip>
-                <Chip value="Afternoon">Afternoon</Chip>
-                <Chip value="Evening">Evening</Chip>
-                <Chip value="Night">Night</Chip>
-              </Chips>
+                <ToggleGroupItem value="Low">Low</ToggleGroupItem>
+                <ToggleGroupItem value="Medium">Medium</ToggleGroupItem>
+                <ToggleGroupItem value="High">High</ToggleGroupItem>
+              </ToggleGroup>
             )}
           />
         </InputGroup>
+
+        <InputGroup className="my-8" label="*Puzzles?">
+          <Controller
+            control={control}
+            name="puzzles"
+            render={({ field }) => (
+              <ToggleGroup
+                type="single"
+                value={puzzles}
+                onValueChange={(value) => {
+                  if (value) field.onChange(value);
+                }}
+              >
+                <ToggleGroupItem value="Low">Low</ToggleGroupItem>
+                <ToggleGroupItem value="Medium">Medium</ToggleGroupItem>
+                <ToggleGroupItem value="High">High</ToggleGroupItem>
+              </ToggleGroup>
+            )}
+          />
+        </InputGroup>
+
+        <div className="mt-8">
+          <InputGroup
+            className="my-8"
+            label="*Additional Information"
+            error={errors?.extraNote}
+          >
+            <Controller
+              control={control}
+              name="extraNote"
+              render={({ field }) => (
+                <Input.TextArea
+                  value={field.value}
+                  onChange={(e) => field.onChange(e)}
+                />
+              )}
+            />
+          </InputGroup>
+        </div>
 
         <Button className="text-white" type="submit">
           Next

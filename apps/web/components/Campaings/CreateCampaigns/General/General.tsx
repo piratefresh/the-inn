@@ -5,20 +5,19 @@ import {
 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Typography } from "ui";
-import React, { useCallback } from "react";
+import React, { useEffect } from "react";
 import { Editor } from "@tiptap/react";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Button, Select } from "@mantine/core";
 import { Input } from "@components/ui/Input";
-import { Dropzone } from "@components/Dropzone/Dropzone";
+import { asUploadButton } from "@rpldy/upload-button";
+import { useItemFinishListener, useUploady } from "@rpldy/uploady";
 import InputGroup from "@components/ui/InputGroup";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
-import { useItemFinishListener, useUploady } from "@rpldy/uploady";
 import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
 import GeneralStyles from "./General.module.css";
+import { ClickableDropZone } from "@components/Dropzone/ClickableDropZone";
 
 // const schema = yup
 //   .object({
@@ -65,8 +64,9 @@ const skillLevels = [
   { label: "Advanced", value: "Advanced" },
 ];
 
+const DropZoneButton = asUploadButton(ClickableDropZone);
+
 export const General = () => {
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const richTextEditorRef = React.useRef<CustomEditorProps>();
   const { processPending } = useUploady();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
@@ -75,7 +75,6 @@ export const General = () => {
   const {
     handleSubmit,
     control,
-    watch,
     setValue,
     formState: { errors },
   } = useForm<IStep1>({
@@ -91,39 +90,48 @@ export const General = () => {
         imageUrl: secureUrl,
       })
     );
+
+    // Route switch happening in here
+    // Make sure that we set the image url before next step
+    router.push("./location");
   });
 
   const onSubmit: SubmitHandler<IStep1> = async (data) => {
     const res = processPending();
-
+    console.log("res: ", res);
     dispatch(step1(data));
-    router.push("./location");
+    if (createCampaignData.imageUrl) {
+      router.push("./location");
+    }
   };
 
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">
-        <Typography.Title level={1} className="font-serif text-white">
-          Welcome to the inn, fellow adventurer
+        <Typography.Title
+          level={1}
+          className="text-white uppercase font-oldFenris"
+        >
+          Create a Campaign
         </Typography.Title>
       </div>
 
-      {/* <InputWrapper className="my-8" label="" error={errors?.image}> */}
+      <FormDivider label="General" />
+
+      {/* <InputWrapper className="my-12" label="" error={errors?.image}> */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="image"
           control={control}
           render={({ field: { onChange } }) => (
-            <Dropzone
-              onChange={(file: File) => {
-                onChange(file);
-              }}
+            <DropZoneButton
+              extraProps={{ previewImage: createCampaignData.imageUrl }}
             />
           )}
         />
 
         <InputGroup
-          className="my-8"
+          className="my-12"
           label="*Campaign Name"
           error={errors?.title}
         >
@@ -141,8 +149,8 @@ export const General = () => {
         </InputGroup>
 
         <InputGroup
-          className="my-8"
-          label="*What kinda quest do you have for our adventurers?"
+          className="my-12"
+          label="*Campaign Description"
           error={errors.description}
         >
           <Controller
@@ -173,7 +181,7 @@ export const General = () => {
 
         <FormDivider label="Detailed Information" />
 
-        <div className="grid grid-cols-3 gap-4 my-8">
+        <div className="grid grid-cols-2 gap-12 my-12">
           <InputGroup label="*Game System" error={errors?.gameSystem}>
             <Controller
               control={control}

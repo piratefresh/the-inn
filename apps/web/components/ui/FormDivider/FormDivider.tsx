@@ -7,7 +7,7 @@ interface FormDividerProps {
 export const FormDivider = ({ label }: FormDividerProps) => {
   return (
     <>
-      <h1 className="font-trejanSans text-2xl text-white mb-4 uppercase">
+      <h1 className="font-trejanSans text-2xl text-white my-4 uppercase">
         {label}
       </h1>
       <div className={FormDividerStyles.root}></div>

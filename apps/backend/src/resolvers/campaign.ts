@@ -204,6 +204,7 @@ export class CampaignResolver {
     const signature: string = cloudinary.utils.api_sign_request(
       {
         timestamp,
+        upload_preset: "the_inn_campaign",
         folder: "The inn/campaignmedia",
       },
       process.env.CLOUDINARY_API_SECRET as string

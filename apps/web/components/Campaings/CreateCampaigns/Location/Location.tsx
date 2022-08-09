@@ -1,5 +1,6 @@
 import { IStep2, step2 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 import { Typography } from "ui";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@store/store";
@@ -10,31 +11,8 @@ import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
 import { MultiSelectDays } from "@components/ui/Days/Days";
 
-export const Location = () => {
-  const createCampaignData = useAppSelector((state) => state.createCampaign);
-  const dispatch = useAppDispatch();
-  const [isOnline, setIsOnline] = React.useState(false);
-
-  const {
-    handleSubmit,
-    control,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<IStep2>({
-    defaultValues: createCampaignData,
-  });
-
-  const onSubmit: SubmitHandler<IStep2> = async (data) => {
-    dispatch(step2(data));
-    router.push("./extra");
-  };
-
-  const campaignIsOnline = watch("isOnline");
-
-  console.log("isOnline: ", campaignIsOnline);
-
-  const onlineOptions = campaignIsOnline ? (
+const OnlineOptions = ({ control, errors }) => (
+  <div className="grid grid-cols-2 gap-8">
     <InputGroup
       className="my-8"
       label="*Voice System"
@@ -52,7 +30,85 @@ export const Location = () => {
         )}
       />
     </InputGroup>
-  ) : null;
+    <InputGroup
+      className="my-8"
+      label="*Virutal Table Top (VTT)"
+      error={errors?.virtualTable}
+    >
+      <Controller
+        control={control}
+        name="virtualTable"
+        render={({ field }) => (
+          <Input
+            placeholder="Virtual Table Top"
+            value={field.value}
+            onChange={(e) => field.onChange(e)}
+          />
+        )}
+      />
+    </InputGroup>
+  </div>
+);
+
+const InPersonOptions = ({ control, errors }) => (
+  <div className="grid grid-cols-2 gap-8">
+    <InputGroup className="my-8" label="*City" error={errors?.city}>
+      <Controller
+        control={control}
+        name="city"
+        render={({ field }) => (
+          <Input
+            placeholder="city"
+            value={field.value}
+            onChange={(e) => field.onChange(e)}
+          />
+        )}
+      />
+    </InputGroup>
+    <InputGroup className="my-8" label="*State" error={errors?.state}>
+      <Controller
+        control={control}
+        name="state"
+        render={({ field }) => (
+          <Input
+            placeholder="state"
+            value={field.value}
+            onChange={(e) => field.onChange(e)}
+          />
+        )}
+      />
+    </InputGroup>
+  </div>
+);
+
+export const Location = () => {
+  const createCampaignData = useAppSelector((state) => state.createCampaign);
+  const dispatch = useAppDispatch();
+  const [isOnline, setIsOnline] = React.useState(false);
+
+  const {
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<IStep2>({
+    defaultValues: createCampaignData,
+    mode: "onChange",
+  });
+
+  const onSubmit: SubmitHandler<IStep2> = async (data) => {
+    dispatch(step2(data));
+    router.push("./extra");
+  };
+
+  const campaignIsOnline = watch("isOnline");
+
+  const locationOptions = campaignIsOnline ? (
+    <OnlineOptions control={control} errors={errors} />
+  ) : (
+    <InPersonOptions control={control} errors={errors} />
+  );
 
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
@@ -84,40 +140,8 @@ export const Location = () => {
             )}
           />
         </InputGroup>
-
-        {onlineOptions}
-
-        <div className="grid grid-cols-2 gap-8">
-          <InputGroup className="my-8" label="*City" error={errors?.city}>
-            <Controller
-              control={control}
-              name="city"
-              render={({ field }) => (
-                <Input
-                  placeholder="city"
-                  value={field.value}
-                  onChange={(e) => field.onChange(e)}
-                />
-              )}
-            />
-          </InputGroup>
-          <InputGroup className="my-8" label="*State" error={errors?.state}>
-            <Controller
-              control={control}
-              name="state"
-              render={({ field }) => (
-                <Input
-                  placeholder="state"
-                  value={field.value}
-                  onChange={(e) => field.onChange(e)}
-                />
-              )}
-            />
-          </InputGroup>
-        </div>
-
+        {locationOptions}
         <FormDivider label="Detailed Information" />
-
         <div className="mt-8">
           <InputGroup
             className="my-8"
@@ -136,7 +160,6 @@ export const Location = () => {
             />
           </InputGroup>
         </div>
-
         <InputGroup className="my-8" label="*Times?">
           <Controller
             control={control}
@@ -155,11 +178,12 @@ export const Location = () => {
             )}
           />
         </InputGroup>
-
         <Button className="text-white" type="submit">
           Next
         </Button>
       </form>
+
+      <DevTool control={control} />
     </div>
   );
 };

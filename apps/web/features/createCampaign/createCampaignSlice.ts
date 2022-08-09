@@ -23,6 +23,9 @@ export interface CreateCampaignState {
   tags: string[];
   extraNote?: string;
   jsonExtraNote?: JSONContent[];
+  action: "Low" | "Medium" | "High";
+  roleplay: "Low" | "Medium" | "High";
+  puzzles: "Low" | "Medium" | "High";
 }
 
 export interface IStep1 {
@@ -50,6 +53,9 @@ export interface IStep3 {
   tags: string[];
   extraNote: string;
   jsonExtraNote: JSONContent[];
+  action: "Low" | "Medium" | "High";
+  roleplay: "Low" | "Medium" | "High";
+  puzzles: "Low" | "Medium" | "High";
 }
 
 // Define the initial state using that type
@@ -73,6 +79,9 @@ const initialState: CreateCampaignState = {
   tags: [""],
   extraNote: "",
   jsonExtraNote: [{}],
+  action: "Low",
+  roleplay: "Low",
+  puzzles: "Low",
 };
 
 export const createCampaignSlice = createSlice({
@@ -92,6 +101,7 @@ export const createCampaignSlice = createSlice({
     },
     step2: (state, action: PayloadAction<IStep2>) => {
       state.voipSystem = action.payload.voipSystem;
+      state.virtualTable = action.payload.virtualTable;
       state.isOnline = action.payload.isOnline;
       state.days = action.payload.days.filter((e) => e);
       state.times = action.payload.times.filter((e) => e);
@@ -101,11 +111,13 @@ export const createCampaignSlice = createSlice({
     },
     // Use the PayloadAction type to declare the contents of `action.payload`
     step3: (state, action: PayloadAction<IStep3>) => {
-      console.log("action: ", action);
       state.requirements = action.payload.requirements;
       state.tags = action.payload.tags;
       state.extraNote = action.payload.extraNote;
       state.jsonExtraNote = action.payload.jsonExtraNote;
+      state.action = action.payload.action;
+      state.roleplay = action.payload.roleplay;
+      state.puzzles = action.payload.puzzles;
     },
     setImageUrl: (state, action: PayloadAction<{ imageUrl: string }>) => {
       state.imageUrl = action.payload.imageUrl;
