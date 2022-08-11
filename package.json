@@ -13,7 +13,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "dev:backend": "yarn workspace backend yarn dev",
     "dev:web": "yarn workspace web yarn dev",
-    "dev:storybook": "yarn workspace ui yarn storybook",
+    "dev:storybook": "yarn workspace docs yarn storybook",
     "backend:prisma:generate": "cd apps/backend && npx prisma generate",
     "backend:prisma:migrate": "cd apps/backend && npx prisma migrate dev",
     "gen:web": "yarn workspace web yarn gen"

@@ -55,7 +55,7 @@ export const { config, css, styled, createTheme } = createStitches({
     },
     shadows: { ...shadows },
     zIndices: { ...zIndex.zIndices },
-    transitions: { ...transition },
+    // transitions: { ...transition },
   },
   utils: {
     ...utils.utils,
