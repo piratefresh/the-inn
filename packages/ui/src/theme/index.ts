@@ -14,6 +14,7 @@ import type * as Stitches from "@stitches/react";
 // Spread the scales in your light and dark themes
 import { createStitches } from "@stitches/react";
 import { borderRadius } from "./foundation/borderRadius";
+import { borderStyles, borderWidth } from "./foundation/borders";
 import { font } from "./foundation/font";
 import { shadows } from "./foundation/shadow";
 import { sizes } from "./foundation/sizes";
@@ -22,15 +23,20 @@ import transition from "./foundation/transition";
 import { utils } from "./foundation/utils";
 import { zIndex } from "./foundation/zIndex";
 
-export const { config, css, styled, createTheme } = createStitches({
+export const { config, css, styled, createTheme, theme } = createStitches({
   theme: {
     colors: {
       yellowBrand: "#FFD166",
+      orangeBrand: "#9f5e25",
+      whiteBrand: "#fcfcfc",
       ...gray,
       ...blue,
       ...red,
       ...green,
       ...yellow,
+      // Semantic colors
+      hiContrast: "$gray12",
+      loContrast: "white",
     },
     space: spacing.space,
     fontSizes: {
@@ -39,6 +45,11 @@ export const { config, css, styled, createTheme } = createStitches({
     fonts: {
       untitled: "Untitled Sans, apple-system, sans-serif",
       mono: "Söhne Mono, menlo, monospace",
+      sans: font.fonts.sans,
+      serif: font.fonts.serif,
+      oldFenris: font.fonts.oldFenris,
+      alegreyaSans: font.fonts.alegreyaSans,
+      trejanSans: font.fonts.trejanSans,
     },
     fontWeights: {
       ...font.fontWeights,
@@ -46,10 +57,13 @@ export const { config, css, styled, createTheme } = createStitches({
     lineHeights: { ...font.lineHeights },
     letterSpacings: { ...font.letterSpacings },
     sizes: {
+      ...spacing.space,
       ...sizes.sizes,
     },
-    borderWidths: {},
-    borderStyles: {},
+    borderWidths: {
+      ...borderWidth,
+    },
+    borderStyles: { ...borderStyles },
     radii: {
       ...borderRadius.radii,
     },

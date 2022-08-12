@@ -3,6 +3,12 @@ export const font = {
     body: "system-ui, sans-serif",
     heading: "Georgia, serif",
     mono: "Menlo, monospace",
+    sans: '"Alegreya Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+    serif:
+      '"Staatliches", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+    oldFenris: "Old Fenris",
+    alegreyaSans: "'Alegreya Sans'",
+    trejanSans: '"trajan-sans-pro"',
   },
   fontSizes: {
     xs: "0.75rem",

@@ -6,8 +6,8 @@ const StyledTag = styled("div", {
   borderRadius: 4,
   backgroundColor: "$yellowBrand",
   color: blackA.blackA12,
-  padding: "$space$4",
-  fontSize: "$fontSizes$lg",
+  padding: "$space$2",
+  fontSize: "$fontSizes$sm",
   fontFamily: "Inter",
 });
 
