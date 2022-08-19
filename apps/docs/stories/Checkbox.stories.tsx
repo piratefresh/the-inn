@@ -4,7 +4,7 @@ import { Checkbox } from "ui/src/Checkbox";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: "MGUI/Checkbox",
+  title: "MGUI/Form/Checkbox",
   component: Checkbox,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 } as ComponentMeta<typeof Checkbox>;
@@ -45,4 +45,11 @@ Medium.args = {
   checked: false,
   name: "checkbox-1",
   size: "medium",
+};
+export const Large = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Large.args = {
+  checked: false,
+  name: "checkbox-1",
+  size: "large",
 };

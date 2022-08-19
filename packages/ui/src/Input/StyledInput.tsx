@@ -2,6 +2,7 @@ import { styled } from "../theme";
 
 export const StyledInput = styled("input", {
   // Reset
+  all: "unset",
   appearance: "none",
   borderWidth: "0",
   boxSizing: "border-box",
@@ -21,7 +22,7 @@ export const StyledInput = styled("input", {
   variants: {
     size: {
       small: {
-        height: "$sizes$6",
+        height: "$sizes$10",
         fontSize: "$fontSizes$sm",
         px: "$space$2",
         lineHeight: "$lineHeights$short",
@@ -30,7 +31,7 @@ export const StyledInput = styled("input", {
         },
       },
       medium: {
-        height: "$sizes$10",
+        height: "$sizes$14",
         fontSize: "$fontSizes$sm",
         px: "$space$2",
         lineHeight: "$lineHeight$base",
@@ -39,7 +40,7 @@ export const StyledInput = styled("input", {
         },
       },
       large: {
-        height: "$sizes$12",
+        height: "$sizes$18",
         fontSize: "$fontSizes$sm",
         px: "$space$2",
         lineHeight: "$lineHeight$taller",
@@ -51,7 +52,7 @@ export const StyledInput = styled("input", {
     gold: {
       true: {
         borderRadius: "$radii$md",
-        border: "2px solid transparent",
+        border: "3px solid transparent",
         backgroundOrigin: "border-box",
         backgroundClip: "padding-box, border-box",
         backgroundImage:

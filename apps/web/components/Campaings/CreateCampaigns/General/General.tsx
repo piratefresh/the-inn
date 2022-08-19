@@ -4,8 +4,8 @@ import {
   step1,
 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { Typography } from "ui";
-import React, { useEffect } from "react";
+import { Header } from "ui/src/Typography";
+import React from "react";
 import { Editor } from "@tiptap/react";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Button, Select } from "@mantine/core";
@@ -19,27 +19,11 @@ import { FormDivider } from "@components/ui/FormDivider";
 import GeneralStyles from "./General.module.css";
 import { ClickableDropZone } from "@components/Dropzone/ClickableDropZone";
 
-// const schema = yup
-//   .object({
-//     title: yup
-//       .string()
-//       .required("Title is required")
-//       .min(1, "Title cannot be empty"),
-//     description: yup
-//       .string()
-//       .required("Description is required")
-//       .min(1, "Description cannot be empty"),
-//     image: yup
-//       .string()
-//       .required("Header image is required")
-//       .min(1, "Header cant be empty"),
-//     gameSystem: yup.string().required("Please choose a game system"),
-//     maxPartySize: yup.mixed().required("Party size needs be choosen"),
-//     recommendedSkillLevel: yup
-//       .string()
-//       .required("Recommended skill level cant be empty"),
-//   })
-//   .required();
+const OPTIONS = [
+  { value: "Low", label: "Low" },
+  { value: "Medium", label: "Medium" },
+  { value: "High", label: "High" },
+];
 
 export interface CustomEditorProps extends Editor {
   insertContent: (string) => void;
@@ -108,12 +92,9 @@ export const General = () => {
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">
-        <Typography.Title
-          level={1}
-          className="text-white uppercase font-oldFenris"
-        >
+        <Header size="4xl" className="text-white uppercase font-oldFenris">
           Create a Campaign
-        </Typography.Title>
+        </Header>
       </div>
 
       <FormDivider label="General" />

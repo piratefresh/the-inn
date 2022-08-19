@@ -23,6 +23,8 @@ import transition from "./foundation/transition";
 import { utils } from "./foundation/utils";
 import { zIndex } from "./foundation/zIndex";
 
+export type { VariantProps } from "@stitches/react";
+
 export const { config, css, styled, createTheme, theme } = createStitches({
   theme: {
     colors: {

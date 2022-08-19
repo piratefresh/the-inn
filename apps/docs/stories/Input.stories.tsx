@@ -4,7 +4,7 @@ import { Input } from "ui/src/Input";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: "MGUI/Input",
+  title: "MGUI/Form/Input",
   component: Input,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
@@ -20,7 +20,7 @@ export const Primary = Template.bind({});
 Primary.args = {
   value: "Input",
   gold: true,
-  size: "small",
+  size: "medium",
 };
 export const Unstyled = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
