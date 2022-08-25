@@ -1,11 +1,11 @@
 import { IStep2, step2 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { Typography } from "ui";
+import { Header } from "ui/src/Typography";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Button, Checkbox, Chip, Chips } from "@mantine/core";
-import { Input } from "@components/ui/Input";
+import { Input } from "ui/src/Input";
 import InputGroup from "@components/ui/InputGroup";
 import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
@@ -23,6 +23,7 @@ const OnlineOptions = ({ control, errors }) => (
         name="voipSystem"
         render={({ field }) => (
           <Input
+            gold
             placeholder="voipSystem"
             value={field.value}
             onChange={(e) => field.onChange(e)}
@@ -40,6 +41,7 @@ const OnlineOptions = ({ control, errors }) => (
         name="virtualTable"
         render={({ field }) => (
           <Input
+            gold
             placeholder="Virtual Table Top"
             value={field.value}
             onChange={(e) => field.onChange(e)}
@@ -58,7 +60,8 @@ const InPersonOptions = ({ control, errors }) => (
         name="city"
         render={({ field }) => (
           <Input
-            placeholder="city"
+            gold
+            placeholder="City"
             value={field.value}
             onChange={(e) => field.onChange(e)}
           />
@@ -71,7 +74,8 @@ const InPersonOptions = ({ control, errors }) => (
         name="state"
         render={({ field }) => (
           <Input
-            placeholder="state"
+            gold
+            placeholder="State"
             value={field.value}
             onChange={(e) => field.onChange(e)}
           />
@@ -113,9 +117,9 @@ export const Location = () => {
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">
-        <Typography.Title level={1} className="font-serif text-white">
+        <Header as="h1" size="4xl" className="font-serif text-white">
           Location
-        </Typography.Title>
+        </Header>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -182,8 +186,6 @@ export const Location = () => {
           Next
         </Button>
       </form>
-
-      <DevTool control={control} />
     </div>
   );
 };

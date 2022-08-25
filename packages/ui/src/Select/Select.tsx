@@ -3,13 +3,10 @@ import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { styled } from "../theme";
 
-const people = [
-  { id: 1, name: "Dungeon and Dragons", unavailable: false },
-  { id: 2, name: "Pathfinder", unavailable: false },
-  { id: 3, name: "Star Wars FFG", unavailable: false },
-  { id: 4, name: "Hero System", unavailable: true },
-  { id: 5, name: "Shadowrun", unavailable: false },
-];
+const StyledRoot = styled("div", {
+  position: "relative",
+  marginTop: "$space$2",
+});
 
 const StyledButton = styled(ListboxPrimitive.Button, {
   position: "relative",
@@ -36,14 +33,18 @@ const StyledButton = styled(ListboxPrimitive.Button, {
   },
 });
 const StyledOptions = styled(ListboxPrimitive.Options, {
+  position: "absolute",
+  width: "100%",
   paddingLeft: 0,
-  marginTop: "$space$2",
+  marginTop: "$space$4",
   listStyle: "none",
   borderRadius: "$radii$md",
   border: "1px solid $yellowBrand",
   borderTop: "none",
   backgroundColor: "$loContrast",
   padding: "$space$4",
+  maxHeight: "$sizes$5xl",
+  zIndex: "$zIndices$dropdown",
 
   variants: {
     gold: {
@@ -107,37 +108,66 @@ const StyledIcon = styled("span", {
   paddingRight: "$space$4",
 });
 
-export const Select = () => {
-  const [selectedPerson, setSelectedPerson] = React.useState(people[0]);
+interface Option {
+  value: any;
+  name: string;
+  unavailable?: boolean;
+}
+
+interface SelectProps {
+  options: Option[];
+  onChange: (option: Option) => void;
+  selected: Option;
+  className?: string;
+  style?: React.CSSProperties;
+  isDisabled?: boolean;
+  placeholder?: string;
+  error?: boolean;
+}
+
+export const Select = ({
+  options,
+  onChange,
+  selected,
+  className,
+  style,
+  isDisabled,
+  placeholder,
+  error,
+}: SelectProps) => {
   return (
-    <ListboxPrimitive value={selectedPerson} onChange={setSelectedPerson}>
+    <ListboxPrimitive
+      value={selected}
+      onChange={onChange}
+      disabled={isDisabled}
+    >
       {({ open }) => (
-        <>
+        <StyledRoot>
           {/*  @ts-ignore */}
-          <StyledButton gold>
-            <StyledTitle>{selectedPerson.name}</StyledTitle>
+          <StyledButton gold error={error}>
+            <StyledTitle>{selected.name}</StyledTitle>
             <StyledIcon>
               {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
             </StyledIcon>
           </StyledButton>
           {/*  @ts-ignore */}
-          <StyledOptions gold>
-            {people.map((person) => (
+          <StyledOptions gold error={error}>
+            {options.map((option) => (
               // @ts-ignore
               <StyledOption
-                key={person.id}
-                value={person}
-                disabled={person.unavailable}
+                key={option.value}
+                value={option}
+                disabled={option.unavailable}
               >
                 {({ active, selected }) => (
-                  <StyledItem active={active} disabled={person.unavailable}>
-                    {person.name}
+                  <StyledItem active={active} disabled={option.unavailable}>
+                    {option.name}
                   </StyledItem>
                 )}
               </StyledOption>
             ))}
           </StyledOptions>
-        </>
+        </StyledRoot>
       )}
     </ListboxPrimitive>
   );

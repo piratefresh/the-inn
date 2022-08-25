@@ -37,6 +37,7 @@ export interface IStep1 {
   maxPartySize: number;
   recommendedSkillLevel: "Beginner" | "Advanced" | "All";
   jsonDescription: JSONContent[];
+  times: string[];
 }
 export interface IStep2 {
   isOnline: boolean;
@@ -98,6 +99,7 @@ export const createCampaignSlice = createSlice({
       state.recommendedSkillLevel = action.payload.recommendedSkillLevel;
       state.imageUrl = action.payload.imageUrl;
       state.jsonDescription = action.payload.jsonDescription;
+      state.times = action.payload.times.filter((e) => e);
     },
     step2: (state, action: PayloadAction<IStep2>) => {
       state.voipSystem = action.payload.voipSystem;

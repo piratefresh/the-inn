@@ -8,8 +8,11 @@ import { Header } from "ui/src/Typography";
 import React from "react";
 import { Editor } from "@tiptap/react";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import { Button, Select } from "@mantine/core";
-import { Input } from "@components/ui/Input";
+import { Button } from "@mantine/core";
+import { Select } from "ui/src/Select";
+import { Input } from "ui/src/Input";
+import { Chip } from "ui/src/Chip";
+import { ChipGroup } from "ui/src/Chip/ChipGroup";
 import { asUploadButton } from "@rpldy/upload-button";
 import { useItemFinishListener, useUploady } from "@rpldy/uploady";
 import InputGroup from "@components/ui/InputGroup";
@@ -30,31 +33,52 @@ export interface CustomEditorProps extends Editor {
 }
 
 const games = [
-  { label: "Dungeons and Dragons", value: "Dungeons and Dragons" },
-  { label: "Pathfinder", value: "Pathfinder" },
-  { label: "Star Wars FFG", value: "Star Wars FFG" },
+  {
+    value: "Dungeon and Dragons",
+    name: "Dungeon and Dragons",
+    unavailable: false,
+  },
+  { value: "Pathfinder", name: "Pathfinder", unavailable: false },
+  { value: "Star Wars FFG", name: "Star Wars FFG", unavailable: false },
+  { value: "Hero System", name: "Hero System", unavailable: true },
+  { value: "Shadowrun", name: "Shadowrun", unavailable: false },
 ];
 const maxParty = [
-  { label: "1 Player", value: "1" },
-  { label: "2 Player", value: "2" },
-  { label: "3 Player", value: "3" },
-  { label: "4 Player", value: "4" },
-  { label: "5 Player", value: "5" },
-  { label: "6 Player", value: "7" },
+  { name: "1 Player", value: "1" },
+  { name: "2 Player", value: "2" },
+  { name: "3 Player", value: "3" },
+  { name: "4 Player", value: "4" },
+  { name: "5 Player", value: "5" },
+  { name: "6 Player", value: "7" },
 ];
 const skillLevels = [
-  { label: "All", value: "All" },
-  { label: "Beginner", value: "Beginner" },
-  { label: "Advanced", value: "Advanced" },
+  { name: "All", value: "All" },
+  { name: "Beginner", value: "Beginner" },
+  { name: "Advanced", value: "Advanced" },
 ];
 
 const DropZoneButton = asUploadButton(ClickableDropZone);
+
+interface Option {
+  value: any;
+  name: string;
+  unavailable?: boolean;
+}
 
 export const General = () => {
   const richTextEditorRef = React.useRef<CustomEditorProps>();
   const { processPending } = useUploady();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
+  const [selectedGameSystem, setSelectedGameSystem] = React.useState<Option>(
+    games[0]
+  );
+  const [selectedGameSize, setSelectedGameSize] = React.useState<Option>(
+    maxParty[5]
+  );
+  const [selectedGameLevel, setSelectedGameLevel] = React.useState<Option>(
+    skillLevels[0]
+  );
 
   const {
     handleSubmit,
@@ -92,7 +116,11 @@ export const General = () => {
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">
-        <Header size="4xl" className="text-white uppercase font-oldFenris">
+        <Header
+          as="h1"
+          size="4xl"
+          className="text-white uppercase font-oldFenris"
+        >
           Create a Campaign
         </Header>
       </div>
@@ -121,6 +149,8 @@ export const General = () => {
             name="title"
             render={({ field }) => (
               <Input
+                gold
+                size="medium"
                 placeholder="Campaign Name"
                 value={field.value}
                 onChange={(e) => field.onChange(e)}
@@ -162,6 +192,26 @@ export const General = () => {
 
         <FormDivider label="Detailed Information" />
 
+        <InputGroup label="*Time" error={errors?.maxPartySize}>
+          <Controller
+            name="times"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <ChipGroup
+                position="center"
+                value={value}
+                onChange={onChange}
+                multiple
+              >
+                <Chip value="Morning">Morning</Chip>
+                <Chip value="Afternoon">Afternoon</Chip>
+                <Chip value="Evening">Evening</Chip>
+                <Chip value="Night">Night</Chip>
+              </ChipGroup>
+            )}
+          />
+        </InputGroup>
+
         <div className="grid grid-cols-2 gap-12 my-12">
           <InputGroup label="*Game System" error={errors?.gameSystem}>
             <Controller
@@ -170,17 +220,18 @@ export const General = () => {
               defaultValue={createCampaignData.gameSystem}
               render={({ field }) => (
                 <Select
+                  key="gameSystem"
                   className={
                     !errors.gameSystem
                       ? GeneralStyles.selectInput
                       : GeneralStyles.selectInputError
                   }
-                  name="gameSystem"
-                  data={games}
-                  value={field.value}
-                  onChange={(e) => field.onChange(e)}
-                  defaultValue=""
-                  placeholder="Game Systems"
+                  options={games}
+                  selected={selectedGameSystem}
+                  onChange={(e) => {
+                    setSelectedGameSystem(e);
+                    field.onChange(e);
+                  }}
                 />
               )}
             />
@@ -195,13 +246,14 @@ export const General = () => {
               defaultValue={createCampaignData.maxPartySize}
               render={({ field }) => (
                 <Select
+                  key="maxPartySize"
                   className={GeneralStyles.selectInput}
-                  name="maxPartySize"
-                  data={maxParty}
-                  value={field.value.toString()}
-                  onChange={(e) => field.onChange(e)}
-                  placeholder="Max party size"
-                  defaultValue="All"
+                  options={maxParty}
+                  selected={selectedGameSize}
+                  onChange={(e) => {
+                    setSelectedGameSize(e);
+                    field.onChange(e.value);
+                  }}
                 />
               )}
             />
@@ -219,13 +271,14 @@ export const General = () => {
               defaultValue={createCampaignData.recommendedSkillLevel}
               render={({ field }) => (
                 <Select
+                  key="recommendedSkillLevel"
                   className={GeneralStyles.selectInput}
-                  name="recommendedSkillLevel"
-                  data={skillLevels}
-                  value={field.value}
-                  onChange={(e) => field.onChange(e)}
-                  defaultValue="All"
-                  placeholder="Skill level"
+                  options={skillLevels}
+                  selected={selectedGameLevel}
+                  onChange={(e) => {
+                    setSelectedGameLevel(e);
+                    field.onChange(e.value);
+                  }}
                 />
               )}
             />

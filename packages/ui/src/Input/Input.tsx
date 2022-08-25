@@ -1,6 +1,7 @@
 import { StyledInput } from "./StyledInput";
 
-interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface IInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   required?: boolean;
   className?: string;
   style?: React.CSSProperties;
@@ -27,6 +28,6 @@ interface ITextAreaProps
   rows?: number;
 }
 
-export const Input = ({ gold, size }: IInputProps) => {
-  return <StyledInput gold={gold} size={size} />;
+export const Input = ({ gold, size = "medium", ...props }: IInputProps) => {
+  return <StyledInput gold={gold} size={size} {...props} />;
 };

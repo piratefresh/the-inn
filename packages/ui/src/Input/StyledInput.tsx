@@ -9,7 +9,7 @@ export const StyledInput = styled("input", {
   fontFamily: "inherit",
   margin: "0",
   outline: "none",
-  padding: "0",
+  px: "$space$4",
   width: "100%",
   WebkitTapHighlightColor: "rgba(0,0,0,0)",
   "&::before": {
@@ -24,7 +24,6 @@ export const StyledInput = styled("input", {
       small: {
         height: "$sizes$10",
         fontSize: "$fontSizes$sm",
-        px: "$space$2",
         lineHeight: "$lineHeights$short",
         "&:-webkit-autofill::first-line": {
           fontSize: "$1",
@@ -33,7 +32,6 @@ export const StyledInput = styled("input", {
       medium: {
         height: "$sizes$14",
         fontSize: "$fontSizes$sm",
-        px: "$space$2",
         lineHeight: "$lineHeight$base",
         "&:-webkit-autofill::first-line": {
           fontSize: "$1",
@@ -42,7 +40,6 @@ export const StyledInput = styled("input", {
       large: {
         height: "$sizes$18",
         fontSize: "$fontSizes$sm",
-        px: "$space$2",
         lineHeight: "$lineHeight$taller",
         "&:-webkit-autofill::first-line": {
           fontSize: "$1",
