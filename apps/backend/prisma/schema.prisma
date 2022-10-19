@@ -1,17 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
-
-// Generator is a bit buggy on overwrties
-// generator PrismaTypeGraphQLTypesGenerator {
-//   provider     = "npx prisma-typegraphql-types-generator"
-//   modelsOutput = "./src/models"
-//   enumsOutput  = "./src/typedefs"
-//   useYarn      = true
-// }
 
 datasource db {
   provider = "postgresql"
@@ -19,33 +8,32 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-  oauth_token_secret String?
-  oauth_token        String?
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refreshToken      String? @map("refresh_token")
+  accessToken       String? @map("access_token")
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type")
+  scope             String?
+  idToken           String? @map("id_token")
+  sessionState      String? @map("session_state")
+  oauthTokenSecret  String? @map("oauth_token_secret")
+  oauthToken        String? @map("oauth_token")
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId, userId])
   @@map("accounts")
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  session_token String   @unique
+  userId        String
+  expires       DateTime
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -60,107 +48,76 @@ model VerificationToken {
 }
 
 model User {
-  id            String     @id @default(uuid())
+  id            String       @id @default(uuid())
   password      String
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  email         String?    @unique
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  email         String?      @unique
   emailVerified DateTime?
-  image         String?
+  imageUrl      String?
   firstName     String
   lastName      String
-  experience    Experience @default(All)
+  experience    Experience   @default(All)
+  twitter       String?
+  facebook      String?
+  discord       String?
+  youtube       String?
+  status        StatusType   @default(ONLINE)
+  memberships   Membership[]
+  accounts      Account[]
+  hosted        Campaign[]   @relation("game_master")
+  reviews       Review[]
+  sessions      Session[]
 
-  // Social Media
-  twitter  String?
-  facebook String?
-  discord  String?
-  youtube  String?
-
-  status StatusType @default(ONLINE)
-
-  accounts    Account[]
-  sessions    Session[]
-  reviews     Review[]
-  Hosted      Campaign[]   @relation("game_master")
-  memberships Membership[]
-
-  @@map(name: "users")
+  @@map("users")
 }
 
 model Membership {
   role       MembershipRole
-  campaignId String
+  campaignId String         @map("campaign_id")
   userId     String
-  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   campaign   Campaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([campaignId, userId])
 }
 
-// model GameSystem {
-//   id         String    @id @default(uuid())
-//   campaign   Campaign  @relation(fields: [campaignId], references: [id])
-//   campaignId String    @unique
-//   item       Item?     @relation(fields: [itemId], references: [id])
-//   itemId     Int?      @unique
-//   npc        Npc?      @relation(fields: [npcId], references: [id])
-//   npcId      Int?      @unique
-//   Creature   Creature? @relation(fields: [creatureId], references: [id])
-//   creatureId Int?      @unique
-//   spell      Spell?    @relation(fields: [spellId], references: [id])
-//   spellId    Int?      @unique
-//   skill      Skill?    @relation(fields: [skillId], references: [id])
-//   skillId    Int?      @unique
-//   stats      Stats?    @relation(fields: [statsId], references: [id])
-//   statsId    String?   @unique
-//   assignedAt DateTime  @default(now())
-//   assignedBy String
-
-//   @@map("gameSystem")
-// }
-
 model Campaign {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
+  id                    String       @id @default(uuid())
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  title                 String
+  summary               String
+  jsonSummary           String
+  additionalDetails     String?
+  jsonAdditionalDetails String?
+  note                  String?
+  imageUrl              String
+  isOnline              Boolean
+  city                  String
+  state                 String
+  lat                   Float
+  lng                   Float
+  startDate             DateTime
+  endDate               DateTime
+  days                  String[]
+  timePeriods           String[]
+  timezone              String
+  gmId                  String
+  experience            Experience   @default(All)
+  voipSystem            String?
+  gameSystem            String
+  virtualTable          String?
+  maxSeats              Int          @default(4)
+  puzzles               Difficulty   @default(Any)
+  combat                Difficulty   @default(Any)
+  roleplay              Difficulty   @default(Any)
+  tags                  String[]
+  price                 Float?
+  gallery               String[]
+  gameMaster            User         @relation("game_master", fields: [gmId], references: [id])
+  memberships           Membership[]
 
-  summary            String
-  additional_details String?
-  note               String?
-  image              String
-  isOnline           Boolean
-
-  // location
-  city  String
-  state String
-  lat   Float
-  lng   Float
-
-  // time
-  startDate    DateTime   @default(now())
-  endDate      DateTime   @default(now())
-  days         String[]
-  time_periods String[]
-  // game
-  // game_system  String
-  experience   Experience @default(All)
-  voip_system  String?
-  max_seats    Int        @default(4)
-  puzzles      Difficulty @default(Any)
-  combat       Difficulty @default(Any)
-  roleplay     Difficulty @default(Any)
-
-  gmId        String
-  game_master User     @relation("game_master", fields: [gmId], references: [id])
-  // extra
-  tags        String[]
-  price       Float?
-  gallery     String[]
-
-  memberships Membership[]
-  // GameSystem  GameSystem[]
   @@map("campaigns")
 }
 
@@ -175,116 +132,6 @@ model Review {
 
   @@map("reviews")
 }
-
-// model Stats {
-//   id       String @id @default(uuid())
-//   name     String
-//   color    String
-//   modifier Float
-
-//   Spell      Spell[]
-//   GameSystem GameSystem[]
-// }
-
-// model Item {
-//   id             Int      @id @default(autoincrement())
-//   name           String
-//   description    String
-//   stats          String[]
-//   attributes     String[]
-//   location       String
-//   sell_price     Float?
-//   buy_price      Float?
-//   type           String
-//   base_dmg       String
-//   weight         String
-//   spells         Spell[]
-//   rarity         String
-//   equipment_slot String
-//   createdAt      DateTime @default(now())
-//   updatedAt      DateTime @updatedAt
-
-//   gameSystem GameSystem[]
-// }
-
-// model Npc {
-//   id          Int          @id @default(autoincrement())
-//   name        String
-//   stats       String[]
-//   location    String
-//   description String
-//   family      Family       @relation(fields: [familyId], references: [id])
-//   languages   String[]
-//   campaignId  Int
-//   createdAt   DateTime     @default(now())
-//   updatedAt   DateTime     @updatedAt
-//   familyId    String
-//   gameSystem  GameSystem[]
-// }
-
-// model Creature {
-//   id          Int          @id @default(autoincrement())
-//   name        String
-//   stats       String[]
-//   location    String
-//   description String
-//   family      Family       @relation(fields: [familyId], references: [id])
-//   speed       String?
-//   hp          Float?
-//   ac          Float?
-//   skills      String[] // make own model
-//   xp          Float?
-//   languages   String[]
-//   actions     String[] //make own model
-//   campaignId  Int
-//   createdAt   DateTime     @default(now())
-//   updatedAt   DateTime     @updatedAt
-//   familyId    String
-//   gameSystem  GameSystem[]
-// }
-
-// model Skill {
-//   id          Int          @id @default(autoincrement())
-//   name        String
-//   description String
-//   type        String
-//   range       String
-//   spells      Spell[]
-//   dice        String[]
-//   GameSystem  GameSystem[]
-// }
-
-// model Spell {
-//   id             Int          @id @default(autoincrement())
-//   name           String
-//   description    String
-//   image          String
-//   required_level Int
-//   casting_time   String
-//   duration       String?
-//   components     String?
-//   school         String?
-//   attack_type    String
-//   save           Stats        @relation(fields: [statsId], references: [id])
-//   range          String
-//   statsId        String
-//   Item           Item?        @relation(fields: [itemId], references: [id])
-//   itemId         Int?
-//   Skill          Skill?       @relation(fields: [skillId], references: [id])
-//   skillId        Int?
-//   dice           String[]
-//   GameSystem     GameSystem[]
-// }
-
-// model Family {
-//   id          String     @id @default(uuid())
-//   description String
-//   type        String
-//   stats       String[]
-//   attributes  String[]
-//   Npc         Npc[]
-//   Creature    Creature[]
-// }
 
 enum MembershipRole {
   GM

@@ -28,9 +28,17 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.6.6",
+    "@internationalized/date": "^3.0.1",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-checkbox": "^1.0.0",
     "@radix-ui/react-select": "^1.0.0",
-    "@stitches/react": "^1.2.8"
+    "@react-aria/calendar": "^3.0.1",
+    "@react-aria/datepicker": "^3.1.0",
+    "@react-aria/i18n": "^3.5.1",
+    "@stitches/react": "^1.2.8",
+    "react-aria": "^3.18.0",
+    "react-select": "^5.4.0",
+    "use-select": "^0.0.6",
+    "uuid": "^9.0.0"
   }
 }

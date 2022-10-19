@@ -2,15 +2,33 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import React from "react";
 import { styled } from "../theme";
 
+const StyledRoot = styled(RadioGroupPrimitive.Root, {
+  display: "flex",
+  justifyContent: "space-between",
+
+  variants: {
+    direction: {
+      row: {
+        flexDirection: "row",
+      },
+      column: {
+        flexDirection: "column",
+      },
+    },
+  },
+});
+
 const StyledRadioItem = styled(RadioGroupPrimitive.Item, {
   all: "unset",
   backgroundColor: "white",
   border: "2px solid $yellowBrand",
   display: "flex",
   justifyContent: "center",
+  alignItems: "center",
   py: "$space$8",
   px: "$space$8",
   borderRadius: "$radii$base",
+  fontSize: "$xl",
 
   variants: {
     checked: {
@@ -32,7 +50,9 @@ const StyledRadioItem = styled(RadioGroupPrimitive.Item, {
   },
 });
 
-const Flex = styled("div", { display: "flex" });
+const Flex = styled("div", {
+  display: "flex",
+});
 
 export interface OptionProps {
   value: string;
@@ -45,6 +65,7 @@ interface RadioGroupProps {
   width?: string;
   onChange: (v: string) => void;
   options: OptionProps[];
+  direction?: "column" | "row";
 }
 
 export const RadioGroup = ({
@@ -53,10 +74,15 @@ export const RadioGroup = ({
   value,
   height,
   width,
+  direction,
 }: RadioGroupProps) => {
   //   const [value, setValue] = React.useState<string>("Low");
   return (
-    <RadioGroupPrimitive.Root value={value} onValueChange={(v) => onChange(v)}>
+    <StyledRoot
+      value={value}
+      onValueChange={(v) => onChange(v)}
+      direction={direction}
+    >
       {options.map((option) => (
         <Flex
           css={{ margin: "10px 0", alignItems: "center" }}
@@ -72,6 +98,6 @@ export const RadioGroup = ({
           </StyledRadioItem>
         </Flex>
       ))}
-    </RadioGroupPrimitive.Root>
+    </StyledRoot>
   );
 };

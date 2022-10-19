@@ -4,11 +4,13 @@ import {
   red,
   green,
   yellow,
+  slate,
   grayDark,
   blueDark,
   redDark,
   greenDark,
   yellowDark,
+  slateDark,
 } from "@radix-ui/colors";
 
 // Spread the scales in your light and dark themes
@@ -23,6 +25,7 @@ export const { styled, createTheme } = createStitches({
       ...red,
       ...green,
       ...yellow,
+      ...slate,
     },
   },
 });
@@ -35,5 +38,6 @@ const darkTheme = createTheme({
     ...redDark,
     ...greenDark,
     ...yellowDark,
+    ...slateDark,
   },
 });

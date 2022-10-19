@@ -4,11 +4,15 @@ import {
   red,
   green,
   yellow,
+  slate,
   grayDark,
   blueDark,
   redDark,
   greenDark,
   yellowDark,
+  slateDark,
+  whiteA,
+  blackA,
 } from "@radix-ui/colors";
 import type * as Stitches from "@stitches/react";
 // Spread the scales in your light and dark themes
@@ -36,8 +40,12 @@ export const { config, css, styled, createTheme, theme } = createStitches({
       ...red,
       ...green,
       ...yellow,
+      ...slate,
+      ...whiteA,
+      ...blackA,
+
       // Semantic colors
-      hiContrast: "$gray12",
+      hiContrast: "$slate12",
       loContrast: "white",
     },
     space: spacing.space,
@@ -86,6 +94,7 @@ const darkTheme = createTheme({
     ...redDark,
     ...greenDark,
     ...yellowDark,
+    ...slateDark,
   },
 });
 

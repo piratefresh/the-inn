@@ -1,11 +1,13 @@
 import { blackA } from "@radix-ui/colors";
-import { styled, theme } from "../theme";
+import { styled } from "../theme";
+import type * as Stitches from "@stitches/react";
 
 const StyledButton = styled("button", {
   // Reset
   all: "unset",
   alignItems: "center",
   boxSizing: "border-box",
+  cursor: "pointer",
   userSelect: "none",
   "&::before": {
     boxSizing: "border-box",
@@ -59,15 +61,22 @@ const StyledButton = styled("button", {
   },
 });
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   size?: "small" | "large";
   color?: "blue" | "yellow";
+  css?: Stitches.CSS;
 }
 
-export const Button = ({ size, color, children }: ButtonProps) => {
+export const Button = ({
+  size,
+  color,
+  css,
+  children,
+  ...props
+}: ButtonProps) => {
   return (
-    <StyledButton size={size} color={color}>
+    <StyledButton css={css} size={size} color={color} {...props}>
       {children}
     </StyledButton>
   );

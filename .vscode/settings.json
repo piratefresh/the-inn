@@ -1,0 +1,21 @@
+{
+  "redisXplorer.config": {
+    "profiles": [
+      {
+        "name": "the-inn",
+        "host": "redis-13673.c56.east-us.azure.cloud.redislabs.com:13673",
+        "accessKey": "QUVqyaYtox5FMjk5bbXLUrqwUm4es2ux",
+        "filter": "*",
+        "port": "13673"
+      },
+      {
+        "name": "theinn",
+        "host": "redis-13673.c56.east-us.azure.cloud.redislabs.com",
+        "accessKey": "QUVqyaYtox5FMjk5bbXLUrqwUm4es2ux",
+        "filter": "*",
+        "port": "13673"
+      }
+    ],
+    "scanLimit": 200
+  }
+}

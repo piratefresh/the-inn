@@ -7,10 +7,10 @@ export class Session {
   id: string;
 
   @Field()
-  sessionToken: string;
+  session_token: string;
 
   @Field()
-  userId: string;
+  user_id: string;
 
   @Field()
   expires: Date;

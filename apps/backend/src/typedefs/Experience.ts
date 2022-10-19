@@ -1,10 +1,10 @@
-import { registerEnumType } from 'type-graphql'
+import { registerEnumType } from "type-graphql";
 
 export enum Experience {
-  Beginner = 'Beginner',
-  Advanced = 'Advanced',
-  All = 'All'
+  Beginner = "Beginner",
+  Advanced = "Advanced",
+  All = "All",
 }
 registerEnumType(Experience, {
-    name: 'Experience',
-})
+  name: "Experience",
+});

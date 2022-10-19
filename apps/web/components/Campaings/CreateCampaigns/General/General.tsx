@@ -8,10 +8,11 @@ import { Header } from "ui/src/Typography";
 import React from "react";
 import { Editor } from "@tiptap/react";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import { Button } from "@mantine/core";
+
 import { Select } from "ui/src/Select";
 import { Input } from "ui/src/Input";
 import { Chip } from "ui/src/Chip";
+import { TimeField } from "ui/src/TimeField";
 import { ChipGroup } from "ui/src/Chip/ChipGroup";
 import { asUploadButton } from "@rpldy/upload-button";
 import { useItemFinishListener, useUploady } from "@rpldy/uploady";
@@ -21,6 +22,7 @@ import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
 import GeneralStyles from "./General.module.css";
 import { ClickableDropZone } from "@components/Dropzone/ClickableDropZone";
+import { Button } from "ui";
 
 const OPTIONS = [
   { value: "Low", label: "Low" },
@@ -32,7 +34,7 @@ export interface CustomEditorProps extends Editor {
   insertContent: (string) => void;
 }
 
-const games = [
+export const GAMES = [
   {
     value: "Dungeon and Dragons",
     name: "Dungeon and Dragons",
@@ -43,7 +45,7 @@ const games = [
   { value: "Hero System", name: "Hero System", unavailable: true },
   { value: "Shadowrun", name: "Shadowrun", unavailable: false },
 ];
-const maxParty = [
+export const MAX_PARTY = [
   { name: "1 Player", value: "1" },
   { name: "2 Player", value: "2" },
   { name: "3 Player", value: "3" },
@@ -51,7 +53,7 @@ const maxParty = [
   { name: "5 Player", value: "5" },
   { name: "6 Player", value: "7" },
 ];
-const skillLevels = [
+export const SKILL_LEVELS = [
   { name: "All", value: "All" },
   { name: "Beginner", value: "Beginner" },
   { name: "Advanced", value: "Advanced" },
@@ -71,19 +73,20 @@ export const General = () => {
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
   const [selectedGameSystem, setSelectedGameSystem] = React.useState<Option>(
-    games[0]
+    GAMES[0]
   );
   const [selectedGameSize, setSelectedGameSize] = React.useState<Option>(
-    maxParty[5]
+    MAX_PARTY[3]
   );
   const [selectedGameLevel, setSelectedGameLevel] = React.useState<Option>(
-    skillLevels[0]
+    SKILL_LEVELS[0]
   );
 
   const {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<IStep1>({
     defaultValues: createCampaignData,
@@ -106,9 +109,10 @@ export const General = () => {
 
   const onSubmit: SubmitHandler<IStep1> = async (data) => {
     const res = processPending();
-    console.log("res: ", res);
+
     dispatch(step1(data));
     if (createCampaignData.imageUrl) {
+      reset();
       router.push("./location");
     }
   };
@@ -162,55 +166,32 @@ export const General = () => {
         <InputGroup
           className="my-12"
           label="*Campaign Description"
-          error={errors.description}
+          error={errors.summary}
         >
           <Controller
             control={control}
-            name="jsonDescription"
+            name="jsonSummary"
             render={({ field }) => (
               <RichTextEditor
                 ref={richTextEditorRef}
                 onChange={(e) => {
                   field.onChange(e);
                   if (richTextEditorRef?.current) {
-                    setValue(
-                      "description",
-                      richTextEditorRef?.current.getText()
-                    );
+                    setValue("summary", richTextEditorRef?.current.getText());
                   }
                 }}
                 value={field.value}
                 onBlur={field.onBlur}
-                name="jsonDescription"
+                name="jsonSummary"
               />
             )}
           />
           <span className="text-red-800">
-            {errors.description && errors.description.message}
+            {errors.summary && errors.summary.message}
           </span>
         </InputGroup>
 
         <FormDivider label="Detailed Information" />
-
-        <InputGroup label="*Time" error={errors?.maxPartySize}>
-          <Controller
-            name="times"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <ChipGroup
-                position="center"
-                value={value}
-                onChange={onChange}
-                multiple
-              >
-                <Chip value="Morning">Morning</Chip>
-                <Chip value="Afternoon">Afternoon</Chip>
-                <Chip value="Evening">Evening</Chip>
-                <Chip value="Night">Night</Chip>
-              </ChipGroup>
-            )}
-          />
-        </InputGroup>
 
         <div className="grid grid-cols-2 gap-12 my-12">
           <InputGroup label="*Game System" error={errors?.gameSystem}>
@@ -226,11 +207,11 @@ export const General = () => {
                       ? GeneralStyles.selectInput
                       : GeneralStyles.selectInputError
                   }
-                  options={games}
+                  options={GAMES}
                   selected={selectedGameSystem}
                   onChange={(e) => {
                     setSelectedGameSystem(e);
-                    field.onChange(e);
+                    field.onChange(e.value);
                   }}
                 />
               )}
@@ -239,16 +220,16 @@ export const General = () => {
               {errors.gameSystem && errors.gameSystem.message}
             </span>
           </InputGroup>
-          <InputGroup label="*Maximum Party Size" error={errors?.maxPartySize}>
+          <InputGroup label="*Maximum Party Size" error={errors?.maxSeats}>
             <Controller
               control={control}
-              name="maxPartySize"
-              defaultValue={createCampaignData.maxPartySize}
+              name="maxSeats"
+              // defaultValue={createCampaignData.maxSeats}
               render={({ field }) => (
                 <Select
-                  key="maxPartySize"
+                  key="maxSeats"
                   className={GeneralStyles.selectInput}
-                  options={maxParty}
+                  options={MAX_PARTY}
                   selected={selectedGameSize}
                   onChange={(e) => {
                     setSelectedGameSize(e);
@@ -258,22 +239,22 @@ export const General = () => {
               )}
             />
             <span className="text-red-800">
-              {errors.maxPartySize && errors.maxPartySize.message}
+              {errors.maxSeats && errors.maxSeats.message}
             </span>
           </InputGroup>
           <InputGroup
             label="*Recommended Skill Level"
-            error={errors?.recommendedSkillLevel}
+            error={errors?.experience}
           >
             <Controller
               control={control}
-              name="recommendedSkillLevel"
-              defaultValue={createCampaignData.recommendedSkillLevel}
+              name="experience"
+              defaultValue={createCampaignData.experience}
               render={({ field }) => (
                 <Select
-                  key="recommendedSkillLevel"
+                  key="experience"
                   className={GeneralStyles.selectInput}
-                  options={skillLevels}
+                  options={SKILL_LEVELS}
                   selected={selectedGameLevel}
                   onChange={(e) => {
                     setSelectedGameLevel(e);
@@ -283,13 +264,48 @@ export const General = () => {
               )}
             />
             <span className="text-red-800">
-              {errors.recommendedSkillLevel &&
-                errors.recommendedSkillLevel.message}
+              {errors.experience && errors.experience.message}
             </span>
           </InputGroup>
         </div>
 
-        <Button className="text-white" type="submit">
+        <div className="grid grid-cols-2 gap-12 my-12">
+          <InputGroup label="*Time" error={errors?.maxSeats}>
+            <Controller
+              name="timePeriods"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <ChipGroup value={value} onChange={onChange} multiple>
+                  <Chip value="Morning">Morning</Chip>
+                  <Chip value="Afternoon">Afternoon</Chip>
+                  <Chip value="Evening">Evening</Chip>
+                  <Chip value="Night">Night</Chip>
+                </ChipGroup>
+              )}
+            />
+          </InputGroup>
+        </div>
+        <div className="grid grid-cols-2 gap-12 my-12">
+          <InputGroup label="*Days" error={errors?.maxSeats}>
+            <Controller
+              name="days"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <ChipGroup value={value} onChange={onChange} multiple>
+                  <Chip value="Monday">Monday</Chip>
+                  <Chip value="Tuesday">Tuesday</Chip>
+                  <Chip value="Wednesday">Wednesday</Chip>
+                  <Chip value="Thursday">Thursday</Chip>
+                  <Chip value="Friday">Friday</Chip>
+                  <Chip value="Saturday">Saturday</Chip>
+                  <Chip value="Sunday">Sunday</Chip>
+                </ChipGroup>
+              )}
+            />
+          </InputGroup>
+        </div>
+
+        <Button size="large" type="submit">
           Next
         </Button>
       </form>

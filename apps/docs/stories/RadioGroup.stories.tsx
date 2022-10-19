@@ -37,6 +37,8 @@ const Template = (args) => {
       value={checked}
       onChange={(v) => setChecked(v)}
       options={args.options}
+      direction={args.direction}
+      width={args.width}
     />
   );
 };
@@ -45,4 +47,14 @@ export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
   options: OPTIONS,
+  direction: "column",
+  width: "250px",
+};
+export const Row = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Row.args = {
+  options: OPTIONS,
+  direction: "row",
+  width: "250px",
+  height: "100px",
 };

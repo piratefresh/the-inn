@@ -11,6 +11,7 @@ import { withUrqlClient } from "next-urql";
 import { NextPage } from "next";
 import { SessionProvider } from "next-auth/react";
 import { RootLayout } from "@layouts/RootLayout";
+import { createUrqlClient } from "@utils/createUrqlClient";
 
 interface NoopProps extends React.FC {
   children: React.ReactNode;
@@ -94,9 +95,4 @@ function App({ Component, pageProps, router }: AppPropsWithLayout) {
   );
 }
 
-export default withUrqlClient(
-  () => ({
-    url: "http://localhost:4000/graphql",
-  }),
-  { ssr: false }
-)(App);
+export default withUrqlClient(createUrqlClient, { ssr: false })(App);

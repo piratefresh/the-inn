@@ -33,7 +33,8 @@ export interface TextProps {
     | "gold"
     | "bronze"
     | "gray"
-    | "contrast";
+    | "hiContrast"
+    | "loContrast";
   font?: VariantProps<typeof font.fonts>;
   style?: React.CSSProperties;
   className?: string;
@@ -136,8 +137,11 @@ const StyledText = styled("span", {
       gray: {
         color: "$slate11",
       },
-      contrast: {
+      hiContrast: {
         color: "$hiContrast",
+      },
+      loContrast: {
+        color: "$loContrast",
       },
     },
     font: {

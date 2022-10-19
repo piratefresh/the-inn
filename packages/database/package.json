@@ -24,7 +24,7 @@
     "studio": "prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "^4.0.0",
+    "@prisma/client": "^4.4.0",
     "argon2": "^0.28.7",
     "chalk": "^5.0.1",
     "loglevel": "^1.8.0",
@@ -36,7 +36,7 @@
     "config": "*",
     "eslint": "^8.12.0",
     "esno": "^0.14.1",
-    "prisma": "^4.0.0",
+    "prisma": "^4.4.0",
     "rimraf": "^3.0.2",
     "tsconfig": "*",
     "tsup": "^6.1.3",

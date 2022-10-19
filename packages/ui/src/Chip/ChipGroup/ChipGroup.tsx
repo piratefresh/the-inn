@@ -92,7 +92,6 @@ export const ChipGroup = ({
           ? _value.filter((v) => v !== val)
           : [..._value, val]
       );
-      console.log("array: ", value);
     } else {
       setValue(val);
     }

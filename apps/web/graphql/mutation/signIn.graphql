@@ -5,7 +5,15 @@ mutation SignIn($usernameOrEmail: String!, $password: String!) {
       email
       firstName
       lastName
-      image
+      imageUrl
+      accounts {
+        provider
+        providerAccountId
+        type
+        expiresAt
+        refreshToken
+        userId
+      }
     }
     ... on NonExistingUserError {
       message

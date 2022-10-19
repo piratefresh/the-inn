@@ -3,20 +3,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { client } from "@utils/createUrqlClient";
+import { createUrqlClient } from "@utils/createUrqlClient";
 import { SignInDocument } from "@generated/graphql";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "database";
-
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+import jwt from "jsonwebtoken";
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Do whatever you want here, before the request is passed down to `NextAuth`
   return await NextAuth(req, res, {
+    // adapter: PrismaAdapter(prisma),
     debug: true,
     providers: [
       //credentials for store
@@ -29,20 +23,18 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           password: { label: "password", type: "password" },
         },
         authorize: async (credentials, req) => {
-          //return a user or null if there are problems with the credentials
-          //database lookup
-          console.log("credentials: ", credentials);
           const { email, password } = credentials;
 
-          const { data, error } = await client
+          const { data, error } = await createUrqlClient
             .mutation(SignInDocument, {
               usernameOrEmail: email,
               password: password,
             })
             .toPromise();
-          console.log("error: ", error);
-          console.log("data: ", data);
-          if (data.signin?.email) {
+
+          console.log("dataa: ", data);
+
+          if (data?.signin) {
             return data.signin;
           }
 
@@ -62,16 +54,19 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           token.id = user.id;
           token.name = `${user.firstName} ${user.lastName}`;
           token.picture = user.image;
+          token.accessToken = user.accounts.refreshToken;
+          token.expiresAt = user.accounts.expiresAt;
         }
 
         return token;
       },
 
       async session({ session, token, user }) {
-        if (token) {
-        }
+        console.log("session: ", session);
         const newSession: Session = {
           ...session,
+          accessToken: token.accessToken,
+          expires: token.expiresAt,
           id: token?.id,
           user: {
             ...session.user,
@@ -85,6 +80,15 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       signIn: "/auth/signin",
     },
     secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
-    // adapter: PrismaAdapter(prisma),
+    // cookies: {
+    //   sessionToken: {
+    //     name: `next-auth.session-token`,
+    //     options: { httpOnly: false },
+    //   },
+    // },
+    session: {
+      strategy: "jwt",
+      maxAge: Date.now() + parseInt(process.env.TOKEN_REFRESH_PERIOD) * 1000,
+    },
   });
 }

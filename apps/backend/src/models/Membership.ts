@@ -9,10 +9,10 @@ export class Membership {
   role: MembershipRole;
 
   @Field()
-  campaignId: string;
+  campaign_id: string;
 
   @Field()
-  userId: string;
+  user_id: string;
 
   @Field((_type) => User)
   user: User;

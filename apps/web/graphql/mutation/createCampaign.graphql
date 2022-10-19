@@ -1,0 +1,23 @@
+# mutation createCampaign($createCampaignInput: CreateCampaignInput!) {
+#   ... on Campaign {
+#     id
+#     gmId
+#     title
+#     summary
+#     city
+#     state
+#   }
+# }
+
+mutation createCampaign($createCampaignInput: CreateCampaignInput!) {
+  createCampaign(createCampaignInput: $createCampaignInput) {
+    ... on Campaign {
+      id
+      gmId
+      title
+      summary
+      city
+      state
+    }
+  }
+}

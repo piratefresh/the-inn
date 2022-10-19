@@ -1,15 +1,16 @@
 import { IStep2, step2 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
+import { RadioGroup } from "ui/src/RadioGroup";
 import { Header } from "ui/src/Typography";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import { Button, Checkbox, Chip, Chips } from "@mantine/core";
-import { Input } from "ui/src/Input";
+import { Checkbox } from "@mantine/core";
+import { Input } from "@components/ui/Input";
 import InputGroup from "@components/ui/InputGroup";
 import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
-import { MultiSelectDays } from "@components/ui/Days/Days";
+import { Box, Button, MultiSelect } from "ui";
+import { DevTool } from "@hookform/devtools";
 
 const OnlineOptions = ({ control, errors }) => (
   <div className="grid grid-cols-2 gap-8">
@@ -88,23 +89,34 @@ const InPersonOptions = ({ control, errors }) => (
 export const Location = () => {
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
-  const [isOnline, setIsOnline] = React.useState(false);
 
   const {
     handleSubmit,
     control,
+    reset,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<IStep2>({
-    defaultValues: createCampaignData,
-    mode: "onChange",
+    defaultValues: {
+      combat: createCampaignData.combat,
+      puzzles: createCampaignData.puzzles,
+      roleplay: createCampaignData.roleplay,
+      voipSystem: createCampaignData.voipSystem ?? "Discord",
+      isOnline: true,
+    },
   });
 
   const onSubmit: SubmitHandler<IStep2> = async (data) => {
     dispatch(step2(data));
-    router.push("./extra");
+    reset();
+    await router.push("./preview");
   };
+
+  const onBack = React.useCallback((e) => {
+    e.preventDefault();
+
+    router.push("./general");
+  }, []);
 
   const campaignIsOnline = watch("isOnline");
 
@@ -117,11 +129,10 @@ export const Location = () => {
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">
-        <Header as="h1" size="4xl" className="font-serif text-white">
+        <Header as="h1" size="4xl" color="loContrast">
           Location
         </Header>
       </div>
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputGroup
           className="my-8"
@@ -140,23 +151,126 @@ export const Location = () => {
                 color="yellow"
                 size="lg"
                 onChange={(e) => field.onChange(e)}
+                defaultChecked={campaignIsOnline}
               />
             )}
           />
         </InputGroup>
         {locationOptions}
-        <FormDivider label="Detailed Information" />
+
+        <FormDivider label="Extras" />
+
+        <InputGroup className="my-8" label="*Roleplay?">
+          <Controller
+            control={control}
+            name="roleplay"
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup
+                direction="row"
+                height="100px"
+                onChange={onChange}
+                options={[
+                  {
+                    label: "Low",
+                    value: "Low",
+                  },
+                  {
+                    label: "Medium",
+                    value: "Medium",
+                  },
+                  {
+                    label: "High",
+                    value: "High",
+                  },
+                ]}
+                value={value}
+                width="250px"
+              />
+            )}
+          />
+        </InputGroup>
+        <InputGroup className="my-8" label="*Combat?">
+          <Controller
+            control={control}
+            name="combat"
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup
+                direction="row"
+                height="100px"
+                onChange={onChange}
+                options={[
+                  {
+                    label: "Low",
+                    value: "Low",
+                  },
+                  {
+                    label: "Medium",
+                    value: "Medium",
+                  },
+                  {
+                    label: "High",
+                    value: "High",
+                  },
+                ]}
+                value={value}
+                width="250px"
+              />
+            )}
+          />
+        </InputGroup>
+        <InputGroup className="my-8" label="*Puzzles?">
+          <Controller
+            control={control}
+            name="puzzles"
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup
+                direction="row"
+                height="100px"
+                onChange={onChange}
+                options={[
+                  {
+                    label: "Low",
+                    value: "Low",
+                  },
+                  {
+                    label: "Medium",
+                    value: "Medium",
+                  },
+                  {
+                    label: "High",
+                    value: "High",
+                  },
+                ]}
+                value={value}
+                width="250px"
+              />
+            )}
+          />
+        </InputGroup>
+
+        <InputGroup label="Tags">
+          <Controller
+            control={control}
+            name="tags"
+            render={({ field: { onChange, value, ref } }) => {
+              return (
+                <MultiSelect onChange={onChange} value={value} ref={ref} />
+              );
+            }}
+          />
+        </InputGroup>
+
         <div className="mt-8">
           <InputGroup
             className="my-8"
-            label="*Playing Days?"
-            // error={errors?.days}
+            label="*Additional Information"
+            error={errors?.additionalDetails}
           >
             <Controller
               control={control}
-              name="days"
+              name="additionalDetails"
               render={({ field }) => (
-                <MultiSelectDays
+                <Input.TextArea
                   value={field.value}
                   onChange={(e) => field.onChange(e)}
                 />
@@ -164,28 +278,23 @@ export const Location = () => {
             />
           </InputGroup>
         </div>
-        <InputGroup className="my-8" label="*Times?">
-          <Controller
-            control={control}
-            name="times"
-            render={({ field }) => (
-              <Chips
-                value={field.value}
-                onChange={(e) => field.onChange(e)}
-                multiple
-              >
-                <Chip value="Morning">Morning</Chip>
-                <Chip value="Afternoon">Afternoon</Chip>
-                <Chip value="Evening">Evening</Chip>
-                <Chip value="Night">Night</Chip>
-              </Chips>
-            )}
-          />
-        </InputGroup>
-        <Button className="text-white" type="submit">
-          Next
-        </Button>
+
+        <Box css={{ marginTop: "$8" }}>
+          <Button
+            css={{ marginRight: "$8" }}
+            size="large"
+            onClick={onBack}
+            type="button"
+          >
+            Previous
+          </Button>
+
+          <Button size="large" type="submit">
+            Submit
+          </Button>
+        </Box>
       </form>
+      <DevTool control={control} /> {/* set up the dev tool */}
     </div>
   );
 };

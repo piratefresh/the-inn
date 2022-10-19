@@ -19,31 +19,31 @@ export class Account {
   providerAccountId: string;
 
   @Field({ nullable: true })
-  refresh_token?: string;
+  refreshToken?: string;
 
   @Field({ nullable: true })
-  access_token?: string;
+  accessToken?: string;
 
   @Field((_type) => Int, { nullable: true })
-  expires_at?: number;
+  expiresAt?: number;
 
   @Field({ nullable: true })
-  token_type?: string;
+  tokenType?: string;
 
   @Field({ nullable: true })
   scope?: string;
 
   @Field({ nullable: true })
-  id_token?: string;
+  idToken?: string;
 
   @Field({ nullable: true })
-  session_state?: string;
+  sessionState?: string;
 
   @Field({ nullable: true })
-  oauth_token_secret?: string;
+  oauthTokenSecret?: string;
 
   @Field({ nullable: true })
-  oauth_token?: string;
+  oauthToken?: string;
 
   @Field((_type) => User)
   user: User;

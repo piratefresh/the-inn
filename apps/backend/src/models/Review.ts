@@ -7,10 +7,10 @@ export class Review {
   id: string;
 
   @Field()
-  createdAt: Date;
+  created_at: Date;
 
   @Field()
-  updatedAt: Date;
+  updated_at: Date;
 
   @Field((_type) => Int)
   rating: number;
@@ -19,7 +19,7 @@ export class Review {
   comment: string;
 
   @Field()
-  userId: string;
+  user_id: string;
 
   @Field((_type) => User)
   user: User;

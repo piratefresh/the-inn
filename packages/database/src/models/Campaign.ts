@@ -1,96 +1,97 @@
-import { Field, ObjectType, ID, Float, Int } from 'type-graphql'
-import { Experience } from '../typedefs/Experience'
-import { Difficulty } from '../typedefs/Difficulty'
-import { User } from './User'
-import { Membership } from './Membership'
+import { Field, ObjectType, ID, Float, Int } from "type-graphql";
+import { Experience } from "../typedefs/Experience";
+import { Difficulty } from "../typedefs/Difficulty";
+import { User } from "./User";
+import { Membership } from "./Membership";
 
 @ObjectType()
 export class Campaign {
   @Field((_type) => ID)
-  id: string
+  id: string;
 
   @Field()
-  createdAt: Date
+  createdAt: Date;
 
   @Field()
-  updatedAt: Date
+  updatedAt: Date;
 
   @Field()
-  title: string
+  title: string;
 
   @Field()
-  summary: string
+  summary: string;
 
   @Field({ nullable: true })
-  additional_details?: string
+  additional_details?: string;
 
   @Field({ nullable: true })
-  note?: string
+  note?: string;
 
   @Field()
-  image: string
+  image: string;
 
   @Field()
-  isOnline: boolean
+  isOnline: boolean;
 
   @Field()
-  city: string
+  city: string;
 
   @Field()
-  state: string
+  state: string;
 
   @Field((_type) => Float)
-  lat: number
+  lat: number;
 
   @Field((_type) => Float)
-  lng: number
+  lng: number;
 
   @Field()
-  startDate: Date
+  startDate: Date;
 
   @Field()
-  endDate: Date
+  endDate: Date;
 
   @Field((_type) => [String])
-  days: string[]
+  days: string[];
 
   @Field((_type) => [String])
-  time_periods: string[]
+  time_periods: string[];
 
   @Field((_type) => Experience)
-  experience: Experience
+  experience: Experience;
 
   @Field({ nullable: true })
-  voip_system?: string
+  voip_system?: string;
 
   @Field((_type) => Int)
-  max_seats: number
+  max_seats: number;
 
   @Field((_type) => Difficulty)
-  puzzles: Difficulty
+  puzzles: Difficulty;
 
   @Field((_type) => Difficulty)
-  combat: Difficulty
+  combat: Difficulty;
 
   @Field((_type) => Difficulty)
-  roleplay: Difficulty
+  roleplay: Difficulty;
 
   @Field()
-  gmId: string
+  gmId: string;
 
   @Field((_type) => User)
-  game_master: User
+  game_master: User;
 
   @Field((_type) => [String])
-  tags: string[]
+  tags: string[];
 
   @Field((_type) => Float, { nullable: true })
-  price?: number
+  price?: number;
 
   @Field((_type) => [String])
-  gallery: string[]
+  gallery: string[];
 
   @Field((_type) => [Membership])
-  memberships: Membership[]
+  memberships: Membership[];
 
   // skip overwrite 👇
+}

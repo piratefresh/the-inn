@@ -1,5 +1,6 @@
 import { Input } from "@components/ui/Input";
 import InputGroup from "@components/ui/InputGroup";
+import { useSignInMutation } from "@generated/graphql";
 import { AuthLayout } from "@layouts/AuthLayout";
 
 import { Button } from "@mantine/core";
@@ -25,14 +26,21 @@ const SignIn = () => {
     watch,
   } = useForm<SignInFormValues>();
 
+  const [_, login] = useSignInMutation();
+
   const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
     const { usernameOrEmail, password } = data;
+    // const res = await login({
+    //   password,
+    //   usernameOrEmail,
+    // });
 
     const res = await signIn("credentials", {
       redirect: false,
       email: usernameOrEmail,
       password,
     });
+
     console.log("res: ", res);
     if (!res?.error) {
       const name = `${session?.user.name}`;

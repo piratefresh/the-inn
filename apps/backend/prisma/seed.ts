@@ -45,54 +45,41 @@ const userData: Prisma.UserCreateInput[] = [
 export async function seedDB() {
   const hashedPassword = await argon2.hash("test");
 
-  // const user = await prisma.user.create({
-  //   data: {
-  //     firstName: "Magnus",
-  //     lastName: "Nilsen",
-  //     email: "magnussithnilsen@gmail.com",
-  //     password: hashedPassword,
-  //     experience: Experience.Beginner,
-  //     Hosted: {
-  //       create: {
-  //         title: "test",
-  //         image:
-  //           "https://cdnb.artstation.com/p/assets/images/images/050/482/035/4k/ben-keeling-squareshota01.jpg?1654954786",
-  //         summary: "test",
-  //         city: "Philadelphia",
-  //         state: "PA",
-  //         isOnline: true,
-  //         startDate: new Date(),
-  //         endDate: new Date(),
-  //         lat: 39.9526,
-  //         lng: -75.134109,
-  //         tags: ["Action", "Fantasy"],
-  //         puzzles: Difficulty.Medium,
-  //         combat: Difficulty.Medium,
-  //         createdAt: new Date(),
-  //         updatedAt: new Date(),
-  //         additional_details: "test",
-  //         max_seats: 4,
-  //       },
-  //     },
-  //   },
-  // });
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: "magnussithnilsen@gmail",
+  const user = await prisma.user.create({
+    data: {
+      firstName: "Magnus",
+      lastName: "Nilsen",
+      email: "magnussithnilsen@gmail.com",
+      password: hashedPassword,
+      experience: Experience.Beginner,
     },
   });
-  if (user) {
-    // const campaign = await prisma.campaign.findMany({
-    //   where: {
-    //     gmId: user.id,
-    //   },
-    // });
-    // const gameSystem = await prisma.gameSystem.create({
-    //   data: {
-    //     campaignId: campaign[0].id,
-    //     assignedBy: user.id,
-    //   },
-    // });
-  }
+
+  const account = await prisma.account.create({
+    data: {
+      userId: user.id,
+      type: "credentials",
+      provider: "Credentials",
+      providerAccountId: user.id,
+    },
+  });
+
+  // const user = await prisma.user.findUnique({
+  //   where: {
+  //     email: "magnussithnilsen@gmail",
+  //   },
+  // });
+  // if (user) {
+  // const campaign = await prisma.campaign.findMany({
+  //   where: {
+  //     gmId: user.id,
+  //   },
+  // });
+  // const gameSystem = await prisma.gameSystem.create({
+  //   data: {
+  //     campaignId: campaign[0].id,
+  //     assignedBy: user.id,
+  //   },
+  // });
+  // }
 }

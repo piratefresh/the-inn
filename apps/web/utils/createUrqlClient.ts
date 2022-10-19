@@ -30,30 +30,68 @@ export const errorExchange: Exchange =
 
 const ssrCache = ssrExchange({ isClient: !isServer });
 
-const client = createClient({
-  url: process.env.API_SERVER,
-  // fetchOptions: {
-  //   credentials: "include" as const,
-  // },
-  exchanges: [
-    devtoolsExchange,
-    dedupExchange,
-    cacheExchange({
-      keys: {
-        PaginatedPosts: () => null,
-      },
-    }),
-    errorExchange,
-    ssrCache,
-    fetchExchange,
-    // subscriptionExchange({
-    //   forwardSubscription: (operation) => ({
-    //     subscribe: (sink) => ({
-    //       unsubscribe: wsClient.subscribe(operation, sink),
-    //     }),
-    //   }),
-    // }),
-  ],
-});
+const createUrqlClient = (ssrExchange: any, ctx: any) => {
+  let cookie = "";
+  // if (isServer()) {
+  //   cookie = ctx?.req?.headers?.cookie;
+  // }
 
-export { client, ssrCache };
+  return {
+    url: process.env.NEXT_PUBLIC_API_URL as string,
+    fetchOptions: {
+      credentials: "include" as const,
+      headers: cookie
+        ? {
+            cookie,
+          }
+        : undefined,
+    },
+    exchanges: [
+      devtoolsExchange,
+      dedupExchange,
+      cacheExchange({
+        keys: {
+          PaginatedPosts: () => null,
+        },
+      }),
+      errorExchange,
+      ssrCache,
+      fetchExchange,
+      // subscriptionExchange({
+      //   forwardSubscription: (operation) => ({
+      //     subscribe: (sink) => ({
+      //       unsubscribe: wsClient.subscribe(operation, sink),
+      //     }),
+      //   }),
+      // }),
+    ],
+  };
+};
+
+// const createUrqlClient = createClient({
+//   url: process.env.API_SERVER,
+//   fetchOptions: {
+//     credentials: "include" as const,
+//   },
+//   exchanges: [
+//     devtoolsExchange,
+//     dedupExchange,
+//     cacheExchange({
+//       keys: {
+//         PaginatedPosts: () => null,
+//       },
+//     }),
+//     errorExchange,
+//     ssrCache,
+//     fetchExchange,
+//     // subscriptionExchange({
+//     //   forwardSubscription: (operation) => ({
+//     //     subscribe: (sink) => ({
+//     //       unsubscribe: wsClient.subscribe(operation, sink),
+//     //     }),
+//     //   }),
+//     // }),
+//   ],
+// });
+
+export { createUrqlClient, ssrCache };

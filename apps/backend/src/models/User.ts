@@ -28,7 +28,7 @@ export class User {
   emailVerified?: Date;
 
   @Field({ nullable: true })
-  image?: string;
+  imageUrl?: string;
 
   @Field()
   firstName: string;

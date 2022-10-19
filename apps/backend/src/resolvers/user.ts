@@ -12,7 +12,8 @@ import argon2 from "argon2";
 import { User } from "@models/User";
 import { MyContext } from "@typedefs/MyContext";
 import { validate } from "class-validator";
-import { setToken } from "@utils/setToken";
+import jwt from "jsonwebtoken";
+import { createRefreshToken, JWTPayload, setToken } from "@utils/setToken";
 import { ExistingUserError } from "@errors/ExisitingUserError";
 import { FieldsValidationError } from "@errors/FieldsValidationError";
 import { BadCredentialsError } from "@errors/BadCredentialsError";
@@ -130,12 +131,37 @@ export class UserResolver {
     // const inputPassword = await validate(password);
     // if (inputPassword.length > 0)
     //   return FieldsValidationError.from(inputPassword);
+
+    console.log("SIGN IN: ");
+
     const user = await prisma.user.findUnique({
       where: {
         email: usernameOrEmail,
       },
+      include: {
+        accounts: true,
+      },
     });
+
     console.log("user: ", user);
+
+    const refreshToken = createRefreshToken(user);
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
+
+    await prisma.account.update({
+      where: {
+        provider_providerAccountId_userId: {
+          userId: user.id,
+          provider: "Credentials",
+          providerAccountId: user.id,
+        },
+      },
+      data: {
+        refreshToken,
+        expiresAt: (decoded as JWTPayload).accessTokenExpires,
+      },
+    });
+
     if (!user) return new NonExistingUserError();
 
     const authenticated = await argon2.verify(user.password, password);
@@ -145,6 +171,34 @@ export class UserResolver {
     setToken(user, res);
 
     req.session.userId = user.id;
+    req.session.save();
+
+    console.log("sessionID SIGN UP: ", req.session.userId);
+
+    return Object.assign(new User(), user);
+  }
+  @Mutation((_type) => AuthResult)
+  async exchangeToken(
+    @Arg("usernameOrEmail") usernameOrEmail: string,
+    @Arg("password") password: string,
+    @Ctx() { prisma, res, req }: MyContext
+  ) {
+    // const inputUserEmailErrors = await validate(usernameOrEmail);
+    // if (inputUserEmailErrors.length > 0)
+    //   return FieldsValidationError.from(inputUserEmailErrors);
+    // const inputPassword = await validate(password);
+    // if (inputPassword.length > 0)
+    //   return FieldsValidationError.from(inputPassword);
+    console.log("sessionID EXCHNAGE TOKEN: ", req.session.userId);
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.session.userId,
+      },
+      include: {
+        accounts: true,
+      },
+    });
 
     return Object.assign(new User(), user);
   }

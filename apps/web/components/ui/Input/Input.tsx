@@ -12,6 +12,7 @@ interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name?: string;
   register?: any;
   children?: React.ReactNode;
+  gold?: boolean;
 }
 interface ITextAreaProps
   extends React.InputHTMLAttributes<HTMLTextAreaElement> {
@@ -24,6 +25,7 @@ interface ITextAreaProps
   name?: string;
   cols?: number;
   rows?: number;
+  gold?: boolean;
 }
 
 export const Input = ({
@@ -41,6 +43,7 @@ export const Input = ({
   onKeyDown,
   placeholder,
   register,
+  gold,
   id,
   ...props
 }: IInputProps) => {

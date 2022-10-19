@@ -50,30 +50,42 @@ export class CreateCampaignInput {
   title: string;
   @Field()
   summary: string;
+  @Field({ nullable: true })
+  jsonSummary: string;
   @Field()
-  image: string;
+  additionalDetails: string;
+  @Field({ nullable: true })
+  jsonAdditionalDetails: string;
+  @Field()
+  imageUrl: string;
   @Field()
   isOnline: boolean;
-  @Field()
+  @Field({ nullable: true })
   city: string;
-  @Field()
+  @Field({ nullable: true })
   state: string;
-  @Field()
+  @Field({ nullable: true })
   lat: number;
-  @Field()
+  @Field({ nullable: true })
   lng: number;
   @Field()
   startDate: Date;
-  @Field()
+  @Field({ nullable: true })
   endDate: Date;
   @Field(() => [String])
   days: string[];
   @Field(() => [String])
-  time_periods: string[];
+  timePeriods: string[];
   @Field()
-  game_system: string;
+  timezone: string;
   @Field()
-  max_seats: number;
+  gameSystem: string;
+  @Field()
+  voipSystem: string;
+  @Field()
+  virtualTable: string;
+  @Field()
+  maxSeats: number;
   @Field(() => Experience)
   experience: Experience;
   @Field(() => Difficulty)
@@ -91,9 +103,9 @@ export class CreateCampaignInput {
 @InputType()
 export class AddPlayerCampaignInput {
   @Field()
-  campaignId: string;
+  campaign_id: string;
   @Field(() => [String])
-  playerIds: string[];
+  player_ids: string[];
 }
 
 @ObjectType()
@@ -122,7 +134,7 @@ export class CampaignResolver {
         id,
       },
       include: {
-        game_master: true,
+        gameMaster: true,
         memberships: {
           select: {
             user: true,
@@ -139,10 +151,16 @@ export class CampaignResolver {
     @Ctx() { prisma, res, req }: MyContext
   ) {
     try {
+      console.log("req.session.userId: ", req.session);
+      console.log("createCampaignInput: ", createCampaignInput);
       const campaign = await prisma.campaign.create({
         data: {
           ...createCampaignInput,
-          gmId: req.session.userId,
+          gameMaster: {
+            connect: {
+              id: req.session.userId,
+            },
+          },
         },
       });
 
@@ -160,13 +178,13 @@ export class CampaignResolver {
     try {
       const members = await prisma.user.findMany({
         where: {
-          id: { in: addPlayerCampaignInput.playerIds },
+          id: { in: addPlayerCampaignInput.player_ids },
         },
       });
 
       const playersArr = await members.map((player: User) => ({
         userId: player.id,
-        campaignId: addPlayerCampaignInput.campaignId,
+        campaignId: addPlayerCampaignInput.campaign_id,
         role: MembershipRole.PLAYER,
       }));
 
@@ -177,7 +195,7 @@ export class CampaignResolver {
       if (createdPlayers) {
         const foundCampaign = await prisma.campaign.findUnique({
           where: {
-            id: addPlayerCampaignInput.campaignId,
+            id: addPlayerCampaignInput.campaign_id,
           },
           include: {
             memberships: {
@@ -186,7 +204,7 @@ export class CampaignResolver {
                 campaign: true,
               },
             },
-            game_master: true,
+            gameMaster: true,
           },
         });
 
@@ -207,7 +225,7 @@ export class CampaignResolver {
         upload_preset: "the_inn_campaign",
         folder: "The inn/campaignmedia",
       },
-      process.env.CLOUDINARY_API_SECRET as string
+      "WLq6q-U8gvxsbOBnjOIoR7PzINo"
     );
     return { timestamp, signature };
   }

@@ -21,14 +21,20 @@ export class Campaign {
   @Field()
   summary: string;
 
+  @Field()
+  jsonSummary: string;
+
   @Field({ nullable: true })
-  additional_details?: string;
+  additionalDetails?: string;
+
+  @Field({ nullable: true })
+  jsonAdditionalDetails: string;
 
   @Field({ nullable: true })
   note?: string;
 
   @Field()
-  image: string;
+  imageUrl: string;
 
   @Field()
   isOnline: boolean;
@@ -54,17 +60,23 @@ export class Campaign {
   @Field((_type) => [String])
   days: string[];
 
+  @Field()
+  timezone: string;
+
   @Field((_type) => [String])
-  time_periods: string[];
+  timePeriods: string[];
+
+  @Field()
+  gameSystem: string;
 
   @Field((_type) => Experience)
   experience: Experience;
 
   @Field({ nullable: true })
-  voip_system?: string;
+  voipSystem?: string;
 
   @Field((_type) => Int)
-  max_seats: number;
+  maxSeats: number;
 
   @Field((_type) => Difficulty)
   puzzles: Difficulty;
@@ -79,7 +91,7 @@ export class Campaign {
   gmId: string;
 
   @Field((_type) => User)
-  game_master: User;
+  gameMaster: User;
 
   @Field((_type) => [String])
   tags: string[];
