@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../styles/fonts.css";
 import React, { ReactNode } from "react";
 import { Provider } from "react-redux";
 import Router from "next/router";
@@ -12,6 +13,8 @@ import { NextPage } from "next";
 import { SessionProvider } from "next-auth/react";
 import { RootLayout } from "@layouts/RootLayout";
 import { createUrqlClient } from "@utils/createUrqlClient";
+import Pusher from "pusher-js";
+import { PusherContainer } from "@components/PusherContainer";
 
 interface NoopProps extends React.FC {
   children: React.ReactNode;
@@ -54,8 +57,19 @@ Router.events.on("routeChangeStart", () => progress.start());
 Router.events.on("routeChangeComplete", () => progress.finish());
 Router.events.on("routeChangeError", () => progress.finish());
 
-function App({ Component, pageProps, router }: AppPropsWithLayout) {
+const pusher = new Pusher("4aa7a9d626b176d0e11f", {
+  cluster: "us2",
+  // use jwts in prod
+  authEndpoint: `http://localhost:4000/pusher/auth`,
+});
+
+function App({
+  Component,
+  pageProps: { session, ...pageProps },
+  router,
+}: AppPropsWithLayout) {
   const [navIsOpen, setNavIsOpen] = React.useState(false);
+  // const [sessi];
 
   React.useEffect(() => {
     if (!navIsOpen) return;
@@ -76,22 +90,26 @@ function App({ Component, pageProps, router }: AppPropsWithLayout) {
   const description =
     meta.metaDescription || meta.description || "Website for Chatting.";
 
+  const presenceChannel = pusher.subscribe("presence-awesome");
+
   return (
-    <MantineProvider
-      withGlobalStyles
-      withNormalizeCSS
-      emotionOptions={{ key: "mantine", prepend: false }}
-    >
-      <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        emotionOptions={{ key: "mantine", prepend: false }}
+      >
         <Provider store={store}>
-          <NotificationsProvider position="top-center">
-            <Layout {...layoutProps}>
-              <Component {...pageProps} />
-            </Layout>
-          </NotificationsProvider>
+          <PusherContainer>
+            <NotificationsProvider position="top-center">
+              <Layout {...layoutProps}>
+                <Component {...pageProps} />
+              </Layout>
+            </NotificationsProvider>
+          </PusherContainer>
         </Provider>
-      </SessionProvider>
-    </MantineProvider>
+      </MantineProvider>
+    </SessionProvider>
   );
 }
 

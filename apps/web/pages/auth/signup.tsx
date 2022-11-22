@@ -5,8 +5,8 @@ import { AuthLayout } from "@layouts/AuthLayout";
 
 import { Button } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 export interface SignUpFormValues {
@@ -17,13 +17,11 @@ export interface SignUpFormValues {
 }
 
 const SignUp = () => {
-  const { data: session } = useSession();
+  const router = useRouter();
   const {
-    register,
     formState: { errors },
     control,
     handleSubmit,
-    watch,
   } = useForm<SignUpFormValues>();
 
   const [_, signUp] = useSignUpMutation();
@@ -53,6 +51,8 @@ const SignUp = () => {
         message: `Welcome to The Inn ${data.firstName} ${data.lastName}`,
         color: "green",
       });
+
+      router.push("/signin");
     }
   };
 

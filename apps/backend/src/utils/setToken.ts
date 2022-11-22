@@ -23,8 +23,10 @@ export const setToken = (user: UserType, res: Response): void => {
 
   const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
 
+  console.log("token: ", token);
+
   res.cookie("rid", token, {
-    httpOnly: false,
+    httpOnly: true,
   });
 };
 

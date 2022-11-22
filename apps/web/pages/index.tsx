@@ -1,85 +1,73 @@
-import { HeroImage } from "@components/HeroImage";
 import { useGetCampaignsQuery } from "@generated/graphql";
-import { Card, Header, Tag, Text } from "ui";
-import { styled } from "ui/src/theme";
-import { format, parse } from "date-fns";
+import { HeroImage, Text } from "ui";
+import {
+  useChannel,
+  useEvent,
+  usePresenceChannel,
+  useTrigger,
+  useClientTrigger,
+} from "@harelpls/use-pusher";
 import { RootLayout } from "../layouts";
-
 import type { NextPageWithLayout } from "./_app";
-
-const StyledText = styled(Text, {
-  margin: "0 0px",
-  lineHeight: "$lineHeights$tall",
-  color: "#666",
-  whiteSpace: "nowrap",
-});
+import { CampaignCard } from "@components/CampaignCard";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "@utils/createUrqlClient";
+import React from "react";
 
 const Home: NextPageWithLayout = () => {
   const [{ data: campaigns, fetching, error }] = useGetCampaignsQuery();
+
+  const channel = useChannel("my-channel");
+  useEvent(channel, "my-event", (data) => console.log(data));
+
+  const {
+    channel: presenceChannel,
+    members,
+    ...rest
+  } = usePresenceChannel("presence-awesome");
+
+  console.log(presenceChannel, rest);
+  console.log("members: ", members);
+
   return (
     <>
-      <div className="bg-main px-100 pt-10 pb-20">
-        <h1 className="font-oldFenris text-6xl text-white mb-12">
-          Recruit, or join <span className="text-yellow-400">epic</span>{" "}
-          adventures
-        </h1>
-        <HeroImage image="https://res.cloudinary.com/film-it/image/upload/v1648264459/The%20inn/david-edwards-artwork-final-013.jpg" />
+      <div className="bg-main">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="font-oldFenris text-6xl text-white my-14">
+            Recruit, or join <span className="text-yellow-400">epic</span>{" "}
+            adventures
+          </h1>
+          <div className="my-14 relative">
+            <HeroImage
+              height={500}
+              width={1280}
+              src="https://res.cloudinary.com/film-it/image/upload/v1648264459/The%20inn/david-edwards-artwork-final-013.jpg"
+            />
+          </div>
+        </div>
       </div>
-      <div className="bg-games px-100 py-20">
-        <h2 className="font-oldFenris text-white text-4xl mb-12">
-          Upcoming Games
-        </h2>
-        <div className="grid grid-cols-4 gap-4">
-          {campaigns?.getCampaigns.map((campaign) => (
-            <div style={{ maxWidth: "275px" }} key={campaign.title}>
-              <Card
-                gold
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  height: "100%",
-                }}
-              >
-                <Card.Image
-                  gold
-                  width="100%"
-                  height="175px"
-                  src={campaign.imageUrl}
-                />
+      <div className="relative">
+        <div className="bg-gamesBg bg-games absolute inset-0 bottom-10 bg-bottom bg-no-repeat goldenBorder2 border-l-0 border-r-0" />
+        <div className="relative py-20 max-w-7xl mx-auto">
+          <span
+            className="App-link"
+            onClick={() => trigger("client-hello-world", {})}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Fire event
+          </span>
+          <h2 className="font-oldFenris text-white text-4xl mb-12">
+            Upcoming Games
+          </h2>
 
-                <Card.Section style={{ flex: 1 }}>
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <StyledText size="sm" weight="medium">
-                      {campaign.gameSystem}
-                    </StyledText>
-                    {/* <StyledText size="sm" weight="medium">
-                      {campaign.members.length} out of {campaign.partySize}{" "}
-                      Players
-                    </StyledText> */}
-                  </div>
-                  <Header color="hiContrast" size="xl">
-                    {campaign.title}
-                  </Header>
-                  <StyledText size="sm">
-                    {format(
-                      new Date(campaign.startDate),
-                      "EEE',' MMM dd 'at' h bbb"
-                    )}
-                  </StyledText>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {campaign.tags?.map((tag) => (
-                      <Tag key={tag}>{tag}</Tag>
-                    ))}
-                  </div>
-                </Card.Section>
-              </Card>
-            </div>
-          ))}
+          <div className="grid grid-cols-4 gap-8">
+            {campaigns?.getCampaigns.map((campaign) => (
+              <div style={{ maxWidth: "275px" }} key={campaign.title}>
+                <CampaignCard campaign={campaign} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
@@ -93,4 +81,4 @@ Home.layoutProps = {
   Layout: RootLayout,
 };
 
-export default Home;
+export default withUrqlClient(createUrqlClient, { ssr: false })(Home);

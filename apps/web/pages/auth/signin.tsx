@@ -2,10 +2,11 @@ import { Input } from "@components/ui/Input";
 import InputGroup from "@components/ui/InputGroup";
 import { useSignInMutation } from "@generated/graphql";
 import { AuthLayout } from "@layouts/AuthLayout";
-
 import { Button } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
+import { createUrqlClient } from "@utils/createUrqlClient";
 import { signIn, useSession } from "next-auth/react";
+import { withUrqlClient } from "next-urql";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -19,30 +20,31 @@ const SignIn = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const {
-    register,
     formState: { errors },
     control,
     handleSubmit,
-    watch,
   } = useForm<SignInFormValues>();
 
-  const [_, login] = useSignInMutation();
+  const [{ data: userData, error, fetching }, signin] = useSignInMutation();
 
   const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
     const { usernameOrEmail, password } = data;
-    // const res = await login({
+
+    // To create session with the api server
+    // const apiRes = signin({
     //   password,
     //   usernameOrEmail,
     // });
 
+    // For authenticating with next-auth
     const res = await signIn("credentials", {
       redirect: false,
       email: usernameOrEmail,
       password,
     });
 
-    console.log("res: ", res);
-    if (!res?.error) {
+    if (!res.error) {
+      console.log("session: ", session);
       const name = `${session?.user.name}`;
       showNotification({
         title: `Welcome back ${name}`,
@@ -50,7 +52,7 @@ const SignIn = () => {
       });
       router.push("/");
     }
-    if (res?.error) {
+    if (res.error) {
       showNotification({
         title: `Only accepted adventures can enter`,
         message: `Reason for not accepted inn: ${res.error}`,
@@ -119,4 +121,4 @@ SignIn.layoutProps = {
   Layout: AuthLayout,
 };
 
-export default SignIn;
+export default withUrqlClient(createUrqlClient)(SignIn);

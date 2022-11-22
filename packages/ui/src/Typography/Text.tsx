@@ -29,13 +29,17 @@ export interface TextProps {
     | "green"
     | "lime"
     | "yellow"
+    | "yellow2"
     | "orange"
     | "gold"
+    | "gold2"
     | "bronze"
     | "gray"
     | "hiContrast"
-    | "loContrast";
+    | "loContrast"
+    | "lightContrast";
   font?: VariantProps<typeof font.fonts>;
+  weight?: VariantProps<typeof font.fontWeights>;
   style?: React.CSSProperties;
   className?: string;
 }
@@ -125,11 +129,14 @@ const StyledText = styled("span", {
       yellow: {
         color: "$yellow11",
       },
+      yellow2: {
+        color: "$yellow12",
+      },
       orange: {
         color: "$orange11",
       },
       gold: {
-        color: "$gold11",
+        color: "$gold1",
       },
       bronze: {
         color: "$bronze11",
@@ -143,17 +150,11 @@ const StyledText = styled("span", {
       loContrast: {
         color: "$loContrast",
       },
+      lightContrast: {
+        color: "rgb(237, 232, 205)",
+      },
     },
     font: {
-      trejanSans: {
-        fontFamiiy: "$fonts$trejanSans",
-      },
-      alegreyaSans: {
-        fontFamiiy: "$fonts$alegreyaSans",
-      },
-      oldFenris: {
-        fontFamiiy: "$fonts$oldFenris",
-      },
       mono: {
         fontFamiiy: "$fonts$mono",
       },
@@ -166,18 +167,59 @@ const StyledText = styled("span", {
       untitled: {
         fontFamiiy: "$fonts$untitled",
       },
+      trejan: {
+        fontFamiiy: "$fonts$trejan",
+      },
+      alegreyasans: {
+        fontFamiiy: "$fonts$alegreyasans",
+      },
+      cinzel: {
+        fontFamily: "$fonts$cinzel",
+      },
+      oldfenris: {
+        fontFamiiy: "$fonts$oldfenris",
+      },
+    },
+    weight: {
+      hairline: {
+        fontWeight: "$fontWeghts$hairline",
+      },
+      thin: {
+        fontWeight: "$fontWeghts$thin",
+      },
+      light: {
+        fontWeight: "$fontWeghts$light",
+      },
+      normal: {
+        fontWeight: "$fontWeghts$normal",
+      },
+      medium: {
+        fontWeight: "$fontWeghts$medium",
+      },
+      semibold: {
+        fontWeight: "$fontWeghts$semibold",
+      },
+      bold: {
+        fontWeight: "$fontWeghts$bold",
+      },
+      extrabold: {
+        fontWeight: "$fontWeghts$extrabold",
+      },
+      black: {
+        fontWeight: "$fontWeghts$black",
+      },
     },
   },
   defaultVariants: {
     size: "base",
     color: "contrast",
-    font: "sans",
   },
 });
 
 export const Text = ({
   size,
   as = "p",
+  weight = "normal",
   color,
   style,
   className,
@@ -189,6 +231,7 @@ export const Text = ({
     size={size}
     color={color}
     font={font}
+    weight={weight}
     style={style}
     className={className}
   >

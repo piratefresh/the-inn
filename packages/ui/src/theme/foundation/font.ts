@@ -6,9 +6,10 @@ export const font = {
     sans: '"Alegreya Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
     serif:
       '"Staatliches", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
-    oldFenris: "Old Fenris",
-    alegreyaSans: "'Alegreya Sans'",
-    trejanSans: '"trajan-sans-pro"',
+    oldfenris: "OldFenris",
+    alegreyasans: "'Alegreya Sans'",
+    trejan: "trajan-sans-pro, sans-serif",
+    cinzel: '"Cinzel", serif',
   },
   fontSizes: {
     xs: "0.75rem",

@@ -1,5 +1,6 @@
 const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
+const plugin = require("tailwindcss/plugin");
 
 module.exports = {
   content: [
@@ -15,7 +16,7 @@ module.exports = {
       fontFamily: {
         sans: ["Alegreya Sans", "Roboto", ...defaultTheme.fontFamily.sans],
         serif: ["Staatliches", ...defaultTheme.fontFamily.serif],
-        oldFenris: ["Old Fenris", ...defaultTheme.fontFamily.sans],
+        oldFenris: ["OldFenris", ...defaultTheme.fontFamily.sans],
         alegreyaSans: ["Alegreya Sans", ...defaultTheme.fontFamily.sans],
         trejanSans: ["trajan-sans-pro", ...defaultTheme.fontFamily.sans],
       },
@@ -110,5 +111,36 @@ module.exports = {
     margin: ["first", "last", "responsive"],
     padding: ["first", "last", "responsive"],
   },
-  plugins: [require("@tailwindcss/typography")],
+  corePlugins: {
+    aspectRatio: false,
+  },
+  plugins: [
+    require("@tailwindcss/aspect-ratio"),
+    require("@tailwindcss/typography"),
+    plugin(function ({ addComponents, theme }) {
+      addComponents({
+        ".bg-main": {
+          position: "relative",
+          background:
+            "linear-gradient(270deg, #0e0a00 0%, #25120e 14.45%, #25120e 89.9%, #0d0a00 102.74%)",
+
+          "&::before": {
+            content: "''",
+            display: "block",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            background:
+              'url("https://res.cloudinary.com/film-it/image/upload/v1648261306/The%20inn/concrete-stylized.png")',
+            backgroundRepeat: "repeat",
+            backgroundSize: "cover",
+            mixBlendMode: "screen",
+            opacity: 0.12,
+          },
+        },
+      });
+    }),
+  ],
 };

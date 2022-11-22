@@ -1,16 +1,19 @@
 import {
+  createClient,
   dedupExchange,
   fetchExchange,
-  subscriptionExchange,
   ssrExchange,
-  createClient,
+  subscriptionExchange,
 } from "urql";
 import { cacheExchange } from "@urql/exchange-graphcache";
 import { devtoolsExchange } from "@urql/devtools";
 import { pipe, tap } from "wonka";
 import { Exchange } from "urql";
 import Router from "next/router";
+import { createClient as createWSClient } from "graphql-ws";
 import { isServer } from "./isServer";
+
+console.log("process.env.NEXT_PUBLIC_WS_URL: ", process.env.NEXT_PUBLIC_WS_URL);
 
 export const errorExchange: Exchange =
   ({ forward }) =>
@@ -30,7 +33,13 @@ export const errorExchange: Exchange =
 
 const ssrCache = ssrExchange({ isClient: !isServer });
 
-const createUrqlClient = (ssrExchange: any, ctx: any) => {
+const wsClient = () =>
+  createWSClient({
+    url: "ws://localhost:4000/graphql",
+  });
+
+const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
+  console.log("CTX: ", ctx);
   let cookie = "";
   // if (isServer()) {
   //   cookie = ctx?.req?.headers?.cookie;
@@ -60,7 +69,7 @@ const createUrqlClient = (ssrExchange: any, ctx: any) => {
       // subscriptionExchange({
       //   forwardSubscription: (operation) => ({
       //     subscribe: (sink) => ({
-      //       unsubscribe: wsClient.subscribe(operation, sink),
+      //       unsubscribe: wsClient().subscribe(operation, sink),
       //     }),
       //   }),
       // }),
@@ -94,4 +103,29 @@ const createUrqlClient = (ssrExchange: any, ctx: any) => {
 //   ],
 // });
 
-export { createUrqlClient, ssrCache };
+const basicClient = createClient({
+  url: process.env.NEXT_PUBLIC_API_URL as string,
+  exchanges: [
+    dedupExchange,
+    cacheExchange({
+      keys: {
+        PaginatedPosts: () => null,
+      },
+    }),
+    ssrCache,
+    fetchExchange,
+  ],
+});
+
+const urqlExchanges = [
+  dedupExchange,
+  cacheExchange({
+    keys: {
+      PaginatedPosts: () => null,
+    },
+  }),
+  ssrCache,
+  fetchExchange,
+];
+
+export { createUrqlClient, basicClient, ssrCache, urqlExchanges };

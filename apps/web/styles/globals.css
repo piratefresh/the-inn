@@ -1,6 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "trajan-sans-pro, Helvetica, Arial, sans-serif";
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "trajan-sans-pro, Helvetica, Arial, sans-serif";
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "trajan-sans-pro, Helvetica, Arial, sans-serif";
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "trajan-sans-pro, Helvetica, Arial, sans-serif";
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TrajanPro";
+  src: url("/fonts/TrajanPro/TrajanPro-Regular.ttf");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TrajanPro";
+  src: url("/fonts/TrajanPro/TrajanPro-Bold.otf");
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Old Fenris";
+  src: url("/fonts/OldFenris/Old-Fenris.ttf");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
 @layer components {
   .bg-main {
@@ -9,8 +58,7 @@
       270deg,
       #0e0a00 0%,
       #25120e 14.45%,
-      #25120e 89.9%,
-      #0d0a00 102.74%
+      #25120e 100%
     );
 
     &::before {
@@ -31,6 +79,8 @@
   .bg-games {
     @apply bg-gamesBg;
     position: relative;
+
+    pointer-events: none;
     &::before {
       content: "";
       display: block;
@@ -76,6 +126,13 @@
       linear-gradient(#ffd166, #9f5e25);
     background-origin: border-box;
     background-clip: content-box, border-box;
+  }
+  .goldenBorder2 {
+    border: 3px solid;
+    border-image-slice: 1;
+    border-width: 3px;
+    border-image-source: linear-gradient(#fcfcfc, #fcfcfc),
+      linear-gradient(#ffd166, #9f5e25);
   }
   .px-100 {
     padding-left: 100px;

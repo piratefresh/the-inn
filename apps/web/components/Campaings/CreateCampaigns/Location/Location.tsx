@@ -11,6 +11,8 @@ import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
 import { Box, Button, MultiSelect } from "ui";
 import { DevTool } from "@hookform/devtools";
+import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
+import { CustomEditorProps } from "../General/General";
 
 const OnlineOptions = ({ control, errors }) => (
   <div className="grid grid-cols-2 gap-8">
@@ -90,10 +92,14 @@ export const Location = () => {
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
 
+  // Used to retrieve json object from text editor
+  const richTextEditorRef = React.useRef<CustomEditorProps>();
+
   const {
     handleSubmit,
     control,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm<IStep2>({
@@ -102,6 +108,8 @@ export const Location = () => {
       puzzles: createCampaignData.puzzles,
       roleplay: createCampaignData.roleplay,
       voipSystem: createCampaignData.voipSystem ?? "Discord",
+      additionalDetails: createCampaignData.additionalDetails,
+      jsonAdditionalDetails: createCampaignData.jsonAdditionalDetails,
       isOnline: true,
     },
   });
@@ -260,24 +268,36 @@ export const Location = () => {
           />
         </InputGroup>
 
-        <div className="mt-8">
-          <InputGroup
-            className="my-8"
-            label="*Additional Information"
-            error={errors?.additionalDetails}
-          >
-            <Controller
-              control={control}
-              name="additionalDetails"
-              render={({ field }) => (
-                <Input.TextArea
-                  value={field.value}
-                  onChange={(e) => field.onChange(e)}
-                />
-              )}
-            />
-          </InputGroup>
-        </div>
+        <InputGroup
+          className="my-12"
+          label="Additional Details"
+          error={errors.additionalDetails}
+        >
+          <Controller
+            control={control}
+            name="jsonAdditionalDetails"
+            render={({ field }) => (
+              <RichTextEditor
+                ref={richTextEditorRef}
+                onChange={(e) => {
+                  field.onChange(e);
+                  if (richTextEditorRef?.current) {
+                    setValue(
+                      "additionalDetails",
+                      richTextEditorRef?.current.getText()
+                    );
+                  }
+                }}
+                value={field.value}
+                onBlur={field.onBlur}
+                name="jsonAdditionalDetails"
+              />
+            )}
+          />
+          <span className="text-red-800">
+            {errors.additionalDetails && errors.additionalDetails.message}
+          </span>
+        </InputGroup>
 
         <Box css={{ marginTop: "$8" }}>
           <Button

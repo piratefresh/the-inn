@@ -1,0 +1,20 @@
+.mainSideSpacing {
+  padding: 0 100px;
+}
+
+.parent {
+  background: linear-gradient(
+    180deg,
+    #0d0a00 0%,
+    #0d0a00 60%,
+    #273435 85.1%,
+    #273435 90%
+  );
+}
+
+.mainLayout {
+  @apply relative mx-auto;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+}

@@ -103,9 +103,7 @@ export class CreateCampaignInput {
 @InputType()
 export class AddPlayerCampaignInput {
   @Field()
-  campaign_id: string;
-  @Field(() => [String])
-  player_ids: string[];
+  campaignId: string;
 }
 
 @ObjectType()
@@ -116,6 +114,15 @@ class ImageSignature {
   @Field((_type) => Int)
   timestamp!: number;
 }
+@ObjectType()
+class CampaignPagination {
+  @Field((_type) => [Campaign])
+  campaigns!: Campaign[];
+  @Field()
+  cursor!: string;
+  @Field((_type) => Boolean)
+  hasNextPage: boolean;
+}
 
 @Resolver(Campaign)
 export class CampaignResolver {
@@ -124,11 +131,76 @@ export class CampaignResolver {
     return "hello game";
   }
   @Query(() => [Campaign])
-  async getCampaigns(@Ctx() { prisma, res }: MyContext) {
+  async getCampaigns(@Ctx() { prisma, res, req, redis }: MyContext) {
+    console.log("req.session.userId CAMPAIGN RESOLVER: ", req.session);
+    const user = await redis.get("sess:3BVczvIrYbEd58T-K_0plkK_c6Wh7S8U");
+    console.log("redis: ", user);
+
     return prisma.campaign.findMany({});
   }
+  @Query(() => CampaignPagination)
+  async getCampaignsPagination(
+    @Arg("cursor", { nullable: true }) cursor: string,
+    @Arg("limit", { defaultValue: 4 }) limit: number,
+    @Ctx() { prisma, res, req }: MyContext
+  ) {
+    let queryResults = null;
+
+    console.log("req.session.userId CAMPAIGN RESOLVER: ", req.session);
+
+    if (cursor)
+      queryResults = await prisma.campaign.findMany({
+        take: limit,
+        skip: 1, // Skip the cursor
+        cursor: {
+          id: cursor,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+    else
+      queryResults = await prisma.campaign.findMany({
+        take: limit,
+      });
+
+    if (queryResults.length > 0) {
+      // Get the last post id
+      const lastPostInResults = queryResults[queryResults.length - 1]; // Remember: zero-based index! :)
+
+      console.log(lastPostInResults);
+      const after = lastPostInResults.id; // Example: 52
+
+      // query after the cursor to check if we have nextPage
+      const secondQueryResults = await prisma.campaign.findMany({
+        take: limit,
+        cursor: {
+          id: after,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+
+      return {
+        campaigns: queryResults,
+        cursor: after,
+        hasNextPage: secondQueryResults.length >= limit,
+      };
+    }
+
+    return {
+      campaigns: [],
+      cursor: null,
+      hasNextPage: false,
+    };
+  }
+
   @Query(() => Campaign)
-  async getCampaign(@Arg("id") id: string, @Ctx() { prisma, res }: MyContext) {
+  async getCampaign(
+    @Arg("id") id: string,
+    @Ctx() { prisma, res, req }: MyContext
+  ) {
     return prisma.campaign.findUnique({
       where: {
         id,
@@ -137,6 +209,7 @@ export class CampaignResolver {
         gameMaster: true,
         memberships: {
           select: {
+            role: true,
             user: true,
             campaign: true,
           },
@@ -151,7 +224,7 @@ export class CampaignResolver {
     @Ctx() { prisma, res, req }: MyContext
   ) {
     try {
-      console.log("req.session.userId: ", req.session);
+      console.log("req.session.userId: ", req.session.userId);
       console.log("createCampaignInput: ", createCampaignInput);
       const campaign = await prisma.campaign.create({
         data: {
@@ -161,11 +234,20 @@ export class CampaignResolver {
               id: req.session.userId,
             },
           },
+          memberships: {
+            create: {
+              role: MembershipRole.GM,
+              userId: req.session.userId,
+            },
+          },
         },
       });
 
+      console.log("campaign: ", campaign);
+
       return Object.assign(new Campaign(), campaign);
     } catch (err) {
+      console.log("err: ", err);
       throw err;
     }
   }
@@ -176,32 +258,74 @@ export class CampaignResolver {
     @Ctx() { prisma, res, req }: MyContext
   ) {
     try {
-      const members = await prisma.user.findMany({
+      // const members = await prisma.user.findMany({
+      //   where: {
+      //     id: { in: addPlayerCampaignInput.player_ids },
+      //   },
+      // });
+
+      // const playersArr = await members.map((player: User) => ({
+      //   userId: player.id,
+      //   campaignId: addPlayerCampaignInput.campaign_id,
+      //   role: MembershipRole.PLAYER,
+      // }));
+
+      // const createdPlayers = await prisma.membership.createMany({
+      //   data: playersArr,
+      //   skipDuplicates: true,
+      // });
+      // if (createdPlayers) {
+      //   const foundCampaign = await prisma.campaign.findUnique({
+      //     where: {
+      //       id: addPlayerCampaignInput.campaign_id,
+      //     },
+      //     include: {
+      //       memberships: {
+      //         select: {
+      //           user: true,
+      //           campaign: true,
+      //         },
+      //       },
+      //       gameMaster: true,
+      //     },
+      //   });
+
+      //   console.log("foundCampaign: ", foundCampaign);
+
+      //   return Object.assign(new Campaign(), foundCampaign);
+      // }
+
+      const user = await prisma.user.findUnique({
         where: {
-          id: { in: addPlayerCampaignInput.player_ids },
+          id: req.session.userId,
         },
       });
 
-      const playersArr = await members.map((player: User) => ({
-        userId: player.id,
-        campaignId: addPlayerCampaignInput.campaign_id,
-        role: MembershipRole.PLAYER,
-      }));
-
-      const createdPlayers = await prisma.membership.createMany({
-        data: playersArr,
-        skipDuplicates: true,
+      const userMembership = await prisma.membership.create({
+        data: {
+          role: MembershipRole.PLAYER,
+          campaignId: addPlayerCampaignInput.campaignId,
+          userId: user.id,
+        },
+        include: {
+          campaign: true,
+          user: true,
+        },
       });
-      if (createdPlayers) {
+
+      console.log("userMembership: ", userMembership);
+
+      if (userMembership) {
         const foundCampaign = await prisma.campaign.findUnique({
           where: {
-            id: addPlayerCampaignInput.campaign_id,
+            id: addPlayerCampaignInput.campaignId,
           },
           include: {
             memberships: {
               select: {
-                user: true,
                 campaign: true,
+                role: true,
+                user: true,
               },
             },
             gameMaster: true,

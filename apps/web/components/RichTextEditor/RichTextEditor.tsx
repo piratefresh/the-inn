@@ -12,7 +12,7 @@ import { TrailingNode } from "./Extensions/TrailingNode";
 import CustomImage from "./Extensions/custom-image";
 import { Float } from "./Extensions/float";
 import { FontSize } from "./Extensions/font-size";
-import RichTextEditorStyles from "./RichTextEditor.module.css";
+import RichTextEditorStyles from "./RichTextEditor.module.scss";
 import Toolbar from "./Toolbar";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { setFontSize } from "@features/richTextEditorSlice/richTextEditorSlice";
@@ -65,21 +65,7 @@ export const RichTextEditor = React.forwardRef(
     const [, createImageSignature] = useCreateImageSignatureMutation();
     const editor = useEditor({
       extensions: [
-        StarterKit.configure({
-          blockquote: {
-            HTMLAttributes: {
-              class: RichTextEditorStyles["editorBlockQuote"],
-            },
-          },
-          heading: {
-            levels: [1, 2, 3],
-          },
-        }),
-        Link.configure({
-          HTMLAttributes: {
-            class: RichTextEditorStyles["editorLink"],
-          },
-        }),
+        StarterKit,
         TextStyle,
         Underline,
         FontFamily,

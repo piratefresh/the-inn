@@ -29,6 +29,11 @@ import { zIndex } from "./foundation/zIndex";
 
 export type { VariantProps } from "@stitches/react";
 
+const gold = {
+  gold1: "#FFD166",
+  gold2: "#FFD166",
+};
+
 export const { config, css, styled, createTheme, theme } = createStitches({
   theme: {
     colors: {
@@ -43,7 +48,7 @@ export const { config, css, styled, createTheme, theme } = createStitches({
       ...slate,
       ...whiteA,
       ...blackA,
-
+      ...gold,
       // Semantic colors
       hiContrast: "$slate12",
       loContrast: "white",
@@ -57,9 +62,10 @@ export const { config, css, styled, createTheme, theme } = createStitches({
       mono: "Söhne Mono, menlo, monospace",
       sans: font.fonts.sans,
       serif: font.fonts.serif,
-      oldFenris: font.fonts.oldFenris,
-      alegreyaSans: font.fonts.alegreyaSans,
-      trejanSans: font.fonts.trejanSans,
+      oldfenris: font.fonts.oldfenris,
+      alegreyasans: font.fonts.alegreyasans,
+      trejan: font.fonts.cinzel,
+      cinzel: font.fonts.cinzel,
     },
     fontWeights: {
       ...font.fontWeights,

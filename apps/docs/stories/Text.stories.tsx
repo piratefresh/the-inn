@@ -23,3 +23,11 @@ Primary.args = {
   as: "p",
   color: "contrast",
 };
+export const Trejan = Template.bind({});
+Trejan.args = {
+  children: "Text",
+  size: "base",
+  as: "p",
+  font: "trejanSans",
+  color: "contrast",
+};

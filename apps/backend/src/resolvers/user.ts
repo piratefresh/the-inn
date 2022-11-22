@@ -7,6 +7,7 @@ import {
   Mutation,
   Query,
   Resolver,
+  Subscription,
 } from "type-graphql";
 import argon2 from "argon2";
 import { User } from "@models/User";
@@ -51,12 +52,55 @@ export class UsernamePasswordInput {
 @Resolver()
 export class UserResolver {
   @Query(() => String)
-  async helloworld() {
-    return "hello world";
+  async helloworld(@Ctx() { prisma, req, res, pusher }: MyContext) {
+    // @ts-ignore
+    pusher.trigger("my-channel", "my-event", {
+      message: "hello world",
+    });
+
+    const userInfo = await prisma.user.findUnique({
+      where: {
+        id: req.session.userId,
+      },
+    });
+
+    // Replace this with code to retrieve the actual user id and info
+    const user = {
+      // @ts-ignore
+      id: req.session.userId,
+      user_info: {
+        ...userInfo,
+      },
+      watchlist: ["another_id_1", "another_id_2"],
+    };
+
+    const authResponse = pusher.authenticateUser(req.session.userId, user);
+
+    console.log(authResponse);
+
+    return `hello world ${authResponse}`;
   }
   @Query(() => [User])
   async getUsers(@Ctx() { prisma, res }: MyContext) {
     return prisma.user.findMany({});
+  }
+  @Query(() => [User])
+  async getOnlineUsers(
+    @Ctx() { prisma, res, req, pusher }: MyContext,
+    @Arg("username") username: string,
+    @Arg("message") message: string
+  ) {
+    pusher.trigger("presence-awesome", "message_sent", {
+      username,
+      message,
+    });
+    return prisma.user.findMany({});
+  }
+  @Subscription(() => String, {
+    topics: "MESSAGES",
+  })
+  async subscription(@Ctx() ctx: any): Promise<any> {
+    return "something";
   }
   @Query(() => [User])
   async getUsersById(
@@ -71,9 +115,13 @@ export class UserResolver {
       },
     });
   }
-  @Query(() => [User])
-  async getUser(@Ctx() { prisma, res }: MyContext) {
-    return prisma.user.findFirst({});
+  @Query(() => User)
+  async getUser(@Arg("id") id: string, @Ctx() { prisma, res }: MyContext) {
+    return prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   @Mutation((_type) => CreateUserResult)
@@ -132,7 +180,7 @@ export class UserResolver {
     // if (inputPassword.length > 0)
     //   return FieldsValidationError.from(inputPassword);
 
-    console.log("SIGN IN: ");
+    console.log("SIGN IN: ", usernameOrEmail);
 
     const user = await prisma.user.findUnique({
       where: {
@@ -168,12 +216,11 @@ export class UserResolver {
 
     if (!authenticated) return new BadCredentialsError();
 
-    setToken(user, res);
+    // setToken(user, res);
 
     req.session.userId = user.id;
-    req.session.save();
 
-    console.log("sessionID SIGN UP: ", req.session.userId);
+    res.setHeader(process.env.JWT_COOKIE_NAME, user.id);
 
     return Object.assign(new User(), user);
   }

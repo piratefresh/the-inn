@@ -10,7 +10,8 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@apollo/server": "^4.0.0",
+    "@apollo/server": "^4.1.1",
+    "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.0",
     "@next-auth/prisma-adapter": "^1.0.3",
     "@prisma/client": "^4.4.0",
     "api": "*",
@@ -29,8 +30,9 @@
     "graphql": "15.7.2",
     "graphql-pusher-subscriptions": "^0.1.1",
     "graphql-redis-subscriptions": "^2.4.2",
+    "graphql-ws": "^5.11.2",
     "ioredis": "^5.0.4",
-    "pusher": "^5.1.0-beta",
+    "pusher": "^5.1.1-beta",
     "pusher-js": "^7.1.0-beta",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1"

@@ -36,8 +36,7 @@ export type Account = {
 };
 
 export type AddPlayerCampaignInput = {
-  campaign_id: Scalars['String'];
-  player_ids: Array<Scalars['String']>;
+  campaignId: Scalars['String'];
 };
 
 export type AuthResult = BadCredentialsError | FieldsValidationError | NonExistingUserError | User;
@@ -82,6 +81,13 @@ export type Campaign = {
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   voipSystem?: Maybe<Scalars['String']>;
+};
+
+export type CampaignPagination = {
+  __typename?: 'CampaignPagination';
+  campaigns: Array<Campaign>;
+  cursor: Scalars['String'];
+  hasNextPage: Scalars['Boolean'];
 };
 
 export type CreateCampaignInput = {
@@ -168,10 +174,10 @@ export type ImageSignature = {
 export type Membership = {
   __typename?: 'Membership';
   campaign: Campaign;
-  campaign_id: Scalars['String'];
+  campaignId: Scalars['String'];
   role: MembershipRole;
   user: User;
-  user_id: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export enum MembershipRole {
@@ -231,7 +237,8 @@ export type Query = {
   __typename?: 'Query';
   getCampaign: Campaign;
   getCampaigns: Array<Campaign>;
-  getUser: Array<User>;
+  getCampaignsPagination: CampaignPagination;
+  getUser: User;
   getUsers: Array<User>;
   getUsersById: Array<User>;
   hellogame: Scalars['String'];
@@ -240,6 +247,17 @@ export type Query = {
 
 
 export type QueryGetCampaignArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGetCampaignsPaginationArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Float']>;
+};
+
+
+export type QueryGetUserArgs = {
   id: Scalars['String'];
 };
 
@@ -344,10 +362,24 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'ExistingUserError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'User', id: string, email?: string | null, firstName: string, lastName: string } };
 
+export type GetCampaignQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetCampaignQuery = { __typename?: 'Query', getCampaign: { __typename?: 'Campaign', id: string, title: string, summary: string, city: string, state: string, imageUrl: string, isOnline: boolean, maxSeats: number, jsonSummary: string, additionalDetails?: string | null, jsonAdditionalDetails?: string | null, gameSystem: string, startDate: any, endDate: any, tags: Array<string>, days: Array<string>, timezone: string, timePeriods: Array<string>, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string } }>, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } } };
+
 export type GetCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city: string, state: string, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate: any, tags: Array<string> }> };
+
+export type GetUserQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email?: string | null } };
 
 
 export const CreateCampaignDocument = gql`
@@ -459,6 +491,48 @@ export const SignUpDocument = gql`
 export function useSignUpMutation() {
   return Urql.useMutation<SignUpMutation, SignUpMutationVariables>(SignUpDocument);
 };
+export const GetCampaignDocument = gql`
+    query GetCampaign($id: String!) {
+  getCampaign(id: $id) {
+    id
+    title
+    summary
+    city
+    state
+    imageUrl
+    isOnline
+    maxSeats
+    summary
+    jsonSummary
+    additionalDetails
+    jsonAdditionalDetails
+    gameSystem
+    startDate
+    endDate
+    tags
+    days
+    timezone
+    timePeriods
+    memberships {
+      role
+      user {
+        firstName
+        lastName
+      }
+    }
+    gameMaster {
+      id
+      firstName
+      lastName
+      imageUrl
+    }
+  }
+}
+    `;
+
+export function useGetCampaignQuery(options: Omit<Urql.UseQueryArgs<GetCampaignQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetCampaignQuery, GetCampaignQueryVariables>({ query: GetCampaignDocument, ...options });
+};
 export const GetCampaignsDocument = gql`
     query GetCampaigns {
   getCampaigns {
@@ -480,4 +554,18 @@ export const GetCampaignsDocument = gql`
 
 export function useGetCampaignsQuery(options?: Omit<Urql.UseQueryArgs<GetCampaignsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCampaignsQuery, GetCampaignsQueryVariables>({ query: GetCampaignsDocument, ...options });
+};
+export const GetUserDocument = gql`
+    query GetUser($id: String!) {
+  getUser(id: $id) {
+    id
+    firstName
+    lastName
+    email
+  }
+}
+    `;
+
+export function useGetUserQuery(options: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUserQuery, GetUserQueryVariables>({ query: GetUserDocument, ...options });
 };
