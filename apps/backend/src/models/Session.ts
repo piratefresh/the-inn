@@ -1,6 +1,7 @@
-import { Field, ObjectType, ID } from "type-graphql";
+import { Field, ObjectType, InputType, ID } from "type-graphql";
 import { User } from "./User";
 
+@InputType("sessionInput")
 @ObjectType()
 export class Session {
   @Field((_type) => ID)

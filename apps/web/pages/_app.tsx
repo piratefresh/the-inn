@@ -15,6 +15,11 @@ import { RootLayout } from "@layouts/RootLayout";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import Pusher from "pusher-js";
 import { PusherContainer } from "@components/PusherContainer";
+import { configureAbly, useChannel } from "@ably-labs/react-hooks";
+
+configureAbly({
+  authUrl: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/createTokenRequest`,
+});
 
 interface NoopProps extends React.FC {
   children: React.ReactNode;
@@ -89,8 +94,6 @@ function App({
   const meta = Component.layoutProps?.meta || {};
   const description =
     meta.metaDescription || meta.description || "Website for Chatting.";
-
-  const presenceChannel = pusher.subscribe("presence-awesome");
 
   return (
     <SessionProvider session={session}>

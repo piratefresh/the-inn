@@ -19,8 +19,6 @@ export const PusherContainer = ({ children }: PusherContainer) => {
 
   if (!session || !session.id) return children;
 
-  console.log("session pusher container: ", session);
-
   const pusherConfig: PusherProviderProps = {
     // required config props
     clientKey: "4aa7a9d626b176d0e11f",

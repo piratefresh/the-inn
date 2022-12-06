@@ -5,8 +5,11 @@ import {
   Field,
   InputType,
   Mutation,
+  PubSub,
+  PubSubEngine,
   Query,
   Resolver,
+  Root,
   Subscription,
 } from "type-graphql";
 import argon2 from "argon2";

@@ -1,18 +1,21 @@
 import { IStep2, step2 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup } from "ui/src/RadioGroup";
 import { Header } from "ui/src/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Checkbox } from "@mantine/core";
-import { Input } from "@components/ui/Input";
+
 import InputGroup from "@components/ui/InputGroup";
 import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
-import { Box, Button, MultiSelect } from "ui";
+import { AsyncSelector, Box, Button, Input, MultiSelect } from "ui";
 import { DevTool } from "@hookform/devtools";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 import { CustomEditorProps } from "../General/General";
+import { locationSchema } from "../General/schema";
+import { Geocoder } from "@components/ui/Geocoder";
 
 const OnlineOptions = ({ control, errors }) => (
   <div className="grid grid-cols-2 gap-8">
@@ -55,42 +58,70 @@ const OnlineOptions = ({ control, errors }) => (
   </div>
 );
 
-const InPersonOptions = ({ control, errors }) => (
-  <div className="grid grid-cols-2 gap-8">
-    <InputGroup className="my-8" label="*City" error={errors?.city}>
-      <Controller
-        control={control}
-        name="city"
-        render={({ field }) => (
-          <Input
-            gold
-            placeholder="City"
-            value={field.value}
-            onChange={(e) => field.onChange(e)}
-          />
-        )}
-      />
-    </InputGroup>
-    <InputGroup className="my-8" label="*State" error={errors?.state}>
-      <Controller
-        control={control}
-        name="state"
-        render={({ field }) => (
-          <Input
-            gold
-            placeholder="State"
-            value={field.value}
-            onChange={(e) => field.onChange(e)}
-          />
-        )}
-      />
-    </InputGroup>
-  </div>
+const InPersonOptions = ({ control, errors, setValue }) => (
+  <>
+    <div className="my-8">
+      <InputGroup className="my-8" label="*Area" error={errors?.state}>
+        <Controller
+          control={control}
+          name="area"
+          render={({ field }) => (
+            <Geocoder
+              placeholder="City Area"
+              value={field.value}
+              onChange={(e) => {
+                field.onChange(e.value);
+                setValue("city", e.city);
+                setValue("state", e.region);
+                setValue("lat", e.lat);
+                setValue("lng", e.lng);
+              }}
+            />
+          )}
+        />
+      </InputGroup>
+    </div>
+    <div className="grid grid-cols-2 gap-8">
+      <InputGroup className="my-8" label="*City" error={errors?.city}>
+        <Controller
+          control={control}
+          name="city"
+          render={({ field }) => (
+            <Input
+              gold
+              placeholder="City"
+              value={field.value}
+              onChange={(e) => field.onChange(e)}
+            />
+          )}
+        />
+      </InputGroup>
+      <InputGroup
+        className="my-8"
+        label="*State / Providance"
+        error={errors?.state}
+      >
+        <Controller
+          control={control}
+          name="state"
+          render={({ field }) => (
+            <Input
+              gold
+              placeholder="State / Providance"
+              value={field.value}
+              onChange={(e) => field.onChange(e)}
+            />
+          )}
+        />
+      </InputGroup>
+    </div>
+  </>
 );
 
 export const Location = () => {
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
+  let campaignIsOnline = false;
 
   // Used to retrieve json object from text editor
   const richTextEditorRef = React.useRef<CustomEditorProps>();
@@ -100,6 +131,7 @@ export const Location = () => {
     control,
     reset,
     setValue,
+    clearErrors,
     watch,
     formState: { errors },
   } = useForm<IStep2>({
@@ -108,11 +140,19 @@ export const Location = () => {
       puzzles: createCampaignData.puzzles,
       roleplay: createCampaignData.roleplay,
       voipSystem: createCampaignData.voipSystem ?? "Discord",
+      city: createCampaignData.city,
+      state: createCampaignData.state,
+      area: createCampaignData.area,
       additionalDetails: createCampaignData.additionalDetails,
       jsonAdditionalDetails: createCampaignData.jsonAdditionalDetails,
       isOnline: true,
     },
+    resolver: zodResolver(locationSchema({ isOnline: campaignIsOnline })),
   });
+
+  const onInvalid = (errors) => {
+    console.log("errors: ", errors);
+  };
 
   const onSubmit: SubmitHandler<IStep2> = async (data) => {
     dispatch(step2(data));
@@ -126,13 +166,30 @@ export const Location = () => {
     router.push("./general");
   }, []);
 
-  const campaignIsOnline = watch("isOnline");
+  useEffect(() => {
+    setValue("tags", [
+      {
+        label: createCampaignData.gameSystem,
+        value: createCampaignData.gameSystem,
+        id: createCampaignData.gameSystem,
+      },
+      {
+        label: createCampaignData.campaignType,
+        value: createCampaignData.campaignType,
+        id: createCampaignData.campaignType,
+      },
+    ]);
+  }, []);
+
+  campaignIsOnline = watch("isOnline");
 
   const locationOptions = campaignIsOnline ? (
     <OnlineOptions control={control} errors={errors} />
   ) : (
-    <InPersonOptions control={control} errors={errors} />
+    <InPersonOptions control={control} errors={errors} setValue={setValue} />
   );
+
+  console.log("createCampaignData: ", createCampaignData);
 
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
@@ -141,7 +198,7 @@ export const Location = () => {
           Location
         </Header>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
         <InputGroup
           className="my-8"
           label="*Domain of the campaign"
@@ -160,6 +217,7 @@ export const Location = () => {
                 size="lg"
                 onChange={(e) => field.onChange(e)}
                 defaultChecked={campaignIsOnline}
+                checked={field.value}
               />
             )}
           />
@@ -168,7 +226,11 @@ export const Location = () => {
 
         <FormDivider label="Extras" />
 
-        <InputGroup className="my-8" label="*Roleplay?">
+        <InputGroup
+          className="my-8"
+          label="*Roleplay?"
+          error={errors?.roleplay}
+        >
           <Controller
             control={control}
             name="roleplay"
@@ -197,7 +259,7 @@ export const Location = () => {
             )}
           />
         </InputGroup>
-        <InputGroup className="my-8" label="*Combat?">
+        <InputGroup className="my-8" label="*Combat?" error={errors?.combat}>
           <Controller
             control={control}
             name="combat"
@@ -226,7 +288,7 @@ export const Location = () => {
             )}
           />
         </InputGroup>
-        <InputGroup className="my-8" label="*Puzzles?">
+        <InputGroup className="my-8" label="*Puzzles?" error={errors?.puzzles}>
           <Controller
             control={control}
             name="puzzles"
@@ -282,15 +344,18 @@ export const Location = () => {
                 onChange={(e) => {
                   field.onChange(e);
                   if (richTextEditorRef?.current) {
-                    setValue(
-                      "additionalDetails",
-                      richTextEditorRef?.current.getText()
-                    );
+                    const currentText = richTextEditorRef?.current.getText();
+                    if (currentText) {
+                      // Reset error if text is valid
+                      clearErrors("additionalDetails");
+                      setValue("additionalDetails", currentText);
+                    }
                   }
                 }}
                 value={field.value}
                 onBlur={field.onBlur}
                 name="jsonAdditionalDetails"
+                error={errors.additionalDetails?.message}
               />
             )}
           />
@@ -314,7 +379,7 @@ export const Location = () => {
           </Button>
         </Box>
       </form>
-      <DevTool control={control} /> {/* set up the dev tool */}
+      <DevTool control={control} />
     </div>
   );
 };

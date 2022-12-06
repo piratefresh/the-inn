@@ -1,7 +1,7 @@
 import { Listbox as ListboxPrimitive } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import React from "react";
-import { styled } from "../theme";
+import { styled, theme } from "../theme";
 
 const StyledRoot = styled("div", {
   position: "relative",
@@ -18,6 +18,7 @@ const StyledButton = styled(ListboxPrimitive.Button, {
   borderRadius: "$radii$md",
   display: "flex",
   justifyContent: "flex-start",
+  fontSize: theme.fontSizes.base.value,
 
   variants: {
     gold: {
@@ -45,6 +46,7 @@ const StyledOptions = styled(ListboxPrimitive.Options, {
   padding: "$space$4",
   maxHeight: "$sizes$5xl",
   zIndex: "$zIndices$dropdown",
+  fontSize: theme.fontSizes.base.value,
 
   variants: {
     gold: {

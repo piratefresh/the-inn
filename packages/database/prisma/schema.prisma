@@ -69,6 +69,11 @@ model User {
   reviews       Review[]
   sessions      Session[]
 
+  //Messaging
+  sentCampaignMessage    CampaignMessage[] @relation("sentCampaignMessages")
+  sentPrivateMessages    PrivateMessage[]  @relation("sentPrivateMessages")
+  receivedPrivateMessage PrivateMessage[]  @relation("receivedPrivateMessage")
+
   @@map("users")
 }
 
@@ -83,9 +88,9 @@ model Membership {
 }
 
 model Campaign {
-  id                      String       @id @default(uuid())
-  created_at              DateTime     @default(now())
-  updated_at              DateTime     @updatedAt
+  id                      String            @id @default(uuid())
+  created_at              DateTime          @default(now())
+  updated_at              DateTime          @updatedAt
   title                   String
   summary                 String
   json_summary            String
@@ -103,20 +108,56 @@ model Campaign {
   days                    String[]
   time_periods            String[]
   gm_id                   String
-  experience              Experience   @default(All)
+  experience              Experience        @default(All)
   voip_system             String?
   virtual_table           String?
-  max_seats               Int          @default(4)
-  puzzles                 Difficulty   @default(Any)
-  combat                  Difficulty   @default(Any)
-  roleplay                Difficulty   @default(Any)
+  max_seats               Int               @default(4)
+  puzzles                 Difficulty        @default(Any)
+  combat                  Difficulty        @default(Any)
+  roleplay                Difficulty        @default(Any)
   tags                    String[]
   price                   Float?
   gallery                 String[]
-  game_master             User         @relation("game_master", fields: [gm_id], references: [id])
+  game_master             User              @relation("game_master", fields: [gm_id], references: [id])
   memberships             Membership[]
+  CampaignMessage         CampaignMessage[]
 
   @@map("campaigns")
+}
+
+model CampaignMessage {
+  message           String
+  id                String   @id @default(cuid())
+  //if there is no sender relation that means it is a message from the server
+  sender            User?    @relation(name: "sentCampaignMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId          String?
+  campaign          Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId        String
+  hasAttachment     Boolean  @default(false)
+  attachmentType    String?
+  attachmentPending Boolean?
+  attachmentError   Boolean?
+  attachmentKey     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model PrivateMessage {
+  message           String
+  id                String   @id @default(cuid())
+  sender            User     @relation(name: "sentPrivateMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient         User     @relation(name: "receivedPrivateMessage", fields: [recipientId], references: [id], onDelete: Cascade)
+  senderId          String
+  recipientId       String
+  hasAttachment     Boolean  @default(false)
+  attachmentType    String?
+  attachmentPending Boolean?
+  attachmentError   Boolean?
+  attachmentKey     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([senderId])
 }
 
 model Review {

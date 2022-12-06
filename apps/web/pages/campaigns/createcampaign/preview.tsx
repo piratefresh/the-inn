@@ -1,16 +1,19 @@
 import { Preview } from "@components/Campaings/CreateCampaigns/Preview";
-import { css } from "@stitches/react";
-
-const root = css({
-  background: "linear-gradient(180deg, #25120E 0%, #273435 50%, #273435 100%)",
-});
+import { CampaignLayout } from "@layouts/CampaignLayout";
 
 const CreatePreviewCampaign = () => {
   return (
-    <div className={`${root()} px-100 py-10`}>
+    <div className="px-100 py-10">
       <Preview />
     </div>
   );
+};
+
+CreatePreviewCampaign.layoutProps = {
+  meta: {
+    title: "Create Campaign Preview",
+  },
+  Layout: CampaignLayout,
 };
 
 export default CreatePreviewCampaign;

@@ -20,6 +20,7 @@ import { ParseOptions } from "prosemirror-model";
 import { Indent } from "./Extensions/wix-indent";
 import ReactComponent from "./Extensions/react-component";
 import { uploadImage } from "@utils/uploadImage";
+import clsx from "clsx";
 // import { Indent } from "./Extensions/indent";
 
 interface GetSelectedNodesProps {
@@ -28,6 +29,7 @@ interface GetSelectedNodesProps {
 
 interface RichTextEditorProps extends ControllerRenderProps<any> {
   content?: string;
+  error?: string;
 }
 
 export interface InsertContentProps {
@@ -60,6 +62,7 @@ export const RichTextEditor = React.forwardRef(
       RichTextEditorStyles["wrapper"],
       "goldenBorder",
       "rounded-md",
+      props.error && RichTextEditorStyles["error"],
     ];
 
     const [, createImageSignature] = useCreateImageSignatureMutation();
@@ -174,13 +177,17 @@ export const RichTextEditor = React.forwardRef(
     if (!editor) return null;
     editorRef.current = editor;
 
+    console.log("props error: ", props.error);
+
     return (
       <>
         <div className={classes.join(" ")}>
           {editorToolbar}
 
           <EditorContent
-            className={RichTextEditorStyles["root"]}
+            className={clsx({
+              [RichTextEditorStyles["root"]]: true,
+            })}
             editor={editor}
             onClick={handleOnClick}
             onKeyDown={(e) => {

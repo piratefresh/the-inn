@@ -8,11 +8,9 @@ import { Header } from "ui/src/Typography";
 import React from "react";
 import { Editor } from "@tiptap/react";
 import { useAppDispatch, useAppSelector } from "@store/store";
-
 import { Select } from "ui/src/Select";
-import { Input } from "ui/src/Input";
+import { Input, InputAddon } from "ui/src/Input";
 import { Chip } from "ui/src/Chip";
-import { TimeField } from "ui/src/TimeField";
 import { ChipGroup } from "ui/src/Chip/ChipGroup";
 import { asUploadButton } from "@rpldy/upload-button";
 import { useItemFinishListener, useUploady } from "@rpldy/uploady";
@@ -22,13 +20,11 @@ import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
 import GeneralStyles from "./General.module.css";
 import { ClickableDropZone } from "@components/Dropzone/ClickableDropZone";
-import { Button } from "ui";
-
-const OPTIONS = [
-  { value: "Low", label: "Low" },
-  { value: "Medium", label: "Medium" },
-  { value: "High", label: "High" },
-];
+import { Button, RadioGroup, RangeSlider, TimeZonePicker } from "ui";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DevTool } from "@hookform/devtools";
+import { generalSchema } from "./schema";
+import { CreatableGameSelector } from "@components/CreatableGameSelector/CreatableGameSelector";
 
 export interface CustomEditorProps extends Editor {
   insertContent: (string) => void;
@@ -66,15 +62,24 @@ interface Option {
   name: string;
   unavailable?: boolean;
 }
+interface GameOption {
+  readonly label: string;
+  readonly value: string;
+}
+
+export type Handle<T> = T extends React.ForwardRefExoticComponent<
+  React.RefAttributes<infer T2>
+>
+  ? T2
+  : never;
 
 export const General = () => {
   const richTextEditorRef = React.useRef<CustomEditorProps>();
   const { processPending } = useUploady();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
-  const [selectedGameSystem, setSelectedGameSystem] = React.useState<Option>(
-    GAMES[0]
-  );
+  const [selectedGameSystem, setSelectedGameSystem] =
+    React.useState<GameOption | null>(null);
   const [selectedGameSize, setSelectedGameSize] = React.useState<Option>(
     MAX_PARTY[3]
   );
@@ -86,13 +91,21 @@ export const General = () => {
     handleSubmit,
     control,
     setValue,
+    clearErrors,
     reset,
+    register,
     formState: { errors },
   } = useForm<IStep1>({
-    defaultValues: createCampaignData,
+    defaultValues: {
+      ...createCampaignData,
+      // The selector only takes string
+      maxSeats: createCampaignData.maxSeats.toString(),
+    },
+    resolver: zodResolver(generalSchema),
   });
 
   useItemFinishListener((item) => {
+    console.log("uploading: ", item);
     const secureUrl = item.uploadResponse?.data.secure_url;
     setValue("imageUrl", secureUrl);
 
@@ -102,15 +115,19 @@ export const General = () => {
       })
     );
 
-    // Route switch happening in here
-    // Make sure that we set the image url before next step
+    // // Route switch happening in here
+    // // Make sure that we set the image url before next step
     router.push("./location");
   });
 
-  const onSubmit: SubmitHandler<IStep1> = async (data) => {
-    const res = processPending();
+  const onInvalid = (errors) => {
+    console.log("errors: ", errors);
+  };
 
+  const onSubmit: SubmitHandler<IStep1> = async (data) => {
+    processPending();
     dispatch(step1(data));
+
     if (createCampaignData.imageUrl) {
       reset();
       router.push("./location");
@@ -128,19 +145,33 @@ export const General = () => {
           Create a Campaign
         </Header>
       </div>
-
       <FormDivider label="General" />
-
       {/* <InputWrapper className="my-12" label="" error={errors?.image}> */}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          name="image"
-          control={control}
-          render={({ field: { onChange } }) => (
-            <DropZoneButton
-              extraProps={{ previewImage: createCampaignData.imageUrl }}
-            />
-          )}
+      <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
+        <InputGroup label="" error={errors?.image || errors?.imageUrl}>
+          <Controller
+            name="image"
+            control={control}
+            rules={{ required: "Header Image is Required" }}
+            render={({ field: { onChange } }) => (
+              <DropZoneButton
+                extraProps={{
+                  previewImage: createCampaignData.imageUrl,
+                  error: errors.image?.message || errors.imageUrl?.message,
+                  onChange: (v) => {
+                    onChange(v);
+                    setValue("imageUrl", v);
+                  },
+                }}
+              />
+            )}
+          />
+        </InputGroup>
+
+        <input
+          type="text"
+          className="hidden"
+          {...register("imageUrl", { required: true })}
         />
 
         <InputGroup
@@ -151,6 +182,7 @@ export const General = () => {
           <Controller
             control={control}
             name="title"
+            rules={{ required: "Campaign Title is Required" }}
             render={({ field }) => (
               <Input
                 gold
@@ -158,6 +190,7 @@ export const General = () => {
                 placeholder="Campaign Name"
                 value={field.value}
                 onChange={(e) => field.onChange(e)}
+                error={errors.title?.message}
               />
             )}
           />
@@ -166,32 +199,69 @@ export const General = () => {
         <InputGroup
           className="my-12"
           label="*Campaign Description"
-          error={errors.summary}
+          error={errors?.summary}
         >
           <Controller
             control={control}
             name="jsonSummary"
+            rules={{
+              required: "Campaign Description is Required",
+              minLength: 10,
+            }}
             render={({ field }) => (
               <RichTextEditor
                 ref={richTextEditorRef}
                 onChange={(e) => {
                   field.onChange(e);
                   if (richTextEditorRef?.current) {
-                    setValue("summary", richTextEditorRef?.current.getText());
+                    const currentText = richTextEditorRef?.current.getText();
+                    if (currentText) {
+                      // Reset error if text is valid
+                      clearErrors("summary");
+                      setValue("summary", currentText);
+                    }
                   }
                 }}
                 value={field.value}
                 onBlur={field.onBlur}
                 name="jsonSummary"
+                error={errors.summary?.message}
               />
             )}
           />
-          <span className="text-red-800">
-            {errors.summary && errors.summary.message}
-          </span>
         </InputGroup>
 
         <FormDivider label="Detailed Information" />
+
+        <InputGroup
+          className="my-8"
+          label="*Campaign Type"
+          error={errors?.campaignType}
+        >
+          <Controller
+            control={control}
+            name="campaignType"
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup
+                direction="row"
+                height="100px"
+                onChange={onChange}
+                options={[
+                  {
+                    label: "Campaign",
+                    value: "Campaign",
+                  },
+                  {
+                    label: "One Shot",
+                    value: "One Shot",
+                  },
+                ]}
+                value={value}
+                width="250px"
+              />
+            )}
+          />
+        </InputGroup>
 
         <div className="grid grid-cols-2 gap-12 my-12">
           <InputGroup label="*Game System" error={errors?.gameSystem}>
@@ -199,19 +269,19 @@ export const General = () => {
               control={control}
               name="gameSystem"
               defaultValue={createCampaignData.gameSystem}
+              rules={{ required: true }}
               render={({ field }) => (
-                <Select
+                <CreatableGameSelector
                   key="gameSystem"
                   className={
                     !errors.gameSystem
                       ? GeneralStyles.selectInput
                       : GeneralStyles.selectInputError
                   }
-                  options={GAMES}
-                  selected={selectedGameSystem}
+                  value={selectedGameSystem}
                   onChange={(e) => {
                     setSelectedGameSystem(e);
-                    field.onChange(e.value);
+                    field.onChange(e?.value);
                   }}
                 />
               )}
@@ -224,7 +294,7 @@ export const General = () => {
             <Controller
               control={control}
               name="maxSeats"
-              // defaultValue={createCampaignData.maxSeats}
+              rules={{ required: true }}
               render={({ field }) => (
                 <Select
                   key="maxSeats"
@@ -249,6 +319,7 @@ export const General = () => {
             <Controller
               control={control}
               name="experience"
+              rules={{ required: true }}
               defaultValue={createCampaignData.experience}
               render={({ field }) => (
                 <Select
@@ -267,10 +338,44 @@ export const General = () => {
               {errors.experience && errors.experience.message}
             </span>
           </InputGroup>
+          <InputGroup label="*Price" error={errors?.price}>
+            <Controller
+              control={control}
+              name="price"
+              render={({ field }) => {
+                return (
+                  <>
+                    <RangeSlider
+                      // Value should be array
+                      value={[field.value]}
+                      min={0}
+                      max={999}
+                      onValueChange={(price) => field.onChange(price[0])}
+                    />
+                    <div className="flex bg-white goldenBorder rounded-md">
+                      <InputAddon>$</InputAddon>
+                      <Input
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(parseInt(e.currentTarget.value), 10);
+                        }}
+                        style={{
+                          paddingLeft: 0,
+                        }}
+                        size="small"
+                        pattern="\d*"
+                        maxLength={3}
+                      />
+                    </div>
+                  </>
+                );
+              }}
+            />
+          </InputGroup>
         </div>
 
         <div className="grid grid-cols-2 gap-12 my-12">
-          <InputGroup label="*Time" error={errors?.maxSeats}>
+          <InputGroup label="*Time" error={errors?.timePeriods}>
             <Controller
               name="timePeriods"
               control={control}
@@ -280,13 +385,14 @@ export const General = () => {
                   <Chip value="Afternoon">Afternoon</Chip>
                   <Chip value="Evening">Evening</Chip>
                   <Chip value="Night">Night</Chip>
+                  <Chip value="Flexible">Flexible</Chip>
                 </ChipGroup>
               )}
             />
           </InputGroup>
         </div>
         <div className="grid grid-cols-2 gap-12 my-12">
-          <InputGroup label="*Days" error={errors?.maxSeats}>
+          <InputGroup label="*Days" error={errors?.days}>
             <Controller
               name="days"
               control={control}
@@ -299,16 +405,38 @@ export const General = () => {
                   <Chip value="Friday">Friday</Chip>
                   <Chip value="Saturday">Saturday</Chip>
                   <Chip value="Sunday">Sunday</Chip>
+                  <Chip value="Flexible">Flexible</Chip>
                 </ChipGroup>
               )}
             />
           </InputGroup>
         </div>
 
+        <InputGroup
+          className="my-12 flex-wrap"
+          label="Time Zone"
+          error={errors.timezone}
+        >
+          <Controller
+            name="timezone"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TimeZonePicker
+                onChange={onChange}
+                value={value}
+                menuPosition="absolute"
+                menuPlacement="auto"
+              />
+            )}
+          />
+        </InputGroup>
+
         <Button size="large" type="submit">
           Next
         </Button>
       </form>
+
+      <DevTool control={control} />
     </div>
   );
 };

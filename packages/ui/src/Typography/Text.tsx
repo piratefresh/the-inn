@@ -30,6 +30,7 @@ export interface TextProps {
     | "lime"
     | "yellow"
     | "yellow2"
+    | "yellowBrand"
     | "orange"
     | "gold"
     | "gold2"
@@ -131,6 +132,9 @@ const StyledText = styled("span", {
       },
       yellow2: {
         color: "$yellow12",
+      },
+      yellowBrand: {
+        color: "$yellowBrand",
       },
       orange: {
         color: "$orange11",

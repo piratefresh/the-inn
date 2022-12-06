@@ -15,12 +15,11 @@ import { FieldsValidationError } from "@errors/FieldsValidationError";
 import { BadCredentialsError } from "@errors/BadCredentialsError";
 import { Campaign } from "@models/Campaign";
 import { NonExistingCampaignError } from "@errors/NonExistingCampaignError";
-
 import { Difficulty } from "@typedefs/Difficulty";
 import { v2 as cloudinary } from "cloudinary";
-import { User } from "@prisma/client";
 import { MembershipRole } from "@typedefs/MembershipRole";
 import { Experience } from "@typedefs/Experience";
+import { CampaignType } from "@typedefs/CampaignType";
 
 cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -65,9 +64,15 @@ export class CreateCampaignInput {
   @Field({ nullable: true })
   state: string;
   @Field({ nullable: true })
+  area: string;
+  @Field({ nullable: true })
   lat: number;
   @Field({ nullable: true })
   lng: number;
+  @Field({ nullable: true })
+  virtualTable: string;
+  @Field({ nullable: true })
+  voipSystem: string;
   @Field()
   startDate: Date;
   @Field({ nullable: true })
@@ -81,11 +86,10 @@ export class CreateCampaignInput {
   @Field()
   gameSystem: string;
   @Field()
-  voipSystem: string;
-  @Field()
-  virtualTable: string;
-  @Field()
   maxSeats: number;
+
+  @Field({ defaultValue: "Campaign" })
+  campaignType: string;
   @Field(() => Experience)
   experience: Experience;
   @Field(() => Difficulty)
@@ -94,9 +98,10 @@ export class CreateCampaignInput {
   combat: Difficulty;
   @Field(() => Difficulty)
   roleplay: Difficulty;
+
   @Field(() => [String])
   tags: string[];
-  @Field()
+  @Field({ nullable: true })
   price: number;
 }
 
@@ -134,9 +139,12 @@ export class CampaignResolver {
   async getCampaigns(@Ctx() { prisma, res, req, redis }: MyContext) {
     console.log("req.session.userId CAMPAIGN RESOLVER: ", req.session);
     const user = await redis.get("sess:3BVczvIrYbEd58T-K_0plkK_c6Wh7S8U");
-    console.log("redis: ", user);
 
-    return prisma.campaign.findMany({});
+    return prisma.campaign.findMany({
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
   }
   @Query(() => CampaignPagination)
   async getCampaignsPagination(
@@ -224,8 +232,7 @@ export class CampaignResolver {
     @Ctx() { prisma, res, req }: MyContext
   ) {
     try {
-      console.log("req.session.userId: ", req.session.userId);
-      console.log("createCampaignInput: ", createCampaignInput);
+      console.log(createCampaignInput);
       const campaign = await prisma.campaign.create({
         data: {
           ...createCampaignInput,
@@ -258,43 +265,6 @@ export class CampaignResolver {
     @Ctx() { prisma, res, req }: MyContext
   ) {
     try {
-      // const members = await prisma.user.findMany({
-      //   where: {
-      //     id: { in: addPlayerCampaignInput.player_ids },
-      //   },
-      // });
-
-      // const playersArr = await members.map((player: User) => ({
-      //   userId: player.id,
-      //   campaignId: addPlayerCampaignInput.campaign_id,
-      //   role: MembershipRole.PLAYER,
-      // }));
-
-      // const createdPlayers = await prisma.membership.createMany({
-      //   data: playersArr,
-      //   skipDuplicates: true,
-      // });
-      // if (createdPlayers) {
-      //   const foundCampaign = await prisma.campaign.findUnique({
-      //     where: {
-      //       id: addPlayerCampaignInput.campaign_id,
-      //     },
-      //     include: {
-      //       memberships: {
-      //         select: {
-      //           user: true,
-      //           campaign: true,
-      //         },
-      //       },
-      //       gameMaster: true,
-      //     },
-      //   });
-
-      //   console.log("foundCampaign: ", foundCampaign);
-
-      //   return Object.assign(new Campaign(), foundCampaign);
-      // }
-
       const user = await prisma.user.findUnique({
         where: {
           id: req.session.userId,

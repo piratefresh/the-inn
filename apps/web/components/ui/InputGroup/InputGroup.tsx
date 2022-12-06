@@ -11,7 +11,7 @@ interface IInputGroupProps {
   htmlFor?: string;
   direction?: "row" | "column" | "row-reverse";
   inline?: boolean;
-  error?: FieldError | undefined;
+  error?: FieldError | undefined | FieldError[];
 }
 
 const InputGroup = ({
@@ -47,12 +47,13 @@ const InputGroup = ({
     labelClasses.unshift(`text-${color}`);
   }
   if (error) {
-    labelClasses.push("text-red-800");
+    labelClasses.unshift("text-red-800");
   }
   return (
     <div className={classes.join(" ")} style={style}>
       <label className={labelClasses.join(" ")}>{label}</label>
       {children}
+      {error && <div className="text-red-800">{error.message}</div>}
     </div>
   );
 };

@@ -29,11 +29,11 @@ model Account {
 }
 
 model Session {
-  id            String   @id @default(cuid())
-  session_token String   @unique
-  userId        String
-  expires       DateTime
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -69,6 +69,11 @@ model User {
   reviews       Review[]
   sessions      Session[]
 
+  //Messaging
+  sentCampaignMessage    CampaignMessage[] @relation("sentCampaignMessages")
+  sentPrivateMessages    PrivateMessage[]  @relation("sentPrivateMessages")
+  receivedPrivateMessage PrivateMessage[]  @relation("receivedPrivateMessage")
+
   @@map("users")
 }
 
@@ -83,9 +88,9 @@ model Membership {
 }
 
 model Campaign {
-  id                    String       @id @default(uuid())
-  createdAt             DateTime     @default(now())
-  updatedAt             DateTime     @updatedAt
+  id                    String            @id @default(uuid())
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
   title                 String
   summary               String
   jsonSummary           String
@@ -94,31 +99,69 @@ model Campaign {
   note                  String?
   imageUrl              String
   isOnline              Boolean
-  city                  String
-  state                 String
-  lat                   Float
-  lng                   Float
+  campaignType          String            @default("Campaign")
+  city                  String?
+  state                 String?
+  area                  String?
+  lat                   Float?
+  lng                   Float?
   startDate             DateTime
-  endDate               DateTime
+  endDate               DateTime?
   days                  String[]
   timePeriods           String[]
   timezone              String
   gmId                  String
-  experience            Experience   @default(All)
+  experience            Experience        @default(All)
   voipSystem            String?
   gameSystem            String
   virtualTable          String?
-  maxSeats              Int          @default(4)
-  puzzles               Difficulty   @default(Any)
-  combat                Difficulty   @default(Any)
-  roleplay              Difficulty   @default(Any)
+  maxSeats              Int               @default(4)
+  puzzles               Difficulty        @default(Any)
+  combat                Difficulty        @default(Any)
+  roleplay              Difficulty        @default(Any)
   tags                  String[]
   price                 Float?
   gallery               String[]
-  gameMaster            User         @relation("game_master", fields: [gmId], references: [id])
+  gameMaster            User              @relation("game_master", fields: [gmId], references: [id])
   memberships           Membership[]
+  campaignMessage       CampaignMessage[]
 
   @@map("campaigns")
+}
+
+model CampaignMessage {
+  message           String
+  id                String   @id @default(cuid())
+  //if there is no sender relation that means it is a message from the server
+  sender            User?    @relation(name: "sentCampaignMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId          String?
+  campaign          Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId        String
+  hasAttachment     Boolean  @default(false)
+  attachmentType    String?
+  attachmentPending Boolean?
+  attachmentError   Boolean?
+  attachmentKey     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model PrivateMessage {
+  message           String
+  id                String   @id @default(cuid())
+  sender            User     @relation(name: "sentPrivateMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient         User     @relation(name: "receivedPrivateMessage", fields: [recipientId], references: [id], onDelete: Cascade)
+  senderId          String
+  recipientId       String
+  hasAttachment     Boolean  @default(false)
+  attachmentType    String?
+  attachmentPending Boolean?
+  attachmentError   Boolean?
+  attachmentKey     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([senderId])
 }
 
 model Review {
@@ -131,6 +174,11 @@ model Review {
   user      User     @relation(fields: [userId], references: [id])
 
   @@map("reviews")
+}
+
+model Counter {
+  id      String @id @default(uuid())
+  counter Int    @default(0)
 }
 
 enum MembershipRole {
@@ -156,4 +204,9 @@ enum StatusType {
   IDLE
   DND
   OFFLINE
+}
+
+enum CampaignType {
+  Campaign
+  One_Shot
 }

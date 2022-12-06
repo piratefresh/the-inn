@@ -9,11 +9,19 @@ import React from "react";
 
 interface IClickableDropZone extends HTMLButtonElement {
   onClick: () => void;
+  onChange: (image: string) => void;
   previewImage?: string;
+  error?: string;
 }
 
 export const ClickableDropZone = forwardRef(
-  ({ onClick, previewImage, ...buttonProps }: IClickableDropZone) => {
+  ({
+    onClick,
+    onChange,
+    previewImage,
+    error,
+    ...buttonProps
+  }: IClickableDropZone) => {
     const [, createImageSignature] = useCreateImageSignatureMutation();
     const [image, setImage] = useState(previewImage);
 
@@ -40,7 +48,10 @@ export const ClickableDropZone = forwardRef(
     useBatchAddListener((batch) => {
       // Not sure how to convert FileLike to Blob
       // @ts-ignore
-      setImage(URL.createObjectURL(batch.items[0].file));
+      const imageUrl = URL.createObjectURL(batch.items[0].file);
+
+      setImage(imageUrl);
+      onChange(imageUrl);
     });
 
     const onZoneClick = useCallback(() => {
@@ -60,7 +71,8 @@ export const ClickableDropZone = forwardRef(
           className={clsx(
             "col-span-3 relative h-48 bg-white p-5 cursor-pointer rounded-md overflow-hidden",
             DropZoneStyles["root"],
-            DropZoneStyles["dropzoneHeight"]
+            DropZoneStyles["dropzoneHeight"],
+            { [DropZoneStyles["error"]]: error }
           )}
         >
           <div className="h-full w-full flex place-items-center justify-center">

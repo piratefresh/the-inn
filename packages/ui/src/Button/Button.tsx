@@ -58,6 +58,12 @@ const StyledButton = styled("button", {
         paddingRight: "$space$8",
       },
     },
+    fullWidth: {
+      true: {
+        display: "flex",
+        width: "100%",
+      },
+    },
   },
 });
 
@@ -66,6 +72,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "small" | "large";
   color?: "blue" | "yellow";
   css?: Stitches.CSS;
+  fullWidth?: boolean;
 }
 
 export const Button = ({
@@ -73,10 +80,17 @@ export const Button = ({
   color,
   css,
   children,
+  fullWidth,
   ...props
 }: ButtonProps) => {
   return (
-    <StyledButton css={css} size={size} color={color} {...props}>
+    <StyledButton
+      css={css}
+      size={size}
+      color={color}
+      fullWidth={fullWidth}
+      {...props}
+    >
       {children}
     </StyledButton>
   );

@@ -3,8 +3,10 @@ query GetCampaign($id: String!) {
     id
     title
     summary
+    campaignType
     city
     state
+    area
     imageUrl
     isOnline
     maxSeats
@@ -12,6 +14,7 @@ query GetCampaign($id: String!) {
     jsonSummary
     additionalDetails
     jsonAdditionalDetails
+    experience
     gameSystem
     startDate
     endDate
@@ -19,6 +22,8 @@ query GetCampaign($id: String!) {
     days
     timezone
     timePeriods
+    virtualTable
+    voipSystem
     memberships {
       role
       user {

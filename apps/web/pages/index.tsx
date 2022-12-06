@@ -1,33 +1,50 @@
 import { useGetCampaignsQuery } from "@generated/graphql";
 import { HeroImage, Text } from "ui";
-import {
-  useChannel,
-  useEvent,
-  usePresenceChannel,
-  useTrigger,
-  useClientTrigger,
-} from "@harelpls/use-pusher";
+// import {
+//   useChannel,
+//   useEvent,
+//   usePresenceChannel,
+//   useTrigger,
+//   useClientTrigger,
+// } from "@harelpls/use-pusher";
+import { configureAbly, useChannel, usePresence } from "@ably-labs/react-hooks";
 import { RootLayout } from "../layouts";
 import type { NextPageWithLayout } from "./_app";
 import { CampaignCard } from "@components/CampaignCard";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import React from "react";
+import { Types } from "ably";
+import { Geocoder } from "@components/ui/Geocoder";
 
 const Home: NextPageWithLayout = () => {
   const [{ data: campaigns, fetching, error }] = useGetCampaignsQuery();
 
-  const channel = useChannel("my-channel");
-  useEvent(channel, "my-event", (data) => console.log(data));
+  // const channel = useChannel("my-channel");
+  // useEvent(channel, "my-event", (data) => console.log(data));
 
-  const {
-    channel: presenceChannel,
-    members,
-    ...rest
-  } = usePresenceChannel("presence-awesome");
+  // const {
+  //   channel: presenceChannel,
+  //   members,
+  //   ...rest
+  // } = usePresenceChannel("presence-awesome");
 
-  console.log(presenceChannel, rest);
-  console.log("members: ", members);
+  const [messages, updateMessages] = React.useState<Types.Message[]>([]);
+  const [channel, ably] = useChannel("getting-started", (message) => {
+    updateMessages((prev) => [...prev, message]);
+  });
+  const [presenceData, updateStatus] = usePresence("getting-started");
+
+  // console.log(presenceChannel, rest);
+  // console.log("members: ", members);
+
+  const peers = presenceData.map((msg, index) => (
+    <li key={index}>
+      {msg.clientId}: {msg.data}
+    </li>
+  ));
+
+  console.log("presenceData: ", presenceData);
 
   return (
     <>
@@ -49,14 +66,6 @@ const Home: NextPageWithLayout = () => {
       <div className="relative">
         <div className="bg-gamesBg bg-games absolute inset-0 bottom-10 bg-bottom bg-no-repeat goldenBorder2 border-l-0 border-r-0" />
         <div className="relative py-20 max-w-7xl mx-auto">
-          <span
-            className="App-link"
-            onClick={() => trigger("client-hello-world", {})}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Fire event
-          </span>
           <h2 className="font-oldFenris text-white text-4xl mb-12">
             Upcoming Games
           </h2>

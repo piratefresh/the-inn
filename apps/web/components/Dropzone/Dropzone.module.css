@@ -10,3 +10,8 @@
 .dropzoneHeight {
   height: 450px;
 }
+
+.error {
+  border: 3px solid red;
+  background-image: none;
+}

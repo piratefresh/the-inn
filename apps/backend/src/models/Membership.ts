@@ -1,8 +1,9 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
 import { MembershipRole } from "../typedefs/MembershipRole";
 import { User } from "./User";
 import { Campaign } from "./Campaign";
 
+@InputType("membershipInput")
 @ObjectType()
 export class Membership {
   @Field((_type) => MembershipRole)

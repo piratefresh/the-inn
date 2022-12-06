@@ -1,9 +1,11 @@
-import { Field, ObjectType, ID, Float, Int } from "type-graphql";
+import { Field, ObjectType, ID, Float, Int, InputType } from "type-graphql";
 import { Experience } from "../typedefs/Experience";
 import { Difficulty } from "../typedefs/Difficulty";
 import { User } from "./User";
 import { Membership } from "./Membership";
+import { CampaignType } from "../typedefs/CampaignType";
 
+@InputType("campaignInput")
 @ObjectType()
 export class Campaign {
   @Field((_type) => ID)
@@ -33,16 +35,22 @@ export class Campaign {
   @Field({ nullable: true })
   note?: string;
 
+  @Field({ defaultValue: "Campaign" })
+  campaignType: string;
+
   @Field()
   imageUrl: string;
 
   @Field()
   isOnline: boolean;
 
-  @Field()
+  @Field({ nullable: true })
+  area: string;
+
+  @Field({ nullable: true })
   city: string;
 
-  @Field()
+  @Field({ nullable: true })
   state: string;
 
   @Field((_type) => Float)
@@ -54,7 +62,7 @@ export class Campaign {
   @Field()
   startDate: Date;
 
-  @Field()
+  @Field({ nullable: true })
   endDate: Date;
 
   @Field((_type) => [String])
@@ -74,6 +82,9 @@ export class Campaign {
 
   @Field({ nullable: true })
   voipSystem?: string;
+
+  @Field({ nullable: true })
+  virtualTable?: string;
 
   @Field((_type) => Int)
   maxSeats: number;

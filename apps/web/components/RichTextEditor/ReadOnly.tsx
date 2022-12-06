@@ -12,9 +12,10 @@ import { Float } from "@components/RichTextEditor/Extensions/float";
 import { TrailingNode } from "@components/RichTextEditor/Extensions/TrailingNode";
 import { styled } from "@components/Theme/Theme";
 import ReadOnlyStyles from "./ReadOnly.module.scss";
+import { JSONContent } from "@tiptap/react";
 
 interface ReadOnlyProps {
-  jsonString: JSON;
+  jsonString: JSONContent | string;
 }
 
 const StyledContent = styled("div", {

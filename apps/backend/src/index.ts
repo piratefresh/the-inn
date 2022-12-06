@@ -1,20 +1,20 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
 import { COOKIE_NAME, __prod__ } from "./constants";
-import { buildSchema, buildTypeDefsAndResolvers } from "type-graphql";
+import { buildTypeDefsAndResolvers } from "type-graphql";
 // import { prisma } from "database";
 import { createServer } from "http";
 import { PrismaClient } from "@prisma/client";
 import { UserResolver } from "@resolvers/user";
 import { CampaignResolver } from "@resolvers/campaign";
 import { ReviewResolver } from "@resolvers/review";
-import express from "express";
+import { CounterResolver } from "@resolvers/counter";
+import { PrivateMessageResolver } from "@resolvers/privateMessage";
+import express, { Request, Response } from "express";
 import Redis from "ioredis";
 import cors from "cors";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import { RedisPubSub } from "graphql-redis-subscriptions";
-import { Config, ExpressContext } from "apollo-server-express";
 import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 // import { pusherClient } from "pusher";
@@ -25,38 +25,13 @@ import { useServer as useWsServer } from "graphql-ws/lib/use/ws";
 import { MyContext } from "@typedefs/MyContext";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { expressMiddleware } from "@apollo/server/express4";
-import { json, urlencoded } from "body-parser";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
+import bodyParser, { urlencoded } from "body-parser";
+import AblyPubSub from "ablyPubsub";
 
 dotenv.config();
 
 // PRISMA
-const prisma = new PrismaClient({
-  // log: [
-  //   {
-  //     emit: "event",
-  //     level: "query",
-  //   },
-  //   {
-  //     emit: "stdout",
-  //     level: "error",
-  //   },
-  //   {
-  //     emit: "stdout",
-  //     level: "info",
-  //   },
-  //   {
-  //     emit: "stdout",
-  //     level: "warn",
-  //   },
-  // ],
-});
-
-// prisma.$on("query", (e) => {
-//   console.log("Query: " + e.query);
-//   console.log("Params: " + e.params);
-//   console.log("Duration: " + e.duration + "ms");
-// });
+const prisma = new PrismaClient();
 
 const pusher = new Pusher({
   appId: "1338472",
@@ -65,18 +40,13 @@ const pusher = new Pusher({
   cluster: "us2",
 });
 
+const pubsub = new AblyPubSub({ key: process.env.ABLY_API_KEY });
+
 const startServer = async () => {
   const PORT = 4000;
   const app = express();
 
-  const pubSub = new RedisPubSub({
-    publisher: new Redis(
-      "redis://default:bacaca9acfe9433f8833bea83aa0fc33@us1-saved-satyr-39150.upstash.io:39150"
-    ),
-    subscriber: new Redis(
-      "redis://default:bacaca9acfe9433f8833bea83aa0fc33@us1-saved-satyr-39150.upstash.io:39150"
-    ),
-  });
+  pubsub.publish("getting-started", "hello world");
 
   const RedisStore = connectRedis(session);
   const redis = new Redis(
@@ -89,7 +59,14 @@ const startServer = async () => {
   );
 
   const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
-    resolvers: [UserResolver, CampaignResolver, ReviewResolver],
+    resolvers: [
+      UserResolver,
+      CampaignResolver,
+      ReviewResolver,
+      CounterResolver,
+      PrivateMessageResolver,
+    ],
+    pubSub: pubsub,
   });
 
   const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -129,9 +106,9 @@ const startServer = async () => {
   });
 
   app.use(sessionMiddleware);
+  app.set("port", 3000);
 
   const httpServer = createServer(app);
-
   // Creating the WebSocket server
 
   const wsServer = new WebSocketServer({
@@ -141,15 +118,42 @@ const startServer = async () => {
     // serves expressMiddleware at a different path
     path: "/graphql",
   });
+
   // Hand in the schema we just created and have the
   // WebSocketServer start listening.
-  const serverCleanup = useWsServer({ schema }, wsServer);
+  const serverCleanup = useWsServer(
+    {
+      schema, // Adding a context property lets you add data to your GraphQL operation context
+      // authenticate the user and set it on the connection context
+      onConnect: async (ctx) => {
+        const req = ctx.extra.request as Request;
+        sessionMiddleware(req, {} as any, () => {
+          // @ts-ignore
+          if (req.session.userId === null) {
+            throw new Error("not authenticated");
+          }
+          // @ts-ignore
+          ctx.extra.userId = req.session.userId;
+        });
+      },
+      context: ({ extra: { request } }) => {
+        const req = request as Request;
+        // @ts-ignore
+        console.log("req.session?.userId: ", extra.userId);
+        // @ts-ignore
+        return { userId: req.session?.userId };
+      },
+    },
+    wsServer
+  );
 
   const server = new ApolloServer<MyContext>({
     schema,
+    introspection: true,
     csrfPrevention: true,
     plugins: [
-      ApolloServerPluginLandingPageGraphQLPlayground(),
+      // Disable dosent support graphql-ws
+      // ApolloServerPluginLandingPageGraphQLPlayground(),
       ApolloServerPluginDrainHttpServer({ httpServer }),
       // Proper shutdown for the WebSocket server.
       {
@@ -162,7 +166,6 @@ const startServer = async () => {
         },
       },
     ],
-    introspection: true,
   });
 
   await server.start();
@@ -180,7 +183,7 @@ const startServer = async () => {
       ],
       credentials: true,
     }),
-    json(),
+    bodyParser.json(),
     urlencoded({ extended: false }),
     expressMiddleware(server, {
       context: async ({ req, res }) => {
@@ -194,38 +197,6 @@ const startServer = async () => {
       },
     })
   );
-
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-
-  app.post("/pusher/auth", async (req, res) => {
-    const userId = req.headers.authorization;
-
-    const socketId = req.body.socket_id;
-    const channel = req.body.channel_name;
-
-    const user = await prisma.user.findFirst({
-      where: {
-        id: userId,
-      },
-    });
-
-    const presenceData: Pusher.PresenceChannelData = {
-      user_id: userId,
-      user_info: {
-        name: `${user.firstName} ${user.lastName}`,
-        email: user.email,
-      },
-    };
-
-    const authResponse = pusher.authorizeChannel(
-      socketId,
-      channel,
-      presenceData
-    );
-
-    res.send(authResponse);
-  });
 
   // Now that our HTTP server is fully set up, we can listen to it.
   httpServer.listen(PORT, () => {

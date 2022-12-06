@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "campaigns" ALTER COLUMN "city" DROP NOT NULL,
+ALTER COLUMN "state" DROP NOT NULL,
+ALTER COLUMN "area" DROP NOT NULL;

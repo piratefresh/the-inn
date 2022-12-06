@@ -1,6 +1,7 @@
-import { Field, ObjectType, ID, Int } from "type-graphql";
+import { Field, ObjectType, ID, Int, InputType } from "type-graphql";
 import { User } from "./User";
 
+@InputType("reviewInput")
 @ObjectType()
 export class Review {
   @Field((_type) => ID)

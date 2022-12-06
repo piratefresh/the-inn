@@ -34,7 +34,6 @@ export const FontFamilyButton = ({ onChange, editor }: IFontSizeProps) => {
     onChange(e);
   };
 
-  console.log("value: ", value);
   return (
     <div className={ButtonsStyles["fontSizeContainer"]}>
       <Select

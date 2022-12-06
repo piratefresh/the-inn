@@ -1,4 +1,4 @@
-import { Field, ObjectType, ID } from "type-graphql";
+import { Field, ObjectType, ID, InputType } from "type-graphql";
 import { Experience } from "../typedefs/Experience";
 import { StatusType } from "../typedefs/StatusType";
 import { Account } from "./Account";
@@ -7,7 +7,10 @@ import { Review } from "./Review";
 import { Campaign } from "./Campaign";
 import { Membership } from "./Membership";
 
-@ObjectType()
+@InputType("UserInput")
+@ObjectType("User", {
+  isAbstract: true,
+})
 export class User {
   @Field((_type) => ID)
   id: string;

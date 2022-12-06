@@ -20,6 +20,7 @@
     "@types/react-dom": "^17.0.11",
     "eslint": "^8.15.0",
     "eslint-config-acme": "*",
+    "storybook-css-modules": "^1.0.8",
     "tsup": "^5.10.1",
     "typescript": "^4.5.3"
   },
@@ -32,12 +33,14 @@
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-checkbox": "^1.0.0",
     "@radix-ui/react-select": "^1.0.0",
+    "@radix-ui/react-slider": "^1.1.0",
     "@react-aria/calendar": "^3.0.1",
     "@react-aria/datepicker": "^3.1.0",
     "@react-aria/i18n": "^3.5.1",
     "@stitches/react": "^1.2.8",
     "react-aria": "^3.18.0",
-    "react-select": "^5.4.0",
+    "react-select": "^5.7.0",
+    "react-timezone-select": "^1.3.2",
     "use-select": "^0.0.6",
     "uuid": "^9.0.0"
   }

@@ -46,6 +46,19 @@ export const StyledInput = styled("input", {
         },
       },
     },
+    iconPlacement: {
+      left: {
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderLeftColor: "transparent",
+      },
+      right: {
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        borderRightColor: "transparent",
+      },
+      none: {},
+    },
     gold: {
       true: {
         borderRadius: "$radii$md",
@@ -54,6 +67,11 @@ export const StyledInput = styled("input", {
         backgroundClip: "padding-box, border-box",
         backgroundImage:
           "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
+      },
+    },
+    errorStyle: {
+      true: {
+        border: "3px solid red",
       },
     },
   },

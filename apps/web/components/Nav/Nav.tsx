@@ -11,8 +11,6 @@ export const Nav = () => {
 
   const router = useRouter();
 
-  console.log("session: ", session);
-
   const userInfo = React.useMemo(
     () =>
       session?.user ? (

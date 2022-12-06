@@ -63,9 +63,8 @@ export const CampaignCard = ({ campaign }: CampaignCardProps) => {
             flexWrap: "wrap",
           }}
         >
-          {campaign.tags?.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
-          ))}
+          {campaign.tags?.length > 0 &&
+            campaign.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
         </div>
       </Card.Section>
     </Card>

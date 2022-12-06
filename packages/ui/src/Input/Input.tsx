@@ -13,6 +13,7 @@ interface IInputProps
   children?: React.ReactNode;
   // Variants
   size?: "small" | "medium" | "large";
+  iconPlacement?: "left" | "right" | "none";
   gold?: boolean;
 }
 interface ITextAreaProps
@@ -28,6 +29,20 @@ interface ITextAreaProps
   rows?: number;
 }
 
-export const Input = ({ gold, size = "medium", ...props }: IInputProps) => {
-  return <StyledInput gold={gold} size={size} {...props} />;
+export const Input = ({
+  gold,
+  size = "medium",
+  iconPlacement = "none",
+  error,
+  ...props
+}: IInputProps) => {
+  return (
+    <StyledInput
+      gold={gold}
+      size={size}
+      errorStyle={!!error}
+      iconPlacement={iconPlacement}
+      {...props}
+    />
+  );
 };

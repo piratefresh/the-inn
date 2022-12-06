@@ -49,11 +49,13 @@ export type BadCredentialsError = IError & {
 export type Campaign = {
   __typename?: 'Campaign';
   additionalDetails?: Maybe<Scalars['String']>;
-  city: Scalars['String'];
+  area?: Maybe<Scalars['String']>;
+  campaignType: Scalars['String'];
+  city?: Maybe<Scalars['String']>;
   combat: Difficulty;
   createdAt: Scalars['DateTime'];
   days: Array<Scalars['String']>;
-  endDate: Scalars['DateTime'];
+  endDate?: Maybe<Scalars['DateTime']>;
   experience: Experience;
   gallery: Array<Scalars['String']>;
   gameMaster: User;
@@ -73,13 +75,14 @@ export type Campaign = {
   puzzles: Difficulty;
   roleplay: Difficulty;
   startDate: Scalars['DateTime'];
-  state: Scalars['String'];
+  state?: Maybe<Scalars['String']>;
   summary: Scalars['String'];
   tags: Array<Scalars['String']>;
   timePeriods: Array<Scalars['String']>;
   timezone: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+  virtualTable?: Maybe<Scalars['String']>;
   voipSystem?: Maybe<Scalars['String']>;
 };
 
@@ -92,6 +95,8 @@ export type CampaignPagination = {
 
 export type CreateCampaignInput = {
   additionalDetails: Scalars['String'];
+  area?: InputMaybe<Scalars['String']>;
+  campaignType?: Scalars['String'];
   city?: InputMaybe<Scalars['String']>;
   combat: Difficulty;
   days: Array<Scalars['String']>;
@@ -105,7 +110,7 @@ export type CreateCampaignInput = {
   lat?: InputMaybe<Scalars['Float']>;
   lng?: InputMaybe<Scalars['Float']>;
   maxSeats: Scalars['Float'];
-  price: Scalars['Float'];
+  price?: InputMaybe<Scalars['Float']>;
   puzzles: Difficulty;
   roleplay: Difficulty;
   startDate: Scalars['DateTime'];
@@ -115,8 +120,8 @@ export type CreateCampaignInput = {
   timePeriods: Array<Scalars['String']>;
   timezone: Scalars['String'];
   title: Scalars['String'];
-  virtualTable: Scalars['String'];
-  voipSystem: Scalars['String'];
+  virtualTable?: InputMaybe<Scalars['String']>;
+  voipSystem?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateCampaignResult = Campaign | FieldsValidationError;
@@ -188,6 +193,7 @@ export enum MembershipRole {
 export type Mutation = {
   __typename?: 'Mutation';
   addCampaignPlayer: CreateCampaignResult;
+  addPrivateMessage: PrivateMessage;
   createCampaign: CreateCampaignResult;
   createImageSignature: ImageSignature;
   createReview: CreateReviewResult;
@@ -199,6 +205,11 @@ export type Mutation = {
 
 export type MutationAddCampaignPlayerArgs = {
   AddPlayerCampaignInput: AddPlayerCampaignInput;
+};
+
+
+export type MutationAddPrivateMessageArgs = {
+  AddPrivateMessageInput: PrivateMessageInput;
 };
 
 
@@ -233,12 +244,42 @@ export type NonExistingUserError = IError & {
   message: Scalars['String'];
 };
 
+export type PrivateMessage = {
+  __typename?: 'PrivateMessage';
+  attachmentError?: Maybe<Scalars['Boolean']>;
+  attachmentKey?: Maybe<Scalars['String']>;
+  attachmentPending?: Maybe<Scalars['Boolean']>;
+  attachmentType?: Maybe<Scalars['String']>;
+  hasAttachment?: Maybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  message: Scalars['String'];
+  recipient: User;
+  recipientId: Scalars['String'];
+  sender: User;
+  senderId: Scalars['String'];
+};
+
+export type PrivateMessageInput = {
+  attachmentError?: InputMaybe<Scalars['Boolean']>;
+  attachmentKey?: InputMaybe<Scalars['String']>;
+  attachmentPending?: InputMaybe<Scalars['Boolean']>;
+  attachmentType?: InputMaybe<Scalars['String']>;
+  hasAttachment?: InputMaybe<Scalars['Boolean']>;
+  message: Scalars['String'];
+  recipientId: Scalars['String'];
+  senderId: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  currentNumber: Scalars['Int'];
+  getAllPrivateMessages: Array<PrivateMessage>;
   getCampaign: Campaign;
   getCampaigns: Array<Campaign>;
   getCampaignsPagination: CampaignPagination;
+  getOnlineUsers: Array<User>;
   getUser: User;
+  getUserPrivateMessages: Array<PrivateMessage>;
   getUsers: Array<User>;
   getUsersById: Array<User>;
   hellogame: Scalars['String'];
@@ -253,7 +294,13 @@ export type QueryGetCampaignArgs = {
 
 export type QueryGetCampaignsPaginationArgs = {
   cursor?: InputMaybe<Scalars['String']>;
-  limit?: InputMaybe<Scalars['Float']>;
+  limit?: Scalars['Float'];
+};
+
+
+export type QueryGetOnlineUsersArgs = {
+  message: Scalars['String'];
+  username: Scalars['String'];
 };
 
 
@@ -293,6 +340,13 @@ export enum StatusType {
   Online = 'ONLINE'
 }
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  newPrivateMessage: PrivateMessage;
+  numberIncremented: Scalars['Float'];
+  subscription: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   Hosted: Array<Campaign>;
@@ -329,7 +383,7 @@ export type CreateCampaignMutationVariables = Exact<{
 }>;
 
 
-export type CreateCampaignMutation = { __typename?: 'Mutation', createCampaign: { __typename?: 'Campaign', id: string, gmId: string, title: string, summary: string, city: string, state: string } | { __typename?: 'FieldsValidationError' } };
+export type CreateCampaignMutation = { __typename?: 'Mutation', createCampaign: { __typename?: 'Campaign', id: string, gmId: string, title: string, summary: string, city?: string | null, state?: string | null } | { __typename?: 'FieldsValidationError' } };
 
 export type CreateImageSignatureMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -367,12 +421,12 @@ export type GetCampaignQueryVariables = Exact<{
 }>;
 
 
-export type GetCampaignQuery = { __typename?: 'Query', getCampaign: { __typename?: 'Campaign', id: string, title: string, summary: string, city: string, state: string, imageUrl: string, isOnline: boolean, maxSeats: number, jsonSummary: string, additionalDetails?: string | null, jsonAdditionalDetails?: string | null, gameSystem: string, startDate: any, endDate: any, tags: Array<string>, days: Array<string>, timezone: string, timePeriods: Array<string>, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string } }>, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } } };
+export type GetCampaignQuery = { __typename?: 'Query', getCampaign: { __typename?: 'Campaign', id: string, title: string, summary: string, campaignType: string, city?: string | null, state?: string | null, area?: string | null, imageUrl: string, isOnline: boolean, maxSeats: number, jsonSummary: string, additionalDetails?: string | null, jsonAdditionalDetails?: string | null, experience: Experience, gameSystem: string, startDate: any, endDate?: any | null, tags: Array<string>, days: Array<string>, timezone: string, timePeriods: Array<string>, virtualTable?: string | null, voipSystem?: string | null, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string } }>, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } } };
 
 export type GetCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city: string, state: string, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate: any, tags: Array<string> }> };
+export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, tags: Array<string> }> };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['String'];
@@ -497,8 +551,10 @@ export const GetCampaignDocument = gql`
     id
     title
     summary
+    campaignType
     city
     state
+    area
     imageUrl
     isOnline
     maxSeats
@@ -506,6 +562,7 @@ export const GetCampaignDocument = gql`
     jsonSummary
     additionalDetails
     jsonAdditionalDetails
+    experience
     gameSystem
     startDate
     endDate
@@ -513,6 +570,8 @@ export const GetCampaignDocument = gql`
     days
     timezone
     timePeriods
+    virtualTable
+    voipSystem
     memberships {
       role
       user {
