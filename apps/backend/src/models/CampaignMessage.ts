@@ -1,30 +1,47 @@
 import { Field, ObjectType, ID, Int } from "type-graphql";
 import { User } from "./User";
+import { Campaign } from "./Campaign";
 
 @ObjectType()
 export class CampaignMessage {
-  @Field((_type) => ID)
-  id: string;
   @Field()
   message: string;
-  @Field((_type) => User)
-  sender: User;
-  @Field((_type) => User)
-  recipient: User;
+
+  @Field((_type) => ID)
+  id: string;
+
+  @Field((_type) => User, { nullable: true })
+  sender?: User;
+
+  @Field({ nullable: true })
+  senderId?: string;
+
+  @Field((_type) => Campaign)
+  campaign: Campaign;
+
   @Field()
-  senderId: string;
-  @Field()
-  recipientId: string;
+  campaignId: string;
+
   @Field()
   hasAttachment: boolean;
+
+  @Field({ nullable: true })
+  attachmentType?: string;
+
+  @Field({ nullable: true })
+  attachmentPending?: boolean;
+
+  @Field({ nullable: true })
+  attachmentError?: boolean;
+
+  @Field({ nullable: true })
+  attachmentKey?: string;
+
   @Field()
-  attachmentType: string;
+  createdAt: Date;
+
   @Field()
-  attachmentPending: boolean;
-  @Field()
-  attachmentError: boolean;
-  @Field()
-  attachmentKey: string;
+  updatedAt: Date;
 
   // skip overwrite 👇
 }

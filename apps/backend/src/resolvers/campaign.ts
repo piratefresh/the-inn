@@ -15,11 +15,10 @@ import { FieldsValidationError } from "@errors/FieldsValidationError";
 import { BadCredentialsError } from "@errors/BadCredentialsError";
 import { Campaign } from "@models/Campaign";
 import { NonExistingCampaignError } from "@errors/NonExistingCampaignError";
-import { Difficulty } from "@typedefs/Difficulty";
 import { v2 as cloudinary } from "cloudinary";
 import { MembershipRole } from "@typedefs/MembershipRole";
-import { Experience } from "@typedefs/Experience";
-import { CampaignType } from "@typedefs/CampaignType";
+import { CreateCampaignInput } from "./CreateCampaignInput";
+import { CampaignApplicationInput } from "./CampaignApplicationInput";
 
 cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -42,68 +41,6 @@ export const CreateCampaignResult = createUnionType({
   name: "CreateCampaignResult",
   types: () => [Campaign, FieldsValidationError] as const,
 });
-
-@InputType()
-export class CreateCampaignInput {
-  @Field()
-  title: string;
-  @Field()
-  summary: string;
-  @Field({ nullable: true })
-  jsonSummary: string;
-  @Field()
-  additionalDetails: string;
-  @Field({ nullable: true })
-  jsonAdditionalDetails: string;
-  @Field()
-  imageUrl: string;
-  @Field()
-  isOnline: boolean;
-  @Field({ nullable: true })
-  city: string;
-  @Field({ nullable: true })
-  state: string;
-  @Field({ nullable: true })
-  area: string;
-  @Field({ nullable: true })
-  lat: number;
-  @Field({ nullable: true })
-  lng: number;
-  @Field({ nullable: true })
-  virtualTable: string;
-  @Field({ nullable: true })
-  voipSystem: string;
-  @Field()
-  startDate: Date;
-  @Field({ nullable: true })
-  endDate: Date;
-  @Field(() => [String])
-  days: string[];
-  @Field(() => [String])
-  timePeriods: string[];
-  @Field()
-  timezone: string;
-  @Field()
-  gameSystem: string;
-  @Field()
-  maxSeats: number;
-
-  @Field({ defaultValue: "Campaign" })
-  campaignType: string;
-  @Field(() => Experience)
-  experience: Experience;
-  @Field(() => Difficulty)
-  puzzles: Difficulty;
-  @Field(() => Difficulty)
-  combat: Difficulty;
-  @Field(() => Difficulty)
-  roleplay: Difficulty;
-
-  @Field(() => [String])
-  tags: string[];
-  @Field({ nullable: true })
-  price: number;
-}
 
 @InputType()
 export class AddPlayerCampaignInput {
@@ -253,6 +190,58 @@ export class CampaignResolver {
       return Object.assign(new Campaign(), campaign);
     } catch (err) {
       console.log("err: ", err);
+      throw err;
+    }
+  }
+  @Mutation((_type) => CreateCampaignResult)
+  async addPlayerApplication(
+    @Arg("CampaignApplicationInput")
+    addPlayerCampaignInput: CampaignApplicationInput,
+    @Ctx() { prisma, res, req }: MyContext
+  ) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: req.session.userId,
+        },
+      });
+
+      const userMembership = await prisma.membership.create({
+        data: {
+          role: MembershipRole.PLAYER,
+          campaignId: addPlayerCampaignInput.campaignId,
+          userId: user.id,
+        },
+        include: {
+          campaign: true,
+          user: true,
+        },
+      });
+
+      console.log("userMembership: ", userMembership);
+
+      if (userMembership) {
+        const foundCampaign = await prisma.campaign.findUnique({
+          where: {
+            id: addPlayerCampaignInput.campaignId,
+          },
+          include: {
+            memberships: {
+              select: {
+                campaign: true,
+                role: true,
+                user: true,
+              },
+            },
+            gameMaster: true,
+          },
+        });
+
+        console.log("foundCampaign: ", foundCampaign);
+
+        return Object.assign(new Campaign(), foundCampaign);
+      }
+    } catch (err) {
       throw err;
     }
   }

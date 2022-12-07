@@ -6,6 +6,8 @@ import { Session } from "./Session";
 import { Review } from "./Review";
 import { Campaign } from "./Campaign";
 import { Membership } from "./Membership";
+import { CampaignMessage } from "./CampaignMessage";
+import { PrivateMessage } from "./PrivateMessage";
 
 @InputType("UserInput")
 @ObjectType("User", {
@@ -57,20 +59,29 @@ export class User {
   @Field((_type) => StatusType)
   status: StatusType;
 
+  @Field((_type) => [Membership])
+  memberships: Membership[];
+
   @Field((_type) => [Account])
   accounts: Account[];
 
-  @Field((_type) => [Session])
-  sessions: Session[];
+  @Field((_type) => [Campaign])
+  hosted: Campaign[];
 
   @Field((_type) => [Review])
   reviews: Review[];
 
-  @Field((_type) => [Campaign])
-  Hosted: Campaign[];
+  @Field((_type) => [Session])
+  sessions: Session[];
 
-  @Field((_type) => [Membership])
-  memberships: Membership[];
+  @Field((_type) => [CampaignMessage])
+  sentCampaignMessage: CampaignMessage[];
+
+  @Field((_type) => [PrivateMessage])
+  sentPrivateMessages: PrivateMessage[];
+
+  @Field((_type) => [PrivateMessage])
+  receivedPrivateMessage: PrivateMessage[];
 
   // skip overwrite 👇
 }
