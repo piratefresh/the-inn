@@ -29,17 +29,17 @@ export interface CreateCampaignState {
   imageUrl: string;
   gameSystem: string; // change to enum type
   campaignType: string;
-  city: string;
-  state: string;
-  area: string;
+  city: string | null;
+  state: string | null;
+  area: string | null;
   lng: number;
   lat: number;
   maxSeats: number;
   experience: Experience;
   price: number;
   isOnline: boolean;
-  voipSystem: string;
-  virtualTable: string;
+  voipSystem: string | null;
+  virtualTable: string | null;
   days: string[];
   timePeriods: string[];
   timezone: ITimezone;
@@ -68,11 +68,11 @@ export interface IStep1 {
 }
 export interface IStep2 {
   isOnline: boolean;
-  voipSystem: string;
-  virtualTable: string;
-  city: string;
-  state: string;
-  area: string;
+  voipSystem: string | null;
+  virtualTable: string | null;
+  city: string | null;
+  state: string | null;
+  area: string | null;
   lng: number;
   lat: number;
   combat: Difficulty;
@@ -91,17 +91,17 @@ const initialState: CreateCampaignState = {
   imageUrl: "",
   gameSystem: "Dungeon & Dragons",
   campaignType: "Campaign",
-  city: "",
-  state: "",
-  area: "",
+  city: null,
+  state: null,
+  area: null,
   lat: 0,
   lng: 0,
   maxSeats: 4,
   experience: Experience.All,
-  price: 500,
+  price: 0,
   isOnline: false,
-  voipSystem: "Discord",
-  virtualTable: "",
+  voipSystem: null,
+  virtualTable: null,
   days: [],
   timePeriods: [],
   timezone: {

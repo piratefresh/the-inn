@@ -52,7 +52,7 @@ const SignUp = () => {
         color: "green",
       });
 
-      router.push("/signin");
+      router.push("/auth/signin");
     }
   };
 
@@ -146,6 +146,8 @@ const SignUp = () => {
 SignUp.layoutProps = {
   meta: {
     title: "The Inn - Sign In",
+    sideImage:
+      "https://res.cloudinary.com/film-it/image/upload/v1670367251/the-inn/sidebar-appstore-today.jpg",
   },
   Layout: AuthLayout,
 };

@@ -32,6 +32,8 @@
     "@internationalized/date": "^3.0.1",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-checkbox": "^1.0.0",
+    "@radix-ui/react-dialog": "^1.0.2",
+    "@radix-ui/react-icons": "^1.1.1",
     "@radix-ui/react-select": "^1.0.0",
     "@radix-ui/react-slider": "^1.1.0",
     "@react-aria/calendar": "^3.0.1",

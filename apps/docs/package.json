@@ -22,15 +22,19 @@
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
     "@storybook/addon-links": "^6.5.10",
-    "@storybook/builder-webpack5": "^6.5.10",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/builder-webpack5": "^6.5.14",
     "@storybook/manager-webpack5": "^6.5.10",
+    "@storybook/preset-scss": "^1.0.3",
     "@storybook/react": "^6.5.10",
     "@storybook/testing-library": "^0.0.13",
     "@storybook/theming": "^6.5.10",
     "babel-loader": "^8.2.5",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.4",
-    "eslint-plugin-storybook": "^0.6.4"
+    "eslint-plugin-storybook": "^0.6.4",
+    "postcss": "^8.4.19",
+    "sass-loader": "^13.2.0"
   },
   "overrides": {
     "@mdx-js/react": {

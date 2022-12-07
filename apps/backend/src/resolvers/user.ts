@@ -227,6 +227,23 @@ export class UserResolver {
 
     return Object.assign(new User(), user);
   }
+
+  @Mutation(() => Boolean)
+  signout(@Ctx() { req, res }: MyContext) {
+    return new Promise((resolve) =>
+      req.session.destroy((err) => {
+        res.clearCookie(process.env.JWT_COOKIE_NAME);
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+
+        resolve(true);
+      })
+    );
+  }
+
   @Mutation((_type) => AuthResult)
   async exchangeToken(
     @Arg("usernameOrEmail") usernameOrEmail: string,

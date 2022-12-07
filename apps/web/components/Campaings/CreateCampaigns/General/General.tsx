@@ -24,48 +24,19 @@ import { Button, RadioGroup, RangeSlider, TimeZonePicker } from "ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DevTool } from "@hookform/devtools";
 import { generalSchema } from "./schema";
-import { CreatableGameSelector } from "@components/CreatableGameSelector/CreatableGameSelector";
+import {
+  CreatableGameSelector,
+  CreatableGameSelectorOption,
+} from "@components/CreatableGameSelector/CreatableGameSelector";
+import { MAX_PARTY } from "consts/maxSeats";
+import { SKILL_LEVELS } from "consts/skillLevels";
+import { SelectOption } from "ui/src/Select/Select";
 
 export interface CustomEditorProps extends Editor {
   insertContent: (string) => void;
 }
 
-export const GAMES = [
-  {
-    value: "Dungeon and Dragons",
-    name: "Dungeon and Dragons",
-    unavailable: false,
-  },
-  { value: "Pathfinder", name: "Pathfinder", unavailable: false },
-  { value: "Star Wars FFG", name: "Star Wars FFG", unavailable: false },
-  { value: "Hero System", name: "Hero System", unavailable: true },
-  { value: "Shadowrun", name: "Shadowrun", unavailable: false },
-];
-export const MAX_PARTY = [
-  { name: "1 Player", value: "1" },
-  { name: "2 Player", value: "2" },
-  { name: "3 Player", value: "3" },
-  { name: "4 Player", value: "4" },
-  { name: "5 Player", value: "5" },
-  { name: "6 Player", value: "7" },
-];
-export const SKILL_LEVELS = [
-  { name: "All", value: "All" },
-  { name: "Beginner", value: "Beginner" },
-  { name: "Advanced", value: "Advanced" },
-];
-
 const DropZoneButton = asUploadButton(ClickableDropZone);
-
-interface Option {
-  value: any;
-  name: string;
-  unavailable?: boolean;
-}
-interface GameOption {
-  readonly label: string;
-  readonly value: string;
-}
 
 export type Handle<T> = T extends React.ForwardRefExoticComponent<
   React.RefAttributes<infer T2>
@@ -79,13 +50,12 @@ export const General = () => {
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
   const [selectedGameSystem, setSelectedGameSystem] =
-    React.useState<GameOption | null>(null);
-  const [selectedGameSize, setSelectedGameSize] = React.useState<Option>(
+    React.useState<CreatableGameSelectorOption | null>(null);
+  const [selectedGameSize, setSelectedGameSize] = React.useState<SelectOption>(
     MAX_PARTY[3]
   );
-  const [selectedGameLevel, setSelectedGameLevel] = React.useState<Option>(
-    SKILL_LEVELS[0]
-  );
+  const [selectedGameLevel, setSelectedGameLevel] =
+    React.useState<SelectOption>(SKILL_LEVELS[0]);
 
   const {
     handleSubmit,

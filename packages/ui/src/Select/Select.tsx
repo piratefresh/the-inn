@@ -110,16 +110,16 @@ const StyledIcon = styled("span", {
   paddingRight: "$space$4",
 });
 
-interface Option {
+export interface SelectOption {
   value: any;
   name: string;
   unavailable?: boolean;
 }
 
 interface SelectProps {
-  options: Option[];
-  onChange: (option: Option) => void;
-  selected: Option;
+  options: SelectOption[];
+  onChange: (option: SelectOption) => void;
+  selected: SelectOption;
   className?: string;
   style?: React.CSSProperties;
   isDisabled?: boolean;

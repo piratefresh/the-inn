@@ -1,4 +1,5 @@
 import { FieldError } from "react-hook-form";
+import { styled } from "ui";
 import InputStyles from "./InputGroup.module.css";
 
 interface IInputGroupProps {
@@ -11,8 +12,14 @@ interface IInputGroupProps {
   htmlFor?: string;
   direction?: "row" | "column" | "row-reverse";
   inline?: boolean;
-  error?: FieldError | undefined | FieldError[];
+  error?: any;
 }
+
+// const StyledLabel = styled('label', {
+//     @apply block text-2xl font-medium font-oldFenris text-brandYellow dark:text-gray-400 mb-2 cursor-pointer;
+//     display: 'flex',
+
+// })
 
 const InputGroup = ({
   className,

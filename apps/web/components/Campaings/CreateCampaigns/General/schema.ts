@@ -43,6 +43,54 @@ export const TipTapJsonContent: z.ZodSchema<JSONContent> = z.lazy(() =>
   )
 );
 
+const LocationDefaultSchema = {
+  roleplay: z.enum(DEGREES),
+  combat: z.enum(DEGREES),
+  puzzles: z.enum(DEGREES),
+  tags: TagsContent,
+  additionalDetails: z.string().optional(),
+  jsonAdditionalDetails: TipTapJsonContent.optional(),
+};
+
+const OfflineSchema = z.object({
+  ...LocationDefaultSchema,
+  isOnline: z.literal(false),
+  area: z.string().min(1, {
+    message: "An Local Area is Required for Offline Campaigns",
+  }),
+  city: z
+    .string()
+    .min(1, { message: "A City is Required for Offline Campaigns" }),
+  state: z
+    .string({
+      invalid_type_error: "A State is Required for offline Campaigns",
+      required_error: "A State is Required for offline Campaigns",
+    })
+    .min(1, {
+      message: "A State is Required for offline Campaigns",
+    }),
+  lat: z.number(),
+  lng: z.number(),
+});
+
+const OnlineSchema = z.object({
+  ...LocationDefaultSchema,
+  isOnline: z.literal(true),
+  voipSystem: z.string().min(1, {
+    message: "A Voice System is Required for Online Campaigns",
+  }),
+
+  virtualTable: z
+    .string({
+      invalid_type_error:
+        "A Virtual Table Top is Required for Online Campaigns",
+      required_error: "A Virtual Table Top is Required for Online Campaigns",
+    })
+    .min(1, {
+      message: "A Virtual Table Top is Required for Online Campaigns",
+    }),
+});
+
 export const generalSchema = z.object({
   title: z.string().min(1, { message: "Campaign Title is Required" }),
   summary: z.string().min(1, { message: "Campaign Description is required" }),
@@ -68,54 +116,8 @@ export const generalSchema = z.object({
   days: z.string().array().min(1, { message: "Not an Valid Day" }),
   timezone: Timezone,
 });
-export const locationSchema = ({ isOnline }: { isOnline: boolean }) =>
-  z.object({
-    isOnline: z.boolean({
-      invalid_type_error: "is online must be a boolean",
-    }),
-    voipSystem: isOnline
-      ? z.string().min(1, {
-          message: "A Voice System is Required for Online Campaigns",
-        })
-      : z.string().optional(),
-    virtualTable: isOnline
-      ? z
-          .string({
-            invalid_type_error:
-              "A Virtual Table Top is Required for Online Campaigns",
-            required_error:
-              "A Virtual Table Top is Required for Online Campaigns",
-          })
-          .min(1, {
-            message: "A Virtual Table Top is Required for Online Campaigns",
-          })
-      : z.string().optional(),
-    area: !isOnline
-      ? z.string().min(1, {
-          message: "An Local Area is Required for Offline Campaigns",
-        })
-      : z.string().optional(),
-    city: !isOnline
-      ? z
-          .string()
-          .min(1, { message: "A City is Required for Offline Campaigns" })
-      : z.string().optional(),
-    state: !isOnline
-      ? z
-          .string({
-            invalid_type_error: "A State is Required for offline Campaigns",
-            required_error: "A State is Required for offline Campaigns",
-          })
-          .min(1, {
-            message: "A State is Required for offline Campaigns",
-          })
-      : z.string().optional(),
-    lat: isOnline ? z.number() : z.number().optional(),
-    lng: isOnline ? z.number() : z.number().optional(),
-    roleplay: z.enum(DEGREES),
-    combat: z.enum(DEGREES),
-    puzzles: z.enum(DEGREES),
-    tags: TagsContent,
-    additionalDetails: z.string().optional(),
-    jsonAdditionalDetails: TipTapJsonContent.optional(),
-  });
+
+export const LocationSchema = z.discriminatedUnion("isOnline", [
+  OnlineSchema,
+  OfflineSchema,
+]);

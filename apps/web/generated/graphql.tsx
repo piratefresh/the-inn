@@ -199,6 +199,7 @@ export type Mutation = {
   createReview: CreateReviewResult;
   exchangeToken: AuthResult;
   signin: AuthResult;
+  signout: Scalars['Boolean'];
   signup: CreateUserResult;
 };
 
@@ -406,6 +407,11 @@ export type SignInMutationVariables = Exact<{
 
 export type SignInMutation = { __typename?: 'Mutation', signin: { __typename?: 'BadCredentialsError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'NonExistingUserError', message: string } | { __typename?: 'User', id: string, email?: string | null, firstName: string, lastName: string, imageUrl?: string | null, accounts: Array<{ __typename?: 'Account', provider: string, providerAccountId: string, type: string, expiresAt?: number | null, refreshToken?: string | null, userId: string }> } };
 
+export type SignoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SignoutMutation = { __typename?: 'Mutation', signout: boolean };
+
 export type SignUpMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -520,6 +526,15 @@ export const SignInDocument = gql`
 
 export function useSignInMutation() {
   return Urql.useMutation<SignInMutation, SignInMutationVariables>(SignInDocument);
+};
+export const SignoutDocument = gql`
+    mutation Signout {
+  signout
+}
+    `;
+
+export function useSignoutMutation() {
+  return Urql.useMutation<SignoutMutation, SignoutMutationVariables>(SignoutDocument);
 };
 export const SignUpDocument = gql`
     mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!) {

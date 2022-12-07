@@ -2,6 +2,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator PrismaTypeGraphQLTypesGenerator {
+  provider     = "npx prisma-typegraphql-types-generator"
+  modelsOutput = "./src/models"
+  enumsOutput  = "./src/typedefs"
+  useYarn      = true
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -78,11 +85,12 @@ model User {
 }
 
 model Membership {
-  role       MembershipRole
-  campaignId String         @map("campaign_id")
-  userId     String
-  campaign   Campaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        MembershipRole
+  campaignId  String         @map("campaign_id")
+  userId      String
+  campaign    Campaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Application Application[]
 
   @@id([campaignId, userId])
 }
@@ -146,6 +154,19 @@ model CampaignMessage {
   updatedAt         DateTime @updatedAt
 }
 
+model Application {
+  id           String     @id @default(cuid())
+  membership   Membership @relation(fields: [membershipId, userId], onDelete: Cascade, references: [campaignId, userId])
+  membershipId String
+  campaignId   String
+  userId       String
+  message      String
+  jsonMessage  String
+  fitsSchedule Boolean
+  days         String[]
+  timePeriods  String[]
+}
+
 model PrivateMessage {
   message           String
   id                String   @id @default(cuid())
@@ -184,6 +205,7 @@ model Counter {
 enum MembershipRole {
   GM
   PLAYER
+  PENDING
 }
 
 enum Difficulty {

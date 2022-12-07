@@ -3,7 +3,7 @@ import { CampaignLayout } from "@layouts/CampaignLayout";
 
 const CreatePreviewCampaign = () => {
   return (
-    <div className="px-100 py-10">
+    <div>
       <Preview />
     </div>
   );

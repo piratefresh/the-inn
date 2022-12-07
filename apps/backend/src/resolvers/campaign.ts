@@ -154,8 +154,6 @@ export class CampaignResolver {
   ) {
     let queryResults = null;
 
-    console.log("req.session.userId CAMPAIGN RESOLVER: ", req.session);
-
     if (cursor)
       queryResults = await prisma.campaign.findMany({
         take: limit,

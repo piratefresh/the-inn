@@ -2,6 +2,7 @@ export { Button } from "./Button";
 export { Card } from "./Card";
 export { Checkbox } from "./Checkbox";
 export { Chip } from "./Chip";
+export { ChipGroup } from "./Chip/ChipGroup";
 export {
   DatePicker,
   RangeCalendar,
@@ -25,3 +26,4 @@ export { Note } from "./Note";
 export { TimeZonePicker } from "./TimeZonePicker";
 export { Selector, AsyncSelector } from "./Selector";
 export { RangeSlider } from "./RangeSlider";
+export { Dialog } from "./Dialog";

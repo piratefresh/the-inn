@@ -21,5 +21,11 @@ export class Membership {
   @Field((_type) => Campaign)
   campaign: Campaign;
 
+  @Field({ nullable: true })
+  application: string;
+
+  @Field({ nullable: true })
+  jsonApplication: string;
+
   // skip overwrite 👇
 }

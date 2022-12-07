@@ -25,16 +25,8 @@ const SignIn = () => {
     handleSubmit,
   } = useForm<SignInFormValues>();
 
-  const [{ data: userData, error, fetching }, signin] = useSignInMutation();
-
   const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
     const { usernameOrEmail, password } = data;
-
-    // To create session with the api server
-    // const apiRes = signin({
-    //   password,
-    //   usernameOrEmail,
-    // });
 
     // For authenticating with next-auth
     const res = await signIn("credentials", {
@@ -117,8 +109,10 @@ const SignIn = () => {
 SignIn.layoutProps = {
   meta: {
     title: "The Inn - Sign In",
+    sideImage:
+      "https://res.cloudinary.com/film-it/image/upload/v1670365199/the-inn/martin-sobr-matt-s-group.jpg",
   },
   Layout: AuthLayout,
 };
 
-export default withUrqlClient(createUrqlClient)(SignIn);
+export default SignIn;

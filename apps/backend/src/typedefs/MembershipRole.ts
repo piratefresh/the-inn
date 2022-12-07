@@ -1,9 +1,10 @@
-import { registerEnumType } from 'type-graphql'
+import { registerEnumType } from "type-graphql";
 
 export enum MembershipRole {
-  GM = 'GM',
-  PLAYER = 'PLAYER'
+  GM = "GM",
+  PLAYER = "PLAYER",
+  PENDING = "PENDING",
 }
 registerEnumType(MembershipRole, {
-    name: 'MembershipRole',
-})
+  name: "MembershipRole",
+});

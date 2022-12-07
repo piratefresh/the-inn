@@ -1,23 +1,36 @@
 import { IStep2, step2 } from "@features/createCampaign/createCampaignSlice";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FormState,
+  SubmitHandler,
+  useForm,
+  UseFormSetValue,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup } from "ui/src/RadioGroup";
 import { Header } from "ui/src/Typography";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Checkbox } from "@mantine/core";
-
 import InputGroup from "@components/ui/InputGroup";
 import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
-import { AsyncSelector, Box, Button, Input, MultiSelect } from "ui";
+import { Box, Button, Input, MultiSelect } from "ui";
 import { DevTool } from "@hookform/devtools";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 import { CustomEditorProps } from "../General/General";
-import { locationSchema } from "../General/schema";
+import { LocationSchema } from "../General/schema";
 import { Geocoder } from "@components/ui/Geocoder";
+import { createTagOptions, TagOptions } from "@utils/createTagOptions";
 
-const OnlineOptions = ({ control, errors }) => (
+interface OnlineOptions {
+  control: Control<IStep2, any>;
+  errors: FormState<IStep2>["errors"];
+  setValue?: UseFormSetValue<IStep2>;
+}
+
+const OnlineOptions = ({ control, errors }: OnlineOptions) => (
   <div className="grid grid-cols-2 gap-8">
     <InputGroup
       className="my-8"
@@ -30,9 +43,11 @@ const OnlineOptions = ({ control, errors }) => (
         render={({ field }) => (
           <Input
             gold
-            placeholder="voipSystem"
+            placeholder="Voice Chat System (Discord)"
             value={field.value}
-            onChange={(e) => field.onChange(e)}
+            onChange={(e) => {
+              field.onChange(e);
+            }}
           />
         )}
       />
@@ -50,7 +65,9 @@ const OnlineOptions = ({ control, errors }) => (
             gold
             placeholder="Virtual Table Top"
             value={field.value}
-            onChange={(e) => field.onChange(e)}
+            onChange={(e) => {
+              field.onChange(e);
+            }}
           />
         )}
       />
@@ -58,7 +75,7 @@ const OnlineOptions = ({ control, errors }) => (
   </div>
 );
 
-const InPersonOptions = ({ control, errors, setValue }) => (
+const InPersonOptions = ({ control, errors, setValue }: OnlineOptions) => (
   <>
     <div className="my-8">
       <InputGroup className="my-8" label="*Area" error={errors?.state}>
@@ -139,7 +156,7 @@ export const Location = () => {
       combat: createCampaignData.combat,
       puzzles: createCampaignData.puzzles,
       roleplay: createCampaignData.roleplay,
-      voipSystem: createCampaignData.voipSystem ?? "Discord",
+      voipSystem: createCampaignData.voipSystem,
       city: createCampaignData.city,
       state: createCampaignData.state,
       area: createCampaignData.area,
@@ -147,7 +164,7 @@ export const Location = () => {
       jsonAdditionalDetails: createCampaignData.jsonAdditionalDetails,
       isOnline: true,
     },
-    resolver: zodResolver(locationSchema({ isOnline: campaignIsOnline })),
+    resolver: zodResolver(LocationSchema),
   });
 
   const onInvalid = (errors) => {
@@ -167,21 +184,16 @@ export const Location = () => {
   }, []);
 
   useEffect(() => {
-    setValue("tags", [
-      {
-        label: createCampaignData.gameSystem,
-        value: createCampaignData.gameSystem,
-        id: createCampaignData.gameSystem,
-      },
-      {
-        label: createCampaignData.campaignType,
-        value: createCampaignData.campaignType,
-        id: createCampaignData.campaignType,
-      },
-    ]);
+    const newGameSystemTag = createTagOptions(createCampaignData.gameSystem);
+    const newCampaignTypeTag = createTagOptions(
+      createCampaignData.campaignType
+    );
+    setValue("tags", [newGameSystemTag, newCampaignTypeTag]);
   }, []);
 
   campaignIsOnline = watch("isOnline");
+
+  console.log(" campaignIsOnline: ", campaignIsOnline);
 
   const locationOptions = campaignIsOnline ? (
     <OnlineOptions control={control} errors={errors} />

@@ -2,14 +2,14 @@ import React from "react";
 import { CreatableSelector } from "ui/src/Selector";
 import GAMES from "./games.json";
 
-interface Option {
+export interface CreatableGameSelectorOption {
   readonly label: string;
   readonly value: string;
 }
 
 interface CreatableGameSelectorProps {
-  onChange: (v: Option) => void;
-  value: Option | null;
+  onChange: (v: CreatableGameSelectorOption) => void;
+  value: CreatableGameSelectorOption | null;
   className?: string;
 }
 
