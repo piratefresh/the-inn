@@ -3,6 +3,7 @@ import {
   createUnionType,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
   Mutation,
   PubSub,
@@ -23,6 +24,7 @@ import { FieldsValidationError } from "@errors/FieldsValidationError";
 import { BadCredentialsError } from "@errors/BadCredentialsError";
 import { NonExistingUserError } from "@errors/NonUserExists";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { issueToken, sendConfirmationEmail } from "@utils/sendEmailUtils";
 
 export const AuthResult = createUnionType({
   name: "AuthResult",
@@ -54,6 +56,13 @@ export class UsernamePasswordInput {
 
 @Resolver()
 export class UserResolver {
+  // @FieldResolver(() => String)
+  // email(@Root() user: User, @Ctx() { req }: MyContext) {
+  //   if (req.session.userId === user.id) {
+  //     return user.email;
+  //   }
+  //   return "";
+  // }
   @Query(() => String)
   async helloworld(@Ctx() { prisma, req, res, pusher }: MyContext) {
     // @ts-ignore
@@ -130,14 +139,14 @@ export class UserResolver {
   @Mutation((_type) => CreateUserResult)
   async signup(
     @Arg("options") options: UsernamePasswordInput,
-    @Ctx() { prisma, res }: MyContext
+    @Ctx() { prisma, res, req }: MyContext
   ) {
     const errors = await validate(options);
     if (errors.length > 0) return FieldsValidationError.from(errors);
     const hashedPassword = await argon2.hash(options.password);
 
     try {
-      const createdUser = await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           ...options,
           experience: "Beginner",
@@ -147,19 +156,24 @@ export class UserResolver {
 
       await prisma.account.create({
         data: {
-          userId: createdUser.id,
+          userId: user.id,
           type: "credentials",
           provider: "Credentials",
-          providerAccountId: createdUser.id,
+          providerAccountId: user.id,
         },
       });
 
-      setToken(createdUser, res);
+      const token = await issueToken(user.id, prisma);
 
-      console.log("user: ", createdUser);
+      await sendConfirmationEmail(user.email, token);
 
-      return Object.assign(new User(), createdUser);
+      setToken(user, res);
+      console.log("req session: ", req.session);
+      req.session.userId = user.id;
+
+      return Object.assign(new User(), user);
     } catch (err) {
+      console.log("err: ", err);
       if (
         err instanceof PrismaClientKnownRequestError &&
         err.code === "P2002" // unique constraint failed
@@ -182,50 +196,52 @@ export class UserResolver {
     // const inputPassword = await validate(password);
     // if (inputPassword.length > 0)
     //   return FieldsValidationError.from(inputPassword);
-
-    console.log("SIGN IN: ", usernameOrEmail);
-
-    const user = await prisma.user.findUnique({
-      where: {
-        email: usernameOrEmail,
-      },
-      include: {
-        accounts: true,
-      },
-    });
-
-    console.log("user: ", user);
-
-    const refreshToken = createRefreshToken(user);
-    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
-
-    await prisma.account.update({
-      where: {
-        provider_providerAccountId_userId: {
-          userId: user.id,
-          provider: "Credentials",
-          providerAccountId: user.id,
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: usernameOrEmail,
         },
-      },
-      data: {
-        refreshToken,
-        expiresAt: (decoded as JWTPayload).accessTokenExpires,
-      },
-    });
+        include: {
+          accounts: true,
+        },
+      });
 
-    if (!user) return new NonExistingUserError();
+      const refreshToken = createRefreshToken(user);
+      const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
 
-    const authenticated = await argon2.verify(user.password, password);
+      await prisma.account.update({
+        where: {
+          provider_providerAccountId_userId: {
+            userId: user.id,
+            provider: "Credentials",
+            providerAccountId: user.id,
+          },
+        },
+        data: {
+          refreshToken,
+          expiresAt: (decoded as JWTPayload).accessTokenExpires,
+        },
+      });
 
-    if (!authenticated) return new BadCredentialsError();
+      if (!user) return new NonExistingUserError();
 
-    // setToken(user, res);
+      const authenticated = await argon2.verify(user.password, password);
 
-    req.session.userId = user.id;
+      if (!authenticated) return new BadCredentialsError();
 
-    res.setHeader(process.env.JWT_COOKIE_NAME, user.id);
+      console.log("user: ", user.id);
+      console.log("authenticated: ", authenticated);
 
-    return Object.assign(new User(), user);
+      setToken(user, res);
+
+      // res.setHeader(process.env.JWT_COOKIE_NAME, user.id);
+      console.log("req session: ", req.session);
+      req.session.userId = await user.id;
+
+      return Object.assign(new User(), user);
+    } catch (err) {
+      console.log("err: ", err);
+    }
   }
 
   @Mutation(() => Boolean)
@@ -242,31 +258,5 @@ export class UserResolver {
         resolve(true);
       })
     );
-  }
-
-  @Mutation((_type) => AuthResult)
-  async exchangeToken(
-    @Arg("usernameOrEmail") usernameOrEmail: string,
-    @Arg("password") password: string,
-    @Ctx() { prisma, res, req }: MyContext
-  ) {
-    // const inputUserEmailErrors = await validate(usernameOrEmail);
-    // if (inputUserEmailErrors.length > 0)
-    //   return FieldsValidationError.from(inputUserEmailErrors);
-    // const inputPassword = await validate(password);
-    // if (inputPassword.length > 0)
-    //   return FieldsValidationError.from(inputPassword);
-    console.log("sessionID EXCHNAGE TOKEN: ", req.session.userId);
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: req.session.userId,
-      },
-      include: {
-        accounts: true,
-      },
-    });
-
-    return Object.assign(new User(), user);
   }
 }

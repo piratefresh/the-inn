@@ -1,12 +1,9 @@
 import { Input } from "@components/ui/Input";
 import InputGroup from "@components/ui/InputGroup";
-import { useSignInMutation } from "@generated/graphql";
 import { AuthLayout } from "@layouts/AuthLayout";
-import { Button } from "@mantine/core";
+import { Button } from "ui";
 import { showNotification } from "@mantine/notifications";
-import { createUrqlClient } from "@utils/createUrqlClient";
 import { signIn, useSession } from "next-auth/react";
-import { withUrqlClient } from "next-urql";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -96,10 +93,15 @@ const SignIn = () => {
           />
         </InputGroup>
 
-        <Button type="submit">Sign-In</Button>
+        <Button size="large" fullWidth type="submit">
+          Sign-In
+        </Button>
 
-        <p className="underline text-white">
-          Dont have an account? <Link href="/auth/signup">Sign up here</Link>
+        <p className=" text-white">
+          Dont have an account?{" "}
+          <span className="underline">
+            <Link href="/auth/signup">Sign up here</Link>
+          </span>
         </p>
       </form>
     </div>

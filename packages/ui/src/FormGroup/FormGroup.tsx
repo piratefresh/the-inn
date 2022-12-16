@@ -28,7 +28,7 @@ const StyledFormGroup = styled("div", {
   },
 });
 
-interface FormGroupProps extends TextProps {
+export interface FormGroupProps extends TextProps {
   label: string;
   helperText: string;
   direction?: "row" | "column" | "rowReverse";
@@ -51,7 +51,7 @@ export const FormGroup = ({
       {label}
     </Header>
     {children}
-    <Text color="contrast" size="sm" as="p">
+    <Text color="loContrast" size="sm" as="p">
       {helperText}
     </Text>
   </StyledFormGroup>

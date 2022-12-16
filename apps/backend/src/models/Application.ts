@@ -1,37 +1,41 @@
-import { Field, ObjectType, ID } from 'type-graphql'
-import { Membership } from './Membership'
+import { Field, ObjectType, ID } from "type-graphql";
+import { Membership } from "./Membership";
+import { Experience } from "../typedefs/Experience";
 
 @ObjectType()
 export class Application {
   @Field((_type) => ID)
-  id: string
+  id: string;
 
   @Field((_type) => Membership)
-  membership: Membership
+  membership: Membership;
 
   @Field()
-  membershipId: string
+  membershipId: string;
 
   @Field()
-  campaignId: string
+  campaignId: string;
 
   @Field()
-  userId: string
+  userId: string;
 
   @Field()
-  message: string
+  message: string;
 
   @Field()
-  jsonMessage: string
+  jsonMessage: string;
 
   @Field()
-  fitsSchedule: boolean
+  fitsSchedule: boolean;
 
   @Field((_type) => [String])
-  days: string[]
+  days: string[];
 
   @Field((_type) => [String])
-  timePeriods: string[]
+  timePeriods: string[];
+
+  @Field((_type) => Experience)
+  experience: Experience;
 
   // skip overwrite 👇
 }

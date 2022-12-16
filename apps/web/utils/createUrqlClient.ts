@@ -2,8 +2,8 @@ import {
   createClient,
   dedupExchange,
   fetchExchange,
-  ssrExchange,
   subscriptionExchange,
+  errorExchange as urqlErrorExchange,
 } from "urql";
 import { cacheExchange } from "@urql/exchange-graphcache";
 import { devtoolsExchange } from "@urql/devtools";
@@ -12,26 +12,23 @@ import { Exchange } from "urql";
 import Router from "next/router";
 import { createClient as createWSClient } from "graphql-ws";
 import { isServer } from "./isServer";
+import {
+  GetUnreadNotificationsDocument,
+  GetUnreadNotificationsQuery,
+  NewCampaignApplicationSubscription,
+  NotificationType,
+} from "@generated/graphql";
 
-console.log("process.env.NEXT_PUBLIC_WS_URL: ", process.env.NEXT_PUBLIC_WS_URL);
-
-export const errorExchange: Exchange =
-  ({ forward }) =>
-  (ops$) => {
-    return pipe(
-      forward(ops$),
-      tap(({ error }) => {
-        // If the OperationResult has an error send a request to sentry
-        if (error) {
-          if (error?.message.includes("Not Authenticated")) {
-            Router.replace("/login");
-          }
-        }
-      })
-    );
-  };
-
-const ssrCache = ssrExchange({ isClient: !isServer });
+export const errorExchange = urqlErrorExchange({
+  onError: (error) => {
+    if (error) {
+      console.log("error: ", error);
+      if (error?.message.includes("Not Authenticated")) {
+        Router.replace("/login");
+      }
+    }
+  },
+});
 
 const wsClient = () =>
   createWSClient({
@@ -62,70 +59,73 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
         keys: {
           PaginatedPosts: () => null,
         },
+        updates: {
+          Mutation: {
+            setNotificationsRead(_result, args, cache, _info) {
+              const fields = cache
+                .inspectFields("Query")
+                .filter((field) => field.fieldName === "todos")
+                .forEach((field) => {
+                  cache.updateQuery(
+                    {
+                      query: GetUnreadNotificationsDocument,
+                    },
+                    (data) => {
+                      data.notification = data.notification.filter(
+                        (n) => n.id !== args.id
+                      );
+                      return data;
+                    }
+                  );
+                });
+            },
+          },
+          Subscription: {
+            newCampaignApplication: (
+              result: NewCampaignApplicationSubscription,
+              variables,
+              cache
+            ) => {
+              cache.updateQuery<GetUnreadNotificationsQuery>(
+                { query: GetUnreadNotificationsDocument },
+                (data) => {
+                  if (!data) return null;
+                  console.log("data: ", data);
+                  const newNotifications: GetUnreadNotificationsQuery["getUnreadNotifications"][0] =
+                    {
+                      id: result.newCampaignApplication.notificationId,
+                      message: result.newCampaignApplication.message,
+                      read: result.newCampaignApplication.read,
+                      relatedId: result.newCampaignApplication.relatedId,
+                      createdAt: result.newCampaignApplication.createdAt,
+                      updatedAt: result.newCampaignApplication.updatedAt,
+                      type: result.newCampaignApplication
+                        .type as NotificationType,
+                      userId: result.newCampaignApplication.gameMasterId,
+                      __typename: "Notification",
+                    };
+                  data.getUnreadNotifications.push(newNotifications);
+
+                  console.log("data: ", data);
+                  return data;
+                }
+              );
+            },
+          },
+        },
       }),
       errorExchange,
-      ssrCache,
+      ssrExchange,
       fetchExchange,
-      // subscriptionExchange({
-      //   forwardSubscription: (operation) => ({
-      //     subscribe: (sink) => ({
-      //       unsubscribe: wsClient().subscribe(operation, sink),
-      //     }),
-      //   }),
-      // }),
+      subscriptionExchange({
+        forwardSubscription: (operation) => ({
+          subscribe: (sink) => ({
+            unsubscribe: wsClient().subscribe(operation, sink),
+          }),
+        }),
+      }),
     ],
   };
 };
 
-// const createUrqlClient = createClient({
-//   url: process.env.API_SERVER,
-//   fetchOptions: {
-//     credentials: "include" as const,
-//   },
-//   exchanges: [
-//     devtoolsExchange,
-//     dedupExchange,
-//     cacheExchange({
-//       keys: {
-//         PaginatedPosts: () => null,
-//       },
-//     }),
-//     errorExchange,
-//     ssrCache,
-//     fetchExchange,
-//     // subscriptionExchange({
-//     //   forwardSubscription: (operation) => ({
-//     //     subscribe: (sink) => ({
-//     //       unsubscribe: wsClient.subscribe(operation, sink),
-//     //     }),
-//     //   }),
-//     // }),
-//   ],
-// });
-
-const basicClient = createClient({
-  url: process.env.NEXT_PUBLIC_API_URL as string,
-  exchanges: [
-    dedupExchange,
-    cacheExchange({
-      keys: {
-        PaginatedPosts: () => null,
-      },
-    }),
-    ssrCache,
-    fetchExchange,
-  ],
-});
-
-const urqlExchanges = [
-  dedupExchange,
-  cacheExchange({
-    keys: {
-      PaginatedPosts: () => null,
-    },
-  }),
-  ssrCache,
-  fetchExchange,
-];
-
-export { createUrqlClient, basicClient, ssrCache, urqlExchanges };
+export { createUrqlClient };

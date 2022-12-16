@@ -64,15 +64,23 @@ const StyledButton = styled("button", {
         width: "100%",
       },
     },
+    outlined: {
+      primary: {
+        backgroundColor: "transparent",
+        border: "1px solid $yellowBrand",
+      },
+    },
   },
 });
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   size?: "small" | "large";
   color?: "blue" | "yellow";
   css?: Stitches.CSS;
   fullWidth?: boolean;
+  outlined?: "primary";
 }
 
 export const Button = ({
@@ -81,6 +89,7 @@ export const Button = ({
   css,
   children,
   fullWidth,
+  outlined,
   ...props
 }: ButtonProps) => {
   return (
@@ -89,6 +98,7 @@ export const Button = ({
       size={size}
       color={color}
       fullWidth={fullWidth}
+      outlined={outlined}
       {...props}
     >
       {children}

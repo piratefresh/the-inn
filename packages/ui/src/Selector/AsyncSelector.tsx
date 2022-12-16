@@ -1,8 +1,7 @@
-import React from "react";
 import { GroupBase } from "react-select";
 import AsyncSelect, { AsyncProps } from "react-select/async";
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { theme } from "../theme";
+import { DropdownIndicator } from "./DropdownIndicator";
 
 type SelectProps<
   Option,
@@ -11,11 +10,6 @@ type SelectProps<
 > = AsyncProps<Option, IsMulti, Group> & {
   label?: string;
   id?: string;
-};
-
-const DropdownIndicator = (props) => {
-  const { menuIsOpen } = props.selectProps;
-  return menuIsOpen ? <ChevronUpIcon /> : <ChevronDownIcon />;
 };
 
 export const AsyncSelector = <

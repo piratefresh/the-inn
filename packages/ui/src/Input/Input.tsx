@@ -1,6 +1,6 @@
 import { StyledInput } from "./StyledInput";
 
-interface IInputProps
+export interface IInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   required?: boolean;
   className?: string;
@@ -16,7 +16,7 @@ interface IInputProps
   iconPlacement?: "left" | "right" | "none";
   gold?: boolean;
 }
-interface ITextAreaProps
+export interface ITextAreaProps
   extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   required?: boolean;
   className?: string;

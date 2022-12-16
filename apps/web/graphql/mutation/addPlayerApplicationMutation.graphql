@@ -1,0 +1,25 @@
+mutation AddPlayerApplication(
+  $campaignApplicationInput: CampaignApplicationInput!
+) {
+  addPlayerApplication(campaignApplicationInput: $campaignApplicationInput) {
+    ... on Campaign {
+      id
+      title
+      memberships {
+        role
+        user {
+          firstName
+          lastName
+          id
+        }
+        application {
+          message
+          jsonMessage
+          id
+          fitsSchedule
+          timePeriods
+        }
+      }
+    }
+  }
+}

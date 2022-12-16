@@ -7,7 +7,7 @@ const StyledH1 = styled("h1", {
   color: "$hiContrast",
 });
 
-interface FormDividerProps {
+export interface FormDividerProps {
   label: string;
 }
 

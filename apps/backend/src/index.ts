@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
-import { COOKIE_NAME, __prod__ } from "./constants";
+import { COOKIE_NAME, redisPrefices, __prod__ } from "./constants";
 import { buildTypeDefsAndResolvers } from "type-graphql";
 // import { prisma } from "database";
 import { createServer } from "http";
@@ -17,28 +17,23 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-// import { pusherClient } from "pusher";
 import { seedDB } from "../prisma/seed";
-import Pusher from "pusher";
 import { WebSocketServer } from "ws";
 import { useServer as useWsServer } from "graphql-ws/lib/use/ws";
 import { MyContext } from "@typedefs/MyContext";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
 import { expressMiddleware } from "@apollo/server/express4";
 import bodyParser, { urlencoded } from "body-parser";
 import AblyPubSub from "ablyPubsub";
+import { NotificationResolver } from "@resolvers/notification";
+import rateLimit from "express-rate-limit";
+import RateLimitRedisStore from "rate-limit-redis";
 
 dotenv.config();
 
 // PRISMA
 const prisma = new PrismaClient();
-
-const pusher = new Pusher({
-  appId: "1338472",
-  key: "4aa7a9d626b176d0e11f",
-  secret: "8c81d2e93d50343e51cd",
-  cluster: "us2",
-});
 
 const pubsub = new AblyPubSub({ key: process.env.ABLY_API_KEY });
 
@@ -50,12 +45,7 @@ const startServer = async () => {
 
   const RedisStore = connectRedis(session);
   const redis = new Redis(
-    "redis://default:bacaca9acfe9433f8833bea83aa0fc33@us1-saved-satyr-39150.upstash.io:39150",
-    {
-      lazyConnect: true,
-      connectTimeout: 5000,
-      maxRetriesPerRequest: 3,
-    }
+    "redis://default:5f5e5f43080a498db82af877c1acbcc7@us1-main-osprey-38760.upstash.io:38760"
   );
 
   const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
@@ -65,6 +55,7 @@ const startServer = async () => {
       ReviewResolver,
       CounterResolver,
       PrivateMessageResolver,
+      NotificationResolver,
     ],
     pubSub: pubsub,
   });
@@ -92,6 +83,7 @@ const startServer = async () => {
     store: new RedisStore({
       client: redis,
       ttl: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
+      prefix: redisPrefices.redisSessionPrefix,
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
@@ -100,12 +92,13 @@ const startServer = async () => {
       secure: __prod__, // cookie only works in https
       domain: __prod__ ? ".codeponder.com" : undefined,
     },
-    saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
     resave: false,
+    saveUninitialized: false,
   });
 
   app.use(sessionMiddleware);
+
   app.set("port", 3000);
 
   const httpServer = createServer(app);
@@ -125,23 +118,10 @@ const startServer = async () => {
     {
       schema, // Adding a context property lets you add data to your GraphQL operation context
       // authenticate the user and set it on the connection context
-      onConnect: async (ctx) => {
-        const req = ctx.extra.request as Request;
-        sessionMiddleware(req, {} as any, () => {
-          // @ts-ignore
-          if (req.session.userId === null) {
-            throw new Error("not authenticated");
-          }
-          // @ts-ignore
-          ctx.extra.userId = req.session.userId;
-        });
-      },
-      context: ({ extra: { request } }) => {
-        const req = request as Request;
-        // @ts-ignore
-        console.log("req.session?.userId: ", extra.userId);
-        // @ts-ignore
-        return { userId: req.session?.userId };
+      context: ({ extra }) => ({ req: extra.request, prisma }),
+
+      onConnect: ({ extra }) => {
+        sessionMiddleware(extra.request as any, {} as any, () => {});
       },
     },
     wsServer
@@ -154,6 +134,7 @@ const startServer = async () => {
     plugins: [
       // Disable dosent support graphql-ws
       // ApolloServerPluginLandingPageGraphQLPlayground(),
+      ApolloServerPluginLandingPageLocalDefault({ includeCookies: true }),
       ApolloServerPluginDrainHttpServer({ httpServer }),
       // Proper shutdown for the WebSocket server.
       {
@@ -192,7 +173,6 @@ const startServer = async () => {
           req,
           res,
           redis,
-          pusher,
         };
       },
     })

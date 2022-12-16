@@ -1,8 +1,19 @@
+import React from "react";
 import { styled } from "../theme";
 
 const StyledCardWrapper = styled("div", {
   backgroundColor: "$loContrast",
   variants: {
+    background: {
+      dark: {
+        borderRadius: "$radii$md",
+        border: "3px solid transparent",
+        backgroundOrigin: "border-box",
+        backgroundClip: "content-box, border-box",
+        backgroundImage:
+          "linear-gradient(rgb(24,24,24), rgb(24,24,24)),linear-gradient($yellowBrand, $orangeBrand)",
+      },
+    },
     gold: {
       true: {
         borderRadius: "$radii$md",
@@ -38,7 +49,15 @@ const StyledCardImg = styled("img", {
   },
 });
 
-export const Card = ({ children, gold, ...props }) => (
+export interface CardProps extends React.ComponentPropsWithoutRef<"div"> {
+  children: React.ReactNode;
+  gold?: boolean;
+  background: "dark";
+}
+
+// There's currently an issue with ui-stitches and typescrip
+// @ts-ignore
+export const Card = ({ children, gold, ...props }: CardProps) => (
   <StyledCardWrapper gold={gold} {...props}>
     {children}
   </StyledCardWrapper>

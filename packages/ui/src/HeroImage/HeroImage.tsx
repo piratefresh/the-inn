@@ -21,14 +21,14 @@ interface HeroImageProps extends ImageProps {
   src: string;
   className?: string;
   style?: React.CSSProperties;
-  width?: number;
-  height?: number;
+  width?: number | string;
+  height?: number | string;
   gold?: boolean;
 }
 
 export const HeroImage = ({
   src,
-  gold,
+  gold = false,
   height,
   width,
   ...props

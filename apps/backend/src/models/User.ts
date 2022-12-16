@@ -8,6 +8,7 @@ import { Campaign } from "./Campaign";
 import { Membership } from "./Membership";
 import { CampaignMessage } from "./CampaignMessage";
 import { PrivateMessage } from "./PrivateMessage";
+import { Notification } from "./Notification";
 
 @InputType("UserInput")
 @ObjectType("User", {
@@ -26,11 +27,17 @@ export class User {
   @Field()
   updatedAt: Date;
 
-  @Field({ nullable: true })
-  email?: string;
+  @Field()
+  email: string;
 
   @Field({ nullable: true })
   emailVerified?: Date;
+
+  @Field({ nullable: true })
+  emailVerifyToken?: string;
+
+  @Field({ nullable: true })
+  passwordResetToken?: string;
 
   @Field({ nullable: true })
   imageUrl?: string;
@@ -40,6 +47,9 @@ export class User {
 
   @Field()
   lastName: string;
+
+  @Field({ nullable: true })
+  aboutMe?: string;
 
   @Field((_type) => Experience)
   experience: Experience;
@@ -82,6 +92,9 @@ export class User {
 
   @Field((_type) => [PrivateMessage])
   receivedPrivateMessage: PrivateMessage[];
+
+  @Field((_type) => [Notification])
+  Notification: Notification[];
 
   // skip overwrite 👇
 }

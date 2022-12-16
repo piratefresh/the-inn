@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useDateSegment } from "@react-aria/datepicker";
+import { DateFieldState, DateSegment as DST } from "@react-stately/datepicker";
 import { styled } from "../theme";
 
 const Flex = styled("div", {
@@ -13,8 +14,13 @@ const StyledWrapper = styled("div", {
   textAlign: "center",
 });
 
-export function DateSegment({ segment, state }) {
-  let ref = useRef();
+interface DateSegmentProps {
+  segment: DST;
+  state: DateFieldState;
+}
+
+export function DateSegment({ segment, state }: DateSegmentProps) {
+  let ref = useRef(null);
   let { segmentProps } = useDateSegment(segment, state, ref);
 
   return (
@@ -24,7 +30,9 @@ export function DateSegment({ segment, state }) {
       style={{
         ...segmentProps.style,
         minWidth:
-          segment.maxValue != null && String(segment.maxValue).length + "ch",
+          segment.maxValue != null
+            ? String(segment.maxValue).length + "ch"
+            : undefined,
       }}
       className={`px-0.5 box-content tabular-nums text-right outline-none rounded-sm focus:bg-violet-600 focus:text-white group ${
         !segment.isEditable ? "text-gray-500" : "text-gray-800"

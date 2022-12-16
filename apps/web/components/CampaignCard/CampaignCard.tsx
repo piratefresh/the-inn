@@ -6,6 +6,7 @@ import { styled } from "ui/src/theme";
 
 interface CampaignCardProps {
   campaign: GetCampaignsQuery["getCampaigns"][0];
+  hideTags?: boolean;
 }
 
 const StyledText = styled(Text, {
@@ -20,10 +21,10 @@ const StyledCardImage = styled(Card.Image, {
   minHeight: "180px",
 });
 
-export const CampaignCard = ({ campaign }: CampaignCardProps) => {
+export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
   return (
     <Card
-      gold
+      background="dark"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -38,32 +39,38 @@ export const CampaignCard = ({ campaign }: CampaignCardProps) => {
       />
 
       <Card.Section style={{ flex: 1 }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="flex flex-col my-2">
           <StyledText size="sm" weight="medium">
             {campaign.gameSystem}
           </StyledText>
-          {/* <StyledText size="sm" weight="medium">
-                      {campaign.members.length} out of {campaign.partySize}{" "}
-                      Players
-                    </StyledText> */}
+        </div>
+
+        <div className="my-2">
+          <StyledText size="sm" weight="medium">
+            {campaign.memberships.length} out of {campaign.maxSeats} Players
+          </StyledText>
         </div>
         <Link href={`/campaign/${campaign.id}`}>
           <a style={{ cursor: "pointer" }}>
-            <Header className="font-oldFenris" color="hiContrast" size="xl">
+            <Header className="font-oldFenris" size="xl">
               {campaign.title}
             </Header>
           </a>
         </Link>
-        <StyledText size="sm">
-          {format(new Date(campaign.startDate), "EEE',' MMM dd 'at' h bbb")}
-        </StyledText>
+        <div className="my-2">
+          <StyledText size="sm">
+            {format(new Date(campaign.startDate), "EEE',' MMM dd 'at' h bbb")}
+          </StyledText>
+        </div>
+
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
           }}
         >
-          {campaign.tags?.length > 0 &&
+          {!hideTags &&
+            campaign.tags?.length > 0 &&
             campaign.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
         </div>
       </Card.Section>

@@ -12,7 +12,7 @@ export const RangeSlider = React.forwardRef(
       <>
         <StyledSlider
           value={value}
-          onValueChange={([value]) => onValueChange([value])}
+          onValueChange={([value]) => onValueChange && onValueChange([value])}
           min={min}
           max={max}
           step={step}

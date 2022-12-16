@@ -1,16 +1,5 @@
 query GetCampaigns {
   getCampaigns {
-    id
-    title
-    summary
-    city
-    state
-    imageUrl
-    summary
-    jsonSummary
-    gameSystem
-    startDate
-    endDate
-    tags
+    ...CampaignSnippet
   }
 }

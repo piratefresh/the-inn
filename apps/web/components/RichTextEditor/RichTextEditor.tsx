@@ -4,6 +4,7 @@ import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
+import { ColumnExtension } from "@gocapsule/column-extension";
 import { Content, Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useCreateImageSignatureMutation } from "generated/graphql";
@@ -84,6 +85,7 @@ export const RichTextEditor = React.forwardRef(
         Indent,
         CustomImage(upload),
         ReactComponent,
+        ColumnExtension,
       ],
       content: value ? value : " ",
       onBlur() {
@@ -133,7 +135,7 @@ export const RichTextEditor = React.forwardRef(
     }));
 
     async function upload(file: File) {
-      const { data: signatureData } = await createImageSignature();
+      const { data: signatureData } = await createImageSignature({});
 
       if (signatureData) {
         const { signature, timestamp } = signatureData.createImageSignature;

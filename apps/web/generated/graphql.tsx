@@ -39,6 +39,21 @@ export type AddPlayerCampaignInput = {
   campaignId: Scalars['String'];
 };
 
+export type Application = {
+  __typename?: 'Application';
+  campaignId: Scalars['String'];
+  days: Array<Scalars['String']>;
+  experience: Experience;
+  fitsSchedule: Scalars['Boolean'];
+  id: Scalars['ID'];
+  jsonMessage: Scalars['String'];
+  membership: Membership;
+  membershipId: Scalars['String'];
+  message: Scalars['String'];
+  timePeriods: Array<Scalars['String']>;
+  userId: Scalars['String'];
+};
+
 export type AuthResult = BadCredentialsError | FieldsValidationError | NonExistingUserError | User;
 
 export type BadCredentialsError = IError & {
@@ -50,6 +65,7 @@ export type Campaign = {
   __typename?: 'Campaign';
   additionalDetails?: Maybe<Scalars['String']>;
   area?: Maybe<Scalars['String']>;
+  campaignMessage: Array<CampaignMessage>;
   campaignType: Scalars['String'];
   city?: Maybe<Scalars['String']>;
   combat: Difficulty;
@@ -66,8 +82,8 @@ export type Campaign = {
   isOnline: Scalars['Boolean'];
   jsonAdditionalDetails?: Maybe<Scalars['String']>;
   jsonSummary: Scalars['String'];
-  lat: Scalars['Float'];
-  lng: Scalars['Float'];
+  lat?: Maybe<Scalars['Float']>;
+  lng?: Maybe<Scalars['Float']>;
   maxSeats: Scalars['Int'];
   memberships: Array<Membership>;
   note?: Maybe<Scalars['String']>;
@@ -84,6 +100,33 @@ export type Campaign = {
   updatedAt: Scalars['DateTime'];
   virtualTable?: Maybe<Scalars['String']>;
   voipSystem?: Maybe<Scalars['String']>;
+};
+
+export type CampaignApplicationInput = {
+  campaignId: Scalars['String'];
+  days: Array<Scalars['String']>;
+  experience: Experience;
+  fitsSchedule: Scalars['Boolean'];
+  jsonMessage?: InputMaybe<Scalars['String']>;
+  message: Scalars['String'];
+  timePeriods: Array<Scalars['String']>;
+};
+
+export type CampaignMessage = {
+  __typename?: 'CampaignMessage';
+  attachmentError?: Maybe<Scalars['Boolean']>;
+  attachmentKey?: Maybe<Scalars['String']>;
+  attachmentPending?: Maybe<Scalars['Boolean']>;
+  attachmentType?: Maybe<Scalars['String']>;
+  campaign: Campaign;
+  campaignId: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  hasAttachment: Scalars['Boolean'];
+  id: Scalars['ID'];
+  message: Scalars['String'];
+  sender?: Maybe<User>;
+  senderId?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['DateTime'];
 };
 
 export type CampaignPagination = {
@@ -178,6 +221,7 @@ export type ImageSignature = {
 
 export type Membership = {
   __typename?: 'Membership';
+  application: Array<Application>;
   campaign: Campaign;
   campaignId: Scalars['String'];
   role: MembershipRole;
@@ -187,17 +231,20 @@ export type Membership = {
 
 export enum MembershipRole {
   Gm = 'GM',
+  Pending = 'PENDING',
   Player = 'PLAYER'
 }
 
 export type Mutation = {
   __typename?: 'Mutation';
   addCampaignPlayer: CreateCampaignResult;
+  addPlayerApplication: CreateCampaignResult;
   addPrivateMessage: PrivateMessage;
   createCampaign: CreateCampaignResult;
   createImageSignature: ImageSignature;
   createReview: CreateReviewResult;
   exchangeToken: AuthResult;
+  setNotificationsRead: Array<Notification>;
   signin: AuthResult;
   signout: Scalars['Boolean'];
   signup: CreateUserResult;
@@ -206,6 +253,11 @@ export type Mutation = {
 
 export type MutationAddCampaignPlayerArgs = {
   AddPlayerCampaignInput: AddPlayerCampaignInput;
+};
+
+
+export type MutationAddPlayerApplicationArgs = {
+  campaignApplicationInput: CampaignApplicationInput;
 };
 
 
@@ -230,6 +282,11 @@ export type MutationExchangeTokenArgs = {
 };
 
 
+export type MutationSetNotificationsReadArgs = {
+  ids: Array<Scalars['String']>;
+};
+
+
 export type MutationSigninArgs = {
   password: Scalars['String'];
   usernameOrEmail: Scalars['String'];
@@ -240,10 +297,42 @@ export type MutationSignupArgs = {
   options: UsernamePasswordInput;
 };
 
+export type NewCampaignNotification = {
+  __typename?: 'NewCampaignNotification';
+  campaignId: Scalars['String'];
+  createdAt: Scalars['String'];
+  gameMasterId: Scalars['String'];
+  message: Scalars['String'];
+  notificationId: Scalars['String'];
+  read: Scalars['Boolean'];
+  relatedId: Scalars['String'];
+  type: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
 export type NonExistingUserError = IError & {
   __typename?: 'NonExistingUserError';
   message: Scalars['String'];
 };
+
+export type Notification = {
+  __typename?: 'Notification';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  message: Scalars['String'];
+  read: Scalars['Boolean'];
+  relatedId: Scalars['String'];
+  type: NotificationType;
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['String'];
+};
+
+export enum NotificationType {
+  Campaign = 'Campaign',
+  Message = 'Message',
+  PrivateMessage = 'PrivateMessage'
+}
 
 export type PrivateMessage = {
   __typename?: 'PrivateMessage';
@@ -251,13 +340,15 @@ export type PrivateMessage = {
   attachmentKey?: Maybe<Scalars['String']>;
   attachmentPending?: Maybe<Scalars['Boolean']>;
   attachmentType?: Maybe<Scalars['String']>;
-  hasAttachment?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['DateTime'];
+  hasAttachment: Scalars['Boolean'];
   id: Scalars['ID'];
   message: Scalars['String'];
   recipient: User;
   recipientId: Scalars['String'];
   sender: User;
   senderId: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
 };
 
 export type PrivateMessageInput = {
@@ -274,12 +365,15 @@ export type PrivateMessageInput = {
 export type Query = {
   __typename?: 'Query';
   currentNumber: Scalars['Int'];
+  getAllNotifications: Array<Notification>;
   getAllPrivateMessages: Array<PrivateMessage>;
   getCampaign: Campaign;
   getCampaigns: Array<Campaign>;
   getCampaignsPagination: CampaignPagination;
   getOnlineUsers: Array<User>;
+  getUnreadNotifications: Array<Notification>;
   getUser: User;
+  getUserCampaign: Array<Campaign>;
   getUserPrivateMessages: Array<PrivateMessage>;
   getUsers: Array<User>;
   getUsersById: Array<User>;
@@ -317,21 +411,21 @@ export type QueryGetUsersByIdArgs = {
 export type Review = {
   __typename?: 'Review';
   comment: Scalars['String'];
-  created_at: Scalars['DateTime'];
+  createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   rating: Scalars['Int'];
-  updated_at: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
   user: User;
-  user_id: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type Session = {
   __typename?: 'Session';
   expires: Scalars['DateTime'];
   id: Scalars['ID'];
-  session_token: Scalars['String'];
+  sessionToken: Scalars['String'];
   user: User;
-  user_id: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export enum StatusType {
@@ -343,6 +437,7 @@ export enum StatusType {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  newCampaignApplication: NewCampaignNotification;
   newPrivateMessage: PrivateMessage;
   numberIncremented: Scalars['Float'];
   subscription: Scalars['String'];
@@ -350,7 +445,7 @@ export type Subscription = {
 
 export type User = {
   __typename?: 'User';
-  Hosted: Array<Campaign>;
+  Notification: Array<Notification>;
   accounts: Array<Account>;
   createdAt: Scalars['DateTime'];
   discord?: Maybe<Scalars['String']>;
@@ -359,12 +454,16 @@ export type User = {
   experience: Experience;
   facebook?: Maybe<Scalars['String']>;
   firstName: Scalars['String'];
+  hosted: Array<Campaign>;
   id: Scalars['ID'];
   imageUrl?: Maybe<Scalars['String']>;
   lastName: Scalars['String'];
   memberships: Array<Membership>;
   password: Scalars['String'];
+  receivedPrivateMessage: Array<PrivateMessage>;
   reviews: Array<Review>;
+  sentCampaignMessage: Array<CampaignMessage>;
+  sentPrivateMessages: Array<PrivateMessage>;
   sessions: Array<Session>;
   status: StatusType;
   twitter?: Maybe<Scalars['String']>;
@@ -378,6 +477,15 @@ export type UsernamePasswordInput = {
   lastName: Scalars['String'];
   password: Scalars['String'];
 };
+
+export type CampaignSnippetFragment = { __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, tags: Array<string>, maxSeats: number, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> };
+
+export type AddPlayerApplicationMutationVariables = Exact<{
+  campaignApplicationInput: CampaignApplicationInput;
+}>;
+
+
+export type AddPlayerApplicationMutation = { __typename?: 'Mutation', addPlayerApplication: { __typename?: 'Campaign', id: string, title: string, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, id: string }, application: Array<{ __typename?: 'Application', message: string, jsonMessage: string, id: string, fitsSchedule: boolean, timePeriods: Array<string> }> }> } | { __typename?: 'FieldsValidationError' } };
 
 export type CreateCampaignMutationVariables = Exact<{
   createCampaignInput: CreateCampaignInput;
@@ -398,6 +506,13 @@ export type ExchangeTokenMutationVariables = Exact<{
 
 
 export type ExchangeTokenMutation = { __typename?: 'Mutation', exchangeToken: { __typename?: 'BadCredentialsError' } | { __typename?: 'FieldsValidationError' } | { __typename?: 'NonExistingUserError' } | { __typename?: 'User', id: string, email?: string | null, firstName: string, lastName: string, imageUrl?: string | null, accounts: Array<{ __typename?: 'Account', refreshToken?: string | null, expiresAt?: number | null }> } };
+
+export type SetNotificationsReadMutationVariables = Exact<{
+  ids: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type SetNotificationsReadMutation = { __typename?: 'Mutation', setNotificationsRead: Array<{ __typename?: 'Notification', id: string }> };
 
 export type SignInMutationVariables = Exact<{
   usernameOrEmail: Scalars['String'];
@@ -422,6 +537,11 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'ExistingUserError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'User', id: string, email?: string | null, firstName: string, lastName: string } };
 
+export type QueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type QueryQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', id: string, read: boolean, message: string, type: NotificationType, relatedId: string, updatedAt: any }> };
+
 export type GetCampaignQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -432,7 +552,12 @@ export type GetCampaignQuery = { __typename?: 'Query', getCampaign: { __typename
 export type GetCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, tags: Array<string> }> };
+export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, tags: Array<string>, maxSeats: number, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> }> };
+
+export type GetUnreadNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUnreadNotificationsQuery = { __typename?: 'Query', getUnreadNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any }> };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['String'];
@@ -441,7 +566,72 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email?: string | null } };
 
+export type GetUserCampaignQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type GetUserCampaignQuery = { __typename?: 'Query', getUserCampaign: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, tags: Array<string>, maxSeats: number, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> }> };
+
+export type NewCampaignApplicationSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewCampaignApplicationSubscription = { __typename?: 'Subscription', newCampaignApplication: { __typename?: 'NewCampaignNotification', campaignId: string, gameMasterId: string, notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string } };
+
+export const CampaignSnippetFragmentDoc = gql`
+    fragment CampaignSnippet on Campaign {
+  id
+  title
+  summary
+  city
+  state
+  imageUrl
+  summary
+  jsonSummary
+  gameSystem
+  startDate
+  endDate
+  days
+  timePeriods
+  tags
+  maxSeats
+  memberships {
+    role
+    user {
+      firstName
+      lastName
+      imageUrl
+    }
+  }
+}
+    `;
+export const AddPlayerApplicationDocument = gql`
+    mutation AddPlayerApplication($campaignApplicationInput: CampaignApplicationInput!) {
+  addPlayerApplication(campaignApplicationInput: $campaignApplicationInput) {
+    ... on Campaign {
+      id
+      title
+      memberships {
+        role
+        user {
+          firstName
+          lastName
+          id
+        }
+        application {
+          message
+          jsonMessage
+          id
+          fitsSchedule
+          timePeriods
+        }
+      }
+    }
+  }
+}
+    `;
+
+export function useAddPlayerApplicationMutation() {
+  return Urql.useMutation<AddPlayerApplicationMutation, AddPlayerApplicationMutationVariables>(AddPlayerApplicationDocument);
+};
 export const CreateCampaignDocument = gql`
     mutation createCampaign($createCampaignInput: CreateCampaignInput!) {
   createCampaign(createCampaignInput: $createCampaignInput) {
@@ -492,6 +682,17 @@ export const ExchangeTokenDocument = gql`
 
 export function useExchangeTokenMutation() {
   return Urql.useMutation<ExchangeTokenMutation, ExchangeTokenMutationVariables>(ExchangeTokenDocument);
+};
+export const SetNotificationsReadDocument = gql`
+    mutation SetNotificationsRead($ids: [String!]!) {
+  setNotificationsRead(ids: $ids) {
+    id
+  }
+}
+    `;
+
+export function useSetNotificationsReadMutation() {
+  return Urql.useMutation<SetNotificationsReadMutation, SetNotificationsReadMutationVariables>(SetNotificationsReadDocument);
 };
 export const SignInDocument = gql`
     mutation SignIn($usernameOrEmail: String!, $password: String!) {
@@ -560,6 +761,22 @@ export const SignUpDocument = gql`
 export function useSignUpMutation() {
   return Urql.useMutation<SignUpMutation, SignUpMutationVariables>(SignUpDocument);
 };
+export const QueryDocument = gql`
+    query Query {
+  getAllNotifications {
+    id
+    read
+    message
+    type
+    relatedId
+    updatedAt
+  }
+}
+    `;
+
+export function useQueryQuery(options?: Omit<Urql.UseQueryArgs<QueryQueryVariables>, 'query'>) {
+  return Urql.useQuery<QueryQuery, QueryQueryVariables>({ query: QueryDocument, ...options });
+};
 export const GetCampaignDocument = gql`
     query GetCampaign($id: String!) {
   getCampaign(id: $id) {
@@ -610,24 +827,31 @@ export function useGetCampaignQuery(options: Omit<Urql.UseQueryArgs<GetCampaignQ
 export const GetCampaignsDocument = gql`
     query GetCampaigns {
   getCampaigns {
+    ...CampaignSnippet
+  }
+}
+    ${CampaignSnippetFragmentDoc}`;
+
+export function useGetCampaignsQuery(options?: Omit<Urql.UseQueryArgs<GetCampaignsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetCampaignsQuery, GetCampaignsQueryVariables>({ query: GetCampaignsDocument, ...options });
+};
+export const GetUnreadNotificationsDocument = gql`
+    query GetUnreadNotifications {
+  getUnreadNotifications {
+    updatedAt
+    userId
+    type
+    relatedId
+    read
+    message
     id
-    title
-    summary
-    city
-    state
-    imageUrl
-    summary
-    jsonSummary
-    gameSystem
-    startDate
-    endDate
-    tags
+    createdAt
   }
 }
     `;
 
-export function useGetCampaignsQuery(options?: Omit<Urql.UseQueryArgs<GetCampaignsQueryVariables>, 'query'>) {
-  return Urql.useQuery<GetCampaignsQuery, GetCampaignsQueryVariables>({ query: GetCampaignsDocument, ...options });
+export function useGetUnreadNotificationsQuery(options?: Omit<Urql.UseQueryArgs<GetUnreadNotificationsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUnreadNotificationsQuery, GetUnreadNotificationsQueryVariables>({ query: GetUnreadNotificationsDocument, ...options });
 };
 export const GetUserDocument = gql`
     query GetUser($id: String!) {
@@ -642,4 +866,34 @@ export const GetUserDocument = gql`
 
 export function useGetUserQuery(options: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUserQuery, GetUserQueryVariables>({ query: GetUserDocument, ...options });
+};
+export const GetUserCampaignDocument = gql`
+    query GetUserCampaign {
+  getUserCampaign {
+    ...CampaignSnippet
+  }
+}
+    ${CampaignSnippetFragmentDoc}`;
+
+export function useGetUserCampaignQuery(options?: Omit<Urql.UseQueryArgs<GetUserCampaignQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUserCampaignQuery, GetUserCampaignQueryVariables>({ query: GetUserCampaignDocument, ...options });
+};
+export const NewCampaignApplicationDocument = gql`
+    subscription NewCampaignApplication {
+  newCampaignApplication {
+    campaignId
+    gameMasterId
+    notificationId
+    message
+    type
+    read
+    updatedAt
+    createdAt
+    relatedId
+  }
+}
+    `;
+
+export function useNewCampaignApplicationSubscription<TData = NewCampaignApplicationSubscription>(options: Omit<Urql.UseSubscriptionArgs<NewCampaignApplicationSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<NewCampaignApplicationSubscription, TData>) {
+  return Urql.useSubscription<NewCampaignApplicationSubscription, TData, NewCampaignApplicationSubscriptionVariables>({ query: NewCampaignApplicationDocument, ...options }, handler);
 };

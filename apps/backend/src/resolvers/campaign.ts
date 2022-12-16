@@ -7,8 +7,12 @@ import {
   Int,
   Mutation,
   ObjectType,
+  PubSub,
+  PubSubEngine,
   Query,
   Resolver,
+  Root,
+  Subscription,
 } from "type-graphql";
 import { MyContext } from "@typedefs/MyContext";
 import { FieldsValidationError } from "@errors/FieldsValidationError";
@@ -19,6 +23,8 @@ import { v2 as cloudinary } from "cloudinary";
 import { MembershipRole } from "@typedefs/MembershipRole";
 import { CreateCampaignInput } from "./CreateCampaignInput";
 import { CampaignApplicationInput } from "./CampaignApplicationInput";
+import { Notification } from "@models/Notification";
+import { NotificationType } from "@typedefs/NotificationType";
 
 cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -74,12 +80,17 @@ export class CampaignResolver {
   }
   @Query(() => [Campaign])
   async getCampaigns(@Ctx() { prisma, res, req, redis }: MyContext) {
-    console.log("req.session.userId CAMPAIGN RESOLVER: ", req.session);
-    const user = await redis.get("sess:3BVczvIrYbEd58T-K_0plkK_c6Wh7S8U");
-
     return prisma.campaign.findMany({
       orderBy: {
         updatedAt: "desc",
+      },
+      include: {
+        memberships: {
+          include: {
+            user: true,
+          },
+        },
+        gameMaster: true,
       },
     });
   }
@@ -155,8 +166,28 @@ export class CampaignResolver {
             role: true,
             user: true,
             campaign: true,
+            application: true,
           },
         },
+      },
+    });
+  }
+  @Query(() => [Campaign])
+  async getUserCampaign(@Ctx() { prisma, res, req }: MyContext) {
+    console.log("user ID: ", req.session.userId);
+    return prisma.campaign.findMany({
+      where: {
+        gameMaster: {
+          id: req.session.userId,
+        },
+      },
+      include: {
+        memberships: {
+          include: {
+            user: true,
+          },
+        },
+        gameMaster: true,
       },
     });
   }
@@ -167,7 +198,6 @@ export class CampaignResolver {
     @Ctx() { prisma, res, req }: MyContext
   ) {
     try {
-      console.log(createCampaignInput);
       const campaign = await prisma.campaign.create({
         data: {
           ...createCampaignInput,
@@ -195,9 +225,10 @@ export class CampaignResolver {
   }
   @Mutation((_type) => CreateCampaignResult)
   async addPlayerApplication(
-    @Arg("CampaignApplicationInput")
-    addPlayerCampaignInput: CampaignApplicationInput,
-    @Ctx() { prisma, res, req }: MyContext
+    @Arg("campaignApplicationInput")
+    campaignApplicationInput: CampaignApplicationInput,
+    @Ctx() { prisma, res, req }: MyContext,
+    @PubSub() pubSub: PubSubEngine
   ) {
     try {
       const user = await prisma.user.findUnique({
@@ -208,28 +239,42 @@ export class CampaignResolver {
 
       const userMembership = await prisma.membership.create({
         data: {
-          role: MembershipRole.PLAYER,
-          campaignId: addPlayerCampaignInput.campaignId,
+          role: MembershipRole.PENDING,
+          campaignId: campaignApplicationInput.campaignId,
           userId: user.id,
+          application: {
+            create: {
+              campaignId: campaignApplicationInput.campaignId,
+              fitsSchedule: campaignApplicationInput.fitsSchedule,
+              message: campaignApplicationInput.message,
+              jsonMessage: campaignApplicationInput.jsonMessage,
+              days: campaignApplicationInput.days,
+              timePeriods: campaignApplicationInput.timePeriods,
+              experience: campaignApplicationInput.experience,
+            },
+          },
         },
         include: {
           campaign: true,
           user: true,
+          application: true,
         },
       });
-
-      console.log("userMembership: ", userMembership);
 
       if (userMembership) {
         const foundCampaign = await prisma.campaign.findUnique({
           where: {
-            id: addPlayerCampaignInput.campaignId,
+            id: campaignApplicationInput.campaignId,
           },
           include: {
             memberships: {
-              select: {
+              include: {
+                application: {
+                  include: {
+                    membership: true,
+                  },
+                },
                 campaign: true,
-                role: true,
                 user: true,
               },
             },
@@ -237,7 +282,29 @@ export class CampaignResolver {
           },
         });
 
-        console.log("foundCampaign: ", foundCampaign);
+        const notification = await prisma.notification.create({
+          data: {
+            message: `New Application Received ${foundCampaign.title}`,
+            type: NotificationType.Campaign,
+            relatedId: foundCampaign.id,
+            userId: foundCampaign.gameMaster.id,
+          },
+          include: {
+            user: true,
+          },
+        });
+
+        await pubSub.publish("NEW_NOTIFICATION_CAMPAIGN_APPLICATION", {
+          gameMasterId: foundCampaign.gameMaster.id,
+          campaignId: foundCampaign.id,
+          notificationId: notification.id,
+          message: notification.message,
+          type: notification.type,
+          createdAt: notification.createdAt,
+          read: notification.read,
+          updatedAt: notification.updatedAt,
+          relatedId: notification.relatedId,
+        });
 
         return Object.assign(new Campaign(), foundCampaign);
       }
@@ -306,7 +373,7 @@ export class CampaignResolver {
         upload_preset: "the_inn_campaign",
         folder: "The inn/campaignmedia",
       },
-      "WLq6q-U8gvxsbOBnjOIoR7PzINo"
+      process.env.CLOUDINARY_API_SECRET
     );
     return { timestamp, signature };
   }

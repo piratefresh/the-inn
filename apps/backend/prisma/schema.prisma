@@ -55,31 +55,35 @@ model VerificationToken {
 }
 
 model User {
-  id            String       @id @default(uuid())
-  password      String
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  email         String?      @unique
-  emailVerified DateTime?
-  imageUrl      String?
-  firstName     String
-  lastName      String
-  experience    Experience   @default(All)
-  twitter       String?
-  facebook      String?
-  discord       String?
-  youtube       String?
-  status        StatusType   @default(ONLINE)
-  memberships   Membership[]
-  accounts      Account[]
-  hosted        Campaign[]   @relation("game_master")
-  reviews       Review[]
-  sessions      Session[]
+  id                 String       @id @default(uuid())
+  password           String
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  email              String       @unique
+  emailVerified      DateTime?
+  emailVerifyToken   String?
+  passwordResetToken String?
+  imageUrl           String?
+  firstName          String
+  lastName           String
+  aboutMe            String?
+  experience         Experience   @default(All)
+  twitter            String?
+  facebook           String?
+  discord            String?
+  youtube            String?
+  status             StatusType   @default(ONLINE)
+  memberships        Membership[]
+  accounts           Account[]
+  hosted             Campaign[]   @relation("game_master")
+  reviews            Review[]
+  sessions           Session[]
 
   //Messaging
   sentCampaignMessage    CampaignMessage[] @relation("sentCampaignMessages")
   sentPrivateMessages    PrivateMessage[]  @relation("sentPrivateMessages")
   receivedPrivateMessage PrivateMessage[]  @relation("receivedPrivateMessage")
+  Notification           Notification[]
 
   @@map("users")
 }
@@ -90,7 +94,7 @@ model Membership {
   userId      String
   campaign    Campaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Application Application[]
+  application Application[]
 
   @@id([campaignId, userId])
 }
@@ -165,6 +169,7 @@ model Application {
   fitsSchedule Boolean
   days         String[]
   timePeriods  String[]
+  experience   Experience @default(All)
 }
 
 model PrivateMessage {
@@ -195,6 +200,18 @@ model Review {
   user      User     @relation(fields: [userId], references: [id])
 
   @@map("reviews")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  message   String
+  type      NotificationType
+  relatedId String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  read      Boolean          @default(false)
 }
 
 model Counter {
@@ -231,4 +248,10 @@ enum StatusType {
 enum CampaignType {
   Campaign
   One_Shot
+}
+
+enum NotificationType {
+  Campaign
+  Message
+  PrivateMessage
 }

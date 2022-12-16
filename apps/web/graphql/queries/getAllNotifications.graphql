@@ -1,0 +1,10 @@
+query Query {
+  getAllNotifications {
+    id
+    read
+    message
+    type
+    relatedId
+    updatedAt
+  }
+}

@@ -1,0 +1,25 @@
+fragment CampaignSnippet on Campaign {
+  id
+  title
+  summary
+  city
+  state
+  imageUrl
+  summary
+  jsonSummary
+  gameSystem
+  startDate
+  endDate
+  days
+  timePeriods
+  tags
+  maxSeats
+  memberships {
+    role
+    user {
+      firstName
+      lastName
+      imageUrl
+    }
+  }
+}

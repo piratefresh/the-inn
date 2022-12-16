@@ -23,7 +23,7 @@ export class Membership {
   user: User;
 
   @Field((_type) => [Application])
-  Application: Application[];
+  application: Application[];
 
   // skip overwrite 👇
 }

@@ -73,11 +73,10 @@ export const nextAuthOptions = (req, res) => ({
           }
         );
 
-        console.log(response.data.data.signin);
-
         if (response.data.data.signin) {
+          console.log("headers: ", response.headers);
           console.log(response.headers["set-cookie"]);
-          console.log("response: ", response.data);
+
           const cookies = response.headers["set-cookie"];
           res.setHeader("Set-Cookie", cookies);
 

@@ -2,7 +2,7 @@ import { CampaignCard } from "@components/CampaignCard";
 import { useGetCampaignQuery, useGetCampaignsQuery } from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
 import { useRouter } from "next/router";
-import { Button, Dialog, HeroImage, Note, Text } from "ui";
+import { HeroImage, Note, Text } from "ui";
 import React from "react";
 import { ReadOnly } from "@components/RichTextEditor/ReadOnly";
 import { styled } from "@components/Theme/Theme";
@@ -46,25 +46,16 @@ const Campaign = () => {
   );
 
   const handleJoinCampaign = () => {
-    router.push(`./join/${id}`);
+    router.push(`/join/${id}`);
   };
 
   if (fetching && !campaign) return <div>Loading....</div>;
 
   return (
     <>
-      <Dialog
-        title="Campaign Application"
-        description="Fill out form to apply for the campaign"
-        onOpen={setOpen}
-        open={open}
-      >
-        <CampaignApplication />
-      </Dialog>
-
       <CampaignSideCard
         campaign={campaign?.getCampaign}
-        onSubmit={() => setOpen(true)}
+        onSubmit={handleJoinCampaign}
       />
       <div className="mt-16 max-w-7xl mx-auto relative">
         <div className="relative aspect-w-16 aspect-h-9 flex flex-col justify-center items-center">
@@ -98,7 +89,7 @@ const Campaign = () => {
           </div>
 
           <div className="flex flex-row">
-            {campaign.getCampaign.memberships.map((member) => (
+            {campaign?.getCampaign.memberships.map((member) => (
               <div className="flex flex-col">
                 <MemberAvatar
                   width={60}

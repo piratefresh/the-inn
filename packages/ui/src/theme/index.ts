@@ -34,6 +34,7 @@ const gold = {
   gold2: "#FFD166",
 };
 
+// @ts-ignore
 export const { config, css, styled, createTheme, theme } = createStitches({
   theme: {
     colors: {

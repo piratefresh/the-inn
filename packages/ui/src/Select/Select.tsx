@@ -116,7 +116,7 @@ export interface SelectOption {
   unavailable?: boolean;
 }
 
-interface SelectProps {
+export interface SelectProps {
   options: SelectOption[];
   onChange: (option: SelectOption) => void;
   selected: SelectOption;
@@ -131,17 +131,16 @@ export const Select = ({
   options,
   onChange,
   selected,
-  className,
-  style,
   isDisabled,
-  placeholder,
   error,
+  ...props
 }: SelectProps) => {
   return (
     <ListboxPrimitive
       value={selected}
       onChange={onChange}
       disabled={isDisabled}
+      {...props}
     >
       {({ open }) => (
         <StyledRoot>
@@ -161,7 +160,7 @@ export const Select = ({
                 value={option}
                 disabled={option.unavailable}
               >
-                {({ active, selected }) => (
+                {({ active, selected }: { active: any; selected: any }) => (
                   <StyledItem active={active} disabled={option.unavailable}>
                     {option.name}
                   </StyledItem>

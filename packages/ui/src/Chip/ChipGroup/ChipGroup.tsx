@@ -34,7 +34,7 @@ const StyledGroup = styled("div", {
   },
 });
 
-export interface ChipGroupProps<T extends boolean = false> {
+export interface ChipGroupProps<T extends boolean = false | true> {
   /** Key of theme.spacing or number to set gap in px */
   spacing?: typeof sizes.sizes;
 
@@ -42,13 +42,15 @@ export interface ChipGroupProps<T extends boolean = false> {
   multiple?: T;
 
   /** Controlled component value */
-  value?: T extends true ? string[] : string;
+  value?: T extends true ? string[] : string | string[];
 
   /** Uncontrolled component initial value */
   defaultValue?: T extends true ? string[] : string;
 
   /** Called when value changes */
-  onChange?(value: T extends true ? string[] : string): void;
+  onChange?(
+    value: T extends true ? string[] : string | React.SetStateAction<string[]>
+  ): void;
 
   /** Direction */
   direction?: "horizontal" | "vertical";
@@ -76,7 +78,7 @@ export const ChipGroup = ({
   const [_value, setValue] = useUncontrolled<string | string[]>({
     value,
     defaultValue,
-    finalValue: multiple ? [] : null,
+    finalValue: [],
     onChange,
   });
 

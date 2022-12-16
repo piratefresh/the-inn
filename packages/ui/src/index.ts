@@ -27,3 +27,5 @@ export { TimeZonePicker } from "./TimeZonePicker";
 export { Selector, AsyncSelector } from "./Selector";
 export { RangeSlider } from "./RangeSlider";
 export { Dialog } from "./Dialog";
+export { Popover } from "./Popover";
+export { Menu, HeadlessMenu } from "./Menu";

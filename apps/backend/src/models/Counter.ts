@@ -1,5 +1,6 @@
 import { Field, ObjectType, ID, Int } from "type-graphql";
 
+// USING THIS FOR TESTING/LEARNING NEW GRAPHQL STUFF
 @ObjectType()
 export class Counter {
   @Field((_type) => ID)

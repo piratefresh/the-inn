@@ -3,20 +3,17 @@ import "../styles/fonts.css";
 import React from "react";
 import { Provider } from "react-redux";
 import Router from "next/router";
-
 import { MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import ProgressBar from "@badrap/bar-of-progress";
 import { store } from "../store/store";
 import { withUrqlClient } from "next-urql";
-
 import { SessionProvider } from "next-auth/react";
 import { RootLayout } from "@layouts/RootLayout";
 import { createUrqlClient } from "@utils/createUrqlClient";
-
-import { PusherContainer } from "@components/PusherContainer";
-import { configureAbly, useChannel } from "@ably-labs/react-hooks";
+import { configureAbly } from "@ably-labs/react-hooks";
 import { AppPropsWithLayout } from "Types/LayoutPage";
+import { UserPageLayout } from "@layouts/UserPageLayout";
 
 configureAbly({
   authUrl: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/createTokenRequest`,
@@ -52,7 +49,7 @@ function App({
     };
   }, [navIsOpen]);
 
-  const Layout = Component.layoutProps?.Layout || RootLayout;
+  const Layout = Component.layoutProps?.Layout || UserPageLayout;
   const layoutProps = Component.layoutProps?.Layout
     ? { layoutProps: Component.layoutProps }
     : {};
@@ -62,11 +59,7 @@ function App({
 
   return (
     <SessionProvider session={session}>
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        emotionOptions={{ key: "mantine", prepend: false }}
-      >
+      <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
         <Provider store={store}>
           <NotificationsProvider position="top-center">
             <Layout {...layoutProps}>

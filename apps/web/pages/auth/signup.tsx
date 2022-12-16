@@ -3,7 +3,7 @@ import InputGroup from "@components/ui/InputGroup";
 import { useSignUpMutation } from "@generated/graphql";
 import { AuthLayout } from "@layouts/AuthLayout";
 
-import { Button } from "@mantine/core";
+import { Button } from "ui";
 import { showNotification } from "@mantine/notifications";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -133,10 +133,15 @@ const SignUp = () => {
           />
         </InputGroup>
 
-        <Button type="submit">Create Account</Button>
+        <Button size="large" fullWidth type="submit">
+          Create Account
+        </Button>
 
-        <p className="underline text-white">
-          Already have an account? <Link href="/auth/signin">Sign In here</Link>
+        <p className=" text-white">
+          Already have an account?{" "}
+          <span className="underline">
+            <Link href="/auth/signin">Sign In here</Link>
+          </span>
         </p>
       </form>
     </div>

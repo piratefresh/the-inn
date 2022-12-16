@@ -2,6 +2,7 @@ import { MessageInput } from "@components/MessageInput";
 import { MessageList } from "@components/MessageList";
 import { usePresenceChannel } from "@harelpls/use-pusher";
 import { RootLayout } from "@layouts/RootLayout";
+import { UserPageLayout } from "@layouts/UserPageLayout";
 import { useSession } from "next-auth/react";
 import { styled, Text } from "ui";
 
@@ -137,7 +138,7 @@ Users.layoutProps = {
   meta: {
     title: "Users",
   },
-  Layout: RootLayout,
+  Layout: UserPageLayout,
 };
 
 export default Users;

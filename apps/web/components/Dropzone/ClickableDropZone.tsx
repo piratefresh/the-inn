@@ -26,7 +26,7 @@ export const ClickableDropZone = forwardRef(
     const [image, setImage] = useState(previewImage);
 
     useRequestPreSend(async ({ options }) => {
-      const { data: signatureData } = await createImageSignature();
+      const { data: signatureData } = await createImageSignature({});
 
       if (signatureData) {
         const { signature, timestamp } = signatureData.createImageSignature;

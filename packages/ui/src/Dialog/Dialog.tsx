@@ -72,7 +72,7 @@ const IconButton = styled("button", {
   "&:focus": { boxShadow: `0 0 0 2px ${blackA.blackA7}` },
 });
 
-interface DialogProps {
+export interface DialogProps {
   description: string;
   onOpen: (v: boolean) => void;
   open: boolean;

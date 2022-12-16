@@ -31,7 +31,7 @@ const TextContainer = styled("div", {
   padding: "$12",
 });
 
-interface NoteProps {
+export interface NoteProps {
   children: React.ReactNode;
 }
 

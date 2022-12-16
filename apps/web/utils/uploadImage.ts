@@ -10,6 +10,7 @@ export const uploadImage = async (
   formData.append("signature", signature);
   formData.append("timestamp", timestamp.toString());
   formData.append("folder", "The inn/campaignmedia");
+  formData.append("upload_preset", "the_inn_campaign");
   formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
 
   const response = await fetch(url, {

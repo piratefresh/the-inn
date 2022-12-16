@@ -1,3 +1,4 @@
+import { Experience } from "@typedefs/Experience";
 import { Field, InputType } from "type-graphql";
 
 @InputType()
@@ -14,4 +15,6 @@ export class CampaignApplicationInput {
   days: string[];
   @Field(() => [String])
   timePeriods: string[];
+  @Field(() => Experience)
+  experience: Experience;
 }

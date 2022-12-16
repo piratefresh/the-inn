@@ -1,13 +1,16 @@
 import { useRef } from "react";
-import { useDatePickerState, DatePickerState } from "@react-stately/datepicker";
+import {
+  useDatePickerState,
+  DatePickerStateOptions,
+} from "@react-stately/datepicker";
 import { useDatePicker } from "@react-aria/datepicker";
 
-export const DatePicker = () => {
+export const DatePicker = (props: DatePickerStateOptions) => {
   let state = useDatePickerState({
     ...props,
     shouldCloseOnSelect: false,
   });
-  let ref = useRef();
+  let ref = useRef(null);
   let {
     groupProps,
     labelProps,
@@ -16,5 +19,5 @@ export const DatePicker = () => {
     dialogProps,
     calendarProps,
   } = useDatePicker(props, state, ref);
-  return <div>date pcierk</div>;
+  return <div>date picker</div>;
 };

@@ -3,7 +3,7 @@ import { styled, Text, Button } from "ui";
 
 interface CampaignSideCardProps {
   campaign: GetCampaignQuery["getCampaign"];
-  onSubmit: () => void;
+  onSubmit?: () => void;
   submitText?: string;
 }
 
@@ -87,11 +87,13 @@ export const CampaignSideCard = ({
         )}
       </div>
 
-      <div className="my-2 w-full">
-        <Button size="large" fullWidth onClick={onSubmit}>
-          {submitText ? submitText : "Join Campaign"}
-        </Button>
-      </div>
+      {onSubmit && (
+        <div className="my-2 w-full">
+          <Button size="large" fullWidth onClick={onSubmit}>
+            {submitText ? submitText : "Join Campaign"}
+          </Button>
+        </div>
+      )}
     </SideCard>
   );
 };

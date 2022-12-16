@@ -2,6 +2,7 @@ import React from "react";
 import { Tooltip } from "@mantine/core";
 import { OrderedList } from "@components/ui/Icons/OrderedListIcon";
 import {
+  BoxIcon,
   ImageIcon,
   Link1Icon,
   ListBulletIcon,
@@ -26,10 +27,13 @@ import {
   StrikeButton,
   UnderlineButton,
 } from "./Buttons/TextStyleButtons";
-import ToolbarStyles from "./Toolbar.module.css";
+import ToolbarStyles from "./Toolbar.module.scss";
+import { HeadlessMenu, Menu, Text } from "ui";
 
 const Toolbar = ({ editor }: { editor: Editor }) => {
   let classes = [ToolbarStyles["root"]];
+
+  const [selectedColumns, setSelectedColumns] = React.useState(1);
 
   const fileInput = React.useRef<HTMLInputElement>(null);
   const [, createImageSignature] = useCreateImageSignatureMutation();
@@ -61,10 +65,11 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
 
   const handleImageChange = React.useCallback(async () => {
     const files = fileInput.current?.files;
-    const { data: signatureData } = await createImageSignature();
+
+    const { data: signatureData } = await createImageSignature({});
     if (signatureData && files && files.length > 0) {
       const { signature, timestamp } = signatureData.createImageSignature;
-      console.log("ffile:", files[0]);
+
       const image = await uploadImage(files[0], signature, timestamp);
 
       return editor.chain().focus().setImage({ src: image.secure_url }).run();
@@ -137,6 +142,12 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
   const onToggleOrderedList = () => {
     editor.chain().focus().toggleOrderedList().run();
   };
+  const unsetColumns = (n: number) => {
+    editor.chain().focus().unsetColumns().run();
+  };
+  const setColumns = (n: number) => {
+    editor.chain().focus().setColumns(n).run();
+  };
 
   if (!editor) {
     return null;
@@ -151,7 +162,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         icon={<ResetIcon />}
       />
       {/* TEXT STYLES */}
-      <div className="mr-4">
+      <div className="flex flex-row mr-4">
         <Tooltip label="Bold" position="bottom" withArrow>
           <BoldButton
             onClick={onBold}
@@ -182,7 +193,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         </Tooltip>
       </div>
 
-      <div className="mr-4">
+      <div className="flex flex-row mr-4">
         {/* FONT SIZE AND FAMILY */}
         <Tooltip label="Font Size" position="bottom" withArrow>
           <FontSizeButton editor={editor} onChange={onFontSizeChange} />
@@ -192,7 +203,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         </Tooltip>
       </div>
 
-      <div className="mr-4">
+      <div className="flex flex-row mr-4">
         {/* LIST */}
         <Tooltip label="Bullet List" position="bottom" withArrow>
           <DefaultToolbarButton
@@ -212,7 +223,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         </Tooltip>
       </div>
 
-      <div className="mr-4">
+      <div className="flex flex-row mr-4">
         <Tooltip label="Add Image" position="bottom" withArrow>
           <DefaultToolbarButton
             onClick={openFileBrowser}
@@ -239,7 +250,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
       </div>
 
       {/* Alignment */}
-      <div className="mr-4">
+      <div className="flex flex-row mr-4">
         <Tooltip label="Left Alignment" position="bottom" withArrow>
           <LeftAlignment
             onClick={onTextAlignLeftChange}
@@ -270,6 +281,32 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
           />
         </Tooltip>
       </div>
+
+      <div className="flex flex-row mr-4">
+        <Menu trigger={<Text color="hiContrast">Columns</Text>}>
+          <HeadlessMenu.Item>
+            <div className="flex p-4">
+              <div className="flex flex-row items-center">
+                {Array(4)
+                  .fill(0)
+                  .map((col, i) => (
+                    <div
+                      className={`${
+                        ToolbarStyles[`tableSelection${selectedColumns}`]
+                      }`}
+                      onMouseOver={() => setSelectedColumns(i + 1)}
+                      onClick={() => setColumns(i + 1)}
+                    >
+                      <BoxIcon fill="currentColor" />
+                    </div>
+                  ))}
+                {`${selectedColumns}x4`}
+              </div>
+            </div>
+          </HeadlessMenu.Item>
+        </Menu>
+      </div>
+
       <input
         ref={fileInput}
         onChange={handleImageChange}

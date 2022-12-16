@@ -31,7 +31,7 @@ const StyledLabel = styled("label", {
   },
 });
 
-interface ChipProps
+export interface ChipProps
   extends Omit<React.ComponentPropsWithRef<"input">, "size" | "onChange"> {
   /** Chip label */
   children: React.ReactNode;
@@ -46,7 +46,7 @@ interface ChipProps
   onChange?(checked: boolean): void;
 }
 
-export const Chip = React.forwardRef<HTMLInputElement, ChipProps>(
+const Chip = React.forwardRef<HTMLInputElement, ChipProps>(
   (
     {
       checked,
@@ -88,7 +88,7 @@ export const Chip = React.forwardRef<HTMLInputElement, ChipProps>(
           id={uuid}
           type={type}
           checked={_checked}
-          onChange={(event) => {
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setValue(event.currentTarget.checked);
           }}
           disabled={disabled}
@@ -110,4 +110,6 @@ export const Chip = React.forwardRef<HTMLInputElement, ChipProps>(
   }
 );
 
-Chip.Group = ChipGroup;
+const Group = ChipGroup;
+
+export { Chip, Group };

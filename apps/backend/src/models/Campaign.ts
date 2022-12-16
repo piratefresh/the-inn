@@ -3,7 +3,6 @@ import { Experience } from "../typedefs/Experience";
 import { Difficulty } from "../typedefs/Difficulty";
 import { User } from "./User";
 import { Membership } from "./Membership";
-import { CampaignType } from "../typedefs/CampaignType";
 import { CampaignMessage } from "./CampaignMessage";
 
 @InputType("campaignInput")

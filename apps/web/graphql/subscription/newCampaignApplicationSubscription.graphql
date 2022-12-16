@@ -1,0 +1,13 @@
+subscription NewCampaignApplication {
+  newCampaignApplication {
+    campaignId
+    gameMasterId
+    notificationId
+    message
+    type
+    read
+    updatedAt
+    createdAt
+    relatedId
+  }
+}

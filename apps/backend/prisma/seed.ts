@@ -6,21 +6,54 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 const prisma = new PrismaClient();
 
-const userData: Prisma.UserCreateInput[] = [
+const usersData: Prisma.UserCreateInput[] = [
   {
     firstName: "Magnus",
     lastName: "Nilsen",
     email: "magnussithnilsen@gmail.com",
     password: "test",
     experience: Experience.Beginner,
+    aboutMe: "",
   },
   {
-    id: "peter-test-1",
     firstName: "Peter",
     lastName: "Test",
-    email: "peter@test.com",
+    email: "magnussithnilsen+ps1@gmail.com",
     password: "test",
     experience: Experience.Beginner,
+    aboutMe: "",
+  },
+  {
+    firstName: "Zach",
+    lastName: "Sharkey",
+    email: "magnussithnilsen+ps2@gmail.com",
+    password: "test",
+    experience: Experience.Beginner,
+    aboutMe: "",
+  },
+  {
+    firstName: "Roberto",
+    lastName: "Test",
+    email: "magnussithnilsen+ps3@gmail.com",
+    password: "test",
+    experience: Experience.Beginner,
+    aboutMe: "",
+  },
+  {
+    firstName: "Matt",
+    lastName: "Test",
+    email: "magnussithnilsen+ps4@gmail.com",
+    password: "test",
+    experience: Experience.Beginner,
+    aboutMe: "",
+  },
+  {
+    firstName: "John",
+    lastName: "Doe",
+    email: "magnussithnilsen+ps5@gmail.com",
+    password: "test",
+    experience: Experience.Beginner,
+    aboutMe: "",
   },
 ];
 
@@ -43,26 +76,41 @@ const userData: Prisma.UserCreateInput[] = [
 // ];
 
 export async function seedDB() {
-  const hashedPassword = await argon2.hash("test");
-
-  const user = await prisma.user.create({
-    data: {
-      firstName: "Magnus",
-      lastName: "Nilsen",
-      email: "magnussithnilsen@gmail.com",
-      password: hashedPassword,
-      experience: Experience.Beginner,
-    },
+  const createdUsers = usersData.map(async (user) => {
+    const hashedPassword = await argon2.hash("test");
+    prisma.user.upsert({
+      where: { email: user.email },
+      update: {},
+      create: {
+        email: user.email,
+        password: hashedPassword,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        experience: user.experience,
+      },
+    });
   });
 
-  const account = await prisma.account.create({
-    data: {
-      userId: user.id,
-      type: "credentials",
-      provider: "Credentials",
-      providerAccountId: user.id,
-    },
-  });
+  console.log("createdUsers: ", createdUsers);
+
+  // const user = await prisma.user.create({
+  //   data: {
+  //     firstName: "Magnus",
+  //     lastName: "Nilsen",
+  //     email: "magnussithnilsen@gmail.com",
+  //     password: hashedPassword,
+  //     experience: Experience.Beginner,
+  //   },
+  // });
+
+  // const account = await prisma.account.create({
+  //   data: {
+  //     userId: user.id,
+  //     type: "credentials",
+  //     provider: "Credentials",
+  //     providerAccountId: user.id,
+  //   },
+  // });
 
   // const user = await prisma.user.findUnique({
   //   where: {

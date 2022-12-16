@@ -15,7 +15,7 @@ export interface TextProps {
     | "5xl"
     | "6xl"
     | "7xl";
-  as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h7";
+  as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h7" | "a";
   color?:
     | "red"
     | "crimson"
@@ -33,7 +33,6 @@ export interface TextProps {
     | "yellowBrand"
     | "orange"
     | "gold"
-    | "gold2"
     | "bronze"
     | "gray"
     | "hiContrast"
@@ -216,7 +215,7 @@ const StyledText = styled("span", {
   },
   defaultVariants: {
     size: "base",
-    color: "contrast",
+    color: "loContrast",
   },
 });
 
@@ -224,7 +223,7 @@ export const Text = ({
   size,
   as = "p",
   weight = "normal",
-  color,
+  color = "loContrast",
   style,
   className,
   font,

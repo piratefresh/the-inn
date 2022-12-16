@@ -1,14 +1,8 @@
-import React, {
-  Component,
-  KeyboardEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { KeyboardEventHandler, useState } from "react";
 import { theme } from "../theme";
 import { v4 as uuidv4 } from "uuid";
-
 import CreatableSelect from "react-select/creatable";
-import { ActionMeta, OnChangeValue, StylesConfig } from "react-select";
+import { StylesConfig } from "react-select";
 
 const components = {
   DropdownIndicator: null,
@@ -68,27 +62,14 @@ const colourStyles: StylesConfig<String, true> = {
   }),
 };
 
-interface MultiSelectProps {
-  onChange: (e) => void;
+export interface MultiSelectProps {
+  onChange: (e: any) => void;
   value: any;
-  ref: any;
+  ref?: any;
 }
 
 export const MultiSelect = ({ onChange, value, ref }: MultiSelectProps) => {
   const [inputValue, setInputValue] = useState("");
-
-  // useEffect(() => {
-  //   if (onChange) {
-  //     onChange(value);
-  //   }
-  // }, [value, onChange]);
-
-  // const handleChange = (
-  //   value: OnChangeValue<String, true>,
-  //   actionMeta: ActionMeta<String>
-  // ) => {
-  //   setValue([...value]);
-  // };
 
   const handleInputChange = (inputValue: string) => {
     setInputValue(inputValue);

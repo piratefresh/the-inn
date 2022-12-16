@@ -1,6 +1,7 @@
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import React from "react";
 import { styled } from "../theme";
+import { Text } from "../Typography";
 
 const StyledInput = styled("input", {
   all: "unset",
@@ -88,7 +89,7 @@ const CheckboxRoot = styled("label", {
   width: "$space$4",
 });
 
-interface CheckboxProps
+export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   label: string;
   afterLabel?: string;

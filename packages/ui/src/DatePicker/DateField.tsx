@@ -5,24 +5,25 @@ import {
   AriaDatePickerProps,
   useDateField,
   useDateSegment,
-  useTimeField,
 } from "@react-aria/datepicker";
 import { useDateFormatter, useLocale } from "@react-aria/i18n";
 import {
   useDateFieldState,
   useDateRangePickerState,
-  useTimeFieldState,
+  DateFieldState,
+  DateSegment as DST,
 } from "@react-stately/datepicker";
 
-import {
-  createCalendar,
-  DateValue,
-  getLocalTimeZone,
-} from "@internationalized/date";
+import { createCalendar, DateValue } from "@internationalized/date";
 import { styled } from "../theme";
 
-interface DateFieldProps extends AriaDatePickerProps<DateValue> {
+export interface DateFieldProps extends AriaDatePickerProps<DateValue> {
   onClick: () => void;
+}
+
+interface DateSegmentProps {
+  segment: DST;
+  state: DateFieldState;
 }
 
 const StyledRoot = styled("div", {
@@ -44,7 +45,7 @@ const StyledRoot = styled("div", {
   },
 });
 
-export const DateField = ({ onClick, ...props }) => {
+export const DateField = ({ onClick, ...props }: DateFieldProps) => {
   let { locale } = useLocale();
   let datepickerState = useDateRangePickerState({});
   let state = useDateFieldState({
@@ -53,12 +54,12 @@ export const DateField = ({ onClick, ...props }) => {
     createCalendar,
   });
 
-  let ref = React.useRef();
+  let ref = React.useRef<HTMLElement>(null);
   let { fieldProps } = useDateField(props, state, ref);
   let formatter = useDateFormatter({ dateStyle: "medium" });
 
   return (
-    <StyledRoot {...fieldProps} onClick={onClick} ref={ref} gold>
+    <StyledRoot {...fieldProps} onClick={onClick} gold>
       {formatter.format(state.dateValue)}
     </StyledRoot>
   );
@@ -73,8 +74,8 @@ const StyledDateBox = styled("div", {
   borderRadius: "$radii$md",
 });
 
-function DateSegment({ segment, state }) {
-  let ref = React.useRef();
+export function DateSegment({ segment, state }: DateSegmentProps) {
+  let ref = React.useRef(null);
   let { segmentProps } = useDateSegment(segment, state, ref);
 
   return (

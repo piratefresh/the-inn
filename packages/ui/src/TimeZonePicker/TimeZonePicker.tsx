@@ -1,23 +1,16 @@
-import React from "react";
 import TimezoneSelect, { allTimezones } from "react-timezone-select";
 import type { ITimezone, ITimezoneOption, Props } from "react-timezone-select";
 import { styled, theme } from "../theme";
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { DropdownIndicator } from "../Selector/DropdownIndicator";
 
-interface ITimeZonePicker extends Props {
+export interface ITimeZonePicker extends Props {
   onChange: (v: ITimezone) => void;
   value: ITimezone;
 }
 
 const StyledSelect = styled(TimezoneSelect, {});
 
-const DropdownIndicator = (props) => {
-  const { menuIsOpen } = props.selectProps;
-  return menuIsOpen ? <ChevronUpIcon /> : <ChevronDownIcon />;
-};
-
 export const TimeZonePicker = ({ ...props }: ITimeZonePicker) => {
-  console.log("props: ", props);
   return (
     <StyledSelect
       components={{ DropdownIndicator }}

@@ -1,11 +1,13 @@
 import { useRef } from "react";
 import { useRangeCalendarState } from "@react-stately/calendar";
-import { useRangeCalendar } from "@react-aria/calendar";
+import { RangeCalendarProps, useRangeCalendar } from "@react-aria/calendar";
 import { useLocale } from "@react-aria/i18n";
 import { createCalendar } from "@internationalized/date";
 import { CalendarGrid } from "./CalendarGrid";
 import { CalendarHeader } from "./CalendarHeader";
 import { styled } from "../theme";
+import { DateValue } from "@react-types/calendar";
+
 const BorderWrapper = styled("div", {
   display: "inline-block",
   variants: {
@@ -31,7 +33,7 @@ const StyledWrapper = styled("div", {
   gap: "$space$12",
 });
 
-export function RangeCalendar(props) {
+export function RangeCalendar(props: RangeCalendarProps<DateValue>) {
   let { locale } = useLocale();
   let state = useRangeCalendarState({
     ...props,
@@ -40,7 +42,7 @@ export function RangeCalendar(props) {
     createCalendar,
   });
 
-  let ref = useRef();
+  let ref = useRef(null);
   let { calendarProps, prevButtonProps, nextButtonProps } = useRangeCalendar(
     props,
     state,

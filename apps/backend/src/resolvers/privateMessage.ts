@@ -127,7 +127,8 @@ export class PrivateMessageResolver {
   async addPrivateMessage(
     @Arg("AddPrivateMessageInput")
     addPrivateMessageInput: PrivateMessageInput,
-    @Ctx() { prisma }: MyContext,
+    // @ts-ignore
+    @Ctx() { prisma, req, res, userId }: MyContext,
     @PubSub() pubSub: PubSubEngine
   ) {
     try {

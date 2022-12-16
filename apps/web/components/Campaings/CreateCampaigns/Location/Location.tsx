@@ -201,8 +201,6 @@ export const Location = () => {
     <InPersonOptions control={control} errors={errors} setValue={setValue} />
   );
 
-  console.log("createCampaignData: ", createCampaignData);
-
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">

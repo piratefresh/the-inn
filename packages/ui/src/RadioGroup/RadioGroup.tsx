@@ -59,7 +59,7 @@ export interface OptionProps {
   label: string;
 }
 
-interface RadioGroupProps {
+export interface RadioGroupProps {
   value: string;
   height?: string;
   width?: string;

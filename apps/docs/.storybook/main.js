@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   stories: [
     "../stories/**/*.stories.mdx",
@@ -7,19 +9,41 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    "@storybook/preset-scss",
-    {
-      name: "@storybook/addon-postcss",
-      options: {
-        postcssLoaderOptions: {
-          implementation: require("postcss"),
-        },
-      },
-    },
+    // "@storybook/preset-scss",
+    // {
+    //   name: "@storybook/addon-postcss",
+    //   options: {
+    //     postcssLoaderOptions: {
+    //       implementation: require("postcss"),
+    //     },
+    //     // cssLoaderOptions: {
+    //     //   // When you have splitted your css over multiple files
+    //     //   // and use @import('./other-styles.css')
+    //     //   importLoaders: 1,
+    //     // },
+    //   },
+    // },
   ],
-  staticDirs: ["../public"],
+  features: {
+    storyStoreV7: true,
+  },
   framework: "@storybook/react",
   core: {
-    builder: "@storybook/builder-webpack5",
+    builder: "@storybook/builder-vite",
+  },
+  async viteFinal(config, { configType }) {
+    // customize the Vite config here
+    return {
+      ...config,
+      resolve: {
+        preserveSymlinks: true,
+        alias: [
+          {
+            find: "@ui",
+            replacement: path.resolve(__dirname, "../../../packages/ui/"),
+          },
+        ],
+      },
+    };
   },
 };

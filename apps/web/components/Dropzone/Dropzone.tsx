@@ -21,7 +21,7 @@ export const Dropzone = ({
   const [files, setFiles] = useState<File[]>([]);
   const [, createImageSignature] = useCreateImageSignatureMutation();
   const presend = useRequestPreSend(async ({ options }) => {
-    const { data: signatureData } = await createImageSignature();
+    const { data: signatureData } = await createImageSignature({});
 
     if (signatureData) {
       const { signature, timestamp } = signatureData.createImageSignature;

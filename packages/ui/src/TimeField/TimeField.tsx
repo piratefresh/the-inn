@@ -1,11 +1,13 @@
 import { styled } from "../theme";
 import { useRef } from "react";
 import { useLocale } from "@react-aria/i18n";
-import { useTimeFieldState } from "@react-stately/datepicker";
+import {
+  useTimeFieldState,
+  TimeFieldStateOptions,
+} from "@react-stately/datepicker";
 import { useTimeField } from "@react-aria/datepicker";
 import { DateSegment } from "../DatePicker";
 
-const StyledTimeField = styled("div", {});
 const Flex = styled("div", {
   display: "flex",
   flexDirection: "column",
@@ -30,14 +32,14 @@ const StyledWrapper = styled("div", {
   },
 });
 
-export const TimeField = (props) => {
+export const TimeField = (props: TimeFieldStateOptions) => {
   let { locale } = useLocale();
   let state = useTimeFieldState({
     ...props,
     locale,
   });
 
-  let ref = useRef();
+  let ref = useRef(null);
   let { labelProps, fieldProps } = useTimeField(props, state, ref);
   return (
     <Flex>

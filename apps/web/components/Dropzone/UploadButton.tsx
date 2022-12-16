@@ -2,6 +2,7 @@ import { useCreateImageSignatureMutation } from "@generated/graphql";
 import { Button } from "@mantine/core";
 import UploadDropZone from "@rpldy/upload-drop-zone";
 import { useRequestPreSend } from "@rpldy/uploady";
+import React from "react";
 import { forwardRef } from "react";
 import DropZoneStyles from "./Dropzone.module.css";
 
@@ -14,7 +15,7 @@ export const SignedUploadButton = forwardRef(
   ({ onClick, onChange, ...buttonProps }: ISignedUploadButtone, ref: any) => {
     const [, createImageSignature] = useCreateImageSignatureMutation();
     useRequestPreSend(async ({ options }) => {
-      const { data: signatureData } = await createImageSignature();
+      const { data: signatureData } = await createImageSignature({});
 
       if (signatureData) {
         const { signature, timestamp } = signatureData.createImageSignature;
@@ -33,7 +34,7 @@ export const SignedUploadButton = forwardRef(
       }
     });
 
-    const onZoneClick = useCallback(
+    const onZoneClick = React.useCallback(
       (e) => {
         if (onClick) {
           onClick(e);
