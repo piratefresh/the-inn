@@ -29,6 +29,8 @@ import AblyPubSub from "ablyPubsub";
 import { NotificationResolver } from "@resolvers/notification";
 import rateLimit from "express-rate-limit";
 import RateLimitRedisStore from "rate-limit-redis";
+import { redis, RedisStore } from "services/redis";
+import { rateLimiter } from "middlewares/rateLimiter";
 
 dotenv.config();
 
@@ -42,11 +44,6 @@ const startServer = async () => {
   const app = express();
 
   pubsub.publish("getting-started", "hello world");
-
-  const RedisStore = connectRedis(session);
-  const redis = new Redis(
-    "redis://default:5f5e5f43080a498db82af877c1acbcc7@us1-main-osprey-38760.upstash.io:38760"
-  );
 
   const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
     resolvers: [
@@ -77,6 +74,8 @@ const startServer = async () => {
       credentials: true,
     })
   );
+
+  app.use(rateLimiter);
 
   const sessionMiddleware = session({
     name: COOKIE_NAME,
