@@ -1,6 +1,6 @@
 import { MessageInput } from "@components/MessageInput";
 import { MessageList } from "@components/MessageList";
-import { usePresenceChannel } from "@harelpls/use-pusher";
+
 import { RootLayout } from "@layouts/RootLayout";
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import { useSession } from "next-auth/react";
@@ -78,12 +78,6 @@ const StyledMessageTitle = styled("li", {
 });
 
 const Users = () => {
-  const {
-    channel: presenceChannel,
-    members,
-    myID,
-    ...rest
-  } = usePresenceChannel("presence-awesome");
   const { data: session } = useSession();
 
   if (!session) return <div>Please Login</div>;

@@ -1,0 +1,40 @@
+query GetUsers(
+  $last: Int
+  $first: Int
+  $before: String
+  $after: String
+  $skip: Int
+) {
+  getUsers(
+    last: $last
+    first: $first
+    before: $before
+    after: $after
+    skip: $skip
+  ) {
+    __typename
+    edges {
+      __typename
+      cursor
+      node {
+        id
+        firstName
+        lastName
+        email
+        aboutMe
+        imageUrl
+        createdAt
+        memberships {
+          campaignId
+        }
+      }
+    }
+    pageInfo {
+      __typename
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+  }
+}

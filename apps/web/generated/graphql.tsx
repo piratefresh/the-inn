@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Cursor: any;
   DateTime: any;
 };
 
@@ -243,7 +244,6 @@ export type Mutation = {
   createCampaign: CreateCampaignResult;
   createImageSignature: ImageSignature;
   createReview: CreateReviewResult;
-  exchangeToken: AuthResult;
   setNotificationsRead: Array<Notification>;
   signin: AuthResult;
   signout: Scalars['Boolean'];
@@ -273,12 +273,6 @@ export type MutationCreateCampaignArgs = {
 
 export type MutationCreateReviewArgs = {
   createReviewInput: CreateReviewInput;
-};
-
-
-export type MutationExchangeTokenArgs = {
-  password: Scalars['String'];
-  usernameOrEmail: Scalars['String'];
 };
 
 
@@ -334,6 +328,14 @@ export enum NotificationType {
   PrivateMessage = 'PrivateMessage'
 }
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['String']>;
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  startCursor?: Maybe<Scalars['String']>;
+};
+
 export type PrivateMessage = {
   __typename?: 'PrivateMessage';
   attachmentError?: Maybe<Scalars['Boolean']>;
@@ -375,10 +377,11 @@ export type Query = {
   getUser: User;
   getUserCampaign: Array<Campaign>;
   getUserPrivateMessages: Array<PrivateMessage>;
-  getUsers: Array<User>;
+  getUsers: UserConnection;
   getUsersById: Array<User>;
   hellogame: Scalars['String'];
   helloworld: Scalars['String'];
+  me: Scalars['String'];
 };
 
 
@@ -401,6 +404,15 @@ export type QueryGetOnlineUsersArgs = {
 
 export type QueryGetUserArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetUsersArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -446,11 +458,13 @@ export type Subscription = {
 export type User = {
   __typename?: 'User';
   Notification: Array<Notification>;
+  aboutMe?: Maybe<Scalars['String']>;
   accounts: Array<Account>;
   createdAt: Scalars['DateTime'];
   discord?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
   emailVerified?: Maybe<Scalars['DateTime']>;
+  emailVerifyToken?: Maybe<Scalars['String']>;
   experience: Experience;
   facebook?: Maybe<Scalars['String']>;
   firstName: Scalars['String'];
@@ -460,6 +474,7 @@ export type User = {
   lastName: Scalars['String'];
   memberships: Array<Membership>;
   password: Scalars['String'];
+  passwordResetToken?: Maybe<Scalars['String']>;
   receivedPrivateMessage: Array<PrivateMessage>;
   reviews: Array<Review>;
   sentCampaignMessage: Array<CampaignMessage>;
@@ -471,6 +486,25 @@ export type User = {
   youtube?: Maybe<Scalars['String']>;
 };
 
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  edges: Array<UserEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type UserEdge = {
+  __typename?: 'UserEdge';
+  /**
+   *
+   *       Represents this location in the query use it in `before` and `after` args
+   *       to query before and after this location.
+   */
+  cursor: Scalars['Cursor'];
+  /** The data of the record that goes along with this edge. */
+  node: User;
+};
+
 export type UsernamePasswordInput = {
   email: Scalars['String'];
   firstName: Scalars['String'];
@@ -479,6 +513,8 @@ export type UsernamePasswordInput = {
 };
 
 export type CampaignSnippetFragment = { __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, tags: Array<string>, maxSeats: number, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> };
+
+export type UserSnippetFragment = { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null };
 
 export type AddPlayerApplicationMutationVariables = Exact<{
   campaignApplicationInput: CampaignApplicationInput;
@@ -499,14 +535,6 @@ export type CreateImageSignatureMutationVariables = Exact<{ [key: string]: never
 
 export type CreateImageSignatureMutation = { __typename?: 'Mutation', createImageSignature: { __typename?: 'ImageSignature', signature: string, timestamp: number } };
 
-export type ExchangeTokenMutationVariables = Exact<{
-  usernameOrEmail: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-
-export type ExchangeTokenMutation = { __typename?: 'Mutation', exchangeToken: { __typename?: 'BadCredentialsError' } | { __typename?: 'FieldsValidationError' } | { __typename?: 'NonExistingUserError' } | { __typename?: 'User', id: string, email?: string | null, firstName: string, lastName: string, imageUrl?: string | null, accounts: Array<{ __typename?: 'Account', refreshToken?: string | null, expiresAt?: number | null }> } };
-
 export type SetNotificationsReadMutationVariables = Exact<{
   ids: Array<Scalars['String']> | Scalars['String'];
 }>;
@@ -520,7 +548,7 @@ export type SignInMutationVariables = Exact<{
 }>;
 
 
-export type SignInMutation = { __typename?: 'Mutation', signin: { __typename?: 'BadCredentialsError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'NonExistingUserError', message: string } | { __typename?: 'User', id: string, email?: string | null, firstName: string, lastName: string, imageUrl?: string | null, accounts: Array<{ __typename?: 'Account', provider: string, providerAccountId: string, type: string, expiresAt?: number | null, refreshToken?: string | null, userId: string }> } };
+export type SignInMutation = { __typename?: 'Mutation', signin: { __typename?: 'BadCredentialsError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'NonExistingUserError', message: string } | { __typename?: 'User', id: string, email: string, firstName: string, lastName: string, imageUrl?: string | null, accounts: Array<{ __typename?: 'Account', provider: string, providerAccountId: string, type: string, expiresAt?: number | null, refreshToken?: string | null, userId: string }> } };
 
 export type SignoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -535,7 +563,7 @@ export type SignUpMutationVariables = Exact<{
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'ExistingUserError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'User', id: string, email?: string | null, firstName: string, lastName: string } };
+export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'ExistingUserError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } };
 
 export type QueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -564,12 +592,23 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email?: string | null } };
+export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } };
 
 export type GetUserCampaignQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUserCampaignQuery = { __typename?: 'Query', getUserCampaign: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, tags: Array<string>, maxSeats: number, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> }> };
+
+export type GetUsersQueryVariables = Exact<{
+  last?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  before?: InputMaybe<Scalars['String']>;
+  after?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetUsersQuery = { __typename?: 'Query', getUsers: { __typename: 'UserConnection', edges: Array<{ __typename: 'UserEdge', cursor: any, node: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, aboutMe?: string | null, imageUrl?: string | null, createdAt: any, memberships: Array<{ __typename?: 'Membership', campaignId: string }> } }>, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type NewCampaignApplicationSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -601,6 +640,15 @@ export const CampaignSnippetFragmentDoc = gql`
       imageUrl
     }
   }
+}
+    `;
+export const UserSnippetFragmentDoc = gql`
+    fragment UserSnippet on User {
+  id
+  firstName
+  lastName
+  email
+  imageUrl
 }
     `;
 export const AddPlayerApplicationDocument = gql`
@@ -661,27 +709,6 @@ export const CreateImageSignatureDocument = gql`
 
 export function useCreateImageSignatureMutation() {
   return Urql.useMutation<CreateImageSignatureMutation, CreateImageSignatureMutationVariables>(CreateImageSignatureDocument);
-};
-export const ExchangeTokenDocument = gql`
-    mutation ExchangeToken($usernameOrEmail: String!, $password: String!) {
-  exchangeToken(usernameOrEmail: $usernameOrEmail, password: $password) {
-    ... on User {
-      id
-      email
-      firstName
-      lastName
-      imageUrl
-      accounts {
-        refreshToken
-        expiresAt
-      }
-    }
-  }
-}
-    `;
-
-export function useExchangeTokenMutation() {
-  return Urql.useMutation<ExchangeTokenMutation, ExchangeTokenMutationVariables>(ExchangeTokenDocument);
 };
 export const SetNotificationsReadDocument = gql`
     mutation SetNotificationsRead($ids: [String!]!) {
@@ -856,13 +883,10 @@ export function useGetUnreadNotificationsQuery(options?: Omit<Urql.UseQueryArgs<
 export const GetUserDocument = gql`
     query GetUser($id: String!) {
   getUser(id: $id) {
-    id
-    firstName
-    lastName
-    email
+    ...UserSnippet
   }
 }
-    `;
+    ${UserSnippetFragmentDoc}`;
 
 export function useGetUserQuery(options: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUserQuery, GetUserQueryVariables>({ query: GetUserDocument, ...options });
@@ -877,6 +901,46 @@ export const GetUserCampaignDocument = gql`
 
 export function useGetUserCampaignQuery(options?: Omit<Urql.UseQueryArgs<GetUserCampaignQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUserCampaignQuery, GetUserCampaignQueryVariables>({ query: GetUserCampaignDocument, ...options });
+};
+export const GetUsersDocument = gql`
+    query GetUsers($last: Int, $first: Int, $before: String, $after: String, $skip: Int) {
+  getUsers(
+    last: $last
+    first: $first
+    before: $before
+    after: $after
+    skip: $skip
+  ) {
+    __typename
+    edges {
+      __typename
+      cursor
+      node {
+        id
+        firstName
+        lastName
+        email
+        aboutMe
+        imageUrl
+        createdAt
+        memberships {
+          campaignId
+        }
+      }
+    }
+    pageInfo {
+      __typename
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+  }
+}
+    `;
+
+export function useGetUsersQuery(options?: Omit<Urql.UseQueryArgs<GetUsersQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUsersQuery, GetUsersQueryVariables>({ query: GetUsersDocument, ...options });
 };
 export const NewCampaignApplicationDocument = gql`
     subscription NewCampaignApplication {

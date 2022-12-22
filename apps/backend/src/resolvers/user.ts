@@ -1,16 +1,16 @@
 import {
   Arg,
+  Args,
+  ArgsType,
   createUnionType,
   Ctx,
   Field,
-  FieldResolver,
   InputType,
+  Int,
   Mutation,
-  PubSub,
-  PubSubEngine,
+  ObjectType,
   Query,
   Resolver,
-  Root,
   Subscription,
 } from "type-graphql";
 import argon2 from "argon2";
@@ -25,6 +25,9 @@ import { BadCredentialsError } from "@errors/BadCredentialsError";
 import { NonExistingUserError } from "@errors/NonUserExists";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { issueToken, sendConfirmationEmail } from "@utils/sendEmailUtils";
+import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
+import { EdgeType, ConnectionType } from "typegraphql-relay-connections";
+import { PageInfo } from "@typedefs/relay/PageInfo";
 
 export const AuthResult = createUnionType({
   name: "AuthResult",
@@ -42,6 +45,20 @@ export const CreateUserResult = createUnionType({
   types: () => [User, FieldsValidationError, ExistingUserError] as const,
 });
 
+@ArgsType()
+export class PaginationArgs {
+  @Field((type) => Int, { nullable: true })
+  skip?: number;
+  @Field({ nullable: true })
+  after?: string;
+  @Field({ nullable: true })
+  before?: string;
+  @Field((type) => Int, { nullable: true })
+  first?: number;
+  @Field((type) => Int, { nullable: true })
+  last?: number;
+}
+
 @InputType()
 export class UsernamePasswordInput {
   @Field()
@@ -53,6 +70,24 @@ export class UsernamePasswordInput {
   @Field()
   email: string;
 }
+
+@ObjectType()
+export class UserEdge extends EdgeType(User) {}
+
+@ObjectType()
+export class UserConnection {
+  @Field((type) => [UserEdge])
+  edges: UserEdge[];
+  @Field((type) => PageInfo)
+  pageInfo: PageInfo;
+  @Field((type) => Int)
+  totalCount: number;
+}
+
+const baseArgs = {
+  select: {},
+  where: {},
+};
 
 @Resolver()
 export class UserResolver {
@@ -88,17 +123,36 @@ export class UserResolver {
 
     const authResponse = pusher.authenticateUser(req.session.userId, user);
 
-    console.log(authResponse);
-
     return `hello world ${authResponse}`;
   }
-  @Query(() => [User])
-  async getUsers(@Ctx() { prisma, res }: MyContext) {
-    return prisma.user.findMany({});
+  @Query(() => String)
+  async me(@Ctx() { req }: MyContext) {
+    return req.session.userId;
+  }
+  @Query(() => UserConnection)
+  async getUsers(
+    @Ctx() { prisma }: MyContext,
+    @Args() { skip, after, before, first, last }: PaginationArgs
+  ) {
+    const result = await findManyCursorConnection(
+      (args) =>
+        prisma.user.findMany({
+          ...args,
+          include: {
+            hosted: true,
+            memberships: true,
+            reviews: true,
+          },
+        }),
+      () => prisma.user.count(),
+      { first, after }
+    );
+
+    return result;
   }
   @Query(() => [User])
   async getOnlineUsers(
-    @Ctx() { prisma, res, req, pusher }: MyContext,
+    @Ctx() { prisma, pusher }: MyContext,
     @Arg("username") username: string,
     @Arg("message") message: string
   ) {
@@ -168,7 +222,7 @@ export class UserResolver {
       await sendConfirmationEmail(user.email, token);
 
       setToken(user, res);
-      console.log("req session: ", req.session);
+
       req.session.userId = user.id;
 
       return Object.assign(new User(), user);
@@ -229,12 +283,8 @@ export class UserResolver {
 
       if (!authenticated) return new BadCredentialsError();
 
-      console.log("user: ", user.id);
-      console.log("authenticated: ", authenticated);
-
       setToken(user, res);
 
-      // res.setHeader(process.env.JWT_COOKIE_NAME, user.id);
       console.log("req session: ", req.session);
       req.session.userId = await user.id;
 

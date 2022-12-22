@@ -49,18 +49,20 @@ const StyledCardImg = styled("img", {
   },
 });
 
-export interface CardProps extends React.ComponentPropsWithoutRef<"div"> {
+export interface CardProps extends React.ComponentPropsWithRef<"div"> {
   children: React.ReactNode;
   gold?: boolean;
-  background: "dark";
+  background?: "dark";
 }
 
 // There's currently an issue with ui-stitches and typescrip
 // @ts-ignore
-export const Card = ({ children, gold, ...props }: CardProps) => (
-  <StyledCardWrapper gold={gold} {...props}>
-    {children}
-  </StyledCardWrapper>
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ children, gold, ...props }, ref) => (
+    <StyledCardWrapper ref={ref} gold={gold} {...props}>
+      {children}
+    </StyledCardWrapper>
+  )
 );
 
 Card.Image = StyledCardImg;

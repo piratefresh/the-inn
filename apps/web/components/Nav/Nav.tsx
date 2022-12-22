@@ -140,7 +140,7 @@ export const Nav = () => {
           <NavItem label="Campaigns" href="/campaigns/createcampaign/general" />
           <NavItem label="Homebrews" href="/homebrews" />
           <NavItem label="Game Rules" href="/gamerules" />
-          <NavItem label="Members" href="/users" />
+          <NavItem label="Members" href="/members/all" />
         </div>
 
         <div className="flex justify-end col-start-11 col-end-13">

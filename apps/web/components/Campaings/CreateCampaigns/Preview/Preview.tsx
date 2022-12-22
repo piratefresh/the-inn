@@ -39,7 +39,7 @@ export const Preview = () => {
           createCampaignData.jsonAdditionalDetails
         ),
         jsonSummary: JSON.stringify(createCampaignData.jsonSummary),
-        startDate: new Date(),
+        startDate: createCampaignData.startDate.toString(),
         timezone: JSON.stringify(createCampaignData.timezone),
       },
     });

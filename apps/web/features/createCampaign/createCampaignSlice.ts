@@ -43,6 +43,7 @@ export interface CreateCampaignState {
   days: string[];
   timePeriods: string[];
   timezone: ITimezone;
+  startDate: Date;
   tags: string[];
   additionalDetails: string;
   jsonAdditionalDetails: JSONContent;
@@ -63,6 +64,7 @@ export interface IStep1 {
   jsonSummary: JSONContent;
   timePeriods: string[];
   timezone: ITimezone;
+  startDate: Date;
   days: string[];
   price: number;
 }
@@ -111,6 +113,7 @@ const initialState: CreateCampaignState = {
     abbrev: "",
     altName: "",
   },
+  startDate: new Date(),
   tags: [],
   additionalDetails: "",
   jsonAdditionalDetails: {},
@@ -132,6 +135,7 @@ export const createCampaignSlice = createSlice({
       state.gameSystem = action.payload.gameSystem;
       state.maxSeats = parseInt(action.payload.maxSeats, 10);
       state.timezone = action.payload.timezone;
+      state.startDate = action.payload.startDate;
       state.experience = action.payload.experience;
       state.campaignType = action.payload.campaignType;
       state.price = action.payload.price;

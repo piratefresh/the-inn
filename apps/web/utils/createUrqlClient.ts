@@ -1,23 +1,25 @@
 import {
-  createClient,
   dedupExchange,
   fetchExchange,
   subscriptionExchange,
   errorExchange as urqlErrorExchange,
+  stringifyVariables,
 } from "urql";
-import { cacheExchange } from "@urql/exchange-graphcache";
+import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
+import {
+  relayPagination,
+  simplePagination,
+} from "@urql/exchange-graphcache/extras";
 import { devtoolsExchange } from "@urql/devtools";
-import { pipe, tap } from "wonka";
-import { Exchange } from "urql";
 import Router from "next/router";
 import { createClient as createWSClient } from "graphql-ws";
-import { isServer } from "./isServer";
 import {
   GetUnreadNotificationsDocument,
   GetUnreadNotificationsQuery,
   NewCampaignApplicationSubscription,
   NotificationType,
 } from "@generated/graphql";
+import { isServer } from "./isServer";
 
 export const errorExchange = urqlErrorExchange({
   onError: (error) => {
@@ -32,15 +34,15 @@ export const errorExchange = urqlErrorExchange({
 
 const wsClient = () =>
   createWSClient({
-    url: "ws://localhost:4000/graphql",
+    url: process.env.NEXT_PUBLIC_WS_URL,
   });
 
 const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
   console.log("CTX: ", ctx);
   let cookie = "";
-  // if (isServer()) {
-  //   cookie = ctx?.req?.headers?.cookie;
-  // }
+  if (isServer()) {
+    cookie = ctx?.req?.headers?.cookie;
+  }
 
   return {
     url: process.env.NEXT_PUBLIC_API_URL as string,
@@ -57,7 +59,14 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
       dedupExchange,
       cacheExchange({
         keys: {
-          PaginatedPosts: () => null,
+          UserConnection: () => null,
+        },
+        resolvers: {
+          Query: {
+            getUsers: relayPagination({
+              mergeMode: "inwards",
+            }),
+          },
         },
         updates: {
           Mutation: {
@@ -90,7 +99,7 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
                 { query: GetUnreadNotificationsDocument },
                 (data) => {
                   if (!data) return null;
-                  console.log("data: ", data);
+
                   const newNotifications: GetUnreadNotificationsQuery["getUnreadNotifications"][0] =
                     {
                       id: result.newCampaignApplication.notificationId,
@@ -106,7 +115,6 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
                     };
                   data.getUnreadNotifications.push(newNotifications);
 
-                  console.log("data: ", data);
                   return data;
                 }
               );

@@ -122,7 +122,6 @@ export class CampaignResolver {
       // Get the last post id
       const lastPostInResults = queryResults[queryResults.length - 1]; // Remember: zero-based index! :)
 
-      console.log(lastPostInResults);
       const after = lastPostInResults.id; // Example: 52
 
       // query after the cursor to check if we have nextPage

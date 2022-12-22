@@ -25,4 +25,3 @@ export class Membership {
   application: Application[]
 
   // skip overwrite 👇
-}

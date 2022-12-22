@@ -1,17 +1,18 @@
-import {
-  useCalendarState,
-  CalendarStateOptions,
-} from "@react-stately/calendar";
+import { useCalendarState } from "@react-stately/calendar";
 import { useCalendar } from "@react-aria/calendar";
 import { useLocale } from "@react-aria/i18n";
-
-import { createCalendar } from "@internationalized/date";
+import { createCalendar, DateValue } from "@internationalized/date";
 import { CalendarButton } from "./CalenderButton";
 import { CalendarGrid } from "./CalendarGrid";
 import { Header } from "../Typography";
 import React from "react";
+import {
+  ArrowLeftCircleIcon,
+  ArrowRightCircleIcon,
+} from "@heroicons/react/24/outline";
+import type { CalendarProps } from "@react-aria/calendar";
 
-export function Calendar(props: CalendarStateOptions) {
+export function Calendar(props: CalendarProps<DateValue>) {
   let { locale } = useLocale();
   let state = useCalendarState({
     ...props,
@@ -27,13 +28,18 @@ export function Calendar(props: CalendarStateOptions) {
   );
 
   return (
-    <div {...calendarProps} ref={ref}>
-      <div>
-        <CalendarButton {...prevButtonProps}>left</CalendarButton>
-        <Header as="h2" size="base">
+    <div {...calendarProps} ref={ref} className="inline-block text-gray-800">
+      <div className="flex items-center">
+        <Header color="hiContrast" as="h2" size="base">
           {title}
         </Header>
-        <CalendarButton {...nextButtonProps}>right</CalendarButton>
+        <CalendarButton {...prevButtonProps}>
+          <ArrowLeftCircleIcon />
+        </CalendarButton>
+
+        <CalendarButton {...nextButtonProps}>
+          <ArrowRightCircleIcon />
+        </CalendarButton>
       </div>
       <CalendarGrid state={state} />
     </div>

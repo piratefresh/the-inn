@@ -9,7 +9,7 @@ import ProgressBar from "@badrap/bar-of-progress";
 import { store } from "../store/store";
 import { withUrqlClient } from "next-urql";
 import { SessionProvider } from "next-auth/react";
-import { RootLayout } from "@layouts/RootLayout";
+import { I18nProvider, SSRProvider } from "@react-aria/ssr";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import { configureAbly } from "@ably-labs/react-hooks";
 import { AppPropsWithLayout } from "Types/LayoutPage";
@@ -58,17 +58,19 @@ function App({
     meta.metaDescription || meta.description || "Website for Chatting.";
 
   return (
-    <SessionProvider session={session}>
-      <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
-        <Provider store={store}>
-          <NotificationsProvider position="top-center">
-            <Layout {...layoutProps}>
-              <Component {...pageProps} />
-            </Layout>
-          </NotificationsProvider>
-        </Provider>
-      </MantineProvider>
-    </SessionProvider>
+    <SSRProvider>
+      <SessionProvider session={session}>
+        <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
+          <Provider store={store}>
+            <NotificationsProvider position="top-center">
+              <Layout {...layoutProps}>
+                <Component {...pageProps} />
+              </Layout>
+            </NotificationsProvider>
+          </Provider>
+        </MantineProvider>
+      </SessionProvider>
+    </SSRProvider>
   );
 }
 

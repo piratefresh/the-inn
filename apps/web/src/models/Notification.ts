@@ -32,4 +32,3 @@ export class Notification {
   read: boolean
 
   // skip overwrite 👇
-}

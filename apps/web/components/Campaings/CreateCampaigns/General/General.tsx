@@ -20,7 +20,13 @@ import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
 import GeneralStyles from "./General.module.css";
 import { ClickableDropZone } from "@components/Dropzone/ClickableDropZone";
-import { Button, RadioGroup, RangeSlider, TimeZonePicker } from "ui";
+import {
+  Button,
+  // DatePicker,
+  RadioGroup,
+  RangeSlider,
+  TimeZonePicker,
+} from "ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DevTool } from "@hookform/devtools";
 import { generalSchema } from "./schema";
@@ -31,6 +37,9 @@ import {
 import { MAX_PARTY } from "consts/maxSeats";
 import { SKILL_LEVELS } from "consts/skillLevels";
 import { SelectOption } from "ui/src/Select/Select";
+import dynamic from "next/dynamic";
+
+const DatePicker = dynamic(async () => (await import("ui")).DatePicker);
 
 export interface CustomEditorProps extends Editor {
   insertContent: (string) => void;
@@ -344,6 +353,21 @@ export const General = () => {
           </InputGroup>
         </div>
 
+        <div className="grid gap-12 my-12">
+          <InputGroup label="*Starting Date" error={errors?.startDate}>
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <DatePicker
+                  label="Game Starting Date"
+                  onChange={(date) => console.log("date: ", date)}
+                  value={value}
+                />
+              )}
+            />
+          </InputGroup>
+        </div>
         <div className="grid grid-cols-2 gap-12 my-12">
           <InputGroup label="*Time" error={errors?.timePeriods}>
             <Controller
@@ -406,7 +430,7 @@ export const General = () => {
         </Button>
       </form>
 
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </div>
   );
 };

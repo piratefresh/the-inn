@@ -27,7 +27,7 @@ export default {
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template = (args) => {
   let state = useDateRangePickerState({});
-  let ref = React.useRef();
+  let ref = React.useRef(null);
   let {
     groupProps,
     labelProps,
@@ -45,9 +45,7 @@ const Template = (args) => {
     ref
   );
 
-  console.log("state: ", state.isOpen);
   const handleOpenCalender = () => {
-    console.log("clicked");
     state.setOpen(!state.isOpen);
   };
 
@@ -62,12 +60,9 @@ const Template = (args) => {
         }}
       >
         {state.isOpen ? "OPEN" : "CLOSED"}
-        <DateField onClick={handleOpenCalender} {...startFieldProps}>
-          {args.children}
-        </DateField>
-        <DateField onClick={handleOpenCalender} {...endFieldProps}>
-          {args.children}
-        </DateField>
+        <DateField onClick={handleOpenCalender} {...startFieldProps} />
+
+        <DateField onClick={handleOpenCalender} {...endFieldProps} />
       </div>
       {state.isOpen && <RangeCalendar {...calendarProps} />}
     </>

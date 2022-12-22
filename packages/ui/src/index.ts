@@ -29,3 +29,4 @@ export { RangeSlider } from "./RangeSlider";
 export { Dialog } from "./Dialog";
 export { Popover } from "./Popover";
 export { Menu, HeadlessMenu } from "./Menu";
+export { Avatar } from "./Avatar";

@@ -43,4 +43,3 @@ export class PrivateMessage {
   updatedAt: Date
 
   // skip overwrite 👇
-}

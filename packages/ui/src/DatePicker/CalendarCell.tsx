@@ -3,7 +3,14 @@ import { useRef } from "react";
 import { useCalendarCell } from "@react-aria/calendar";
 import { mergeProps } from "@react-aria/utils";
 import { useFocusRing } from "@react-aria/focus";
-import { isSameDay, getDayOfWeek, isSameMonth } from "@internationalized/date";
+import { CalendarState, RangeCalendarState } from "@react-stately/calendar";
+import {
+  isSameDay,
+  getDayOfWeek,
+  isSameMonth,
+  CalendarDate,
+  DateValue,
+} from "@internationalized/date";
 import { styled } from "../theme";
 import { useLocale } from "react-aria";
 
@@ -64,8 +71,14 @@ const StyledInnerCell = styled("div", {
   },
 });
 
-export function CalendarCell({ state, date, currentMonth }) {
-  let ref = useRef();
+export interface CalendarCellProps {
+  state: CalendarState | RangeCalendarState;
+  date: CalendarDate;
+  currentMonth: DateValue;
+}
+
+export function CalendarCell({ state, date, currentMonth }: CalendarCellProps) {
+  let ref = useRef(null);
   let { cellProps, buttonProps, isSelected, isDisabled, formattedDate } =
     useCalendarCell({ date }, state, ref);
 
@@ -73,11 +86,11 @@ export function CalendarCell({ state, date, currentMonth }) {
 
   // The start and end date of the selected range will have
   // an emphasized appearance.
-  let isSelectionStart = state.highlightedRange
-    ? isSameDay(date, state.highlightedRange.start)
+  let isSelectionStart = (state as RangeCalendarState).highlightedRange
+    ? isSameDay(date, (state as RangeCalendarState).highlightedRange.start)
     : isSelected;
-  let isSelectionEnd = state.highlightedRange
-    ? isSameDay(date, state.highlightedRange.end)
+  let isSelectionEnd = (state as RangeCalendarState).highlightedRange
+    ? isSameDay(date, (state as RangeCalendarState).highlightedRange.end)
     : isSelected;
 
   // We add rounded corners on the left for the first day of the month,
@@ -99,9 +112,9 @@ export function CalendarCell({ state, date, currentMonth }) {
   return (
     <StyledTD {...cellProps}>
       <StyledCell
+        {...mergeProps(buttonProps, focusProps)}
         ref={ref}
         hidden={isOutsideMonth}
-        {...mergeProps(buttonProps, focusProps)}
         selected={isSelected}
         disabled={isDisabled}
         roundedLeft={isRoundedLeft}

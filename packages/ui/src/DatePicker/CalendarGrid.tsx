@@ -1,5 +1,6 @@
-import { useCalendarGrid } from "@react-aria/calendar";
+import { AriaCalendarGridProps, useCalendarGrid } from "@react-aria/calendar";
 import { getWeeksInMonth, endOfMonth } from "@internationalized/date";
+import { CalendarState, RangeCalendarState } from "@react-stately/calendar";
 import { useLocale } from "@react-aria/i18n";
 import { CalendarCell } from "./CalendarCell";
 import { styled } from "../theme";
@@ -11,14 +12,18 @@ const StyledTable = styled("table", {
   },
 });
 
-export function CalendarGrid({ state, offset = {} }) {
+export interface CalendarGridProps extends AriaCalendarGridProps {
+  state: CalendarState | RangeCalendarState;
+  offset?: { months?: number };
+}
+
+export function CalendarGrid({ state, offset = {} }: CalendarGridProps) {
   let { locale } = useLocale();
   let startDate = state.visibleRange.start.add(offset);
-  let endDate = endOfMonth(startDate);
+
   let { gridProps, headerProps, weekDays } = useCalendarGrid(
     {
       startDate,
-      endDate,
     },
     state
   );

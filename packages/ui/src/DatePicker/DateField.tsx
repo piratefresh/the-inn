@@ -6,7 +6,7 @@ import {
   useDateField,
   useDateSegment,
 } from "@react-aria/datepicker";
-import { useDateFormatter, useLocale } from "@react-aria/i18n";
+import { useDateFormatter, useLocale, I18nProvider } from "@react-aria/i18n";
 import {
   useDateFieldState,
   useDateRangePickerState,
@@ -18,7 +18,9 @@ import { createCalendar, DateValue } from "@internationalized/date";
 import { styled } from "../theme";
 
 export interface DateFieldProps extends AriaDatePickerProps<DateValue> {
-  onClick: () => void;
+  onClick?: () => void;
+  gold?: boolean;
+  format?: "medium";
 }
 
 interface DateSegmentProps {
@@ -45,22 +47,32 @@ const StyledRoot = styled("div", {
   },
 });
 
-export const DateField = ({ onClick, ...props }: DateFieldProps) => {
+export const DateField = ({ onClick, gold, ...props }: DateFieldProps) => {
   let { locale } = useLocale();
-  let datepickerState = useDateRangePickerState({});
+
   let state = useDateFieldState({
     ...props,
+    value: props.value,
     locale,
     createCalendar,
   });
 
   let ref = React.useRef<HTMLElement>(null);
   let { fieldProps } = useDateField(props, state, ref);
-  let formatter = useDateFormatter({ dateStyle: "medium" });
+
+  // For formatting date
+  // let formatter = useDateFormatter({
+  //   dateStyle: "medium",
+  //   day: state.segments[2].value,
+  //   month: state.segments[0].value,
+  //   year: state.segments[0].value,
+  // });
 
   return (
-    <StyledRoot {...fieldProps} onClick={onClick} gold>
-      {formatter.format(state.dateValue)}
+    <StyledRoot {...fieldProps} onClick={onClick} gold={gold}>
+      {state.segments.map((segment, i) => (
+        <DateSegment key={i} segment={segment} state={state} />
+      ))}
     </StyledRoot>
   );
 };
@@ -78,15 +90,19 @@ export function DateSegment({ segment, state }: DateSegmentProps) {
   let ref = React.useRef(null);
   let { segmentProps } = useDateSegment(segment, state, ref);
 
+  console.log("segment: ", segment);
+
   return (
-    <StyledDateBox
-      {...segmentProps}
-      ref={ref}
-      style={{
-        ...segmentProps.style,
-      }}
-    >
-      {segment.text}
-    </StyledDateBox>
+    <I18nProvider locale="en-US">
+      <StyledDateBox
+        {...segmentProps}
+        ref={ref}
+        style={{
+          ...segmentProps.style,
+        }}
+      >
+        {segment.text}
+      </StyledDateBox>
+    </I18nProvider>
   );
 }

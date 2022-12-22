@@ -96,9 +96,10 @@ export const nextAuthOptions = (req, res) => ({
     },
     async jwt({ token, user, account, profile, isNewUser }) {
       if (user) {
+        console.log("user: ", user);
         token.id = user.id;
         token.name = `${user.firstName} ${user.lastName}`;
-        token.picture = user.image;
+        token.picture = user.imageUrl ?? "";
         token.accessToken = user.accounts.refreshToken;
         token.expiresAt = user.accounts.expiresAt;
       }
@@ -108,13 +109,14 @@ export const nextAuthOptions = (req, res) => ({
 
     async session({ session, token, user }) {
       console.log("session: ", session);
+      console.log("token: ", token);
       const newSession: Session = {
         ...session,
-        accessToken: token.accessToken,
-        expires: token.expiresAt,
+        expires: token.exp,
         id: token?.id,
         user: {
           ...session.user,
+          image: session.user.image ?? null,
         },
       };
 

@@ -2,7 +2,7 @@ import { CampaignCard } from "@components/CampaignCard";
 import { useGetCampaignQuery, useGetCampaignsQuery } from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
 import { useRouter } from "next/router";
-import { HeroImage, Note, Text } from "ui";
+import { Avatar, HeroImage, Note, Text } from "ui";
 import React from "react";
 import { ReadOnly } from "@components/RichTextEditor/ReadOnly";
 import { styled } from "@components/Theme/Theme";
@@ -91,9 +91,8 @@ const Campaign = () => {
           <div className="flex flex-row">
             {campaign?.getCampaign.memberships.map((member) => (
               <div className="flex flex-col">
-                <MemberAvatar
-                  width={60}
-                  height={60}
+                <Avatar
+                  name={`${member.user.firstName} ${member.user.lastName}`}
                   src={`https://joeschmoe.io/api/v1/${member.user.firstName}`}
                 />
                 <Text color="loContrast">{member.user.firstName}</Text>

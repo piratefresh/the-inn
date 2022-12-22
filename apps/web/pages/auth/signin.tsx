@@ -52,9 +52,11 @@ const SignIn = () => {
 
   return (
     <div className="flex flex-col place-items-center justify-center items-center h-screen">
-      <div className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack">
-        The Inn
-      </div>
+      <Link href="/">
+        <a className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack">
+          The Inn
+        </a>
+      </Link>
       <form
         className="flex flex-col mt-8 space-y-6 w-100 max-w-xl"
         style={{ width: "600px" }}

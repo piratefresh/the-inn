@@ -2,13 +2,38 @@ import { CampaignApplication } from "@components/CampaignApplication";
 import { CampaignSideCard } from "@components/CampaignSideCard";
 import { useGetCampaignQuery } from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
+import { GetServerSidePropsContext } from "next";
+import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
+import { nextAuthOptions } from "pages/api/auth/[...nextauth]";
 import { css } from "ui";
 
 const root = css({
   background:
     "linear-gradient(179.62deg, #0E0A00 -79.35%, #25120E -3.81%, #25120E 25.17%, #0D0A00 68.63%)",
 });
+
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(
+    req,
+    res,
+    nextAuthOptions(req, res)
+  );
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  };
+}
 
 const Join = () => {
   const router = useRouter();

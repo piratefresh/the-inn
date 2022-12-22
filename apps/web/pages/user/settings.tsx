@@ -7,6 +7,9 @@ import { UserPageLayout } from "@layouts/UserPageLayout";
 import { useSession } from "next-auth/react";
 import { Controller, useForm } from "react-hook-form";
 import { Input, styled, Text } from "ui";
+import { GetServerSidePropsContext } from "next";
+import { unstable_getServerSession } from "next-auth";
+import { nextAuthOptions } from "pages/api/auth/[...nextauth]";
 
 interface AccountSettingsProps {
   firstName: string;
@@ -22,6 +25,28 @@ const Section = styled("section", {
   border: "1px solid $yellowBrand",
   borderRadius: "$md",
 });
+
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(
+    req,
+    res,
+    nextAuthOptions(req, res)
+  );
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  };
+}
 
 const SettingsPage = () => {
   const { data: session, status } = useSession();

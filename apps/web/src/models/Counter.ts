@@ -9,4 +9,3 @@ export class Counter {
   counter: number
 
   // skip overwrite 👇
-}
