@@ -1,5 +1,5 @@
 export { Button } from "./Button";
-export { Card } from "./Card";
+export { Card, CardImage, CardSection } from "./Card";
 export { Checkbox } from "./Checkbox";
 export { Chip } from "./Chip";
 export { ChipGroup } from "./Chip/ChipGroup";

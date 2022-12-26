@@ -1,9 +1,8 @@
-import { TipTapJsonContent } from "@components/Campaings/CreateCampaigns/General/schema";
 import { z } from "zod";
 
 const ApplicationDefaultSchema = {
   message: z.string().min(1, { message: "Message is required" }),
-  jsonMessage: TipTapJsonContent,
+  jsonMessage: z.string().min(1, { message: "Message is required" }),
   campaignId: z.string(),
 };
 

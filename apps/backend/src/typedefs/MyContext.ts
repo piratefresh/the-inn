@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { Redis } from "ioredis";
 import Pusher from "pusher";
 import AblyPubSub from "ablyPubsub";
+import { SearchIndex } from "algoliasearch";
 
 interface MyContext {
   prisma: PrismaClient;
@@ -12,5 +13,6 @@ interface MyContext {
   wsHeaders?: any;
   pubsub?: AblyPubSub;
   pusher?: Pusher;
+  theInnIndex?: SearchIndex;
 }
 export { MyContext };

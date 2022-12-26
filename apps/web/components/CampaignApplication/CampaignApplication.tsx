@@ -85,7 +85,7 @@ export const CampaignApplication = () => {
     defaultValues: {
       campaignId: id as string,
       fitsSchedule: true,
-      experience: "All",
+      experience: Experience.All,
       days: [],
       timePeriods: [],
     },
@@ -103,7 +103,7 @@ export const CampaignApplication = () => {
       campaignApplicationInput: {
         campaignId: id as string,
         message: data.message,
-        jsonMessage: JSON.stringify(data.jsonMessage),
+        jsonMessage: data.jsonMessage,
         fitsSchedule: data.fitsSchedule,
         experience: data.experience,
         days: data.days ?? [],
@@ -124,7 +124,6 @@ export const CampaignApplication = () => {
 
   return (
     <>
-      {" "}
       <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
         <div className="my-16">
           <Text size="4xl" color="loContrast" className="mb-4">

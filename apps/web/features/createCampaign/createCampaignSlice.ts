@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice, createSelector } from "@reduxjs/toolkit";
 import type { RootState } from "@store/store";
-import { JSONContent } from "@tiptap/react";
 import { ITimezone } from "ui/src/TimeZonePicker/TimeZonePicker";
 
 export enum Experience {
@@ -25,7 +24,7 @@ interface ITag {
 export interface CreateCampaignState {
   title: string;
   summary: string;
-  jsonSummary?: JSONContent;
+  jsonSummary?: string;
   imageUrl: string;
   gameSystem: string; // change to enum type
   campaignType: string;
@@ -43,10 +42,10 @@ export interface CreateCampaignState {
   days: string[];
   timePeriods: string[];
   timezone: ITimezone;
-  startDate: Date;
+  startDate: string;
   tags: string[];
   additionalDetails: string;
-  jsonAdditionalDetails: JSONContent;
+  jsonAdditionalDetails: string;
   combat: Difficulty;
   roleplay: Difficulty;
   puzzles: Difficulty;
@@ -56,15 +55,15 @@ export interface IStep1 {
   title: string;
   summary: string;
   imageUrl: string;
-  image?: FileList;
+  image?: FileList | string;
   campaignType: string;
   gameSystem: string; // change to enum type
-  maxSeats: string;
+  maxSeats: number;
   experience: Experience;
-  jsonSummary: JSONContent;
+  jsonSummary: string;
   timePeriods: string[];
   timezone: ITimezone;
-  startDate: Date;
+  startDate: string;
   days: string[];
   price: number;
 }
@@ -82,15 +81,15 @@ export interface IStep2 {
   puzzles: Difficulty;
   tags: ITag[];
   additionalDetails: string;
-  jsonAdditionalDetails: JSONContent;
+  jsonAdditionalDetails: string;
 }
 
 // Define the initial state using that type
 const initialState: CreateCampaignState = {
   title: "",
   summary: "",
-  jsonSummary: {},
-  imageUrl: "",
+  jsonSummary: "",
+  imageUrl: null,
   gameSystem: "Dungeon & Dragons",
   campaignType: "Campaign",
   city: null,
@@ -113,10 +112,10 @@ const initialState: CreateCampaignState = {
     abbrev: "",
     altName: "",
   },
-  startDate: new Date(),
+  startDate: "",
   tags: [],
   additionalDetails: "",
-  jsonAdditionalDetails: {},
+  jsonAdditionalDetails: "",
   combat: Difficulty.Low,
   roleplay: Difficulty.Low,
   puzzles: Difficulty.Low,
@@ -128,12 +127,11 @@ export const createCampaignSlice = createSlice({
   initialState,
   reducers: {
     step1: (state, action: PayloadAction<IStep1>) => {
-      console.log("price: ", action.payload.price);
       state.title = action.payload.title;
       state.summary = action.payload.summary;
       state.imageUrl = action.payload.imageUrl;
       state.gameSystem = action.payload.gameSystem;
-      state.maxSeats = parseInt(action.payload.maxSeats, 10);
+      state.maxSeats = action.payload.maxSeats;
       state.timezone = action.payload.timezone;
       state.startDate = action.payload.startDate;
       state.experience = action.payload.experience;

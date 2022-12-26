@@ -1,23 +1,27 @@
-// https://codesandbox.io/s/objective-shape-8r4utm?file=/src/Button.js:517-527
-import { useRef } from "react";
+import * as React from "react";
+import type {
+  CalendarState,
+  RangeCalendarState,
+} from "@react-stately/calendar";
 import { useCalendarCell } from "@react-aria/calendar";
-import { mergeProps } from "@react-aria/utils";
-import { useFocusRing } from "@react-aria/focus";
-import { CalendarState, RangeCalendarState } from "@react-stately/calendar";
 import {
-  isSameDay,
-  getDayOfWeek,
-  isSameMonth,
   CalendarDate,
   DateValue,
+  getDayOfWeek,
+  isSameDay,
+  isSameMonth,
 } from "@internationalized/date";
+import { useFocusRing } from "@react-aria/focus";
+import { mergeProps } from "@react-aria/utils";
+import { classNames } from "../utils/classNames";
 import { styled } from "../theme";
-import { useLocale } from "react-aria";
+import { useLocale } from "@react-aria/i18n";
 
-const StyledTD = styled("td", {
-  display: "relative",
-  py: "0.5rem",
-});
+export interface Props {
+  state: CalendarState | RangeCalendarState;
+  date: CalendarDate;
+  currentMonth: DateValue;
+}
 
 const StyledCell = styled("div", {
   outline: "2px solid transparent",
@@ -25,7 +29,6 @@ const StyledCell = styled("div", {
   height: "2.5rem",
   width: "2.5rem",
   fontWeight: "bold",
-
   variants: {
     roundedLeft: {
       true: {
@@ -71,16 +74,17 @@ const StyledInnerCell = styled("div", {
   },
 });
 
-export interface CalendarCellProps {
-  state: CalendarState | RangeCalendarState;
-  date: CalendarDate;
-  currentMonth: DateValue;
-}
-
-export function CalendarCell({ state, date, currentMonth }: CalendarCellProps) {
-  let ref = useRef(null);
-  let { cellProps, buttonProps, isSelected, isDisabled, formattedDate } =
-    useCalendarCell({ date }, state, ref);
+export function CalendarCell({ state, date, currentMonth }: Props) {
+  const ref = React.useRef<HTMLDivElement | null>(null);
+  const {
+    cellProps,
+    buttonProps,
+    isSelected,
+    isOutsideVisibleRange,
+    isDisabled,
+    formattedDate,
+    isInvalid,
+  } = useCalendarCell({ date }, state, ref);
 
   let isOutsideMonth = !isSameMonth(currentMonth, date);
 
@@ -93,12 +97,10 @@ export function CalendarCell({ state, date, currentMonth }: CalendarCellProps) {
     ? isSameDay(date, (state as RangeCalendarState).highlightedRange.end)
     : isSelected;
 
-  // We add rounded corners on the left for the first day of the month,
-  // the first day of each week, and the start date of the selection.
-  // We add rounded corners on the right for the last day of the month,
-  // the last day of each week, and the end date of the selection.
   let { locale } = useLocale();
+
   let dayOfWeek = getDayOfWeek(date, locale);
+
   let isRoundedLeft =
     isSelected && (isSelectionStart || dayOfWeek === 0 || date.day === 1);
   let isRoundedRight =
@@ -107,10 +109,10 @@ export function CalendarCell({ state, date, currentMonth }: CalendarCellProps) {
       dayOfWeek === 6 ||
       date.day === date.calendar.getDaysInMonth(date));
 
-  let { focusProps, isFocusVisible } = useFocusRing();
+  const { focusProps, isFocusVisible } = useFocusRing();
 
   return (
-    <StyledTD {...cellProps}>
+    <td {...cellProps}>
       <StyledCell
         {...mergeProps(buttonProps, focusProps)}
         ref={ref}
@@ -124,6 +126,6 @@ export function CalendarCell({ state, date, currentMonth }: CalendarCellProps) {
           {formattedDate}
         </StyledInnerCell>
       </StyledCell>
-    </StyledTD>
+    </td>
   );
 }

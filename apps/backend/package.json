@@ -19,6 +19,7 @@
     "@upstash/ratelimit": "^0.1.5",
     "@upstash/redis": "^1.18.1",
     "ably": "^1.2.33",
+    "algoliasearch": "^4.14.3",
     "api": "*",
     "argon2": "^0.28.5",
     "body-parser": "^1.20.1",

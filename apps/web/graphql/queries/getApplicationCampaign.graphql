@@ -1,0 +1,18 @@
+query GetApplicationCampaign($campaignId: String!) {
+  getApplicationCampaign(campaignId: $campaignId) {
+    campaignId
+    days
+    experience
+    fitsSchedule
+    id
+    jsonMessage
+    message
+    timePeriods
+    userId
+    membership {
+      user {
+        ...UserSnippet
+      }
+    }
+  }
+}

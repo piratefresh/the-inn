@@ -6,6 +6,15 @@ import { Table } from "./Table";
 export default {
   title: "MGUI/Table",
   component: Table,
+  parameters: {
+    backgrounds: {
+      default: "dark",
+      values: [
+        { name: "dark", value: "rgb(13, 10, 0)" },
+        { name: "facebook", value: "#3b5998" },
+      ],
+    },
+  },
 } as ComponentMeta<typeof Table>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args

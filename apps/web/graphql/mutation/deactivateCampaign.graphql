@@ -1,0 +1,3 @@
+mutation DeactivateCampaign($campaignId: String!) {
+  deactivateCampaign(campaignId: $campaignId)
+}

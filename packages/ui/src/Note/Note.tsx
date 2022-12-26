@@ -1,5 +1,4 @@
 import { styled } from "../theme";
-import { Text } from "../Typography";
 
 const Container = styled("div", {
   position: "relative",
@@ -40,16 +39,7 @@ export const Note = ({ children }: NoteProps) => {
     <Container>
       <StyledOverlay />
       <StyledNote>
-        <TextContainer>
-          <Text
-            style={{ lineHeight: "125%", textTransform: "uppercase" }}
-            size="2xl"
-            font="cinzel"
-            weight="bold"
-          >
-            {children}
-          </Text>
-        </TextContainer>
+        <TextContainer>{children}</TextContainer>
       </StyledNote>
     </Container>
   );

@@ -2,17 +2,30 @@ import { KeyboardEventHandler, useState } from "react";
 import { theme } from "../theme";
 import { v4 as uuidv4 } from "uuid";
 import CreatableSelect from "react-select/creatable";
-import { StylesConfig } from "react-select";
+import { OnChangeValue, StylesConfig } from "react-select";
 
 const components = {
   DropdownIndicator: null,
 };
 
-const createOption = (label: string) => ({
+interface IOptionType {
+  label: string;
+  value: string;
+  id: string;
+}
+
+const createOption = (label: string): IOptionType => ({
   label,
   value: label,
   id: uuidv4(),
 });
+
+export function getUniqueListBy(
+  arr: Record<string, string>[],
+  key: string
+): Record<string, string>[] {
+  return [...new Map(arr.map((item) => [item[key], item])).values()];
+}
 
 const colourStyles: StylesConfig<String, true> = {
   control: (styles) => ({
@@ -84,12 +97,33 @@ export const MultiSelect = ({ onChange, value, ref }: MultiSelectProps) => {
         setInputValue("");
         onChange(
           value
-            ? [...value, createOption(inputValue)]
+            ? getUniqueListBy([...value, createOption(inputValue)], "value")
             : [createOption(inputValue)]
         );
 
         event.preventDefault();
     }
+  };
+
+  /** Allow creating a new option with a different casing. */
+  const isValidNewOption = (
+    inputValue: string,
+    selectValue: OnChangeValue<IOptionType, true>
+  ): boolean => {
+    console.log("inputValue: ", inputValue);
+    console.log("selectValue: ", selectValue);
+    console.log(
+      "test: ",
+      selectValue.some(
+        ({ value }) => value.toLowerCase() === inputValue.toLowerCase()
+      )
+    );
+    return (
+      !!inputValue &&
+      selectValue.some(
+        ({ value }) => value.toLowerCase() === inputValue.toLowerCase()
+      )
+    );
   };
 
   return (
@@ -102,6 +136,7 @@ export const MultiSelect = ({ onChange, value, ref }: MultiSelectProps) => {
       onChange={onChange}
       onInputChange={handleInputChange}
       onKeyDown={handleKeyDown}
+      isValidNewOption={isValidNewOption}
       placeholder=""
       value={value}
       styles={colourStyles}

@@ -1,0 +1,13 @@
+mutation UpdateCampaign(
+  $campaignId: String!
+  $createCampaignInput: CreateCampaignInput!
+) {
+  updateCampaign(
+    campaignId: $campaignId
+    createCampaignInput: $createCampaignInput
+  ) {
+    ... on Campaign {
+      id
+    }
+  }
+}

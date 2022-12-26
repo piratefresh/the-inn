@@ -1,44 +1,42 @@
 import * as React from "react";
-import {
-  usePopover,
-  DismissButton,
-  Overlay,
-  AriaPopoverProps,
-} from "@react-aria/overlays";
+import { FocusScope } from "@react-aria/focus";
+import { AriaDialogProps, useDialog } from "@react-aria/dialog";
+import { useOverlay, useModal, DismissButton } from "@react-aria/overlays";
+import { mergeProps } from "@react-aria/utils";
 
-interface PopoverProps extends Omit<AriaPopoverProps, "popoverRef"> {
+interface Props extends AriaDialogProps {
   children: React.ReactNode;
-  state: any;
-  onClose: () => void;
+  onClose(): void;
   isOpen: boolean;
-  className?: string;
-  popoverRef?: React.RefObject<HTMLDivElement>;
+  popoverRef?: any;
 }
 
-export function Popover(props: PopoverProps) {
-  let ref = React.useRef(null);
-  let { state, children, onClose } = props;
+export function Popover(props: Props) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const { popoverRef = ref, isOpen, onClose, children, ...otherProps } = props;
 
-  let { popoverProps, underlayProps } = usePopover(
+  const { overlayProps } = useOverlay(
     {
-      ...props,
-      popoverRef: ref,
+      isOpen,
+      onClose,
+      isDismissable: true,
     },
-    state
+    popoverRef
   );
 
+  const { modalProps } = useModal();
+  const { dialogProps } = useDialog(otherProps, popoverRef);
+
   return (
-    <Overlay>
-      <div onClick={onClose} {...underlayProps} className="fixed inset-0" />
+    <FocusScope contain restoreFocus>
       <div
-        {...popoverProps}
-        ref={ref}
-        className="absolute top-full bg-white border border-neutral-300 rounded-md shadow-lg mt-2 p-8 z-10"
+        {...mergeProps(overlayProps, modalProps, dialogProps)}
+        ref={popoverRef}
+        className="absolute top-full bg-gray-200 dark:bg-primary dark:border dark:border-secondary rounded-md shadow-lg mt-2 p-8 z-10"
       >
-        <DismissButton onDismiss={state.close} />
         {children}
-        <DismissButton onDismiss={state.close} />
+        <DismissButton onDismiss={onClose} />
       </div>
-    </Overlay>
+    </FocusScope>
   );
 }

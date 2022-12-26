@@ -19,9 +19,9 @@ export const UserGames = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid grid-cols-3 gap-8">
         {myCampaigns?.getUserCampaign.map((campaign) => (
-          <div style={{ maxWidth: "350px" }} key={campaign.title}>
+          <div style={{ maxWidth: "300px" }} key={campaign.title}>
             <CampaignCardSmall campaign={campaign} />
           </div>
         ))}

@@ -19,7 +19,6 @@ const MemberAvatar = styled("img", {
 
 const Campaign = () => {
   const router = useRouter();
-  const [open, setOpen] = React.useState(false);
   const { id } = router.query;
 
   const [{ data: campaign, fetching }] = useGetCampaignQuery({
@@ -93,7 +92,7 @@ const Campaign = () => {
               <div className="flex flex-col">
                 <Avatar
                   name={`${member.user.firstName} ${member.user.lastName}`}
-                  src={`https://joeschmoe.io/api/v1/${member.user.firstName}`}
+                  imageUrl={`https://joeschmoe.io/api/v1/${member.user.firstName}`}
                 />
                 <Text color="loContrast">{member.user.firstName}</Text>
               </div>
@@ -118,7 +117,7 @@ const Campaign = () => {
             <Text size="4xl" color="lightContrast" className="font-trejanSans">
               About the Campaign
             </Text>
-            <ReadOnly jsonString={campaign?.getCampaign.jsonSummary} />
+            <ReadOnly textString={campaign?.getCampaign.jsonSummary} />
           </div>
 
           <div className="my-16">
@@ -126,15 +125,24 @@ const Campaign = () => {
               Additional Details
             </Text>
             <ReadOnly
-              jsonString={campaign?.getCampaign.jsonAdditionalDetails}
+              textString={campaign?.getCampaign.jsonAdditionalDetails}
             />
           </div>
 
           <div className="my-14 mx-auto">
             <Note>
-              “George is a fantastic GM. He really knows the rules and helps
-              beginners. He always makes sure everyone I comfortable and having
-              fun. I love that he uses different voices for different NPCs.”
+              <Text
+                style={{ lineHeight: "125%", textTransform: "uppercase" }}
+                size="2xl"
+                font="cinzel"
+                weight="bold"
+                color="hiContrast"
+              >
+                “George is a fantastic GM. He really knows the rules and helps
+                beginners. He always makes sure everyone I comfortable and
+                having fun. I love that he uses different voices for different
+                NPCs.”
+              </Text>
             </Note>
           </div>
           {SimilarCampaigns}

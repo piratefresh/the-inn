@@ -1,108 +1,88 @@
-//https://codesandbox.io/s/white-breeze-rer8g2?file=/src/DateField.js:1988-2765
-
-import React from "react";
+import { DateValue, GregorianCalendar } from "@internationalized/date";
+import { useDateField, useDateSegment } from "@react-aria/datepicker";
 import {
-  AriaDatePickerProps,
-  useDateField,
-  useDateSegment,
-} from "@react-aria/datepicker";
-import { useDateFormatter, useLocale, I18nProvider } from "@react-aria/i18n";
-import {
+  DateSegment as DateSegmentType,
   useDateFieldState,
-  useDateRangePickerState,
-  DateFieldState,
-  DateSegment as DST,
 } from "@react-stately/datepicker";
+import { DOMAttributes, FocusableElement } from "@react-types/shared";
+import React, { forwardRef, useRef } from "react";
+import { AriaDateFieldProps, useLocale } from "react-aria";
+import { DateFieldState } from "react-stately";
+import { Text } from "../Typography";
 
-import { createCalendar, DateValue } from "@internationalized/date";
-import { styled } from "../theme";
-
-export interface DateFieldProps extends AriaDatePickerProps<DateValue> {
-  onClick?: () => void;
-  gold?: boolean;
-  format?: "medium";
+function createCalendar(identifier: string) {
+  switch (identifier) {
+    case "gregory":
+      return new GregorianCalendar();
+    default:
+      throw new Error(`Unsupported calendar ${identifier}`);
+  }
 }
 
-interface DateSegmentProps {
-  segment: DST;
-  state: DateFieldState;
-}
+type DateFieldProps = AriaDateFieldProps<DateValue> & {
+  label?: React.ReactNode;
+  labelProps?: DOMAttributes<FocusableElement>;
+  name?: string;
+};
+export function DateField(props: DateFieldProps) {
+  const { locale } = useLocale();
 
-const StyledRoot = styled("div", {
-  display: "inline-flex",
-  backgroundColor: "$loContrast",
-  p: "$space$4",
-
-  variants: {
-    gold: {
-      true: {
-        borderRadius: "$radii$md",
-        border: "3px solid transparent",
-        backgroundOrigin: "border-box",
-        backgroundClip: "padding-box, border-box",
-        backgroundImage:
-          "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
-      },
-    },
-  },
-});
-
-export const DateField = ({ onClick, gold, ...props }: DateFieldProps) => {
-  let { locale } = useLocale();
-
-  let state = useDateFieldState({
+  const state = useDateFieldState({
     ...props,
-    value: props.value,
     locale,
     createCalendar,
   });
 
-  let ref = React.useRef<HTMLElement>(null);
-  let { fieldProps } = useDateField(props, state, ref);
-
-  // For formatting date
-  // let formatter = useDateFormatter({
-  //   dateStyle: "medium",
-  //   day: state.segments[2].value,
-  //   month: state.segments[0].value,
-  //   year: state.segments[0].value,
-  // });
+  const ref = useRef(null);
+  const { fieldProps, labelProps } = useDateField(props, state, ref);
 
   return (
-    <StyledRoot {...fieldProps} onClick={onClick} gold={gold}>
-      {state.segments.map((segment, i) => (
-        <DateSegment key={i} segment={segment} state={state} />
-      ))}
-    </StyledRoot>
+    <div className="flex flex-col">
+      {props.label && (
+        <div {...props.labelProps} {...labelProps}>
+          {props.label}
+        </div>
+      )}
+      <div {...fieldProps} ref={ref} className="flex">
+        {state.segments.map((segment, i) => (
+          <DateSegment key={i} segment={segment} state={state} />
+        ))}
+      </div>
+      <input type="hidden" value={state.value?.toString()} name={props.name} />
+    </div>
   );
+}
+interface StyledFieldProps extends React.HTMLAttributes<HTMLDivElement> {
+  onClick(): void;
+  children: React.ReactNode;
+  variant?: "simple" | "with-trigger";
+}
+export const StyledField = forwardRef<HTMLDivElement, StyledFieldProps>(
+  ({ children, variant = "simple", ...otherProps }, ref) => {
+    return (
+      <div {...otherProps} ref={ref}>
+        {children}
+      </div>
+    );
+  }
+);
+
+type DateSegmentProps = {
+  segment: DateSegmentType;
+  state: DateFieldState;
 };
-
-const StyledDateBox = styled("div", {
-  fontVariantNumeric: "tabular-nums",
-  boxSizing: "content-box",
-  px: "$space$4",
-  textAlign: "flex-end",
-  outline: "none",
-  borderRadius: "$radii$md",
-});
-
-export function DateSegment({ segment, state }: DateSegmentProps) {
-  let ref = React.useRef(null);
-  let { segmentProps } = useDateSegment(segment, state, ref);
-
-  console.log("segment: ", segment);
-
+function DateSegment({ segment, state }: DateSegmentProps) {
+  const ref = useRef(null);
+  const { segmentProps } = useDateSegment(segment, state, ref);
   return (
-    <I18nProvider locale="en-US">
-      <StyledDateBox
-        {...segmentProps}
-        ref={ref}
-        style={{
-          ...segmentProps.style,
-        }}
-      >
-        {segment.text}
-      </StyledDateBox>
-    </I18nProvider>
+    <div
+      {...segmentProps}
+      ref={ref}
+      className={`box-content tabular-nums p-3 text-end outline-none rounded-sm focus:bg-brandYellow focus:text-white group ${
+        !segment.isEditable ? "text-gray-500" : "text-gray-800"
+      }`}
+    >
+      {segment.text}
+    </div>
   );
 }

@@ -54,12 +54,7 @@
 @layer components {
   .bg-main {
     position: relative;
-    background: linear-gradient(
-      270deg,
-      #0e0a00 0%,
-      #25120e 14.45%,
-      #25120e 100%
-    );
+    background: #0d0a00;
 
     &::before {
       content: "";
@@ -73,7 +68,7 @@
       background-repeat: repeat;
       background-size: cover;
       mix-blend-mode: screen;
-      opacity: 0.12;
+      opacity: 0.05;
     }
   }
   .bg-games {
@@ -180,4 +175,9 @@ a {
   border-radius: 8px;
   padding: 8px;
   margin: -8px;
+}
+
+.ProseMirror * {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }

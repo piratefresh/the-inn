@@ -1,6 +1,9 @@
 import { CampaignApplication } from "@components/CampaignApplication";
 import { CampaignSideCard } from "@components/CampaignSideCard";
-import { useGetCampaignQuery } from "@generated/graphql";
+import {
+  useAddPlayerApplicationMutation,
+  useGetCampaignQuery,
+} from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
 import { GetServerSidePropsContext } from "next";
 import { unstable_getServerSession } from "next-auth";

@@ -1,5 +1,5 @@
 import { useGetCampaignsQuery } from "@generated/graphql";
-import { HeroImage } from "ui";
+import { HeroImage, Text } from "ui";
 import { configureAbly, useChannel, usePresence } from "@ably-labs/react-hooks";
 
 import { CampaignCard } from "@components/CampaignCard";
@@ -27,31 +27,52 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto">
-        <h1 className="font-oldFenris text-6xl text-white my-14">
-          Recruit, or join <span className="text-yellow-400">epic</span>{" "}
-          adventures
-        </h1>
-        <div className="my-14 relative">
+      <div className="mx-auto">
+        <div className="relative">
           <div
-            className="absolute bottom-0 h-4/5 rounded-full"
+            className="absolute bottom-0 h-full w-full z-10"
             style={{
-              width: "100%",
-              filter: "blur(150px)",
-              backgroundColor: "#66180E",
+              background:
+                "linear-gradient(180deg, rgba(217, 217, 217, 0) 0%, rgba(91, 105, 107, 0.28) 33.85%, #0D0A00 100%)",
             }}
           />
-
-          <HeroImage
-            height={500}
-            width={1280}
-            src="https://res.cloudinary.com/film-it/image/upload/v1648264459/The%20inn/david-edwards-artwork-final-013.jpg"
-          />
+          <div className="absolute flex h-full w-full justify-center items-end pb-8 z-20">
+            <div className="flex flex-col text-center">
+              <Text
+                as="h1"
+                className="font-oldFenris"
+                style={{ fontSize: "96px" }}
+              >
+                The Inn
+              </Text>
+              <Text
+                as="h2"
+                size="6xl"
+                weight="bold"
+                className="font-alegreyaSans my-4"
+              >
+                Recruit, or join <span className="text-yellow-400">epic</span>{" "}
+                adventures
+              </Text>
+            </div>
+          </div>
+          <div className="block w-full" style={{ height: "700px" }}>
+            <HeroImage
+              objectFit="cover"
+              layout="fill"
+              gold
+              className="aspect-w-16 aspect-h-9 w-full"
+              src="https://res.cloudinary.com/film-it/image/upload/v1671827083/the-inn/dnd2up.png"
+            />
+          </div>
         </div>
       </div>
 
       <div className="relative">
         <div className="relative py-20 max-w-7xl mx-auto">
+          <h2 className="font-oldFenris text-white text-4xl mb-12">
+            Trending Tags
+          </h2>
           <h2 className="font-oldFenris text-white text-4xl mb-12">
             Upcoming Games
           </h2>

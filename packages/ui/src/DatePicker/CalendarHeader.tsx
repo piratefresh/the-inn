@@ -1,66 +1,35 @@
-import { useDateFormatter } from "@react-aria/i18n";
-import { CalendarButton } from "./CalenderButton";
-import { VisuallyHidden } from "@react-aria/visually-hidden";
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import { styled } from "../theme";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { AriaButtonProps } from "@react-aria/button";
 
-const StyledWrapper = styled("div", {
-  display: "flex",
-  alingItems: "center",
-});
-const StyledHeader = styled("h2", {
-  flex: 1,
-  alignItems: "center",
-  textAlign: "center",
-});
+import React from "react";
+import { Header } from "../Typography";
+import { CalendarButton } from "./CalendarButton";
+import { MonthNavigationButton } from "./MonthNavigationButton";
 
+type CalendarHeaderProps = {
+  title: string;
+  previousButtonProps: AriaButtonProps<"button">;
+  nextButtonProps: AriaButtonProps<"button">;
+};
 export function CalendarHeader({
-  state,
-  calendarProps,
-  prevButtonProps,
+  title,
+  previousButtonProps,
   nextButtonProps,
-}) {
-  let monthDateFormatter = useDateFormatter({
-    month: "long",
-    year: "numeric",
-    timeZone: state.timeZone,
-  });
-
+}: CalendarHeaderProps) {
   return (
-    <StyledWrapper className="flex items-center py-4">
-      {/* Add a screen reader only description of the entire visible range rather than
-       * a separate heading above each month grid. This is placed first in the DOM order
-       * so that it is the first thing a touch screen reader user encounters.
-       * In addition, VoiceOver on iOS does not announce the aria-label of the grid
-       * elements, so the aria-label of the Calendar is included here as well. */}
-      <VisuallyHidden>
-        <h2>{calendarProps["aria-label"]}</h2>
-      </VisuallyHidden>
-      <CalendarButton {...prevButtonProps}>
-        <ChevronLeftIcon />
+    <div className="flex justify-between items-center">
+      <CalendarButton {...previousButtonProps}>
+        <ArrowLeftIcon className="h-5 w-5" />
       </CalendarButton>
-      <StyledHeader
-        // We have a visually hidden heading describing the entire visible range,
-        // and the calendar itself describes the individual month
-        // so we don't need to repeat that here for screen reader users.
-        aria-hidden
-        className="flex-1 align-center font-bold text-xl text-center"
-      >
-        {monthDateFormatter.format(
-          state.visibleRange.start.toDate(state.timeZone)
-        )}
-      </StyledHeader>
-      <StyledHeader
-        aria-hidden
-        className="flex-1 align-center font-bold text-xl text-center"
-      >
-        {monthDateFormatter.format(
-          state.visibleRange.start.add({ months: 1 }).toDate(state.timeZone)
-        )}
-      </StyledHeader>
+      <Header size="sm" weight="bold" color="hiContrast">
+        {capitalize(title)}
+      </Header>
       <CalendarButton {...nextButtonProps}>
-        <ChevronRightIcon />
+        <ArrowRightIcon className="h-5 w-5" />
       </CalendarButton>
-    </StyledWrapper>
+    </div>
   );
 }
+
+const capitalize = (str: string = "") =>
+  str.charAt(0).toUpperCase() + str.slice(1);

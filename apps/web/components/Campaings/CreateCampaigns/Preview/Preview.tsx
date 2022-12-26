@@ -3,9 +3,14 @@ import { CampaignSideCard } from "@components/CampaignSideCard";
 import { CampaignTags } from "@components/CampaignTags";
 import { ReadOnly } from "@components/RichTextEditor/ReadOnly";
 import { reset } from "@features/createCampaign/createCampaignSlice";
-import { useCreateCampaignMutation } from "@generated/graphql";
+import {
+  GetCampaignQuery,
+  useCreateCampaignMutation,
+  useUpdateCampaignMutation,
+} from "@generated/graphql";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import router from "next/router";
+import { useRouter } from "next/router";
+import React from "react";
 import { Button, HeroImage, styled, Tag, Text } from "ui";
 import { ITimezoneOption } from "ui/src/TimeZonePicker/TimeZonePicker";
 
@@ -22,34 +27,56 @@ const PriceButton = styled("button", {
   zIndex: "$banner",
 });
 
-const StyledTag = styled(Tag, {
-  marginLeft: "$4",
-});
+interface LocationProps {
+  campaign?: GetCampaignQuery["getCampaign"];
+}
 
-export const Preview = () => {
+export const Preview = ({ campaign }: LocationProps) => {
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
   const [_, createCampaign] = useCreateCampaignMutation();
+  const [__, updateCampaign] = useUpdateCampaignMutation();
+  const router = useRouter();
+
+  const isEditing = React.useMemo(
+    () => router.pathname.includes("editcampaign"),
+    [router]
+  );
 
   const onSubmit = async () => {
-    const { data: createdCampaign, error } = await createCampaign({
-      createCampaignInput: {
-        ...createCampaignData,
-        jsonAdditionalDetails: JSON.stringify(
-          createCampaignData.jsonAdditionalDetails
-        ),
-        jsonSummary: JSON.stringify(createCampaignData.jsonSummary),
-        startDate: createCampaignData.startDate.toString(),
-        timezone: JSON.stringify(createCampaignData.timezone),
-      },
-    });
+    if (isEditing) {
+      const { data: updatedCampaign, error } = await updateCampaign({
+        createCampaignInput: {
+          ...createCampaignData,
+          startDate: createCampaignData.startDate.toString(),
+          timezone: JSON.stringify(createCampaignData.timezone),
+        },
+        campaignId: campaign.id,
+      });
 
-    if (createdCampaign) {
-      await router.push("/");
-      dispatch(reset());
-    }
-    if (error) {
-      console.log("error: ", error);
+      if (updatedCampaign) {
+        await router.push("/user/games");
+        return dispatch(reset());
+      }
+      if (error) {
+        return console.log("error: ", error);
+      }
+    } else {
+      const { data: createdCampaign, error } = await createCampaign({
+        createCampaignInput: {
+          ...createCampaignData,
+          startDate: createCampaignData.startDate.toString(),
+          timezone: JSON.stringify(createCampaignData.timezone),
+        },
+      });
+
+      if (createdCampaign) {
+        await router.push("/");
+        dispatch(reset());
+      }
+      if (error) {
+        console.log("error: ", error);
+      }
     }
   };
 
@@ -58,7 +85,7 @@ export const Preview = () => {
       <CampaignSideCard
         campaign={createCampaignData}
         onSubmit={onSubmit}
-        submitText="Create Campaign"
+        submitText={isEditing ? "Update Campaign" : "Create Campaign"}
       />
       <div className="max-w-7xl mx-auto relative">
         {createCampaignData.price && (
@@ -68,6 +95,7 @@ export const Preview = () => {
           height={500}
           width={1280}
           objectFit="cover"
+          gold
           src={createCampaignData.imageUrl}
         />
         <div className="my-16">
@@ -104,22 +132,18 @@ export const Preview = () => {
         </div>
 
         <div className="my-16">
-          <ReadOnly
-            jsonString={JSON.stringify(createCampaignData.jsonSummary)}
-          />
+          <ReadOnly textString={createCampaignData.jsonSummary} />
         </div>
 
         <div className="my-16">
           <Text size="4xl" color="lightContrast" className="font-trejanSans">
             Additional Details
           </Text>
-          <ReadOnly
-            jsonString={JSON.stringify(
-              createCampaignData.jsonAdditionalDetails
-            )}
-          />
+          <ReadOnly textString={createCampaignData.jsonAdditionalDetails} />
         </div>
-        <Button onClick={onSubmit}>Create Campaign</Button>
+        <Button onClick={onSubmit}>
+          {isEditing ? "Update Campaign" : "Create Campaign"}
+        </Button>
       </div>
     </>
   );

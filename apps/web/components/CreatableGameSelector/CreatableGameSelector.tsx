@@ -38,8 +38,6 @@ export const CreatableGameSelector = ({
     }
   };
 
-  console.log("value: ", value);
-
   return (
     <CreatableSelector
       className={className}

@@ -1,12 +1,5 @@
 import { IStep2, step2 } from "@features/createCampaign/createCampaignSlice";
-import {
-  Control,
-  Controller,
-  FormState,
-  SubmitHandler,
-  useForm,
-  UseFormSetValue,
-} from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup } from "ui/src/RadioGroup";
 import { Header } from "ui/src/Typography";
@@ -16,126 +9,22 @@ import { Checkbox } from "@mantine/core";
 import InputGroup from "@components/ui/InputGroup";
 import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
-import { Box, Button, Input, MultiSelect } from "ui";
+import { Box, Button, MultiSelect } from "ui";
 import { DevTool } from "@hookform/devtools";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 import { CustomEditorProps } from "../General/General";
 import { LocationSchema } from "../General/schema";
-import { Geocoder } from "@components/ui/Geocoder";
-import { createTagOptions, TagOptions } from "@utils/createTagOptions";
 
-interface OnlineOptions {
-  control: Control<IStep2, any>;
-  errors: FormState<IStep2>["errors"];
-  setValue?: UseFormSetValue<IStep2>;
+import { createTagOptions } from "@utils/createTagOptions";
+import { GetCampaignQuery } from "@generated/graphql";
+import { OnlineOptions } from "./OnlineOptions";
+import { InPersonOptions } from "./InPersonOptions";
+
+interface LocationProps {
+  campaign?: GetCampaignQuery["getCampaign"];
 }
 
-const OnlineOptions = ({ control, errors }: OnlineOptions) => (
-  <div className="grid grid-cols-2 gap-8">
-    <InputGroup
-      className="my-8"
-      label="*Voice System"
-      error={errors?.voipSystem}
-    >
-      <Controller
-        control={control}
-        name="voipSystem"
-        render={({ field }) => (
-          <Input
-            gold
-            placeholder="Voice Chat System (Discord)"
-            value={field.value}
-            onChange={(e) => {
-              field.onChange(e);
-            }}
-          />
-        )}
-      />
-    </InputGroup>
-    <InputGroup
-      className="my-8"
-      label="*Virutal Table Top (VTT)"
-      error={errors?.virtualTable}
-    >
-      <Controller
-        control={control}
-        name="virtualTable"
-        render={({ field }) => (
-          <Input
-            gold
-            placeholder="Virtual Table Top"
-            value={field.value}
-            onChange={(e) => {
-              field.onChange(e);
-            }}
-          />
-        )}
-      />
-    </InputGroup>
-  </div>
-);
-
-const InPersonOptions = ({ control, errors, setValue }: OnlineOptions) => (
-  <>
-    <div className="my-8">
-      <InputGroup className="my-8" label="*Area" error={errors?.state}>
-        <Controller
-          control={control}
-          name="area"
-          render={({ field }) => (
-            <Geocoder
-              placeholder="City Area"
-              value={field.value}
-              onChange={(e) => {
-                field.onChange(e.value);
-                setValue("city", e.city);
-                setValue("state", e.region);
-                setValue("lat", e.lat);
-                setValue("lng", e.lng);
-              }}
-            />
-          )}
-        />
-      </InputGroup>
-    </div>
-    <div className="grid grid-cols-2 gap-8">
-      <InputGroup className="my-8" label="*City" error={errors?.city}>
-        <Controller
-          control={control}
-          name="city"
-          render={({ field }) => (
-            <Input
-              gold
-              placeholder="City"
-              value={field.value}
-              onChange={(e) => field.onChange(e)}
-            />
-          )}
-        />
-      </InputGroup>
-      <InputGroup
-        className="my-8"
-        label="*State / Providance"
-        error={errors?.state}
-      >
-        <Controller
-          control={control}
-          name="state"
-          render={({ field }) => (
-            <Input
-              gold
-              placeholder="State / Providance"
-              value={field.value}
-              onChange={(e) => field.onChange(e)}
-            />
-          )}
-        />
-      </InputGroup>
-    </div>
-  </>
-);
-
-export const Location = () => {
+export const Location = ({ campaign }: LocationProps) => {
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
   let campaignIsOnline = false;
@@ -150,20 +39,36 @@ export const Location = () => {
     setValue,
     clearErrors,
     watch,
+
     formState: { errors },
   } = useForm<IStep2>({
-    defaultValues: {
-      combat: createCampaignData.combat,
-      puzzles: createCampaignData.puzzles,
-      roleplay: createCampaignData.roleplay,
-      voipSystem: createCampaignData.voipSystem,
-      city: createCampaignData.city,
-      state: createCampaignData.state,
-      area: createCampaignData.area,
-      additionalDetails: createCampaignData.additionalDetails,
-      jsonAdditionalDetails: createCampaignData.jsonAdditionalDetails,
-      isOnline: true,
-    },
+    defaultValues: campaign
+      ? {
+          combat: campaign.combat,
+          puzzles: campaign.puzzles,
+          roleplay: campaign.roleplay,
+          voipSystem: campaign.voipSystem,
+          virtualTable: campaign.virtualTable,
+          city: campaign.city,
+          state: campaign.state,
+          area: campaign.area,
+          additionalDetails: campaign.additionalDetails,
+          jsonAdditionalDetails: campaign.jsonAdditionalDetails,
+          isOnline: campaign.isOnline,
+          tags: campaign.tags.map((tag) => createTagOptions(tag)),
+        }
+      : {
+          combat: createCampaignData.combat,
+          puzzles: createCampaignData.puzzles,
+          roleplay: createCampaignData.roleplay,
+          voipSystem: createCampaignData.voipSystem,
+          city: createCampaignData.city,
+          state: createCampaignData.state,
+          area: createCampaignData.area,
+          additionalDetails: createCampaignData.additionalDetails,
+          jsonAdditionalDetails: createCampaignData.jsonAdditionalDetails,
+          isOnline: true,
+        },
     resolver: zodResolver(LocationSchema),
   });
 
@@ -174,32 +79,55 @@ export const Location = () => {
   const onSubmit: SubmitHandler<IStep2> = async (data) => {
     dispatch(step2(data));
     reset();
-    await router.push("./preview");
+    if (router.pathname.includes("editcampaign")) {
+      return await router.push(`/user/editcampaign/preview?id=${campaign.id}`);
+    }
+    return await router.push("./preview");
   };
 
-  const onBack = React.useCallback((e) => {
-    e.preventDefault();
+  const onBack = React.useCallback(
+    (e) => {
+      e.preventDefault();
+      if (router.pathname.includes("editcampaign")) {
+        return router.push(`/user/editcampaign/general?id=${campaign.id}`);
+      }
+      return router.push(`./general`);
+    },
+    [campaign?.id]
+  );
 
-    router.push("./general");
-  }, []);
-
+  // Only do this if campaign tags does not exist
   useEffect(() => {
-    const newGameSystemTag = createTagOptions(createCampaignData.gameSystem);
-    const newCampaignTypeTag = createTagOptions(
-      createCampaignData.campaignType
-    );
-    setValue("tags", [newGameSystemTag, newCampaignTypeTag]);
+    if (!campaign?.tags) {
+      const newGameSystemTag = createTagOptions(createCampaignData.gameSystem);
+      const newCampaignTypeTag = createTagOptions(
+        createCampaignData.campaignType
+      );
+      setValue("tags", [newGameSystemTag, newCampaignTypeTag]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   campaignIsOnline = watch("isOnline");
-
-  console.log(" campaignIsOnline: ", campaignIsOnline);
+  const tags = watch("tags");
 
   const locationOptions = campaignIsOnline ? (
-    <OnlineOptions control={control} errors={errors} />
+    <OnlineOptions
+      control={control}
+      errors={errors}
+      setValue={setValue}
+      tags={tags}
+    />
   ) : (
-    <InPersonOptions control={control} errors={errors} setValue={setValue} />
+    <InPersonOptions
+      control={control}
+      errors={errors}
+      setValue={setValue}
+      tags={tags}
+    />
   );
+
+  console.log("router.pathname: ");
 
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
@@ -332,11 +260,9 @@ export const Location = () => {
           <Controller
             control={control}
             name="tags"
-            render={({ field: { onChange, value, ref } }) => {
-              return (
-                <MultiSelect onChange={onChange} value={value} ref={ref} />
-              );
-            }}
+            render={({ field: { onChange, value, ref } }) => (
+              <MultiSelect onChange={onChange} value={value} ref={ref} />
+            )}
           />
         </InputGroup>
 

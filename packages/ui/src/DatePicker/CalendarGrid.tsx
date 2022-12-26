@@ -1,38 +1,32 @@
-import { AriaCalendarGridProps, useCalendarGrid } from "@react-aria/calendar";
-import { getWeeksInMonth, endOfMonth } from "@internationalized/date";
-import { CalendarState, RangeCalendarState } from "@react-stately/calendar";
-import { useLocale } from "@react-aria/i18n";
-import { CalendarCell } from "./CalendarCell";
-import { styled } from "../theme";
+import { useCalendarGrid } from "@react-aria/calendar";
+import { getWeeksInMonth } from "@internationalized/date";
+import type {
+  CalendarState,
+  RangeCalendarState,
+} from "@react-stately/calendar";
 
-const StyledTable = styled("table", {
-  borderCollapse: "collapse",
-  "& td": {
-    padding: "$space$1",
-  },
-});
+import { CalendarCell } from "./CalendarCell";
+import { AriaCalendarGridProps, useLocale } from "react-aria";
 
 export interface CalendarGridProps extends AriaCalendarGridProps {
   state: CalendarState | RangeCalendarState;
   offset?: { months?: number };
 }
 
-export function CalendarGrid({ state, offset = {} }: CalendarGridProps) {
+export function CalendarGrid({
+  state,
+  offset = {},
+  ...props
+}: CalendarGridProps) {
   let { locale } = useLocale();
   let startDate = state.visibleRange.start.add(offset);
 
-  let { gridProps, headerProps, weekDays } = useCalendarGrid(
-    {
-      startDate,
-    },
-    state
-  );
+  const { gridProps, headerProps, weekDays } = useCalendarGrid(props, state);
 
-  // Get the number of weeks in the month so we can render the proper number of rows.
   let weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale);
 
   return (
-    <StyledTable {...gridProps} cellPadding="0" className="flex-1">
+    <table {...gridProps} cellPadding="0" className="flex-1">
       <thead {...headerProps} className="text-gray-600">
         <tr>
           {weekDays.map((day, index) => (
@@ -60,6 +54,6 @@ export function CalendarGrid({ state, offset = {} }: CalendarGridProps) {
           </tr>
         ))}
       </tbody>
-    </StyledTable>
+    </table>
   );
 }

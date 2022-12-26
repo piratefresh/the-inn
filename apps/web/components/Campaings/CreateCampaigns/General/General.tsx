@@ -5,7 +5,7 @@ import {
 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Header } from "ui/src/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import { Editor } from "@tiptap/react";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Select } from "ui/src/Select";
@@ -22,7 +22,7 @@ import GeneralStyles from "./General.module.css";
 import { ClickableDropZone } from "@components/Dropzone/ClickableDropZone";
 import {
   Button,
-  // DatePicker,
+  DatePicker,
   RadioGroup,
   RangeSlider,
   TimeZonePicker,
@@ -37,12 +37,18 @@ import {
 import { MAX_PARTY } from "consts/maxSeats";
 import { SKILL_LEVELS } from "consts/skillLevels";
 import { SelectOption } from "ui/src/Select/Select";
-import dynamic from "next/dynamic";
-
-const DatePicker = dynamic(async () => (await import("ui")).DatePicker);
+import {
+  today,
+  getLocalTimeZone,
+  parseAbsoluteToLocal,
+  parseDate,
+} from "@internationalized/date";
+import { GetCampaignQuery } from "@generated/graphql";
+import Games from "../../../CreatableGameSelector/games.json";
 
 export interface CustomEditorProps extends Editor {
   insertContent: (string) => void;
+  setContent: (string) => void;
 }
 
 const DropZoneButton = asUploadButton(ClickableDropZone);
@@ -53,18 +59,48 @@ export type Handle<T> = T extends React.ForwardRefExoticComponent<
   ? T2
   : never;
 
-export const General = () => {
+interface GeneralProps {
+  campaign?: GetCampaignQuery["getCampaign"];
+}
+
+function findValueInJson(
+  jsonItems: SelectOption[] | CreatableGameSelectorOption[],
+  key: string
+) {
+  const object = jsonItems.find((o) =>
+    Object.entries(o).some(([k, value]) => k === "value" && value === key)
+  );
+
+  return object;
+}
+
+const MemoedTextEditor = React.memo(RichTextEditor);
+
+export const General = ({ campaign }: GeneralProps) => {
   const richTextEditorRef = React.useRef<CustomEditorProps>();
   const { processPending } = useUploady();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
   const [selectedGameSystem, setSelectedGameSystem] =
-    React.useState<CreatableGameSelectorOption | null>(null);
+    React.useState<CreatableGameSelectorOption | null>(
+      findValueInJson(
+        Games,
+        campaign?.gameSystem
+      ) as unknown as CreatableGameSelectorOption
+    );
   const [selectedGameSize, setSelectedGameSize] = React.useState<SelectOption>(
-    MAX_PARTY[3]
+    (findValueInJson(
+      MAX_PARTY,
+      campaign?.maxSeats.toString()
+    ) as unknown as SelectOption) ?? MAX_PARTY[3]
   );
   const [selectedGameLevel, setSelectedGameLevel] =
-    React.useState<SelectOption>(SKILL_LEVELS[0]);
+    React.useState<SelectOption>(
+      (findValueInJson(
+        SKILL_LEVELS,
+        campaign?.experience
+      ) as unknown as SelectOption) ?? SKILL_LEVELS[0]
+    );
 
   const {
     handleSubmit,
@@ -73,18 +109,23 @@ export const General = () => {
     clearErrors,
     reset,
     register,
+    getValues,
     formState: { errors },
   } = useForm<IStep1>({
-    defaultValues: {
-      ...createCampaignData,
-      // The selector only takes string
-      maxSeats: createCampaignData.maxSeats.toString(),
-    },
+    defaultValues: campaign
+      ? {
+          ...campaign,
+          image: campaign.imageUrl,
+          timezone: JSON.parse(campaign.timezone),
+        }
+      : {
+          ...createCampaignData,
+          startDate: today(getLocalTimeZone()).toString(),
+        },
     resolver: zodResolver(generalSchema),
   });
 
   useItemFinishListener((item) => {
-    console.log("uploading: ", item);
     const secureUrl = item.uploadResponse?.data.secure_url;
     setValue("imageUrl", secureUrl);
 
@@ -96,6 +137,9 @@ export const General = () => {
 
     // // Route switch happening in here
     // // Make sure that we set the image url before next step
+    if (router.pathname.includes("editcampaign")) {
+      return router.push(`/user/editcampaign/location?id=${campaign.id}`);
+    }
     router.push("./location");
   });
 
@@ -107,11 +151,18 @@ export const General = () => {
     processPending();
     dispatch(step1(data));
 
+    console.log("data: ", data);
+
     if (createCampaignData.imageUrl) {
       reset();
+      if (router.pathname.includes("editcampaign")) {
+        return router.push(`/user/editcampaign/location?id=${campaign.id}`);
+      }
       router.push("./location");
     }
   };
+
+  console.log(new Date(campaign.startDate).toISOString());
 
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
@@ -126,24 +177,29 @@ export const General = () => {
       </div>
       <FormDivider label="General" />
       {/* <InputWrapper className="my-12" label="" error={errors?.image}> */}
-      <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
+      <form className="relative" onSubmit={handleSubmit(onSubmit, onInvalid)}>
         <InputGroup label="" error={errors?.image || errors?.imageUrl}>
           <Controller
             name="image"
             control={control}
             rules={{ required: "Header Image is Required" }}
-            render={({ field: { onChange } }) => (
-              <DropZoneButton
-                extraProps={{
-                  previewImage: createCampaignData.imageUrl,
-                  error: errors.image?.message || errors.imageUrl?.message,
-                  onChange: (v) => {
-                    onChange(v);
-                    setValue("imageUrl", v);
-                  },
-                }}
-              />
-            )}
+            render={({ field: { onChange, value } }) => {
+              console.log("value: ", value);
+              return (
+                <DropZoneButton
+                  extraProps={{
+                    previewImage: createCampaignData.imageUrl
+                      ? createCampaignData.imageUrl
+                      : value,
+                    error: errors.image?.message || errors.imageUrl?.message,
+                    onChange: (v) => {
+                      onChange(v);
+                      setValue("imageUrl", v);
+                    },
+                  }}
+                />
+              );
+            }}
           />
         </InputGroup>
 
@@ -188,7 +244,7 @@ export const General = () => {
               minLength: 10,
             }}
             render={({ field }) => (
-              <RichTextEditor
+              <MemoedTextEditor
                 ref={richTextEditorRef}
                 onChange={(e) => {
                   field.onChange(e);
@@ -282,7 +338,10 @@ export const General = () => {
                   selected={selectedGameSize}
                   onChange={(e) => {
                     setSelectedGameSize(e);
-                    field.onChange(e.value);
+
+                    // Select only takes string
+                    // convert to number
+                    field.onChange(parseInt(e.value, 10));
                   }}
                 />
               )}
@@ -336,7 +395,7 @@ export const General = () => {
                       <Input
                         value={field.value}
                         onChange={(e) => {
-                          field.onChange(parseInt(e.currentTarget.value), 10);
+                          field.onChange(+e.currentTarget.value || 0);
                         }}
                         style={{
                           paddingLeft: 0,
@@ -353,7 +412,7 @@ export const General = () => {
           </InputGroup>
         </div>
 
-        <div className="grid gap-12 my-12">
+        <div className="flex my-12">
           <InputGroup label="*Starting Date" error={errors?.startDate}>
             <Controller
               name="startDate"
@@ -361,8 +420,20 @@ export const General = () => {
               render={({ field: { onChange, value } }) => (
                 <DatePicker
                   label="Game Starting Date"
-                  onChange={(date) => console.log("date: ", date)}
-                  value={value}
+                  onChange={(date) => {
+                    onChange(date.toString());
+                  }}
+                  defaultValue={
+                    campaign?.startDate
+                      ? parseDate(
+                          new Date(campaign.startDate)
+                            .toISOString()
+                            .split("T", 1)[0]
+                        )
+                      : today(getLocalTimeZone())
+                  }
+                  granularity="day"
+                  variant="simple"
                 />
               )}
             />

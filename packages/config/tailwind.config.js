@@ -136,8 +136,7 @@ module.exports = {
       addComponents({
         ".bg-main": {
           position: "relative",
-          background:
-            "linear-gradient(270deg, #0e0a00 0%, #25120e 14.45%, #25120e 89.9%, #0d0a00 102.74%)",
+          background: "#0F2124",
 
           "&::before": {
             content: "''",

@@ -24,11 +24,17 @@ export class User {
   @Field()
   updatedAt: Date
 
-  @Field({ nullable: true })
-  email?: string
+  @Field()
+  email: string
 
   @Field({ nullable: true })
   emailVerified?: Date
+
+  @Field({ nullable: true })
+  emailVerifyToken?: string
+
+  @Field({ nullable: true })
+  passwordResetToken?: string
 
   @Field({ nullable: true })
   imageUrl?: string
@@ -38,6 +44,9 @@ export class User {
 
   @Field()
   lastName: string
+
+  @Field({ nullable: true })
+  aboutMe?: string
 
   @Field((_type) => Experience)
   experience: Experience

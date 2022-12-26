@@ -9,7 +9,11 @@ export const CampaignTags = ({ tags }: CampaignTagsProps) => {
     <>
       {tags.map((tag) => (
         <Tag>
-          <Text style={{ fontFamily: "Alegreya Sans" }} size="4xl">
+          <Text
+            color="hiContrast"
+            style={{ fontFamily: "Alegreya Sans" }}
+            size="4xl"
+          >
             {tag}
           </Text>
         </Tag>

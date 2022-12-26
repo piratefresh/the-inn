@@ -2,7 +2,6 @@ import "reflect-metadata";
 import dotenv from "dotenv";
 import { __prod__ } from "./constants";
 import { buildTypeDefsAndResolvers } from "type-graphql";
-// import { prisma } from "database";
 import { createServer } from "http";
 import { PrismaClient } from "@prisma/client";
 import { UserResolver } from "@resolvers/user";
@@ -10,11 +9,10 @@ import { CampaignResolver } from "@resolvers/campaign";
 import { ReviewResolver } from "@resolvers/review";
 import { CounterResolver } from "@resolvers/counter";
 import { PrivateMessageResolver } from "@resolvers/privateMessage";
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { seedDB } from "../prisma/seed";
 import { WebSocketServer } from "ws";
 import { useServer as useWsServer } from "graphql-ws/lib/use/ws";
 import { MyContext } from "@typedefs/MyContext";
@@ -25,13 +23,20 @@ import bodyParser, { urlencoded } from "body-parser";
 import AblyPubSub from "ablyPubsub";
 import { NotificationResolver } from "@resolvers/notification";
 import { redis } from "services/redis";
-import { rateLimiter } from "middlewares/rateLimiter";
 import { sessionMiddleware } from "middlewares/sessionConfig";
+import algoliasearch from "algoliasearch";
+import { ApplicationResolver } from "@resolvers/application";
 
 dotenv.config();
 
 // PRISMA
 const prisma = new PrismaClient();
+// Connect and authenticate with your Algolia app
+const algoliaClient = algoliasearch(
+  process.env.ALGOLIA_APP_ID,
+  process.env.ALGOLIA_API_KEY
+);
+const theInnIndex = algoliaClient.initIndex("dev_campaigns");
 
 const pubsub = new AblyPubSub({ key: process.env.ABLY_API_KEY });
 
@@ -47,6 +52,7 @@ const startServer = async () => {
       CounterResolver,
       PrivateMessageResolver,
       NotificationResolver,
+      ApplicationResolver,
     ],
     pubSub: pubsub,
   });
@@ -92,7 +98,7 @@ const startServer = async () => {
     {
       schema, // Adding a context property lets you add data to your GraphQL operation context
       // authenticate the user and set it on the connection context
-      context: ({ extra }) => ({ req: extra.request, prisma }),
+      context: ({ extra }) => ({ req: extra.request, prisma, theInnIndex }),
       onConnect: ({ extra }) => {
         sessionMiddleware(extra.request as any, {} as any, () => {});
       },
@@ -146,6 +152,7 @@ const startServer = async () => {
           req,
           res,
           redis,
+          theInnIndex,
         };
       },
     })

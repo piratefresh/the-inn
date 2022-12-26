@@ -1,102 +1,92 @@
-import { useRef } from "react";
-import {
-  useDatePickerState,
-  DatePickerStateOptions,
-} from "@react-stately/datepicker";
-import { useDatePicker } from "@react-aria/datepicker";
+import * as Popover from "@radix-ui/react-popover";
 import {
   CalendarIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
-import { DateField } from "./DateField";
-import { FieldButton } from "./FieldButton";
+import { DateValue, getLocalTimeZone, today } from "@internationalized/date";
+import { useDatePicker } from "@react-aria/datepicker";
+import { useDatePickerState } from "@react-stately/datepicker";
+import { useRef } from "react";
+import { AriaDatePickerProps, I18nProvider, useLocale } from "react-aria";
+import { Calendar } from "./Calendar";
+import { DateField, StyledField } from "./DateField";
 
-import { Dialog } from "@radix-ui/react-dialog";
-import { Calendar } from "./Calender";
-import { getLocalTimeZone, parseDate, today } from "@internationalized/date";
-import { formatISO } from "date-fns";
-import React from "react";
-import { Popover } from "./Popover";
-
-export interface DatePickerProps extends Omit<DatePickerStateOptions, "value"> {
-  onClick?: () => void;
+type DatePickerProps = AriaDatePickerProps<DateValue> & {
+  variant: "simple" | "with-trigger";
+  name?: string;
   value?: Date;
-}
+};
 
-export const DatePicker = ({
-  label,
+export function DatePicker({
+  variant,
+  errorMessage,
   minValue,
-  onClick,
   ...props
-}: DatePickerProps) => {
-  const value = React.useMemo(() => {
-    if (!props.value) return undefined;
-
-    return parseDate(
-      formatISO(new Date(props.value), { representation: "date" })
-    );
-  }, [props.value]);
-
-  let state = useDatePickerState({
+}: DatePickerProps) {
+  const state = useDatePickerState({
     ...props,
-    value,
+    shouldCloseOnSelect: true,
   });
-
-  let ref = useRef(null);
-  let {
+  const ref = useRef(null);
+  const {
     groupProps,
     labelProps,
     fieldProps,
     buttonProps,
     dialogProps,
     calendarProps,
+    errorMessageProps,
   } = useDatePicker(
     {
-      label,
-      minValue: minValue ?? today(getLocalTimeZone()),
+      ...props,
+      minValue: today(getLocalTimeZone()),
     },
     state,
     ref
   );
 
-  const handleFieldClick = () => {
+  const { locale } = useLocale();
+
+  const onFieldClick = () => {
     state.setOpen(true);
   };
 
+  const hasTrigger = variant === "with-trigger";
+
   return (
-    <div className="relative inline-flex flex-col text-left">
-      <span {...labelProps} className="text-sm text-gray-800">
-        {label}
-      </span>
-      <div
-        {...groupProps}
-        onClick={handleFieldClick}
-        ref={ref}
-        className="flex group"
+    <I18nProvider locale={locale}>
+      <Popover.Root
+        {...dialogProps}
+        open={state.isOpen}
+        onOpenChange={(open) => state.setOpen(open)}
+        modal={true}
       >
-        <div className="bg-white border border-r-0 border-brandYellow group-hover:border-yellow-400 transition-colors rounded-l-md pr-10 group-focus-within:border-brandYellow group-focus-within:group-hover:border-brandYellow p-1 relative flex items-center">
-          <DateField {...fieldProps} />
-          {state.validationState === "invalid" && (
-            <ExclamationCircleIcon className="w-6 h-6 text-red-500 absolute right-1" />
-          )}
-        </div>
-        {/* <FieldButton {...buttonProps}>
-          <CalendarIcon className="w-5 h-5 text-gray-700" />
-        </FieldButton> */}
-      </div>
-      {state.isOpen && (
-        <Popover
-          {...dialogProps}
-          state={state}
-          triggerRef={ref}
-          isOpen={state.isOpen}
-          onClose={() => state.setOpen(false)}
-        >
-          <Dialog {...dialogProps}>
+        <Popover.Trigger className="relative" {...groupProps} ref={ref}>
+          <Popover.Anchor className="relative inline-block">
+            <StyledField
+              onClick={onFieldClick}
+              className={`bg-white text-black group inline-flex items-center rounded-md px-4`}
+            >
+              {!hasTrigger && (
+                <CalendarIcon className=" mr-1 h-5 w-5 text-black" />
+              )}
+              <DateField name={props.name} {...fieldProps} />
+              {state.validationState === "invalid" && (
+                <ExclamationCircleIcon className="w-6 h-6 text-red-500 absolute right-1" />
+              )}
+            </StyledField>
+          </Popover.Anchor>
+        </Popover.Trigger>
+
+        <Popover.Portal>
+          <Popover.Content
+            alignOffset={50}
+            className="bg-white rounded-md p-4 relative z-10"
+          >
             <Calendar {...calendarProps} />
-          </Dialog>
-        </Popover>
-      )}
-    </div>
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
+    </I18nProvider>
   );
-};
+}

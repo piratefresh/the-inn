@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { Card, Header, Tag, Text } from "ui";
+import { Card, CardImage, CardSection, Header, Tag, Text } from "ui";
 import Link from "next/link";
 import { GetCampaignsQuery } from "@generated/graphql";
 import { styled } from "ui/src/theme";
@@ -16,7 +16,7 @@ const StyledText = styled(Text, {
   whiteSpace: "nowrap",
 });
 
-const StyledCardImage = styled(Card.Image, {
+const StyledCardImage = styled(CardImage, {
   maxHeight: "180px",
   minHeight: "180px",
 });
@@ -38,7 +38,7 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
         src={campaign.imageUrl}
       />
 
-      <Card.Section style={{ flex: 1 }}>
+      <CardSection style={{ flex: 1 }}>
         <div className="flex flex-col my-2">
           <StyledText size="sm" weight="medium">
             {campaign.gameSystem}
@@ -63,17 +63,12 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
           </StyledText>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-          }}
-        >
+        <div className="flex flex-wrap">
           {!hideTags &&
             campaign.tags?.length > 0 &&
             campaign.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
         </div>
-      </Card.Section>
+      </CardSection>
     </Card>
   );
 };

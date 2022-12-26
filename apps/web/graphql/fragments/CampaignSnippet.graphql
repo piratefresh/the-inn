@@ -12,6 +12,8 @@ fragment CampaignSnippet on Campaign {
   endDate
   days
   timePeriods
+  createdAt
+  updatedAt
   tags
   maxSeats
   memberships {

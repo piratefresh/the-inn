@@ -1,0 +1,37 @@
+fragment CampaignFull on Campaign {
+  id
+  createdAt
+  updatedAt
+  title
+  summary
+  jsonSummary
+  additionalDetails
+  jsonAdditionalDetails
+  note
+  imageUrl
+  isOnline
+  campaignType
+  city
+  state
+  area
+  lat
+  lng
+  startDate
+  endDate
+  days
+  timePeriods
+  timezone
+  gmId
+  experience
+  voipSystem
+  gameSystem
+  virtualTable
+  maxSeats
+  isActive
+  puzzles
+  combat
+  roleplay
+  tags
+  price
+  gallery
+}

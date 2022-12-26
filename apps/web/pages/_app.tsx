@@ -9,7 +9,7 @@ import ProgressBar from "@badrap/bar-of-progress";
 import { store } from "../store/store";
 import { withUrqlClient } from "next-urql";
 import { SessionProvider } from "next-auth/react";
-import { I18nProvider, SSRProvider } from "@react-aria/ssr";
+import { SSRProvider } from "@react-aria/ssr";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import { configureAbly } from "@ably-labs/react-hooks";
 import { AppPropsWithLayout } from "Types/LayoutPage";

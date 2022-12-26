@@ -39,7 +39,7 @@ export const CampaignDetails = ({
         <div className="flex items-center">
           {days.map((day) => (
             <StyledTag>
-              <Text weight="bold" size="4xl">
+              <Text color="hiContrast" weight="bold" size="4xl">
                 {day}
               </Text>
             </StyledTag>
@@ -48,7 +48,7 @@ export const CampaignDetails = ({
         in the{" "}
         {timePeriods.map((time) => (
           <StyledTag>
-            <Text weight="bold" size="4xl">
+            <Text color="hiContrast" weight="bold" size="4xl">
               {time}
             </Text>
           </StyledTag>
@@ -61,7 +61,7 @@ export const CampaignDetails = ({
           This game is recommended for
         </Text>
         <StyledTag>
-          <Text size="4xl" className="font-alegreyaSans">
+          <Text color="hiContrast" size="4xl" className="font-alegreyaSans">
             {experience}
           </Text>
         </StyledTag>
@@ -72,13 +72,13 @@ export const CampaignDetails = ({
           <Text size="4xl" color="loContrast" className="font-alegreyaSans">
             Will be played near{" "}
             <StyledTag>
-              <Text weight="bold" size="4xl">
+              <Text color="hiContrast" weight="bold" size="4xl">
                 {city}
               </Text>
             </StyledTag>
             ,
             <StyledTag>
-              <Text weight="bold" size="4xl">
+              <Text color="hiContrast" weight="bold" size="4xl">
                 {state}
               </Text>
             </StyledTag>{" "}

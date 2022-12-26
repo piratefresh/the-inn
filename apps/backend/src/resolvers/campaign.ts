@@ -194,7 +194,7 @@ export class CampaignResolver {
   @Mutation((_type) => CreateCampaignResult)
   async createCampaign(
     @Arg("createCampaignInput") createCampaignInput: CreateCampaignInput,
-    @Ctx() { prisma, res, req }: MyContext
+    @Ctx() { prisma, req, theInnIndex }: MyContext
   ) {
     try {
       const campaign = await prisma.campaign.create({
@@ -214,9 +214,82 @@ export class CampaignResolver {
         },
       });
 
-      console.log("campaign: ", campaign);
+      await theInnIndex.saveObject({ ...campaign, objectID: campaign.id });
 
       return Object.assign(new Campaign(), campaign);
+    } catch (err) {
+      console.log("err: ", err);
+      throw err;
+    }
+  }
+  @Mutation((_type) => CreateCampaignResult)
+  async updateCampaign(
+    @Arg("createCampaignInput") createCampaignInput: CreateCampaignInput,
+    @Arg("campaignId") campaignId: string,
+    @Ctx() { prisma, req, theInnIndex }: MyContext
+  ) {
+    try {
+      const campaign = await prisma.campaign.update({
+        where: {
+          id: campaignId,
+        },
+        data: {
+          ...createCampaignInput,
+        },
+      });
+
+      await theInnIndex.saveObject({ ...campaign, objectID: campaign.id });
+
+      return Object.assign(new Campaign(), campaign);
+    } catch (err) {
+      console.log("err: ", err);
+      throw err;
+    }
+  }
+  @Mutation((_type) => Boolean)
+  async deactivateCampaign(
+    @Arg("campaignId") campaignId: string,
+    @Ctx() { prisma, req, theInnIndex }: MyContext
+  ) {
+    try {
+      await prisma.campaign.update({
+        where: {
+          id: campaignId,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+
+      await theInnIndex.partialUpdateObject({
+        isActive: false,
+        objectID: campaignId,
+      });
+
+      return true;
+    } catch (err) {
+      console.log("err: ", err);
+      throw err;
+    }
+  }
+  @Mutation((_type) => Boolean)
+  async deleteCampaign(
+    @Arg("campaignId") campaignId: string,
+    @Ctx() { prisma, req, theInnIndex }: MyContext
+  ) {
+    try {
+      await prisma.campaign.deleteMany({
+        where: {
+          id: campaignId,
+          gameMaster: {
+            id: req.session.userId,
+          },
+        },
+      });
+
+      await theInnIndex.deleteObject(campaignId);
+
+      return true;
     } catch (err) {
       console.log("err: ", err);
       throw err;

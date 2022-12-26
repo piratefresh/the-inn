@@ -1,7 +1,5 @@
 import { MessageInput } from "@components/MessageInput";
 import { MessageList } from "@components/MessageList";
-
-import { RootLayout } from "@layouts/RootLayout";
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import { useSession } from "next-auth/react";
 import { styled, Text } from "ui";
@@ -92,7 +90,7 @@ const Users = () => {
             </Text>
           </StyledMessageHeader>
           <StyledUl>
-            {Object.entries(members)
+            {/* {Object.entries(members)
               // filter self from members
               .filter(([id]) => id !== myID)
               // map them to a list
@@ -109,7 +107,7 @@ const Users = () => {
                     </Text>
                   </StyledMessageTitle>
                 );
-              })}
+              })} */}
           </StyledUl>
         </StyledInnerBar>
       </StyledSidebar>

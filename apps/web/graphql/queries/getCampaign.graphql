@@ -1,29 +1,6 @@
 query GetCampaign($id: String!) {
   getCampaign(id: $id) {
-    id
-    title
-    summary
-    campaignType
-    city
-    state
-    area
-    imageUrl
-    isOnline
-    maxSeats
-    summary
-    jsonSummary
-    additionalDetails
-    jsonAdditionalDetails
-    experience
-    gameSystem
-    startDate
-    endDate
-    tags
-    days
-    timezone
-    timePeriods
-    virtualTable
-    voipSystem
+    ...CampaignFull
     memberships {
       role
       user {

@@ -1,10 +1,10 @@
 import React from "react";
-import { ComponentStory, ComponentMeta, Story } from "@storybook/react";
+import { ComponentMeta, Story } from "@storybook/react";
 import { Card } from "ui/src/Card";
 import { Header, Text } from "ui/src/Typography";
 import { styled } from "ui/src/theme";
 import { Tag } from "ui/src/Tag";
-import { CardProps } from "./Card";
+import { CardImage, CardProps, CardSection } from "./Card";
 
 const campaigns = [
   {
@@ -141,14 +141,14 @@ const Template: Story<StoryCardProps> = (args) => (
           style={{ display: "flex", flexDirection: "column", height: "100%" }}
           {...args}
         >
-          <Card.Image
+          <CardImage
             gold={args.gold}
             width="100%"
             height="175px"
             src={campaign.imageURL}
           />
 
-          <Card.Section style={{ flex: 1 }}>
+          <CardSection style={{ flex: 1 }}>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <StyledText size="sm" weight="medium">
                 {campaign.gameSystem}
@@ -169,7 +169,7 @@ const Template: Story<StoryCardProps> = (args) => (
                 <Tag key={tag}>{tag}</Tag>
               ))}
             </div>
-          </Card.Section>
+          </CardSection>
         </Card>
       </div>
     ))}

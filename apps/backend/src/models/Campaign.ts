@@ -92,6 +92,9 @@ export class Campaign {
   @Field((_type) => Int)
   maxSeats: number;
 
+  @Field()
+  isActive: boolean;
+
   @Field((_type) => Difficulty)
   puzzles: Difficulty;
 

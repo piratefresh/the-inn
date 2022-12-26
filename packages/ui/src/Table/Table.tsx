@@ -9,44 +9,68 @@ import React from "react";
 type Person = {
   firstName: string;
   lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
+  email: string;
+  gamesPlayed: number;
+  experiance: string;
+  message: string;
 };
 
 const defaultData: Person[] = [
   {
     firstName: "tanner",
     lastName: "linsley",
-    age: 24,
-    visits: 100,
-    status: "In Relationship",
-    progress: 50,
-  },
-  {
-    firstName: "tandy",
-    lastName: "miller",
-    age: 40,
-    visits: 40,
-    status: "Single",
-    progress: 80,
+    email: "test.com",
+    gamesPlayed: 100,
+    experiance: "In Relationship",
+    message: "Hey I wanna join",
   },
   {
     firstName: "joe",
-    lastName: "dirte",
-    age: 45,
-    visits: 20,
-    status: "Complicated",
-    progress: 10,
+    lastName: "dirt",
+    email: "thisisalongassemail@email.com",
+    gamesPlayed: 100,
+    experiance: "In Relationship",
+    message: "Hey I wanna join",
+  },
+  {
+    firstName: "bob",
+    lastName: "lee",
+    email: "test.com",
+    gamesPlayed: 100,
+    experiance: "In Relationship",
+    message: "Hey I wanna join",
   },
 ];
 
 const columnHelper = createColumnHelper<Person>();
 
 const columns = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <IndeterminateCheckbox
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <IndeterminateCheckbox
+          {...{
+            checked: row.getIsSelected(),
+            indeterminate: row.getIsSomeSelected(),
+            onChange: row.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
   columnHelper.accessor("firstName", {
     cell: (info) => info.getValue(),
+    header: () => <span>First Name</span>,
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor((row) => row.lastName, {
@@ -55,21 +79,22 @@ const columns = [
     header: () => <span>Last Name</span>,
     footer: (info) => info.column.id,
   }),
-  columnHelper.accessor("age", {
-    header: () => "Age",
+  columnHelper.accessor("email", {
+    header: () => "Email",
     cell: (info) => info.renderValue(),
     footer: (info) => info.column.id,
+    size: 400,
   }),
-  columnHelper.accessor("visits", {
-    header: () => <span>Visits</span>,
+  columnHelper.accessor("gamesPlayed", {
+    header: () => <span>Games Played</span>,
     footer: (info) => info.column.id,
   }),
-  columnHelper.accessor("status", {
-    header: "Status",
+  columnHelper.accessor("experiance", {
+    header: "Experiance",
     footer: (info) => info.column.id,
   }),
-  columnHelper.accessor("progress", {
-    header: "Profile Progress",
+  columnHelper.accessor("message", {
+    header: () => <span>Message</span>,
     footer: (info) => info.column.id,
   }),
 ];
@@ -78,19 +103,22 @@ export const Table = () => {
   const [data, setData] = React.useState(() => [...defaultData]);
   const rerender = React.useReducer(() => ({}), {})[1];
 
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [globalFilter, setGlobalFilter] = React.useState("");
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <div className="p-2">
-      <table>
-        <thead>
+    <div className="p-2 text-white">
+      <table className="border-separate border-spacing-y-4">
+        <thead className="border-b border-t">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <th className="font-bold p-4 whitespace-nowrap" key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -104,16 +132,20 @@ export const Table = () => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <tr className=" my-2" key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <td
+                  style={{ backgroundColor: "rgba(24, 24, 24, 1)" }}
+                  className="px-4 py-2"
+                  key={cell.id}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
             </tr>
           ))}
         </tbody>
-        <tfoot>
+        {/* <tfoot>
           {table.getFooterGroups().map((footerGroup) => (
             <tr key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
@@ -128,7 +160,7 @@ export const Table = () => {
               ))}
             </tr>
           ))}
-        </tfoot>
+        </tfoot> */}
       </table>
       <div className="h-4" />
       <button onClick={() => rerender()} className="border p-2">
@@ -137,3 +169,26 @@ export const Table = () => {
     </div>
   );
 };
+
+function IndeterminateCheckbox({
+  indeterminate,
+  className = "",
+  ...rest
+}: { indeterminate?: boolean } & React.HTMLProps<HTMLInputElement>) {
+  const ref = React.useRef<HTMLInputElement>(null!);
+
+  React.useEffect(() => {
+    if (typeof indeterminate === "boolean") {
+      ref.current.indeterminate = !rest.checked && indeterminate;
+    }
+  }, [ref, indeterminate]);
+
+  return (
+    <input
+      type="checkbox"
+      ref={ref}
+      className={className + " cursor-pointer rounded-small"}
+      {...rest}
+    />
+  );
+}

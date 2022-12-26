@@ -1,28 +1,15 @@
 import React from "react";
-import FontFamily from "@tiptap/extension-font-family";
-import Link from "@tiptap/extension-link";
-import TextAlign from "@tiptap/extension-text-align";
-import TextStyle from "@tiptap/extension-text-style";
-import Underline from "@tiptap/extension-underline";
-import { ColumnExtension } from "@gocapsule/column-extension";
 import { Content, Editor, EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { useCreateImageSignatureMutation } from "generated/graphql";
 import { ControllerRenderProps } from "react-hook-form";
-import { TrailingNode } from "./Extensions/TrailingNode";
-import CustomImage from "./Extensions/custom-image";
-import { Float } from "./Extensions/float";
-import { FontSize } from "./Extensions/font-size";
 import RichTextEditorStyles from "./RichTextEditor.module.scss";
 import Toolbar from "./Toolbar";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { setFontSize } from "@features/richTextEditorSlice/richTextEditorSlice";
 import { ParseOptions } from "prosemirror-model";
-import { Indent } from "./Extensions/wix-indent";
-import ReactComponent from "./Extensions/react-component";
 import { uploadImage } from "@utils/uploadImage";
 import clsx from "clsx";
-// import { Indent } from "./Extensions/indent";
+import { extensions } from "./Extensions";
 
 interface GetSelectedNodesProps {
   editor: Editor;
@@ -56,7 +43,7 @@ export const RichTextEditor = React.forwardRef(
   (props: RichTextEditorProps, ref) => {
     const { onChange, value, onBlur } = props;
     const dispatch = useAppDispatch();
-    const fontSize = useAppSelector((state) => state.richTextEditor.fontSize);
+    // const fontSize = useAppSelector((state) => state.richTextEditor.fontSize);
     const pressedKeys = React.useRef<Record<string, any>>({});
 
     let classes = [
@@ -68,37 +55,22 @@ export const RichTextEditor = React.forwardRef(
 
     const [, createImageSignature] = useCreateImageSignatureMutation();
     const editor = useEditor({
-      extensions: [
-        StarterKit,
-        TextStyle,
-        Underline,
-        FontFamily,
-        FontSize,
-        TrailingNode,
-        TextAlign.configure({
-          types: ["heading", "paragraph", "image", "img"],
-          defaultAlignment: "none",
-        }),
-        Float.configure({
-          types: ["image", "img"],
-        }),
-        Indent,
-        CustomImage(upload),
-        ReactComponent,
-        ColumnExtension,
-      ],
+      extensions: extensions({ upload }),
       content: value ? value : " ",
       onBlur() {
         onBlur();
       },
       onUpdate: ({ editor }) => {
-        onChange(editor.getJSON());
+        onChange(editor.getHTML());
+      },
+      parseOptions: {
+        preserveWhitespace: true,
       },
     });
 
     React.useEffect(() => {
       if (editor) {
-        editor.view.dom.classList.add("w-full", "p-2");
+        editor.view.dom.classList.add("w-full", "p-6");
       }
     }, [editor]);
     const editorRef: React.MutableRefObject<Editor | null> = React.useRef(null);
@@ -114,6 +86,13 @@ export const RichTextEditor = React.forwardRef(
       getJSON: () => {
         const json = editorRef.current?.getJSON();
         return json;
+      },
+      getHTML: () => {
+        const html = editorRef.current?.getHTML();
+        return html;
+      },
+      setContent: (value: InsertContentProps["value"]) => {
+        editorRef.current?.commands.setContent(value);
       },
       insertContent: (
         value: InsertContentProps["value"],
@@ -178,8 +157,6 @@ export const RichTextEditor = React.forwardRef(
 
     if (!editor) return null;
     editorRef.current = editor;
-
-    console.log("props error: ", props.error);
 
     return (
       <>

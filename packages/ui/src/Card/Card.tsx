@@ -27,11 +27,11 @@ const StyledCardWrapper = styled("div", {
   },
 });
 
-const StyledCardSection = styled("div", {
+export const CardSection = styled("div", {
   p: "$space$8",
 });
 
-const StyledCardImg = styled("img", {
+export const CardImage = styled("img", {
   objectFit: "cover",
   borderTopLeftRadius: "4px",
   borderTopRightRadius: "4px",
@@ -64,6 +64,3 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     </StyledCardWrapper>
   )
 );
-
-Card.Image = StyledCardImg;
-Card.Section = StyledCardSection;

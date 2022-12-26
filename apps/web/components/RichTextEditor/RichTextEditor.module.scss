@@ -27,8 +27,7 @@
     font-weight: 500;
     line-height: 1.6;
     letter-spacing: 0.0075em;
-    white-space: pre-line;
-    overflow-wrap: break-word;
+
     text-align: left;
   }
 
@@ -38,10 +37,6 @@
     margin-bottom: 1em !important;
     margin-left: 0;
     margin-right: 0;
-    white-space: pre-line;
-
-    overflow-wrap: break-word;
-    text-align: left;
   }
 
   * + * {
@@ -77,4 +72,59 @@
 
 .error {
   border: 3px solid red;
+}
+
+.readOnlyStyles {
+  @apply flex flex-1 h-full bg-white rounded-md rounded-tl-none rounded-tr-none;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  h4 {
+    font-size: 3.4rem;
+    font-weight: 700;
+    margin: 0px 0px 1.6rem;
+  }
+
+  h6 {
+    margin: 1.6rem 0px 0px;
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: 0.0075em;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+    text-align: left;
+  }
+
+  p {
+    display: block;
+    margin-top: 1em !important;
+    margin-bottom: 1em !important;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  * + * {
+    margin-top: 0.75em;
+  }
+
+  ul {
+    list-style: disc outside none;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
 }

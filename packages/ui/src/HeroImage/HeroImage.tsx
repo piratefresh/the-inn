@@ -10,11 +10,18 @@ const StyledHeroImage = styled(Image, {
 
 const StyledRoot = styled("div", {
   borderRadius: "$radii$md",
-  border: "3px solid transparent",
-  backgroundOrigin: "border-box",
-  backgroundClip: "padding-box, border-box",
-  backgroundImage:
-    "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
+
+  variants: {
+    gold: {
+      true: {
+        border: "3px solid transparent",
+        backgroundOrigin: "border-box",
+        backgroundClip: "padding-box, border-box",
+        backgroundImage:
+          "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
+      },
+    },
+  },
 });
 
 interface HeroImageProps extends ImageProps {
@@ -34,7 +41,7 @@ export const HeroImage = ({
   ...props
 }: HeroImageProps) => {
   return (
-    <StyledRoot>
+    <StyledRoot gold={gold}>
       <StyledHeroImage
         height={height}
         width={width}
