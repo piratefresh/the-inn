@@ -69,7 +69,12 @@ const columns = [
     ),
   },
   columnHelper.accessor("firstName", {
-    cell: (info) => info.getValue(),
+    // cell: (info) => info.getValue(),
+    cell: (props) => (
+      <span className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+        {props.getValue().toUpperCase()}
+      </span>
+    ),
     header: () => <span>First Name</span>,
     footer: (info) => info.column.id,
   }),
@@ -112,13 +117,13 @@ export const Table = () => {
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <div className="p-2 text-white">
-      <table className="border-separate border-spacing-y-4">
-        <thead className="border-b border-t">
+    <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 border-separate border-spacing-y-4">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-t">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th className="font-bold p-4 whitespace-nowrap" key={header.id}>
+                <th className="p-4 whitespace-nowrap" key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -132,13 +137,12 @@ export const Table = () => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr className=" my-2" key={row.id}>
+            <tr
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              key={row.id}
+            >
               {row.getVisibleCells().map((cell) => (
-                <td
-                  style={{ backgroundColor: "rgba(24, 24, 24, 1)" }}
-                  className="px-4 py-2"
-                  key={cell.id}
-                >
+                <td className="p-4 w-4" key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
@@ -187,7 +191,10 @@ function IndeterminateCheckbox({
     <input
       type="checkbox"
       ref={ref}
-      className={className + " cursor-pointer rounded-small"}
+      className={
+        className +
+        " cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      }
       {...rest}
     />
   );
