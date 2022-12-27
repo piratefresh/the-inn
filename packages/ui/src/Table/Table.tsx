@@ -1,130 +1,82 @@
 import {
-  createColumnHelper,
+  ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import React from "react";
+import { TablePagination } from "./TablePagination";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
-type Person = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  gamesPlayed: number;
-  experiance: string;
-  message: string;
+export type TableProps<TData extends object> = {
+  data: TData[];
+  columns: ColumnDef<TData>[];
 };
 
-const defaultData: Person[] = [
-  {
-    firstName: "tanner",
-    lastName: "linsley",
-    email: "test.com",
-    gamesPlayed: 100,
-    experiance: "In Relationship",
-    message: "Hey I wanna join",
-  },
-  {
-    firstName: "joe",
-    lastName: "dirt",
-    email: "thisisalongassemail@email.com",
-    gamesPlayed: 100,
-    experiance: "In Relationship",
-    message: "Hey I wanna join",
-  },
-  {
-    firstName: "bob",
-    lastName: "lee",
-    email: "test.com",
-    gamesPlayed: 100,
-    experiance: "In Relationship",
-    message: "Hey I wanna join",
-  },
-];
-
-const columnHelper = createColumnHelper<Person>();
-
-const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <IndeterminateCheckbox
-        {...{
-          checked: table.getIsAllRowsSelected(),
-          indeterminate: table.getIsSomeRowsSelected(),
-          onChange: table.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <IndeterminateCheckbox
-          {...{
-            checked: row.getIsSelected(),
-            indeterminate: row.getIsSomeSelected(),
-            onChange: row.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  columnHelper.accessor("firstName", {
-    cell: (info) => info.getValue(),
-    header: () => <span>First Name</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor((row) => row.lastName, {
-    id: "lastName",
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("email", {
-    header: () => "Email",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-    size: 400,
-  }),
-  columnHelper.accessor("gamesPlayed", {
-    header: () => <span>Games Played</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("experiance", {
-    header: "Experiance",
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("message", {
-    header: () => <span>Message</span>,
-    footer: (info) => info.column.id,
-  }),
-];
-
-export const Table = () => {
-  const [data, setData] = React.useState(() => [...defaultData]);
-  const rerender = React.useReducer(() => ({}), {})[1];
+export const Table = <TData extends object>({
+  data,
+  columns,
+}: TableProps<TData>) => {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [rowSelection, setRowSelection] = React.useState({});
-  const [globalFilter, setGlobalFilter] = React.useState("");
+  // const [globalFilter, setGlobalFilter] = React.useState("");
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      rowSelection,
+      sorting,
+    },
+    onSortingChange: setSorting,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
   });
+
   return (
-    <div className="p-2 text-white">
-      <table className="border-separate border-spacing-y-4">
-        <thead className="border-b border-t">
+    <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-brandLightBlack dark:text-gray-400">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th className="font-bold p-4 whitespace-nowrap" key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
+                <th
+                  className="p-4 whitespace-nowrap"
+                  key={header.id}
+                  colSpan={header.colSpan}
+                  style={{
+                    width:
+                      header.getSize() !== 0 ? header.getSize() : undefined,
+                  }}
+                >
+                  {header.isPlaceholder ? null : (
+                    <div
+                      {...{
+                        className: header.column.getCanSort()
+                          ? "cursor-pointer select-none flex items-center gap-1"
+                          : "",
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
                       )}
+                      {{
+                        asc: <ChevronDownIcon className="h-5 w-5" />,
+                        desc: <ChevronUpIcon className="h-5 w-5" />,
+                      }[header.column.getIsSorted() as string] ?? null}
+                    </div>
+                  )}
                 </th>
               ))}
             </tr>
@@ -132,63 +84,21 @@ export const Table = () => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr className=" my-2" key={row.id}>
+            <tr
+              className="bg-white border-b h-6 max-h-6 overflow-y-hidden text-ellipsis dark:bg-brandLightBlack dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+              key={row.id}
+            >
               {row.getVisibleCells().map((cell) => (
-                <td
-                  style={{ backgroundColor: "rgba(24, 24, 24, 1)" }}
-                  className="px-4 py-2"
-                  key={cell.id}
-                >
+                <td className="p-4 w-4" key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
             </tr>
           ))}
         </tbody>
-        {/* <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot> */}
       </table>
-      <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
-        Rerender
-      </button>
+
+      <TablePagination table={table} />
     </div>
   );
 };
-
-function IndeterminateCheckbox({
-  indeterminate,
-  className = "",
-  ...rest
-}: { indeterminate?: boolean } & React.HTMLProps<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!);
-
-  React.useEffect(() => {
-    if (typeof indeterminate === "boolean") {
-      ref.current.indeterminate = !rest.checked && indeterminate;
-    }
-  }, [ref, indeterminate]);
-
-  return (
-    <input
-      type="checkbox"
-      ref={ref}
-      className={className + " cursor-pointer rounded-small"}
-      {...rest}
-    />
-  );
-}

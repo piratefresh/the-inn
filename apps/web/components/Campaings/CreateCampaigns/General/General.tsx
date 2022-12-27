@@ -162,8 +162,6 @@ export const General = ({ campaign }: GeneralProps) => {
     }
   };
 
-  console.log(new Date(campaign.startDate).toISOString());
-
   return (
     <div className="relative mx-auto" style={{ width: "1024px" }}>
       <div className="mt-8">

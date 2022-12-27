@@ -1,6 +1,9 @@
 import { COOKIE_NAME, redisPrefices, __prod__ } from "../constants";
 import session from "express-session";
 import { redis, RedisStore } from "services/redis";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const sessionMiddleware = session({
   name: COOKIE_NAME,

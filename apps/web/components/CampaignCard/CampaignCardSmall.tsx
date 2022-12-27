@@ -135,7 +135,7 @@ export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
             </Text>
           </Button>
           <Button outlined="primary">
-            <Link href={`/applications?id=${campaign.id}`}>
+            <Link href={`/applications/${campaign.id}`}>
               <a>
                 <Text className="whitespace-nowrap">View Applications</Text>
               </a>

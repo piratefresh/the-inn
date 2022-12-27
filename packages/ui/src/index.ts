@@ -30,3 +30,10 @@ export { Dialog } from "./Dialog";
 export { Popover } from "./Popover";
 export { Menu, HeadlessMenu } from "./Menu";
 export { Avatar } from "./Avatar";
+export {
+  Table,
+  TablePagination,
+  makeData,
+  IndeterminateCheckbox,
+} from "./Table";
+export type { Person } from "./Table";

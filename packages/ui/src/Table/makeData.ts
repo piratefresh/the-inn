@@ -1,0 +1,51 @@
+import { faker } from "@faker-js/faker";
+
+export type Person = {
+  id: string;
+  name: string;
+  email: string;
+  gamesPlayed: number;
+  experiance: string;
+  message: string;
+};
+
+const range = (len: number) => {
+  const arr = [];
+  for (let i = 0; i < len; i++) {
+    arr.push(i);
+  }
+  return arr;
+};
+
+function randomIntFromInterval(min: number, max: number) {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+const newPerson = (): Person => {
+  return {
+    id: faker.datatype.uuid(),
+    name: faker.name.fullName(),
+    email: faker.internet.email(),
+    gamesPlayed: faker.datatype.number(1000),
+    experiance: faker.helpers.shuffle<Person["experiance"]>([
+      "Beginner",
+      "Advanced",
+      "All",
+    ])[0]!,
+    message: faker.lorem.paragraphs(randomIntFromInterval(1, 3)),
+  };
+};
+
+export function makeData(...lens: number[]) {
+  const makeDataLevel = (depth = 0): Person[] => {
+    const len = lens[depth]!;
+    return range(len).map((d): Person => {
+      return {
+        ...newPerson(),
+      };
+    });
+  };
+
+  return makeDataLevel();
+}

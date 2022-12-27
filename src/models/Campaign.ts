@@ -122,3 +122,4 @@ export class Campaign {
   campaignMessage: CampaignMessage[]
 
   // skip overwrite 👇
+}

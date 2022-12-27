@@ -25,6 +25,7 @@ module.exports = {
       colors: {
         orange: colors.orange,
         brandBlack: "#0D0A00",
+        brandLightBlack: "#181818",
         brandBlue: "#26547C",
         brandGray: "#273435",
         brandYellow: "#FFD166",

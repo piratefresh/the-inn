@@ -23,7 +23,7 @@ export const NavItem = ({ label, onClick, href = "" }: NavItemProps) => {
 
   return (
     <li
-      className={`font-sans list-none mr-8 text-white dark:text-brandBlack ${
+      className={`font-sans list-none mr-8 text-brandBlack dark:text-white ${
         isSelected ? "font-bold" : ""
       }`}
     >

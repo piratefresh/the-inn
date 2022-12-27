@@ -9,6 +9,7 @@ import ProgressBar from "@badrap/bar-of-progress";
 import { store } from "../store/store";
 import { withUrqlClient } from "next-urql";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
 import { SSRProvider } from "@react-aria/ssr";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import { configureAbly } from "@ably-labs/react-hooks";
@@ -60,15 +61,17 @@ function App({
   return (
     <SSRProvider>
       <SessionProvider session={session}>
-        <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
-          <Provider store={store}>
-            <NotificationsProvider position="top-center">
-              <Layout {...layoutProps}>
-                <Component {...pageProps} />
-              </Layout>
-            </NotificationsProvider>
-          </Provider>
-        </MantineProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark">
+          <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
+            <Provider store={store}>
+              <NotificationsProvider position="top-center">
+                <Layout {...layoutProps}>
+                  <Component {...pageProps} />
+                </Layout>
+              </NotificationsProvider>
+            </Provider>
+          </MantineProvider>
+        </ThemeProvider>
       </SessionProvider>
     </SSRProvider>
   );

@@ -131,7 +131,7 @@ export const Nav = () => {
       <nav className={`${NavStyles["nav"]}`}>
         <Link href="/">
           <a>
-            <div className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack col-start-1 col-end-3 whitespace-nowrap">
+            <div className="font-oldFenris uppercase text-5xl text-brandBlack dark:text-white col-start-1 col-end-3 whitespace-nowrap">
               The Inn
             </div>
           </a>

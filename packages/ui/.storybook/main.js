@@ -17,6 +17,7 @@ module.exports = {
         // },
       },
     },
+    "storybook-tailwind-dark-mode",
   ],
   framework: "@storybook/react",
   core: {
