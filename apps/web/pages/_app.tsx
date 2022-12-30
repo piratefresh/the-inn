@@ -10,6 +10,8 @@ import { store } from "../store/store";
 import { withUrqlClient } from "next-urql";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
+import { NextAdapter } from "next-query-params";
+import { QueryParamProvider } from "use-query-params";
 import { SSRProvider } from "@react-aria/ssr";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import { configureAbly } from "@ably-labs/react-hooks";
@@ -63,13 +65,15 @@ function App({
       <SessionProvider session={session}>
         <ThemeProvider attribute="class" defaultTheme="dark">
           <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
-            <Provider store={store}>
-              <NotificationsProvider position="top-center">
-                <Layout {...layoutProps}>
-                  <Component {...pageProps} />
-                </Layout>
-              </NotificationsProvider>
-            </Provider>
+            <QueryParamProvider adapter={NextAdapter}>
+              <Provider store={store}>
+                <NotificationsProvider position="top-center">
+                  <Layout {...layoutProps}>
+                    <Component {...pageProps} />
+                  </Layout>
+                </NotificationsProvider>
+              </Provider>
+            </QueryParamProvider>
           </MantineProvider>
         </ThemeProvider>
       </SessionProvider>

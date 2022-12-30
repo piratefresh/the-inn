@@ -5,8 +5,11 @@ export type Person = {
   name: string;
   email: string;
   gamesPlayed: number;
-  experiance: string;
+  experience: string;
   message: string;
+  updatedAt: Date;
+  firstName?: string;
+  lastName?: string;
 };
 
 const range = (len: number) => {
@@ -17,7 +20,7 @@ const range = (len: number) => {
   return arr;
 };
 
-function randomIntFromInterval(min: number, max: number) {
+export function randomIntFromInterval(min: number, max: number) {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -28,12 +31,13 @@ const newPerson = (): Person => {
     name: faker.name.fullName(),
     email: faker.internet.email(),
     gamesPlayed: faker.datatype.number(1000),
-    experiance: faker.helpers.shuffle<Person["experiance"]>([
+    experience: faker.helpers.shuffle<Person["experience"]>([
       "Beginner",
       "Advanced",
       "All",
     ])[0]!,
     message: faker.lorem.paragraphs(randomIntFromInterval(1, 3)),
+    updatedAt: new Date(),
   };
 };
 

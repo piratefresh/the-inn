@@ -9,6 +9,7 @@ import { Membership } from "./Membership";
 import { CampaignMessage } from "./CampaignMessage";
 import { PrivateMessage } from "./PrivateMessage";
 import { Notification } from "./Notification";
+import { Application } from "./Application";
 
 @InputType("UserInput")
 @ObjectType("User", {
@@ -51,6 +52,9 @@ export class User {
   @Field({ nullable: true })
   aboutMe?: string;
 
+  @Field({ nullable: true })
+  htmlAboutMe?: string;
+
   @Field((_type) => Experience)
   experience: Experience;
 
@@ -65,6 +69,15 @@ export class User {
 
   @Field({ nullable: true })
   youtube?: string;
+
+  @Field({ nullable: true })
+  instagram?: string;
+
+  @Field({ nullable: true })
+  twitch?: string;
+
+  @Field((_type) => [String])
+  tags: string[];
 
   @Field((_type) => StatusType)
   status: StatusType;
@@ -95,6 +108,9 @@ export class User {
 
   @Field((_type) => [Notification])
   Notification: Notification[];
+
+  @Field((_type) => [Application])
+  Application: Application[];
 
   // skip overwrite 👇
 }

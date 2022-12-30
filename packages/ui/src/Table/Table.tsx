@@ -5,6 +5,9 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  OnChangeFn,
+  PaginationState,
+  RowSelectionState,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -12,18 +15,40 @@ import React from "react";
 import { TablePagination } from "./TablePagination";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
+export interface OnChangeProps {
+  pagination: PaginationState;
+  query?: string;
+  sortBy?: SortingState;
+  filters?: { [key: string]: any };
+}
+
 export type TableProps<TData extends object> = {
   data: TData[];
   columns: ColumnDef<TData>[];
+  onChange?: (values: OnChangeProps) => void;
+  pagination: PaginationState;
+  pageCount?: number;
+  setPagination?: OnChangeFn<PaginationState>;
+  searchQuery?: string | null;
+  setSorting?: OnChangeFn<SortingState>;
+  setRowSelection?: OnChangeFn<RowSelectionState>;
+  sorting?: SortingState;
+  rowSelection?: RowSelectionState;
 };
 
 export const Table = <TData extends object>({
   data,
   columns,
+  pagination,
+  pageCount,
+  onChange,
+  setPagination,
+  setRowSelection,
+  searchQuery,
+  setSorting,
+  sorting,
+  rowSelection,
 }: TableProps<TData>) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-
-  const [rowSelection, setRowSelection] = React.useState({});
   // const [globalFilter, setGlobalFilter] = React.useState("");
 
   const table = useReactTable({
@@ -32,14 +57,18 @@ export const Table = <TData extends object>({
     state: {
       rowSelection,
       sorting,
+      pagination,
     },
+    pageCount: pageCount ?? -1,
     onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
+    manualPagination: true,
   });
 
   return (
@@ -98,7 +127,7 @@ export const Table = <TData extends object>({
         </tbody>
       </table>
 
-      <TablePagination table={table} />
+      <TablePagination table={table} pagination={pagination} />
     </div>
   );
 };

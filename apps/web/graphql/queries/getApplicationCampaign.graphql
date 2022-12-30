@@ -1,18 +1,41 @@
-query GetApplicationCampaign($campaignId: String!) {
-  getApplicationCampaign(campaignId: $campaignId) {
-    campaignId
-    days
-    experience
-    fitsSchedule
-    id
-    jsonMessage
-    message
-    timePeriods
-    userId
-    membership {
+query GetApplicationCampaign(
+  $campaignId: String!
+  $after: String
+  $take: Int
+  $skip: Int
+  $sort: String
+) {
+  getApplicationCampaign(
+    campaignId: $campaignId
+    after: $after
+    take: $take
+    skip: $skip
+    sort: $sort
+  ) {
+    applications {
+      id
+      membership {
+        role
+      }
+      membershipId
+      campaignId
+      userId
       user {
         ...UserSnippet
       }
+      firstName
+      lastName
+      gamesPlayed
+      message
+      jsonMessage
+      fitsSchedule
+      days
+      timePeriods
+      experience
+      createdAt
+      updatedAt
     }
+    totalCount
+    pageCount
   }
 }

@@ -37,3 +37,4 @@ export {
   IndeterminateCheckbox,
 } from "./Table";
 export type { Person } from "./Table";
+export { Tabs, TabsContent, TabsTrigger } from "./Tabs";

@@ -1,0 +1,31 @@
+mutation UpdateUserProfile(
+  $updatePasswordArgs: UpdatePasswordArgs
+  $updateProfileArgs: UpdateProfileArgs
+) {
+  updateUserProfile(
+    updatePasswordArgs: $updatePasswordArgs
+    updateProfileArgs: $updateProfileArgs
+  ) {
+    id
+    password
+    createdAt
+    updatedAt
+    email
+    emailVerified
+    emailVerifyToken
+    passwordResetToken
+    imageUrl
+    firstName
+    lastName
+    aboutMe
+    htmlAboutMe
+    experience
+    twitter
+    facebook
+    discord
+    youtube
+    instagram
+    twitch
+    status
+  }
+}

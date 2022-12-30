@@ -67,11 +67,15 @@ model User {
   firstName          String
   lastName           String
   aboutMe            String?
+  htmlAboutMe        String?
   experience         Experience   @default(All)
   twitter            String?
   facebook           String?
   discord            String?
   youtube            String?
+  instagram          String?
+  twitch             String?
+  tags               String[]
   status             StatusType   @default(ONLINE)
   memberships        Membership[]
   accounts           Account[]
@@ -84,6 +88,7 @@ model User {
   sentPrivateMessages    PrivateMessage[]  @relation("sentPrivateMessages")
   receivedPrivateMessage PrivateMessage[]  @relation("receivedPrivateMessage")
   Notification           Notification[]
+  Application            Application[]
 
   @@map("users")
 }
@@ -165,12 +170,18 @@ model Application {
   membershipId String
   campaignId   String
   userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  firstName    String     @default("John")
+  lastName     String     @default("Test")
+  gamesPlayed  Int        @default(0)
   message      String
   jsonMessage  String
   fitsSchedule Boolean
   days         String[]
   timePeriods  String[]
   experience   Experience @default(All)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model PrivateMessage {

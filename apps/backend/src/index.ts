@@ -26,11 +26,13 @@ import { redis } from "services/redis";
 import { sessionMiddleware } from "middlewares/sessionConfig";
 import algoliasearch from "algoliasearch";
 import { ApplicationResolver } from "@resolvers/application";
+import { seedDB, seedDBApplication } from "../prisma/seed";
 
 dotenv.config();
 
 // PRISMA
 const prisma = new PrismaClient();
+
 // Connect and authenticate with your Algolia app
 const algoliaClient = algoliasearch(
   process.env.ALGOLIA_APP_ID,
@@ -174,6 +176,7 @@ const startServer = async () => {
   });
 };
 // seedDB();
+// seedDBApplication();
 startServer().catch((err) => {
   console.error(err);
 });

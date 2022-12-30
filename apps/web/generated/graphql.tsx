@@ -43,16 +43,29 @@ export type AddPlayerCampaignInput = {
 export type Application = {
   __typename?: 'Application';
   campaignId: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   days: Array<Scalars['String']>;
   experience: Experience;
+  firstName: Scalars['String'];
   fitsSchedule: Scalars['Boolean'];
+  gamesPlayed: Scalars['Int'];
   id: Scalars['ID'];
   jsonMessage: Scalars['String'];
+  lastName: Scalars['String'];
   membership: Membership;
   membershipId: Scalars['String'];
   message: Scalars['String'];
   timePeriods: Array<Scalars['String']>;
+  updatedAt: Scalars['DateTime'];
+  user: User;
   userId: Scalars['String'];
+};
+
+export type ApplicationConnection = {
+  __typename?: 'ApplicationConnection';
+  applications: Array<Application>;
+  pageCount: Scalars['Int'];
+  totalCount: Scalars['Int'];
 };
 
 export type AuthResult = BadCredentialsError | FieldsValidationError | NonExistingUserError | User;
@@ -252,6 +265,7 @@ export type Mutation = {
   signout: Scalars['Boolean'];
   signup: CreateUserResult;
   updateCampaign: CreateCampaignResult;
+  updateUserProfile: User;
 };
 
 
@@ -309,6 +323,12 @@ export type MutationSignupArgs = {
 export type MutationUpdateCampaignArgs = {
   campaignId: Scalars['String'];
   createCampaignInput: CreateCampaignInput;
+};
+
+
+export type MutationUpdateUserProfileArgs = {
+  updatePasswordArgs?: InputMaybe<UpdatePasswordArgs>;
+  updateProfileArgs?: InputMaybe<UpdateProfileArgs>;
 };
 
 export type NewCampaignNotification = {
@@ -389,7 +409,7 @@ export type Query = {
   currentNumber: Scalars['Int'];
   getAllNotifications: Array<Notification>;
   getAllPrivateMessages: Array<PrivateMessage>;
-  getApplicationCampaign: Array<Application>;
+  getApplicationCampaign: ApplicationConnection;
   getCampaign: Campaign;
   getCampaigns: Array<Campaign>;
   getCampaignsPagination: CampaignPagination;
@@ -407,7 +427,11 @@ export type Query = {
 
 
 export type QueryGetApplicationCampaignArgs = {
+  after?: InputMaybe<Scalars['String']>;
   campaignId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -481,8 +505,28 @@ export type Subscription = {
   subscription: Scalars['String'];
 };
 
+export type UpdatePasswordArgs = {
+  newPassword?: InputMaybe<Scalars['String']>;
+  oldPassword?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateProfileArgs = {
+  aboutMe?: InputMaybe<Scalars['String']>;
+  discord?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  facebook?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  htmlAboutMe?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  twitch?: InputMaybe<Scalars['String']>;
+  twitter?: InputMaybe<Scalars['String']>;
+  youtube?: InputMaybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
+  Application: Array<Application>;
   Notification: Array<Notification>;
   aboutMe?: Maybe<Scalars['String']>;
   accounts: Array<Account>;
@@ -495,8 +539,10 @@ export type User = {
   facebook?: Maybe<Scalars['String']>;
   firstName: Scalars['String'];
   hosted: Array<Campaign>;
+  htmlAboutMe?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   imageUrl?: Maybe<Scalars['String']>;
+  instagram?: Maybe<Scalars['String']>;
   lastName: Scalars['String'];
   memberships: Array<Membership>;
   password: Scalars['String'];
@@ -507,6 +553,7 @@ export type User = {
   sentPrivateMessages: Array<PrivateMessage>;
   sessions: Array<Session>;
   status: StatusType;
+  twitch?: Maybe<Scalars['String']>;
   twitter?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
   youtube?: Maybe<Scalars['String']>;
@@ -615,6 +662,14 @@ export type UpdateCampaignMutationVariables = Exact<{
 
 export type UpdateCampaignMutation = { __typename?: 'Mutation', updateCampaign: { __typename?: 'Campaign', id: string } | { __typename?: 'FieldsValidationError' } };
 
+export type UpdateUserProfileMutationVariables = Exact<{
+  updatePasswordArgs?: InputMaybe<UpdatePasswordArgs>;
+  updateProfileArgs?: InputMaybe<UpdateProfileArgs>;
+}>;
+
+
+export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile: { __typename?: 'User', id: string, password: string, createdAt: any, updatedAt: any, email: string, emailVerified?: any | null, emailVerifyToken?: string | null, passwordResetToken?: string | null, imageUrl?: string | null, firstName: string, lastName: string, aboutMe?: string | null, htmlAboutMe?: string | null, experience: Experience, twitter?: string | null, facebook?: string | null, discord?: string | null, youtube?: string | null, instagram?: string | null, twitch?: string | null, status: StatusType } };
+
 export type QueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -622,10 +677,14 @@ export type QueryQuery = { __typename?: 'Query', getAllNotifications: Array<{ __
 
 export type GetApplicationCampaignQueryVariables = Exact<{
   campaignId: Scalars['String'];
+  after?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetApplicationCampaignQuery = { __typename?: 'Query', getApplicationCampaign: Array<{ __typename?: 'Application', campaignId: string, days: Array<string>, experience: Experience, fitsSchedule: boolean, id: string, jsonMessage: string, message: string, timePeriods: Array<string>, userId: string, membership: { __typename?: 'Membership', user: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } } }> };
+export type GetApplicationCampaignQuery = { __typename?: 'Query', getApplicationCampaign: { __typename?: 'ApplicationConnection', totalCount: number, pageCount: number, applications: Array<{ __typename?: 'Application', id: string, membershipId: string, campaignId: string, userId: string, firstName: string, lastName: string, gamesPlayed: number, message: string, jsonMessage: string, fitsSchedule: boolean, days: Array<string>, timePeriods: Array<string>, experience: Experience, createdAt: any, updatedAt: any, membership: { __typename?: 'Membership', role: MembershipRole }, user: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } }> } };
 
 export type GetCampaignQueryVariables = Exact<{
   id: Scalars['String'];
@@ -920,6 +979,40 @@ export const UpdateCampaignDocument = gql`
 export function useUpdateCampaignMutation() {
   return Urql.useMutation<UpdateCampaignMutation, UpdateCampaignMutationVariables>(UpdateCampaignDocument);
 };
+export const UpdateUserProfileDocument = gql`
+    mutation UpdateUserProfile($updatePasswordArgs: UpdatePasswordArgs, $updateProfileArgs: UpdateProfileArgs) {
+  updateUserProfile(
+    updatePasswordArgs: $updatePasswordArgs
+    updateProfileArgs: $updateProfileArgs
+  ) {
+    id
+    password
+    createdAt
+    updatedAt
+    email
+    emailVerified
+    emailVerifyToken
+    passwordResetToken
+    imageUrl
+    firstName
+    lastName
+    aboutMe
+    htmlAboutMe
+    experience
+    twitter
+    facebook
+    discord
+    youtube
+    instagram
+    twitch
+    status
+  }
+}
+    `;
+
+export function useUpdateUserProfileMutation() {
+  return Urql.useMutation<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>(UpdateUserProfileDocument);
+};
 export const QueryDocument = gql`
     query Query {
   getAllNotifications {
@@ -937,22 +1030,39 @@ export function useQueryQuery(options?: Omit<Urql.UseQueryArgs<QueryQueryVariabl
   return Urql.useQuery<QueryQuery, QueryQueryVariables>({ query: QueryDocument, ...options });
 };
 export const GetApplicationCampaignDocument = gql`
-    query GetApplicationCampaign($campaignId: String!) {
-  getApplicationCampaign(campaignId: $campaignId) {
-    campaignId
-    days
-    experience
-    fitsSchedule
-    id
-    jsonMessage
-    message
-    timePeriods
-    userId
-    membership {
+    query GetApplicationCampaign($campaignId: String!, $after: String, $take: Int, $skip: Int, $sort: String) {
+  getApplicationCampaign(
+    campaignId: $campaignId
+    after: $after
+    take: $take
+    skip: $skip
+    sort: $sort
+  ) {
+    applications {
+      id
+      membership {
+        role
+      }
+      membershipId
+      campaignId
+      userId
       user {
         ...UserSnippet
       }
+      firstName
+      lastName
+      gamesPlayed
+      message
+      jsonMessage
+      fitsSchedule
+      days
+      timePeriods
+      experience
+      createdAt
+      updatedAt
     }
+    totalCount
+    pageCount
   }
 }
     ${UserSnippetFragmentDoc}`;

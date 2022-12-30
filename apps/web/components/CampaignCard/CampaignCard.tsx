@@ -1,8 +1,9 @@
 import { format } from "date-fns";
 import { Card, CardImage, CardSection, Header, Tag, Text } from "ui";
 import Link from "next/link";
-import { GetCampaignsQuery } from "@generated/graphql";
+import { GetCampaignsQuery, MembershipRole } from "@generated/graphql";
 import { styled } from "ui/src/theme";
+import React from "react";
 
 interface CampaignCardProps {
   campaign: GetCampaignsQuery["getCampaigns"][0];
@@ -22,6 +23,20 @@ const StyledCardImage = styled(CardImage, {
 });
 
 export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
+  const pendingMember = React.useMemo(
+    () =>
+      campaign.memberships.filter(
+        (member) => member.role === MembershipRole.Pending
+      ),
+    [campaign.memberships]
+  );
+  const acceptedMember = React.useMemo(
+    () =>
+      campaign.memberships.filter(
+        (member) => member.role === MembershipRole.Player
+      ),
+    [campaign.memberships]
+  );
   return (
     <Card
       background="dark"
@@ -47,7 +62,12 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
 
         <div className="my-2">
           <StyledText size="sm" weight="medium">
-            {campaign.memberships.length} out of {campaign.maxSeats} Players
+            {acceptedMember.length} out of {campaign.maxSeats} Players
+          </StyledText>
+        </div>
+        <div className="my-2">
+          <StyledText size="sm" weight="medium">
+            Pending requests {pendingMember.length}
           </StyledText>
         </div>
         <Link href={`/campaign/${campaign.id}`}>

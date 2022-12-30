@@ -60,6 +60,41 @@ export class PaginationArgs {
 }
 
 @InputType()
+export class UpdateProfileArgs {
+  @Field({ nullable: true })
+  firstName?: string;
+  @Field({ nullable: true })
+  lastName?: string;
+  @Field({ nullable: true })
+  imageUrl?: string;
+  @Field({ nullable: true })
+  email?: string;
+  @Field({ nullable: true })
+  aboutMe?: string;
+  @Field({ nullable: true })
+  htmlAboutMe?: string;
+  @Field({ nullable: true })
+  facebook?: string;
+  @Field({ nullable: true })
+  discord?: string;
+  @Field({ nullable: true })
+  twitch?: string;
+  @Field({ nullable: true })
+  twitter?: string;
+  @Field({ nullable: true })
+  youtube?: string;
+  @Field(() => [String], { nullable: true })
+  tags: string[];
+}
+@InputType()
+export class UpdatePasswordArgs {
+  @Field({ nullable: true })
+  oldPassword?: string;
+  @Field({ nullable: true })
+  newPassword?: string;
+}
+
+@InputType()
 export class UsernamePasswordInput {
   @Field()
   firstName: string;
@@ -84,20 +119,8 @@ export class UserConnection {
   totalCount: number;
 }
 
-const baseArgs = {
-  select: {},
-  where: {},
-};
-
 @Resolver()
 export class UserResolver {
-  // @FieldResolver(() => String)
-  // email(@Root() user: User, @Ctx() { req }: MyContext) {
-  //   if (req.session.userId === user.id) {
-  //     return user.email;
-  //   }
-  //   return "";
-  // }
   @Query(() => String)
   async helloworld(@Ctx() { prisma, req, res, pusher }: MyContext) {
     // @ts-ignore
@@ -308,5 +331,27 @@ export class UserResolver {
         resolve(true);
       })
     );
+  }
+
+  @Mutation(() => User)
+  async updateUserProfile(
+    @Arg("updateProfileArgs", { nullable: true })
+    updateProfileArgs: UpdateProfileArgs,
+    @Arg("updatePasswordArgs", { nullable: true })
+    updatePasswordArgs: UpdatePasswordArgs,
+    @Ctx() { prisma, req }: MyContext
+  ) {
+    const userId = req.session.userId;
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...updateProfileArgs,
+      },
+    });
+
+    return user;
   }
 }

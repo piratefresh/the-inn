@@ -1,6 +1,7 @@
-import { Field, ObjectType, ID } from "type-graphql";
+import { Field, ObjectType, ID, Int } from "type-graphql";
 import { Membership } from "./Membership";
 import { Experience } from "../typedefs/Experience";
+import { User } from "./User";
 
 @ObjectType()
 export class Application {
@@ -19,6 +20,18 @@ export class Application {
   @Field()
   userId: string;
 
+  @Field((_type) => User)
+  user: User;
+
+  @Field()
+  firstName: string;
+
+  @Field()
+  lastName: string;
+
+  @Field((_type) => Int)
+  gamesPlayed: number;
+
   @Field()
   message: string;
 
@@ -36,6 +49,12 @@ export class Application {
 
   @Field((_type) => Experience)
   experience: Experience;
+
+  @Field()
+  createdAt: Date;
+
+  @Field()
+  updatedAt: Date;
 
   // skip overwrite 👇
 }

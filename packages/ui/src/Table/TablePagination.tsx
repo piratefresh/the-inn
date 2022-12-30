@@ -1,9 +1,14 @@
-import { Table } from "@tanstack/react-table";
+import { PaginationState, Table } from "@tanstack/react-table";
+import React from "react";
+import { useEffect } from "react";
+import { Button } from "../Button";
 import { styled } from "../theme";
-import { usePaginationRange } from "./usePaginationRange";
+import { OnChangeProps } from "./Table";
+import { usePaginationRange, pagination2 } from "./usePaginationRange";
 
 interface TablePaginationProps {
   table: Table<any>;
+  pagination: PaginationState;
 }
 
 export const PaginationButton = styled("button", {
@@ -33,24 +38,37 @@ export const PaginationEllipsis = styled("button", {
   },
 });
 
-export const TablePagination = ({ table }: TablePaginationProps) => {
-  const { items, currentPage } = usePaginationRange({
-    currentPage: table.getState().pagination.pageIndex,
-    totalPages: table.getPageCount(),
-  });
+export const TablePagination = ({
+  table,
+  pagination,
+}: TablePaginationProps) => {
+  // const { items, currentPage } = usePaginationRange({
+  //   currentPage: table.getState().pagination.pageIndex,
+  //   totalPages: table.getPageCount(),
+  // });
+
+  const totalCount = React.useMemo(() => table.getPageCount() - 1, [table]);
+
+  const { pages, currentPage } = pagination2(
+    table.getState().pagination.pageIndex,
+    table.getPageCount() - 1,
+    5,
+    9
+  );
 
   const ButtonHandler = ({ page }: { page: string | number }) => {
     if (typeof page === "number") {
       const onClick = () => {
-        table.setPageIndex(page - 1);
+        table.setPageIndex(page);
       };
 
       return (
         <button
-          className="py-2 px-3 text-sm rounded-lg dark:bg-brandLightBlack dark:hover:bg-gray-700 dark:hover:text-white"
+          className={`py-2 px-3 text-sm rounded-lg ${
+            currentPage === page ? "bg-blue-600" : "bg-brandLightBlack"
+          }  dark:hover:bg-gray-700 dark:hover:text-white`}
           onClick={onClick}
           type="button"
-          //   variant={currentPage + 1 === page ? "active" : undefined}
         >
           {page}
         </button>
@@ -69,7 +87,7 @@ export const TablePagination = ({ table }: TablePaginationProps) => {
         <button
           className="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-brandLightBlack dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
           onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          disabled={!table.getCanPreviousPage() || currentPage === 1}
         >
           {"< Previous"}
         </button>
@@ -79,13 +97,12 @@ export const TablePagination = ({ table }: TablePaginationProps) => {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
+            {table.getState().pagination.pageIndex} of {totalCount}
           </strong>
         </span>
 
         <div className="flex gap-1 items-center">
-          {items.map((page) => (
+          {pages.map((page) => (
             <ButtonHandler page={page} key={page} />
           ))}
         </div>
@@ -111,7 +128,7 @@ export const TablePagination = ({ table }: TablePaginationProps) => {
       <button
         className="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-brandLightBlack dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
         onClick={() => table.nextPage()}
-        disabled={!table.getCanNextPage()}
+        // disabled={!table.getCanNextPage()}
       >
         {"Next >"}
       </button>

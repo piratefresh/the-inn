@@ -3,60 +3,17 @@ import { Difficulty } from "@typedefs/Difficulty";
 import { Experience } from "@typedefs/Experience";
 import argon2 from "argon2";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { User } from "@models/User";
+import { faker } from "@faker-js/faker";
+import { CampaignApplicationInput } from "@resolvers/CampaignApplicationInput";
+import { MembershipRole } from "@typedefs/MembershipRole";
 
 const prisma = new PrismaClient();
 
-const usersData: Prisma.UserCreateInput[] = [
-  {
-    firstName: "Magnus",
-    lastName: "Nilsen",
-    email: "magnussithnilsen@gmail.com",
-    password: "test",
-    experience: Experience.Beginner,
-    aboutMe: "",
-  },
-  {
-    firstName: "Peter",
-    lastName: "Test",
-    email: "magnussithnilsen+ps1@gmail.com",
-    password: "test",
-    experience: Experience.Beginner,
-    aboutMe: "",
-  },
-  {
-    firstName: "Zach",
-    lastName: "Sharkey",
-    email: "magnussithnilsen+ps2@gmail.com",
-    password: "test",
-    experience: Experience.Beginner,
-    aboutMe: "",
-  },
-  {
-    firstName: "Roberto",
-    lastName: "Test",
-    email: "magnussithnilsen+ps3@gmail.com",
-    password: "test",
-    experience: Experience.Beginner,
-    aboutMe: "",
-  },
-  {
-    firstName: "Matt",
-    lastName: "Test",
-    email: "magnussithnilsen+ps4@gmail.com",
-    password: "test",
-    experience: Experience.Beginner,
-    aboutMe: "",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    email: "magnussithnilsen+ps5@gmail.com",
-    password: "test",
-    experience: Experience.Beginner,
-    aboutMe: "",
-  },
-];
-
+export function randomIntFromInterval(min: number, max: number) {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 // const campaignData: Prisma.CampaignCreateInput[] = [
 //   {
 //     title: "test",
@@ -76,58 +33,85 @@ const usersData: Prisma.UserCreateInput[] = [
 // ];
 
 export async function seedDB() {
-  const createdUsers = usersData.map(async (user) => {
+  const amountOfUsers = 50;
+
+  const users: Prisma.UserCreateInput[] = [];
+
+  for (let i = 0; i < amountOfUsers; i++) {
+    const firstName = faker.name.firstName();
+    const lastName = faker.name.lastName();
     const hashedPassword = await argon2.hash("test");
-    prisma.user.upsert({
-      where: { email: user.email },
-      update: {},
-      create: {
-        email: user.email,
-        password: hashedPassword,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        experience: user.experience,
+
+    const user: Prisma.UserCreateInput = {
+      email: faker.internet.email(firstName, lastName),
+      firstName,
+      lastName,
+      password: hashedPassword,
+    };
+
+    users.push(user);
+  }
+
+  const addUsers = async () =>
+    await prisma.user.createMany({ data: users, skipDuplicates: true });
+  addUsers();
+}
+
+export async function seedDBApplication() {
+  const applications = CampaignApplicationInput;
+
+  const users = await prisma.user.findMany({
+    where: {
+      memberships: {
+        none: {
+          campaignId: "6c82306c-a699-4067-b10b-52d4aba580cc",
+        },
       },
-    });
+    },
   });
 
-  console.log("createdUsers: ", createdUsers);
+  console.log("users: ", users);
 
-  // const user = await prisma.user.create({
-  //   data: {
-  //     firstName: "Magnus",
-  //     lastName: "Nilsen",
-  //     email: "magnussithnilsen@gmail.com",
-  //     password: hashedPassword,
-  //     experience: Experience.Beginner,
-  //   },
-  // });
+  users.map(async (user) => {
+    const message = faker.lorem.paragraphs(randomIntFromInterval(1, 3));
+    const fitsSchedule = faker.datatype.boolean();
+    const randomDate = faker.date.recent(10);
 
-  // const account = await prisma.account.create({
-  //   data: {
-  //     userId: user.id,
-  //     type: "credentials",
-  //     provider: "Credentials",
-  //     providerAccountId: user.id,
-  //   },
-  // });
+    const userMembership = await prisma.membership.create({
+      data: {
+        role: MembershipRole.PENDING,
+        campaignId: "6c82306c-a699-4067-b10b-52d4aba580cc",
+        userId: user.id,
+        application: {
+          create: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            gamesPlayed: faker.datatype.number({ max: 20 }),
+            campaignId: "6c82306c-a699-4067-b10b-52d4aba580cc",
+            fitsSchedule,
+            message,
+            jsonMessage: message,
+            experience: faker.helpers.shuffle<
+              CampaignApplicationInput["experience"]
+            >([Experience.Beginner, Experience.Advanced, Experience.All])[0]!,
+            days: !fitsSchedule
+              ? [...new Array(randomIntFromInterval(1, 4))].map(() =>
+                  faker.date.weekday()
+                )
+              : "",
+            timePeriods: !fitsSchedule ? ["Evening"] : "",
+            createdAt: randomDate,
+            updatedAt: randomDate,
+          },
+        },
+      },
+      include: {
+        campaign: true,
+        user: true,
+        application: true,
+      },
+    });
 
-  // const user = await prisma.user.findUnique({
-  //   where: {
-  //     email: "magnussithnilsen@gmail",
-  //   },
-  // });
-  // if (user) {
-  // const campaign = await prisma.campaign.findMany({
-  //   where: {
-  //     gmId: user.id,
-  //   },
-  // });
-  // const gameSystem = await prisma.gameSystem.create({
-  //   data: {
-  //     campaignId: campaign[0].id,
-  //     assignedBy: user.id,
-  //   },
-  // });
-  // }
+    console.log("userMembership: ", userMembership);
+  });
 }
