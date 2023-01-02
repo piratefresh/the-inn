@@ -42,6 +42,7 @@ export const { config, css, styled, createTheme, theme } = createStitches({
       orangeBrand: "#9f5e25",
       whiteBrand: "#fcfcfc",
       grayBrand: "#273435",
+      lightBlackBrand: "hsl(0, 0%, 9%)",
       ...gray,
       ...blue,
       ...red,

@@ -519,6 +519,7 @@ export type UpdateProfileArgs = {
   htmlAboutMe?: InputMaybe<Scalars['String']>;
   imageUrl?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
   twitch?: InputMaybe<Scalars['String']>;
   twitter?: InputMaybe<Scalars['String']>;
   youtube?: InputMaybe<Scalars['String']>;
@@ -547,12 +548,14 @@ export type User = {
   memberships: Array<Membership>;
   password: Scalars['String'];
   passwordResetToken?: Maybe<Scalars['String']>;
+  profileCSS?: Maybe<Scalars['String']>;
   receivedPrivateMessage: Array<PrivateMessage>;
   reviews: Array<Review>;
   sentCampaignMessage: Array<CampaignMessage>;
   sentPrivateMessages: Array<PrivateMessage>;
   sessions: Array<Session>;
   status: StatusType;
+  tags: Array<Scalars['String']>;
   twitch?: Maybe<Scalars['String']>;
   twitter?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
@@ -708,7 +711,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } };
+export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', aboutMe?: string | null, htmlAboutMe?: string | null, tags: Array<string>, profileCSS?: string | null, twitch?: string | null, instagram?: string | null, facebook?: string | null, youtube?: string | null, discord?: string | null, id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } };
 
 export type GetUserCampaignQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1127,6 +1130,15 @@ export const GetUserDocument = gql`
     query GetUser($id: String!) {
   getUser(id: $id) {
     ...UserSnippet
+    aboutMe
+    htmlAboutMe
+    tags
+    profileCSS
+    twitch
+    instagram
+    facebook
+    youtube
+    discord
   }
 }
     ${UserSnippetFragmentDoc}`;

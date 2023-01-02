@@ -79,6 +79,9 @@ export class User {
   @Field((_type) => [String])
   tags: string[];
 
+  @Field({ nullable: true })
+  profileCSS?: string;
+
   @Field((_type) => StatusType)
   status: StatusType;
 

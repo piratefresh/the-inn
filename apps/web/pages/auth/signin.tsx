@@ -1,7 +1,7 @@
 import { Input } from "@components/ui/Input";
 import InputGroup from "@components/ui/InputGroup";
 import { AuthLayout } from "@layouts/AuthLayout";
-import { Button } from "ui";
+import { Button, Text } from "ui";
 import { showNotification } from "@mantine/notifications";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -53,7 +53,7 @@ const SignIn = () => {
   return (
     <div className="flex flex-col place-items-center justify-center items-center h-screen">
       <Link href="/">
-        <a className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack">
+        <a className="font-oldFenris uppercase text-5xl text-brandBlack dark:text-white">
           The Inn
         </a>
       </Link>
@@ -62,7 +62,12 @@ const SignIn = () => {
         style={{ width: "600px" }}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h2>SignIn</h2>
+        <Text as="h2" size="2xl" className="text-brandBlack dark:text-white">
+          Sign-In
+        </Text>
+        <Text as="h3" size="lg" className="text-brandBlack dark:text-white">
+          Welcome back! Please enter your details below
+        </Text>
         <InputGroup
           className="my-8"
           label="*Username or email"
@@ -99,7 +104,7 @@ const SignIn = () => {
           Sign-In
         </Button>
 
-        <p className=" text-white">
+        <p className="text-brandBlack dark:text-white">
           Dont have an account?{" "}
           <span className="underline">
             <Link href="/auth/signup">Sign up here</Link>

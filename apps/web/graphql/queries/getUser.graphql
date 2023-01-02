@@ -1,5 +1,14 @@
 query GetUser($id: String!) {
   getUser(id: $id) {
     ...UserSnippet
+    aboutMe
+    htmlAboutMe
+    tags
+    profileCSS
+    twitch
+    instagram
+    facebook
+    youtube
+    discord
   }
 }

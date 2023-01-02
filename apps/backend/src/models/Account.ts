@@ -1,4 +1,4 @@
-import { Field, ObjectType, InputType, ID, Int } from "type-graphql";
+import { Field, ObjectType, InputType, ID } from "type-graphql";
 import { User } from "./User";
 
 @InputType("AccountInput")
@@ -25,7 +25,7 @@ export class Account {
   @Field({ nullable: true })
   accessToken?: string;
 
-  @Field((_type) => Int, { nullable: true })
+  @Field({ nullable: true })
   expiresAt?: number;
 
   @Field({ nullable: true })

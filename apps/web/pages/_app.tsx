@@ -39,7 +39,6 @@ function App({
   router,
 }: AppPropsWithLayout) {
   const [navIsOpen, setNavIsOpen] = React.useState(false);
-  // const [sessi];
 
   React.useEffect(() => {
     if (!navIsOpen) return;

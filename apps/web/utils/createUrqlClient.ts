@@ -3,13 +3,11 @@ import {
   fetchExchange,
   subscriptionExchange,
   errorExchange as urqlErrorExchange,
-  stringifyVariables,
+  createClient,
+  ssrExchange as UrqlSSRExchange,
 } from "urql";
-import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
-import {
-  relayPagination,
-  simplePagination,
-} from "@urql/exchange-graphcache/extras";
+import { cacheExchange } from "@urql/exchange-graphcache";
+import { relayPagination } from "@urql/exchange-graphcache/extras";
 import { devtoolsExchange } from "@urql/devtools";
 import Router from "next/router";
 import { createClient as createWSClient } from "graphql-ws";
@@ -20,6 +18,7 @@ import {
   NotificationType,
 } from "@generated/graphql";
 import { isServer } from "./isServer";
+import { SSRExchange } from "next-urql";
 
 export const errorExchange = urqlErrorExchange({
   onError: (error) => {
@@ -37,8 +36,9 @@ const wsClient = () =>
     url: process.env.NEXT_PUBLIC_WS_URL,
   });
 
+const ssrExchange: SSRExchange = UrqlSSRExchange({ isClient: !isServer });
+
 const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
-  console.log("CTX: ", ctx);
   let cookie = "";
   if (isServer()) {
     cookie = ctx?.req?.headers?.cookie;

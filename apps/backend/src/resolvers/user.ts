@@ -286,7 +286,7 @@ export class UserResolver {
       const refreshToken = createRefreshToken(user);
       const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
 
-      await prisma.account.update({
+      await prisma.account.upsert({
         where: {
           provider_providerAccountId_userId: {
             userId: user.id,
@@ -294,7 +294,13 @@ export class UserResolver {
             providerAccountId: user.id,
           },
         },
-        data: {
+        create: {
+          userId: user.id,
+          type: "credentials",
+          provider: "Credentials",
+          providerAccountId: user.id,
+        },
+        update: {
           refreshToken,
           expiresAt: (decoded as JWTPayload).accessTokenExpires,
         },

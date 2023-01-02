@@ -70,8 +70,8 @@ const StyledRange = styled(Range, {
 const StyledThumb = styled(Thumb, {
   all: "unset",
   display: "block",
-  width: "0.6em",
-  height: "0.6em",
+  width: "1em",
+  height: "1em",
   cursor: "pointer",
   backgroundColor: theme.colors.yellowBrand.value,
   borderRadius: "50%",

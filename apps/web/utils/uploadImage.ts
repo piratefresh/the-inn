@@ -18,6 +18,6 @@ export const uploadImage = async (
     body: formData,
   });
   const data = response.json();
-  console.log("CLOUDINARY: ", data);
+
   return data;
 };
