@@ -5,15 +5,16 @@ import { RangeSlider, Text, Button } from "ui";
 import getCroppedImg from "./cropImage";
 
 interface AvatarUploadDialogProps {
-  onChange: (file: File) => void;
   image: string;
-  imageType: string;
+  onChange: (file: File) => void;
+  onCloseDialog: () => void;
 }
 
 export const AvatarUploadDialog = ({
   onChange,
+  onCloseDialog,
+
   image,
-  imageType,
 }: AvatarUploadDialogProps) => {
   const [crop, setCrop] = React.useState({ x: 0, y: 0 });
   const [rotation, setRotation] = React.useState<number>(0);
@@ -25,25 +26,29 @@ export const AvatarUploadDialog = ({
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
+  const onClose = React.useCallback(() => {
+    setCroppedImage(null);
+  }, []);
+
   const showCroppedImage = React.useCallback(async () => {
     try {
       const croppedImage = await getCroppedImg(
         image,
         croppedAreaPixels,
-        rotation,
-        imageType
+        rotation
       );
 
       setCroppedImage(croppedImage);
+
       onChange(croppedImage);
+
+      onClose();
+      onCloseDialog();
     } catch (e) {
       console.error(e);
     }
-  }, [croppedAreaPixels, rotation, onChange]);
+  }, [image, croppedAreaPixels, rotation, onChange, onClose, onCloseDialog]);
 
-  const onClose = React.useCallback(() => {
-    setCroppedImage(null);
-  }, []);
   return (
     <div className="flex flex-col">
       <div
@@ -74,7 +79,7 @@ export const AvatarUploadDialog = ({
             aria-labelledby="Zoom"
             onValueChange={(zoom) => setZoom(zoom[0])}
           />
-          <Button size="large" type="submit">
+          <Button size="large" type="submit" onClick={showCroppedImage}>
             Save
           </Button>
         </div>

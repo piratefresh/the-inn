@@ -7,14 +7,23 @@ import { Section } from "pages/user/settings";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { SettingsProps } from "Types/Settings";
-import { MultiSelect, Button, Text } from "ui";
+import { MultiSelect, Text, Input, Button } from "ui";
 
 interface ProfileSettingsProps extends SettingsProps {}
 
 interface ProfileFormProps {
   aboutMe: string;
   htmlAboutMe: string;
+  playStyle: string;
+  htmlPlayStyle: string;
+  gmStyle: string;
+  htmlGmStyle: string;
   tags: TagOptions[];
+  twitch?: string;
+  youtube?: string;
+  discord?: string;
+  facebook?: string;
+  instagram?: string;
 }
 
 export const ProfileSettings = ({ session, user }: ProfileSettingsProps) => {
@@ -26,6 +35,10 @@ export const ProfileSettings = ({ session, user }: ProfileSettingsProps) => {
     return {
       aboutMe: user.aboutMe,
       htmlAboutMe: user.htmlAboutMe,
+      playStyle: user.playStyle,
+      htmlPlayStyle: user.htmlPlayStyle,
+      gmStyle: user.gmStyle,
+      htmlGmStyle: user.htmlGmStyle,
       tags: user.tags?.map((tag) => createTagOptions(tag)),
     };
   }, [user]);
@@ -33,10 +46,8 @@ export const ProfileSettings = ({ session, user }: ProfileSettingsProps) => {
   const {
     clearErrors,
     control,
-    register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<ProfileFormProps>({
     defaultValues,
@@ -53,7 +64,6 @@ export const ProfileSettings = ({ session, user }: ProfileSettingsProps) => {
         tags:
           data.tags?.length > 0 ? data.tags.map((option) => option.value) : [],
       },
-      updatePasswordArgs: null,
     });
   };
 
@@ -98,8 +108,90 @@ export const ProfileSettings = ({ session, user }: ProfileSettingsProps) => {
           </InputGroup>
         </div>
       </Section>
+      <Section className="flex flex-col gap-8">
+        <div>
+          <Text size="xl" weight="bold" color="lightContrast">
+            Play Style
+          </Text>
+          <Text color="loContrast">
+            A more in-depth description about yourself, the more detailed, the
+            more others will get a better idea of you and how you fit with them.
+            Will be shown in your user page.
+          </Text>
+        </div>
+        <div>
+          <InputGroup label="Play Style">
+            <Controller
+              name="htmlPlayStyle"
+              control={control}
+              render={({ field }) => (
+                <RichTextEditor
+                  ref={richTextEditorRef}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    if (richTextEditorRef?.current) {
+                      const currentText = richTextEditorRef?.current.getText();
+                      if (currentText) {
+                        // Reset error if text is valid
+                        clearErrors("playStyle");
+                        setValue("playStyle", currentText);
+                      }
+                    }
+                  }}
+                  value={field.value}
+                  onBlur={field.onBlur}
+                  name="playStyle"
+                />
+              )}
+            />
+          </InputGroup>
+        </div>
+      </Section>
 
-      <Section className="flex flex-col my-16 gap-8">
+      <Section className="flex flex-col gap-8">
+        <div>
+          <Text size="xl" weight="bold" color="lightContrast">
+            Gamemaster Style
+          </Text>
+          <Text color="loContrast">
+            A more in-depth description about yourself, the more detailed, the
+            more others will get a better idea of you and how you fit with them.
+            Will be shown in your user page.
+          </Text>
+        </div>
+        <div>
+          <InputGroup label="Game Master Style">
+            <Controller
+              name="htmlGmStyle"
+              control={control}
+              render={({ field }) => (
+                <RichTextEditor
+                  ref={richTextEditorRef}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    if (richTextEditorRef?.current) {
+                      const currentText = richTextEditorRef?.current.getText();
+                      if (currentText) {
+                        // Reset error if text is valid
+                        clearErrors("gmStyle");
+                        setValue("gmStyle", currentText);
+                      }
+                    }
+                  }}
+                  value={field.value}
+                  onBlur={field.onBlur}
+                  name="gmStyle"
+                />
+              )}
+            />
+          </InputGroup>
+        </div>
+      </Section>
+
+      <Section
+        className="grid gap-8"
+        style={{ gridTemplateColumns: "1fr 2fr" }}
+      >
         <div>
           <Text size="xl" weight="bold" color="lightContrast">
             Tags
@@ -118,6 +210,86 @@ export const ProfileSettings = ({ session, user }: ProfileSettingsProps) => {
             )}
           />
         </InputGroup>
+      </Section>
+
+      <Section
+        className="grid gap-8"
+        style={{ gridTemplateColumns: "1fr 2fr" }}
+      >
+        <div>
+          <Text size="xl" weight="bold" color="lightContrast">
+            Socials
+          </Text>
+          <Text color="loContrast">For user to find you on other pages</Text>
+        </div>
+        <section className="text-black">
+          <InputGroup className="my-4" label="Twitch">
+            <Controller
+              name="twitch"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  gold
+                  size="medium"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </InputGroup>
+          <InputGroup className="my-4" label="Youtube">
+            <Controller
+              name="youtube"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  gold
+                  size="medium"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </InputGroup>
+          <InputGroup className="my-4" label="Facebook">
+            <Controller
+              name="facebook"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  gold
+                  size="medium"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </InputGroup>
+          <InputGroup className="my-4" label="Instagram">
+            <Controller
+              name="instagram"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  gold
+                  size="medium"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </InputGroup>
+        </section>
+      </Section>
+
+      <Section>
+        <Button
+          size="large"
+          type="submit"
+          onClick={() => console.log("clicked")}
+        >
+          Save
+        </Button>
       </Section>
     </form>
   );

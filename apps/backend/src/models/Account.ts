@@ -8,9 +8,6 @@ export class Account {
   id: string;
 
   @Field()
-  userId: string;
-
-  @Field()
   type: string;
 
   @Field()
@@ -45,6 +42,9 @@ export class Account {
 
   @Field({ nullable: true })
   oauthToken?: string;
+
+  @Field()
+  userId: string;
 
   @Field((_type) => User)
   user: User;

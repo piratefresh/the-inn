@@ -2,6 +2,10 @@ query GetUser($id: String!) {
   getUser(id: $id) {
     ...UserSnippet
     aboutMe
+    htmlPlayStyle
+    playStyle
+    htmlGmStyle
+    gmStyle
     htmlAboutMe
     tags
     profileCSS

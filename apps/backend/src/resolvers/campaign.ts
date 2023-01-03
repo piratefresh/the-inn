@@ -25,6 +25,9 @@ import { CreateCampaignInput } from "./CreateCampaignInput";
 import { CampaignApplicationInput } from "./CampaignApplicationInput";
 import { Notification } from "@models/Notification";
 import { NotificationType } from "@typedefs/NotificationType";
+import { User } from "@models/User";
+import { Membership } from "@models/Membership";
+import { Prisma } from "@prisma/client";
 
 cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -72,6 +75,26 @@ class CampaignPagination {
   hasNextPage: boolean;
 }
 
+// FIX TYPE
+interface GenerateAlgoliaCampaignsProps {
+  campaigns: any;
+}
+
+const generateAlgoliaCampaigns = async ({
+  campaigns,
+}: GenerateAlgoliaCampaignsProps) => {
+  return await Promise.all(
+    campaigns.map(async (campaign: any) => {
+      return {
+        ...campaign,
+        objectID: campaign.id,
+        members: 0,
+        pending: 0,
+      };
+    })
+  );
+};
+
 @Resolver(Campaign)
 export class CampaignResolver {
   @Query(() => String)
@@ -79,8 +102,8 @@ export class CampaignResolver {
     return "hello game";
   }
   @Query(() => [Campaign])
-  async getCampaigns(@Ctx() { prisma, res, req, redis }: MyContext) {
-    return prisma.campaign.findMany({
+  async getCampaigns(@Ctx() { prisma }: MyContext) {
+    const campaigns = await prisma.campaign.findMany({
       orderBy: {
         updatedAt: "desc",
       },
@@ -93,6 +116,8 @@ export class CampaignResolver {
         gameMaster: true,
       },
     });
+
+    return campaigns;
   }
   @Query(() => CampaignPagination)
   async getCampaignsPagination(
@@ -212,9 +237,21 @@ export class CampaignResolver {
             },
           },
         },
+        include: {
+          memberships: true,
+        },
       });
 
-      await theInnIndex.saveObject({ ...campaign, objectID: campaign.id });
+      const players = campaign.memberships.filter(
+        (member) => member.role === MembershipRole.PLAYER
+      );
+
+      await theInnIndex.saveObject({
+        ...campaign,
+        objectID: campaign.id,
+        members: players.length,
+        pending: 0,
+      });
 
       return Object.assign(new Campaign(), campaign);
     } catch (err) {
@@ -295,95 +332,7 @@ export class CampaignResolver {
       throw err;
     }
   }
-  @Mutation((_type) => CreateCampaignResult)
-  async addPlayerApplication(
-    @Arg("campaignApplicationInput")
-    campaignApplicationInput: CampaignApplicationInput,
-    @Ctx() { prisma, res, req }: MyContext,
-    @PubSub() pubSub: PubSubEngine
-  ) {
-    try {
-      const user = await prisma.user.findUnique({
-        where: {
-          id: req.session.userId,
-        },
-      });
 
-      const userMembership = await prisma.membership.create({
-        data: {
-          role: MembershipRole.PENDING,
-          campaignId: campaignApplicationInput.campaignId,
-          userId: user.id,
-          application: {
-            create: {
-              campaignId: campaignApplicationInput.campaignId,
-              fitsSchedule: campaignApplicationInput.fitsSchedule,
-              message: campaignApplicationInput.message,
-              jsonMessage: campaignApplicationInput.jsonMessage,
-              days: campaignApplicationInput.days,
-              timePeriods: campaignApplicationInput.timePeriods,
-              experience: campaignApplicationInput.experience,
-            },
-          },
-        },
-        include: {
-          campaign: true,
-          user: true,
-          application: true,
-        },
-      });
-
-      if (userMembership) {
-        const foundCampaign = await prisma.campaign.findUnique({
-          where: {
-            id: campaignApplicationInput.campaignId,
-          },
-          include: {
-            memberships: {
-              include: {
-                application: {
-                  include: {
-                    membership: true,
-                  },
-                },
-                campaign: true,
-                user: true,
-              },
-            },
-            gameMaster: true,
-          },
-        });
-
-        const notification = await prisma.notification.create({
-          data: {
-            message: `New Application Received ${foundCampaign.title}`,
-            type: NotificationType.Campaign,
-            relatedId: foundCampaign.id,
-            userId: foundCampaign.gameMaster.id,
-          },
-          include: {
-            user: true,
-          },
-        });
-
-        await pubSub.publish("NEW_NOTIFICATION_CAMPAIGN_APPLICATION", {
-          gameMasterId: foundCampaign.gameMaster.id,
-          campaignId: foundCampaign.id,
-          notificationId: notification.id,
-          message: notification.message,
-          type: notification.type,
-          createdAt: notification.createdAt,
-          read: notification.read,
-          updatedAt: notification.updatedAt,
-          relatedId: notification.relatedId,
-        });
-
-        return Object.assign(new Campaign(), foundCampaign);
-      }
-    } catch (err) {
-      throw err;
-    }
-  }
   @Mutation((_type) => CreateCampaignResult)
   async addCampaignPlayer(
     @Arg("AddPlayerCampaignInput")
@@ -409,8 +358,6 @@ export class CampaignResolver {
         },
       });
 
-      console.log("userMembership: ", userMembership);
-
       if (userMembership) {
         const foundCampaign = await prisma.campaign.findUnique({
           where: {
@@ -427,8 +374,6 @@ export class CampaignResolver {
             gameMaster: true,
           },
         });
-
-        console.log("foundCampaign: ", foundCampaign);
 
         return Object.assign(new Campaign(), foundCampaign);
       }

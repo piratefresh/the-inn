@@ -9,6 +9,7 @@ import { Session } from './Session'
 import { CampaignMessage } from './CampaignMessage'
 import { PrivateMessage } from './PrivateMessage'
 import { Notification } from './Notification'
+import { Application } from './Application'
 
 @ObjectType()
 export class User {
@@ -48,6 +49,9 @@ export class User {
   @Field({ nullable: true })
   aboutMe?: string
 
+  @Field({ nullable: true })
+  htmlAboutMe?: string
+
   @Field((_type) => Experience)
   experience: Experience
 
@@ -62,6 +66,18 @@ export class User {
 
   @Field({ nullable: true })
   youtube?: string
+
+  @Field({ nullable: true })
+  instagram?: string
+
+  @Field({ nullable: true })
+  twitch?: string
+
+  @Field((_type) => [String])
+  tags: string[]
+
+  @Field({ nullable: true })
+  profileCSS?: string
 
   @Field((_type) => StatusType)
   status: StatusType
@@ -92,5 +108,8 @@ export class User {
 
   @Field((_type) => [Notification])
   Notification: Notification[]
+
+  @Field((_type) => [Application])
+  Application: Application[]
 
   // skip overwrite 👇

@@ -51,7 +51,11 @@ const StyledArrow = styled(TooltipPrimitive.Arrow, {
   fill: "white",
 });
 
-function Content({ children, ...props }) {
+interface TooltipContentProps extends TooltipPrimitive.TooltipContentProps {
+  children: React.ReactNode;
+}
+
+function Content({ children, ...props }: TooltipContentProps) {
   return (
     <TooltipPrimitive.Portal>
       <StyledContent {...props}>
@@ -63,12 +67,12 @@ function Content({ children, ...props }) {
 }
 
 // Exports
-export const Provider = TooltipPrimitive.Provider;
-export const Tooltip = TooltipPrimitive.Root;
+export const TooltipProvider = TooltipPrimitive.Provider;
+export const TooltipRoot = TooltipPrimitive.Root;
 export const TooltipTrigger = TooltipPrimitive.Trigger;
 export const TooltipContent = Content;
+export { IconButton };
 
-// Your app...
 const IconButton = styled("button", {
   all: "unset",
   fontFamily: "inherit",
@@ -85,19 +89,18 @@ const IconButton = styled("button", {
   "&:focus": { boxShadow: `0 0 0 2px black` },
 });
 
-const TooltipDemo = () => {
+export interface TooltipProps {
+  children: React.ReactNode;
+  content: React.ReactNode;
+}
+
+export const Tooltip = ({ content, children, ...props }: TooltipProps) => {
   return (
-    <Provider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <IconButton>
-            <PlusIcon />
-          </IconButton>
-        </TooltipTrigger>
-        <TooltipContent sideOffset={5}>Add to library</TooltipContent>
-      </Tooltip>
-    </Provider>
+    <TooltipProvider>
+      <TooltipRoot {...props}>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
+        <TooltipContent>{content}</TooltipContent>
+      </TooltipRoot>
+    </TooltipProvider>
   );
 };
-
-export default TooltipDemo;

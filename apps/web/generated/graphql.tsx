@@ -20,7 +20,7 @@ export type Scalars = {
 export type Account = {
   __typename?: 'Account';
   accessToken?: Maybe<Scalars['String']>;
-  expiresAt?: Maybe<Scalars['Int']>;
+  expiresAt?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
   idToken?: Maybe<Scalars['String']>;
   oauthToken?: Maybe<Scalars['String']>;
@@ -265,6 +265,7 @@ export type Mutation = {
   signout: Scalars['Boolean'];
   signup: CreateUserResult;
   updateCampaign: CreateCampaignResult;
+  updateUserPassword: User;
   updateUserProfile: User;
 };
 
@@ -326,8 +327,12 @@ export type MutationUpdateCampaignArgs = {
 };
 
 
-export type MutationUpdateUserProfileArgs = {
+export type MutationUpdateUserPasswordArgs = {
   updatePasswordArgs?: InputMaybe<UpdatePasswordArgs>;
+};
+
+
+export type MutationUpdateUserProfileArgs = {
   updateProfileArgs?: InputMaybe<UpdateProfileArgs>;
 };
 
@@ -516,9 +521,13 @@ export type UpdateProfileArgs = {
   email?: InputMaybe<Scalars['String']>;
   facebook?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
+  gmStyle?: InputMaybe<Scalars['String']>;
   htmlAboutMe?: InputMaybe<Scalars['String']>;
+  htmlGmStyle?: InputMaybe<Scalars['String']>;
+  htmlPlayStyle?: InputMaybe<Scalars['String']>;
   imageUrl?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
+  playStyle?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   twitch?: InputMaybe<Scalars['String']>;
   twitter?: InputMaybe<Scalars['String']>;
@@ -539,8 +548,12 @@ export type User = {
   experience: Experience;
   facebook?: Maybe<Scalars['String']>;
   firstName: Scalars['String'];
+  gameSystems: Array<Scalars['String']>;
+  gmStyle?: Maybe<Scalars['String']>;
   hosted: Array<Campaign>;
   htmlAboutMe?: Maybe<Scalars['String']>;
+  htmlGmStyle?: Maybe<Scalars['String']>;
+  htmlPlayStyle?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   imageUrl?: Maybe<Scalars['String']>;
   instagram?: Maybe<Scalars['String']>;
@@ -548,6 +561,7 @@ export type User = {
   memberships: Array<Membership>;
   password: Scalars['String'];
   passwordResetToken?: Maybe<Scalars['String']>;
+  playStyle?: Maybe<Scalars['String']>;
   profileCSS?: Maybe<Scalars['String']>;
   receivedPrivateMessage: Array<PrivateMessage>;
   reviews: Array<Review>;
@@ -665,8 +679,14 @@ export type UpdateCampaignMutationVariables = Exact<{
 
 export type UpdateCampaignMutation = { __typename?: 'Mutation', updateCampaign: { __typename?: 'Campaign', id: string } | { __typename?: 'FieldsValidationError' } };
 
-export type UpdateUserProfileMutationVariables = Exact<{
+export type UpdateUserPasswordMutationVariables = Exact<{
   updatePasswordArgs?: InputMaybe<UpdatePasswordArgs>;
+}>;
+
+
+export type UpdateUserPasswordMutation = { __typename?: 'Mutation', updateUserPassword: { __typename?: 'User', id: string, password: string, createdAt: any, updatedAt: any, email: string, emailVerified?: any | null, emailVerifyToken?: string | null, passwordResetToken?: string | null, imageUrl?: string | null, firstName: string, lastName: string, aboutMe?: string | null, htmlAboutMe?: string | null, experience: Experience, twitter?: string | null, facebook?: string | null, discord?: string | null, youtube?: string | null, instagram?: string | null, twitch?: string | null, status: StatusType } };
+
+export type UpdateUserProfileMutationVariables = Exact<{
   updateProfileArgs?: InputMaybe<UpdateProfileArgs>;
 }>;
 
@@ -711,7 +731,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', aboutMe?: string | null, htmlAboutMe?: string | null, tags: Array<string>, profileCSS?: string | null, twitch?: string | null, instagram?: string | null, facebook?: string | null, youtube?: string | null, discord?: string | null, id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } };
+export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', aboutMe?: string | null, htmlPlayStyle?: string | null, playStyle?: string | null, htmlGmStyle?: string | null, gmStyle?: string | null, htmlAboutMe?: string | null, tags: Array<string>, profileCSS?: string | null, twitch?: string | null, instagram?: string | null, facebook?: string | null, youtube?: string | null, discord?: string | null, id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } };
 
 export type GetUserCampaignQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -982,12 +1002,40 @@ export const UpdateCampaignDocument = gql`
 export function useUpdateCampaignMutation() {
   return Urql.useMutation<UpdateCampaignMutation, UpdateCampaignMutationVariables>(UpdateCampaignDocument);
 };
+export const UpdateUserPasswordDocument = gql`
+    mutation UpdateUserPassword($updatePasswordArgs: UpdatePasswordArgs) {
+  updateUserPassword(updatePasswordArgs: $updatePasswordArgs) {
+    id
+    password
+    createdAt
+    updatedAt
+    email
+    emailVerified
+    emailVerifyToken
+    passwordResetToken
+    imageUrl
+    firstName
+    lastName
+    aboutMe
+    htmlAboutMe
+    experience
+    twitter
+    facebook
+    discord
+    youtube
+    instagram
+    twitch
+    status
+  }
+}
+    `;
+
+export function useUpdateUserPasswordMutation() {
+  return Urql.useMutation<UpdateUserPasswordMutation, UpdateUserPasswordMutationVariables>(UpdateUserPasswordDocument);
+};
 export const UpdateUserProfileDocument = gql`
-    mutation UpdateUserProfile($updatePasswordArgs: UpdatePasswordArgs, $updateProfileArgs: UpdateProfileArgs) {
-  updateUserProfile(
-    updatePasswordArgs: $updatePasswordArgs
-    updateProfileArgs: $updateProfileArgs
-  ) {
+    mutation UpdateUserProfile($updateProfileArgs: UpdateProfileArgs) {
+  updateUserProfile(updateProfileArgs: $updateProfileArgs) {
     id
     password
     createdAt
@@ -1131,6 +1179,10 @@ export const GetUserDocument = gql`
   getUser(id: $id) {
     ...UserSnippet
     aboutMe
+    htmlPlayStyle
+    playStyle
+    htmlGmStyle
+    gmStyle
     htmlAboutMe
     tags
     profileCSS

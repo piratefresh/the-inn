@@ -55,8 +55,23 @@ export class User {
   @Field({ nullable: true })
   htmlAboutMe?: string;
 
+  @Field({ nullable: true })
+  playStyle?: string;
+
+  @Field({ nullable: true })
+  htmlPlayStyle?: string;
+
+  @Field({ nullable: true })
+  gmStyle?: string;
+
+  @Field({ nullable: true })
+  htmlGmStyle?: string;
+
   @Field((_type) => Experience)
   experience: Experience;
+
+  @Field((_type) => [String])
+  gameSystems: string[];
 
   @Field({ nullable: true })
   twitter?: string;

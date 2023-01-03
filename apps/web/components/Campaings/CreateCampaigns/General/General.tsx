@@ -26,9 +26,10 @@ import {
   RadioGroup,
   RangeSlider,
   TimeZonePicker,
+  Tooltip,
+  Text,
 } from "ui";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DevTool } from "@hookform/devtools";
 import { generalSchema } from "./schema";
 import {
   CreatableGameSelector,
@@ -37,12 +38,7 @@ import {
 import { MAX_PARTY } from "consts/maxSeats";
 import { SKILL_LEVELS } from "consts/skillLevels";
 import { SelectOption } from "ui/src/Select/Select";
-import {
-  today,
-  getLocalTimeZone,
-  parseAbsoluteToLocal,
-  parseDate,
-} from "@internationalized/date";
+import { today, getLocalTimeZone, parseDate } from "@internationalized/date";
 import { GetCampaignQuery } from "@generated/graphql";
 import Games from "../../../CreatableGameSelector/games.json";
 
@@ -200,13 +196,11 @@ export const General = ({ campaign }: GeneralProps) => {
             }}
           />
         </InputGroup>
-
         <input
           type="text"
           className="hidden"
           {...register("imageUrl", { required: true })}
         />
-
         <InputGroup
           className="my-12"
           label="*Campaign Name"
@@ -228,7 +222,6 @@ export const General = ({ campaign }: GeneralProps) => {
             )}
           />
         </InputGroup>
-
         <InputGroup
           className="my-12"
           label="*Campaign Description"
@@ -263,9 +256,7 @@ export const General = ({ campaign }: GeneralProps) => {
             )}
           />
         </InputGroup>
-
         <FormDivider label="Detailed Information" />
-
         <InputGroup
           className="my-8"
           label="*Campaign Type"
@@ -295,7 +286,6 @@ export const General = ({ campaign }: GeneralProps) => {
             )}
           />
         </InputGroup>
-
         <div className="grid grid-cols-2 gap-12 my-12">
           <InputGroup label="*Game System" error={errors?.gameSystem}>
             <Controller
@@ -409,7 +399,6 @@ export const General = ({ campaign }: GeneralProps) => {
             />
           </InputGroup>
         </div>
-
         <div className="flex my-12">
           <InputGroup label="*Starting Date" error={errors?.startDate}>
             <Controller
@@ -437,6 +426,7 @@ export const General = ({ campaign }: GeneralProps) => {
             />
           </InputGroup>
         </div>
+
         <div className="grid grid-cols-2 gap-12 my-12">
           <InputGroup label="*Time" error={errors?.timePeriods}>
             <Controller
@@ -444,11 +434,47 @@ export const General = ({ campaign }: GeneralProps) => {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <ChipGroup value={value} onChange={onChange} multiple>
-                  <Chip value="Morning">Morning</Chip>
-                  <Chip value="Afternoon">Afternoon</Chip>
-                  <Chip value="Evening">Evening</Chip>
-                  <Chip value="Night">Night</Chip>
-                  <Chip value="Flexible">Flexible</Chip>
+                  <Chip value="Morning">
+                    <div className="flex flex-col">
+                      <Text color="hiContrast">Morning</Text>
+                      <Text color="hiContrast" size="xs">
+                        8am-12am
+                      </Text>
+                    </div>
+                  </Chip>
+
+                  <Chip value="Afternoon">
+                    <div className="flex flex-col">
+                      <Text color="hiContrast">Afternoon</Text>
+                      <Text color="hiContrast" size="xs">
+                        12am-5pm
+                      </Text>
+                    </div>
+                  </Chip>
+                  <Chip value="Evening">
+                    <div className="flex flex-col">
+                      <Text color="hiContrast">Evening</Text>
+                      <Text color="hiContrast" size="xs">
+                        5pm-10pm
+                      </Text>
+                    </div>
+                  </Chip>
+                  <Chip value="Night">
+                    <div className="flex flex-col">
+                      <Text color="hiContrast">Night</Text>
+                      <Text color="hiContrast" size="xs">
+                        10pm-8am
+                      </Text>
+                    </div>
+                  </Chip>
+                  <Chip value="Flexible">
+                    <div className="flex flex-col">
+                      <Text color="hiContrast">Flexible</Text>
+                      <Text color="hiContrast" size="xs">
+                        Any
+                      </Text>
+                    </div>
+                  </Chip>
                 </ChipGroup>
               )}
             />
@@ -474,7 +500,6 @@ export const General = ({ campaign }: GeneralProps) => {
             />
           </InputGroup>
         </div>
-
         <InputGroup
           className="my-12 flex-wrap"
           label="Time Zone"
@@ -493,7 +518,6 @@ export const General = ({ campaign }: GeneralProps) => {
             )}
           />
         </InputGroup>
-
         <Button size="large" type="submit">
           Next
         </Button>

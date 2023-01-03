@@ -43,6 +43,17 @@ export const Preview = ({ campaign }: LocationProps) => {
     [router]
   );
 
+  const onBack = React.useCallback(
+    (e) => {
+      e.preventDefault();
+      if (router.pathname.includes("editcampaign")) {
+        return router.push(`/user/editcampaign/location?id=${campaign.id}`);
+      }
+      return router.push(`./location`);
+    },
+    [campaign?.id]
+  );
+
   const onSubmit = async () => {
     if (isEditing) {
       const { data: updatedCampaign, error } = await updateCampaign({
@@ -141,6 +152,14 @@ export const Preview = ({ campaign }: LocationProps) => {
           </Text>
           <ReadOnly textString={createCampaignData.jsonAdditionalDetails} />
         </div>
+        <Button
+          css={{ marginRight: "$8" }}
+          size="large"
+          onClick={onBack}
+          type="button"
+        >
+          Previous
+        </Button>
         <Button onClick={onSubmit}>
           {isEditing ? "Update Campaign" : "Create Campaign"}
         </Button>

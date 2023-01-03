@@ -13,10 +13,17 @@ import { ThemeProvider } from "next-themes";
 import { NextAdapter } from "next-query-params";
 import { QueryParamProvider } from "use-query-params";
 import { SSRProvider } from "@react-aria/ssr";
+import algoliasearch from "algoliasearch/lite";
+import { InstantSearch } from "react-instantsearch-hooks-web";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import { configureAbly } from "@ably-labs/react-hooks";
 import { AppPropsWithLayout } from "Types/LayoutPage";
 import { UserPageLayout } from "@layouts/UserPageLayout";
+
+const searchClient = algoliasearch(
+  process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_ID,
+  process.env.NEXT_PUBLIC_ALGOLIA_API_KEY
+);
 
 configureAbly({
   authUrl: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/createTokenRequest`,
@@ -66,11 +73,16 @@ function App({
           <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
             <QueryParamProvider adapter={NextAdapter}>
               <Provider store={store}>
-                <NotificationsProvider position="top-center">
-                  <Layout {...layoutProps}>
-                    <Component {...pageProps} />
-                  </Layout>
-                </NotificationsProvider>
+                <InstantSearch
+                  searchClient={searchClient}
+                  indexName="dev_campaigns"
+                >
+                  <NotificationsProvider position="top-center">
+                    <Layout {...layoutProps}>
+                      <Component {...pageProps} />
+                    </Layout>
+                  </NotificationsProvider>
+                </InstantSearch>
               </Provider>
             </QueryParamProvider>
           </MantineProvider>

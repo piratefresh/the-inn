@@ -1,4 +1,6 @@
 import { Area } from "react-easy-crop";
+import { v4 as uuidv4 } from "uuid";
+import mime from "mime/lite";
 
 export const createImage = (url: string) =>
   new Promise<HTMLImageElement>(async (resolve, reject) => {
@@ -34,10 +36,8 @@ export function rotateSize(width: number, height: number, rotation: number) {
 export default async function getCroppedImg(
   imageSrc: string,
   pixelCrop: Area,
-  imageType: string,
-  rotation: number = 0,
-  flip = { horizontal: false, vertical: false }
-) {
+  rotation: number = 0
+): Promise<File | null> {
   const image = await createImage(imageSrc);
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
@@ -62,7 +62,7 @@ export default async function getCroppedImg(
   // translate canvas context to a central location to allow rotating and flipping around the center
   ctx.translate(bBoxWidth / 2, bBoxHeight / 2);
   ctx.rotate(rotRad);
-  ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1);
+
   ctx.translate(-image.width / 2, -image.height / 2);
 
   // draw rotated image
@@ -92,8 +92,15 @@ export default async function getCroppedImg(
 
   // As a blob
   return new Promise((resolve, reject) => {
-    canvas.toBlob((file) => {
-      resolve(URL.createObjectURL(file));
-    }, imageType);
+    canvas.toBlob((blob) => {
+      if (!blob) return resolve(null);
+      // @ts-ignore
+      const imgName = `${uuidv4()}.${mime.getExtension(blob.type)}`;
+      const file = new File([blob], imgName, {
+        type: blob.type,
+        lastModified: Date.now(),
+      });
+      resolve(file);
+    });
   });
 }

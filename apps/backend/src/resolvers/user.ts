@@ -74,6 +74,14 @@ export class UpdateProfileArgs {
   @Field({ nullable: true })
   htmlAboutMe?: string;
   @Field({ nullable: true })
+  playStyle?: string;
+  @Field({ nullable: true })
+  htmlPlayStyle?: string;
+  @Field({ nullable: true })
+  gmStyle?: string;
+  @Field({ nullable: true })
+  htmlGmStyle?: string;
+  @Field({ nullable: true })
   facebook?: string;
   @Field({ nullable: true })
   discord?: string;
@@ -314,7 +322,6 @@ export class UserResolver {
 
       setToken(user, res);
 
-      console.log("req session: ", req.session);
       req.session.userId = await user.id;
 
       return Object.assign(new User(), user);
@@ -343,13 +350,11 @@ export class UserResolver {
   async updateUserProfile(
     @Arg("updateProfileArgs", { nullable: true })
     updateProfileArgs: UpdateProfileArgs,
-    @Arg("updatePasswordArgs", { nullable: true })
-    updatePasswordArgs: UpdatePasswordArgs,
     @Ctx() { prisma, req }: MyContext
   ) {
     const userId = req.session.userId;
 
-    const user = await prisma.user.update({
+    return await prisma.user.update({
       where: {
         id: userId,
       },
@@ -357,7 +362,39 @@ export class UserResolver {
         ...updateProfileArgs,
       },
     });
+  }
 
-    return user;
+  @Mutation(() => User)
+  async updateUserPassword(
+    @Arg("updatePasswordArgs", { nullable: true })
+    updatePasswordArgs: UpdatePasswordArgs,
+    @Ctx() { prisma, req }: MyContext
+  ) {
+    const userId = req.session.userId;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (updatePasswordArgs.oldPassword) {
+      const verifyOldPassword = await argon2.verify(
+        user.password,
+        updatePasswordArgs.oldPassword
+      );
+      if (verifyOldPassword) {
+        return await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            password: updatePasswordArgs.newPassword,
+          },
+        });
+      } else {
+        throw "Old password is wrong";
+      }
+    }
   }
 }

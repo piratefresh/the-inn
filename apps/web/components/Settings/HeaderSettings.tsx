@@ -16,23 +16,28 @@ interface HeaderFormProps {
 }
 
 export const HeaderSettings = ({ session, user }: SettingsProps) => {
-  const [open, setOpen] = React.useState(false);
   const [_, updateUserProfile] = useUpdateUserProfileMutation();
 
   const [, createImageSignature] = useCreateImageSignatureMutation();
+
+  const refSubmitButtom = React.useRef<HTMLButtonElement>(null);
 
   const {
     control,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<HeaderFormProps>({});
+
+  const image = watch("image");
 
   const onInvalid = (errors) => {
     console.log("errors: ", errors);
   };
 
   const onSubmit: SubmitHandler<HeaderFormProps> = async (data) => {
+    console.log("onSubmit data: ", data);
     let imageUrl = null;
     if (data.image) {
       const { data: signatureData } = await createImageSignature({});
@@ -43,9 +48,13 @@ export const HeaderSettings = ({ session, user }: SettingsProps) => {
 
       await updateUserProfile({
         updateProfileArgs: { imageUrl: imageUrl.secure_url },
-        updatePasswordArgs: null,
       });
     }
+  };
+
+  const handleOnChange = (file: File) => {
+    setValue("image", file);
+    refSubmitButtom?.current?.click();
   };
 
   return (
@@ -60,18 +69,11 @@ export const HeaderSettings = ({ session, user }: SettingsProps) => {
           render={({ field }) => (
             <AvatarUpload
               defaultSrc={user.imageUrl}
-              onChange={(file) => setValue("image", file)}
+              onChange={handleOnChange}
+              image={image}
             />
           )}
         />
-        <Button
-          size="large"
-          type="submit"
-          className="my-4"
-          onClick={() => setOpen(true)}
-        >
-          Save New Profile Picture
-        </Button>
       </div>
 
       <div className="flex flex-col">
@@ -80,9 +82,8 @@ export const HeaderSettings = ({ session, user }: SettingsProps) => {
           color="lightContrast"
         >{`${user.firstName} ${user.lastName}`}</Text>
       </div>
-      <Dialog onOpen={setOpen} open={open} title="Avatar Upload" description="">
-        <AvatarUploadDialog />
-      </Dialog>
+
+      <button hidden={true} ref={refSubmitButtom} type={"submit"} />
     </form>
   );
 };

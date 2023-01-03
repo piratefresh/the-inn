@@ -1,6 +1,6 @@
 import React from "react";
 import NavStyles from "./Nav.module.css";
-import { NavItem } from "./NavItem";
+import { NavItemButton, NavItemLink } from "./NavItem";
 import { signOut, useSession } from "next-auth/react";
 import { Avatar } from "@mantine/core";
 import Link from "next/link";
@@ -13,9 +13,31 @@ import {
 import { BellIcon, TicketIcon, UserIcon } from "@heroicons/react/24/solid";
 import { Menu, HeadlessMenu, Text } from "ui";
 
+const navSubItems = {
+  campaign: [
+    {
+      label: "Find Campaigns",
+      href: "/campaigns/findcampaigns",
+    },
+    {
+      label: "Create Campaign",
+      href: "/campaigns/createcampaign/general",
+    },
+  ],
+  homebrews: [],
+  gamerules: [],
+  members: [
+    {
+      label: "Find Members",
+      href: "/members/all",
+    },
+  ],
+};
+
 export const Nav = () => {
   const { data: session } = useSession();
   const [open, setOpen] = React.useState(false);
+  const [subMenu, setSubMenu] = React.useState(null);
   const [{ data: notifications, fetching: fetchingNotifications }] =
     useGetUnreadNotificationsQuery();
   const [{ data: _newNotifications }] = useNewCampaignApplicationSubscription();
@@ -137,16 +159,44 @@ export const Nav = () => {
           </a>
         </Link>
         <div className="flex justify-center col-start-5 col-end-9">
-          <NavItem label="Campaigns" href="/campaigns/createcampaign/general" />
-          <NavItem label="Homebrews" href="/homebrews" />
-          <NavItem label="Game Rules" href="/gamerules" />
-          <NavItem label="Members" href="/members/all" />
+          <NavItemButton
+            label="Campaigns"
+            href="/campaigns/"
+            onClick={() => setSubMenu("campaigns")}
+          />
+          <NavItemButton
+            label="Homebrews"
+            href="/homebrews"
+            onClick={() => setSubMenu("homebrews")}
+          />
+          <NavItemButton
+            label="Game rules"
+            href="/gamerules"
+            onClick={() => setSubMenu("gamerules")}
+          />
+          <NavItemButton
+            label="Members"
+            href="/members/all"
+            onClick={() => setSubMenu("members")}
+          />
         </div>
 
         <div className="flex justify-end col-start-11 col-end-13">
           {userInfo}
         </div>
       </nav>
+      {subMenu && (
+        <nav
+          className={`${NavStyles["nav"]}`}
+          onMouseLeave={() => setSubMenu(null)}
+        >
+          <div className="flex justify-center col-start-5 col-end-9">
+            {navSubItems[subMenu].map((item) => (
+              <NavItemLink label={item.label} href={item.href} />
+            ))}
+          </div>
+        </nav>
+      )}
     </>
   );
 };

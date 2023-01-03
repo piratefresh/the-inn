@@ -1,4 +1,5 @@
 import { CampaignCard } from "@components/CampaignCard";
+import { ReadOnly } from "@components/RichTextEditor/ReadOnly";
 import { useGetCampaignsQuery, useGetUserQuery } from "@generated/graphql";
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import Image from "next/image";
@@ -95,36 +96,23 @@ const UserPage = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 my-24">
+        <div className="grid grid-cols-2 gap-8 my-24">
           <div>
             <Text className="font-oldFenris" size="6xl" color="gold">
               {data.getUser.firstName} {data.getUser.lastName}
             </Text>
             <div className="my-8">
-              <Text className="font-alegreyaSans my-8" size="lg" color="gold2">
+              <Text className="font-alegreyaSans my-8" size="lg" color="gold">
                 Good guy | 100 reviews
               </Text>
               <Text color="loContrast" size="lg">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-                sed sodales libero, et fermentum sapien. In sit amet nisl orci.
-                Cras fringilla, velit eu egestas commodo, tortor metus commodo
-                felis, sit amet convallis nibh turpis vel augue. Suspendisse sed
-                ipsum viverra, efficitur libero quis, accumsan est. Sed nisi
-                erat, molestie non diam sed, dignissim mattis sapien. Phasellus
-                euismod mauris mollis orci viverra auctor. Donec est dolor,
-                interdum quis vestibulum vitae, pulvinar id quam. Phasellus id
-                orci risus. Sed elementum placerat accumsan. Nulla facilisi.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
-                leo dui, luctus at eros ut, varius dapibus dui. In feugiat
-                tincidunt turpis, vel feugiat mauris tincidunt sit amet. Ut in
-                egestas tellus. Sed rhoncus tincidunt fringilla. Aenean sagittis
-                nisl tellus, a convallis massa porttitor a.
+                <ReadOnly textString={data.getUser.htmlAboutMe} />
               </Text>
             </div>
           </div>
-          <div>
+          <div className="flex justify-center items-center">
             <StyledUserImage
-              src="https://res.cloudinary.com/film-it/image/upload/v1666992673/the-inn/user/Andy-Richter-avacados-from-mexico-super-bowl-embed2.webp"
+              src={data.getUser.imageUrl}
               width={400}
               height={400}
               objectFit="cover"
@@ -132,18 +120,23 @@ const UserPage = () => {
           </div>
         </div>
 
-        <StyledUl>
+        {/* <StyledUl>
           <StyledListItem>
-            <Text size="4xl" color="loContrast">
-              Burbank, California
-            </Text>
+            <Text size="4xl" color="loContrast"></Text>
           </StyledListItem>
           <StyledListItem>
             <Text size="4xl" color="loContrast">
               Game Master
             </Text>
           </StyledListItem>
-        </StyledUl>
+        </StyledUl> */}
+
+        <Text size="4xl" color="loContrast">
+          Game Master Style
+        </Text>
+        <Text color="loContrast" size="lg">
+          <ReadOnly textString={data.getUser.htmlGmStyle} />
+        </Text>
       </div>
       <StyledMiddleContainer>
         <StyledFlame1 />

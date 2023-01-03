@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "../theme";
 
-const StyledCardWrapper = styled("div", {
+const StyledCardWrapper = styled("article", {
   backgroundColor: "$loContrast",
   variants: {
     background: {

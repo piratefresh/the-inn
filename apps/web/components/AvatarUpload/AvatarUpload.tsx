@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Dialog, styled, Text } from "ui";
 import { CameraIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { AvatarUploadDialog } from "./AvatarUploadDialog";
+import { AvatarDialog } from "./AvatarDialog";
 
 const StyledImage = styled(Image, {
   borderRadius: "$full",
@@ -14,11 +15,18 @@ const StyledImage = styled(Image, {
 interface AvatarUploadProps {
   defaultSrc?: string | null;
   onChange: (file: File) => void;
+  image?: File;
 }
 
-export const AvatarUpload = ({ defaultSrc, onChange }: AvatarUploadProps) => {
+export const AvatarUpload = ({
+  defaultSrc,
+  image,
+  onChange,
+}: AvatarUploadProps) => {
+  console.log("image: ", image);
   const [open, setOpen] = React.useState(false);
-  const [image, setImage] = React.useState<File>();
+  const [openCropper, setOpenCropper] = React.useState(false);
+
   const [preview, setPreview] = React.useState<string>(defaultSrc);
   const fileInputRef = React.useRef<HTMLInputElement>();
 
@@ -31,8 +39,15 @@ export const AvatarUpload = ({ defaultSrc, onChange }: AvatarUploadProps) => {
       reader.readAsDataURL(image);
     }
   }, [image]);
+
+  const handleDialogs = (v: boolean) => {
+    setOpen(v);
+    setOpenCropper(v);
+  };
+
   return (
     <div>
+      <Text color="hiContrast">{openCropper}</Text>
       <div
         className="h-40 w-40 border-4 border-brandYellow rounded-full relative cursor-pointer flex justify-center items-center "
         onClick={(event) => {
@@ -70,20 +85,32 @@ export const AvatarUpload = ({ defaultSrc, onChange }: AvatarUploadProps) => {
         onChange={(event) => {
           const file = event.target.files[0];
           if (file && file.type.substr(0, 5) === "image") {
-            setImage(file);
             onChange(file);
-          } else {
-            setImage(null);
+            handleDialogs(false);
           }
         }}
       />
 
-      <Dialog onOpen={setOpen} open={open} title="Avatar Upload" description="">
-        <AvatarUploadDialog
-          image={preview}
-          imageType={image.type}
-          onChange={onChange}
-        />
+      <Dialog
+        onOpen={handleDialogs}
+        open={open}
+        title="Avatar Upload"
+        description=""
+      >
+        {!preview || openCropper ? (
+          <AvatarUploadDialog
+            image={preview}
+            onChange={onChange}
+            onCloseDialog={() => {
+              handleDialogs(false);
+            }}
+          />
+        ) : (
+          <AvatarDialog
+            openFileInput={() => fileInputRef.current.click()}
+            openCropper={() => setOpenCropper(true)}
+          />
+        )}
       </Dialog>
     </div>
   );

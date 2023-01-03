@@ -5,8 +5,21 @@ import { GetCampaignsQuery, MembershipRole } from "@generated/graphql";
 import { styled } from "ui/src/theme";
 import React from "react";
 
+export interface CampaignProps {
+  id: string;
+  imageUrl: string;
+  title: string;
+  gameSystem: string;
+  maxSeats: number;
+  members?: number;
+  pending?: number;
+  memberships?: GetCampaignsQuery["getCampaigns"][0]["memberships"];
+  startDate: GetCampaignsQuery["getCampaigns"][0]["startDate"];
+  tags: string[];
+}
+
 interface CampaignCardProps {
-  campaign: GetCampaignsQuery["getCampaigns"][0];
+  campaign: CampaignProps;
   hideTags?: boolean;
 }
 
@@ -25,17 +38,21 @@ const StyledCardImage = styled(CardImage, {
 export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
   const pendingMember = React.useMemo(
     () =>
-      campaign.memberships.filter(
-        (member) => member.role === MembershipRole.Pending
-      ),
-    [campaign.memberships]
+      campaign.memberships
+        ? campaign.memberships.filter(
+            (member) => member.role === MembershipRole.Pending
+          ).length
+        : campaign.pending,
+    [campaign.pending, campaign.memberships]
   );
   const acceptedMember = React.useMemo(
     () =>
-      campaign.memberships.filter(
-        (member) => member.role === MembershipRole.Player
-      ),
-    [campaign.memberships]
+      campaign.memberships
+        ? campaign.memberships.filter(
+            (member) => member.role === MembershipRole.Player
+          ).length
+        : campaign.members,
+    [campaign.members, campaign.memberships]
   );
   return (
     <Card
@@ -62,12 +79,12 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
 
         <div className="my-2">
           <StyledText size="sm" weight="medium">
-            {acceptedMember.length} out of {campaign.maxSeats} Players
+            {acceptedMember} out of {campaign.maxSeats} Players
           </StyledText>
         </div>
         <div className="my-2">
           <StyledText size="sm" weight="medium">
-            Pending requests {pendingMember.length}
+            Pending requests {pendingMember}
           </StyledText>
         </div>
         <Link href={`/campaign/${campaign.id}`}>

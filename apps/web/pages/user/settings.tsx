@@ -15,6 +15,7 @@ import { BasicSettings } from "@components/Settings/BasicSettings";
 import { ProfileSettings } from "@components/Settings/ProfileSettings";
 import { HeaderSettings } from "@components/Settings/HeaderSettings";
 import { initUrqlClient } from "@utils/initUrqlClient";
+import { PasswordSettings } from "@components/Settings/PasswordSettings";
 
 export const Section = styled("section", {
   padding: "$8",
@@ -102,7 +103,13 @@ const SettingsPage = () => {
             className="flex flex-row items-center justify-center px-8 h-16 border border-brandYellow hover:text-brandYellow hover:bg-brandLightBlack data-[size=active]:text-brandYellow"
             value="profile"
           >
-            Profile Page
+            Profile
+          </StyledTabsTrigger>
+          <StyledTabsTrigger
+            className="flex flex-row items-center justify-center px-8 h-16 border border-brandYellow hover:text-brandYellow hover:bg-brandLightBlack data-[size=active]:text-brandYellow"
+            value="password"
+          >
+            Password
           </StyledTabsTrigger>
         </TabsList>
 
@@ -111,6 +118,9 @@ const SettingsPage = () => {
         </TabsContent>
         <TabsContent value="profile">
           <ProfileSettings session={session} user={user} />
+        </TabsContent>
+        <TabsContent value="password">
+          <PasswordSettings session={session} user={user} />
         </TabsContent>
       </div>
     </Tabs>

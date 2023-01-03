@@ -126,7 +126,7 @@ export class ApplicationResolver {
   async addPlayerApplication(
     @Arg("campaignApplicationInput")
     campaignApplicationInput: CampaignApplicationInput,
-    @Ctx() { prisma, res, req }: MyContext,
+    @Ctx() { prisma, req, theInnIndex }: MyContext,
     @PubSub() pubSub: PubSubEngine
   ) {
     try {
@@ -191,6 +191,21 @@ export class ApplicationResolver {
           include: {
             user: true,
           },
+        });
+
+        const players = foundCampaign.memberships.filter(
+          (member) => member.role === MembershipRole.PLAYER
+        );
+
+        const pending = foundCampaign.memberships.filter(
+          (member) => member.role === MembershipRole.PENDING
+        );
+
+        await theInnIndex.saveObject({
+          ...foundCampaign,
+          objectID: foundCampaign.id,
+          members: players.length,
+          pending,
         });
 
         await pubSub.publish("NEW_NOTIFICATION_CAMPAIGN_APPLICATION", {

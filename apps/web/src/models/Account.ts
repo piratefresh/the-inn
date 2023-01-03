@@ -1,13 +1,11 @@
 import { Field, ObjectType, ID, Int } from 'type-graphql'
 import { User } from './User'
+import { Field, ObjectType, ID } from 'type-graphql'
 
 @ObjectType()
 export class Account {
   @Field((_type) => ID)
   id: string
-
-  @Field()
-  userId: string
 
   @Field()
   type: string
@@ -24,7 +22,7 @@ export class Account {
   @Field({ nullable: true })
   accessToken?: string
 
-  @Field((_type) => Int, { nullable: true })
+  @Field({ nullable: true })
   expiresAt?: number
 
   @Field({ nullable: true })
@@ -44,6 +42,9 @@ export class Account {
 
   @Field({ nullable: true })
   oauthToken?: string
+
+  @Field()
+  userId: string
 
   @Field((_type) => User)
   user: User

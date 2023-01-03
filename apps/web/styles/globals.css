@@ -129,6 +129,9 @@
     border-image-source: linear-gradient(#fcfcfc, #fcfcfc),
       linear-gradient(#ffd166, #9f5e25);
   }
+  .goldenImageBorder {
+    border-image: linear-gradient(90deg, #ffd166, #9f5e25) 1;
+  }
   .px-100 {
     padding-left: 100px;
     padding-right: 100px;

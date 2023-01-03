@@ -68,7 +68,12 @@ model User {
   lastName           String
   aboutMe            String?
   htmlAboutMe        String?
+  playStyle          String?
+  htmlPlayStyle      String?
+  gmStyle            String?
+  htmlGmStyle        String?
   experience         Experience   @default(All)
+  gameSystems        String[]
   twitter            String?
   facebook           String?
   discord            String?

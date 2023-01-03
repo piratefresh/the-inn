@@ -2,62 +2,60 @@ import { Section } from "pages/user/settings";
 import { Button, Input, Text } from "ui";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import InputGroup from "@components/ui/InputGroup";
-import {
-  useGetUserQuery,
-  useUpdateUserProfileMutation,
-} from "@generated/graphql";
+import { useUpdateUserPasswordMutation } from "@generated/graphql";
 import React from "react";
+import z from "zod";
 import { SettingsProps } from "Types/Settings";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-interface AccountSettingsProps {
-  firstName?: string;
-  lastName?: string;
-  image?: File;
-  email?: string;
+interface PasswordFormProps {
+  oldPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
 }
 
-interface BasicSettingsProps extends SettingsProps {}
+interface PasswordSettingsProps extends SettingsProps {}
 
-function prepandHttps(link: string) {
-  return link?.indexOf("://") === -1 ? "http://" + link : link;
-}
+export const UpdatePasswordSchema = z
+  .object({
+    oldPassword: z.string(),
+    newPassword: z.string().min(4),
+    confirmPassword: z.string().min(4),
+  })
+  .superRefine(({ confirmPassword, oldPassword }, ctx) => {
+    if (confirmPassword !== oldPassword) {
+      ctx.addIssue({
+        code: "custom",
+        message: "The passwords did not match",
+      });
+    }
+  });
 
-export const BasicSettings = ({ session, user }: BasicSettingsProps) => {
-  const [_, updateUserProfile] = useUpdateUserProfileMutation();
+export const PasswordSettings = ({ session, user }: PasswordSettingsProps) => {
+  const [_, updateUserPassword] = useUpdateUserPasswordMutation();
 
-  const defaultValues: AccountSettingsProps = React.useMemo(() => {
+  const defaultValues: PasswordFormProps = React.useMemo(() => {
     return {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      twitch: prepandHttps(user.twitch),
-      youtube: prepandHttps(user.youtube),
-      discord: prepandHttps(user.discord),
-      facebook: prepandHttps(user.facebook),
-      instagram: prepandHttps(user.instagram),
-      password: "randompassword",
+      oldPassword: "randompassword",
     };
-  }, [user]);
+  }, []);
 
   const {
-    clearErrors,
     control,
-    register,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors },
-  } = useForm<AccountSettingsProps>({
+  } = useForm<PasswordFormProps>({
     defaultValues,
+    resolver: zodResolver(UpdatePasswordSchema),
   });
 
   const onInvalid = (errors) => {
     console.log("errors: ", errors);
   };
 
-  const onSubmit: SubmitHandler<AccountSettingsProps> = async (data) => {
-    await updateUserProfile({
-      updateProfileArgs: { ...data },
+  const onSubmit: SubmitHandler<PasswordFormProps> = async (data) => {
+    await updateUserPassword({
+      updatePasswordArgs: { ...data },
     });
   };
 
@@ -69,16 +67,16 @@ export const BasicSettings = ({ session, user }: BasicSettingsProps) => {
       >
         <div>
           <Text size="xl" weight="bold" color="lightContrast">
-            Basic Information
+            Password
           </Text>
           <Text color="loContrast">
-            This will be displayed on your profile.
+            Please enter your current password to change your password
           </Text>
         </div>
         <div>
-          <InputGroup label="First Name">
+          <InputGroup label="Current Password">
             <Controller
-              name="firstName"
+              name="oldPassword"
               control={control}
               render={({ field }) => (
                 <Input
@@ -86,13 +84,14 @@ export const BasicSettings = ({ session, user }: BasicSettingsProps) => {
                   size="medium"
                   value={field.value}
                   onChange={field.onChange}
+                  type="password"
                 />
               )}
             />
           </InputGroup>
-          <InputGroup className="my-12" label="Last Name">
+          <InputGroup className="my-12" label="New Password">
             <Controller
-              name="lastName"
+              name="newPassword"
               control={control}
               render={({ field }) => (
                 <Input
@@ -100,6 +99,22 @@ export const BasicSettings = ({ session, user }: BasicSettingsProps) => {
                   size="medium"
                   value={field.value}
                   onChange={field.onChange}
+                  type="password"
+                />
+              )}
+            />
+          </InputGroup>
+          <InputGroup className="my-12" label="Confirm New Password">
+            <Controller
+              name="confirmPassword"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  gold
+                  size="medium"
+                  value={field.value}
+                  onChange={field.onChange}
+                  type="password"
                 />
               )}
             />
@@ -107,33 +122,6 @@ export const BasicSettings = ({ session, user }: BasicSettingsProps) => {
         </div>
       </Section>
 
-      <Section
-        className="grid gap-8"
-        style={{ gridTemplateColumns: "1fr 2fr" }}
-      >
-        <div>
-          <Text size="xl" weight="bold" color="lightContrast">
-            Contact Information. Don&apos;t worry we won&apos;t spam you
-          </Text>
-          <Text color="loContrast">Ways for people to connect to you</Text>
-        </div>
-        <div>
-          <InputGroup label="Email">
-            <Controller
-              name="email"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  gold
-                  size="medium"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </InputGroup>
-        </div>
-      </Section>
       <Section>
         <Button
           size="large"

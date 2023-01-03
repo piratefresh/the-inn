@@ -38,3 +38,23 @@ export {
 } from "./Table";
 export type { Person } from "./Table";
 export { Tabs, TabsContent, TabsTrigger, TabsList } from "./Tabs";
+export {
+  Tooltip,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+  IconButton,
+} from "./Tooltip";
+export {
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuGroup,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+} from "./Dropdown";
