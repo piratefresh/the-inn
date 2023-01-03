@@ -24,7 +24,7 @@
   },
   "engines": {
     "npm": ">=7.0.0",
-    "node": "18.x"
+    "node": ">=14.0.0"
   },
   "packageManager": "pnpm@7.22.0"
 }
