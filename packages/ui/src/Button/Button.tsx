@@ -70,6 +70,9 @@ const StyledButton = styled("button", {
         border: "1px solid $yellowBrand",
       },
     },
+    active: {
+      true: {},
+    },
   },
 });
 

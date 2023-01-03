@@ -1,7 +1,7 @@
 {
   "pipeline": {
     "build": {
-      "dependsOn": ["^build", "^db:generate"],
+      "dependsOn": ["^build", "^db:generate", "^db:migration:deploy"],
       "outputs": ["dist/**", ".next/**"]
     },
     "lint": {
@@ -18,6 +18,9 @@
       "cache": false
     },
     "db:push": {
+      "cache": false
+    },
+    "db:migration:deploy": {
       "cache": false
     }
   }

@@ -5,13 +5,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
-    "build": "rm -rf dist && swc src -d dist --source-maps --copy-files",
+    "build": "rm -rf dist && db:migration:deploy && swc src -d dist --source-maps --copy-files",
     "build:swc": "swc . -d dist",
     "start": "node dist/index.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
     "db:migration:generate": "prisma migrate dev --create-only",
-    "db:migration:run": "prisma migrate dev"
+    "db:migration:run": "prisma migrate dev",
+    "db:migration:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@apollo/server": "^4.1.1",
