@@ -2,7 +2,6 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import { Difficulty } from "@typedefs/Difficulty";
 import { Experience } from "@typedefs/Experience";
 import argon2 from "argon2";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { User } from "@models/User";
 import { faker } from "@faker-js/faker";
 import { CampaignApplicationInput } from "@resolvers/CampaignApplicationInput";
