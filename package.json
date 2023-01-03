@@ -11,12 +11,12 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "dev:backend": "yarn workspace backend yarn dev",
-    "dev:web": "yarn workspace web yarn dev",
-    "dev:storybook": "yarn workspace docs yarn storybook",
+    "dev:backend": "pnpm workspace backend pnpm dev",
+    "dev:web": "pnpm workspace web pnpm dev",
+    "dev:storybook": "pnpm workspace docs pnpm storybook",
     "backend:prisma:generate": "cd apps/backend && npx prisma generate",
     "backend:prisma:migrate": "cd apps/backend && npx prisma migrate dev",
-    "gen:web": "yarn workspace web yarn gen"
+    "gen:web": "pnpm workspace web pnpm gen"
   },
   "devDependencies": {
     "prettier": "^2.5.1",
@@ -26,5 +26,5 @@
     "npm": ">=7.0.0",
     "node": "18.x"
   },
- "packageManager": "pnpm@7.22.0"
+  "packageManager": "pnpm@7.22.0"
 }
