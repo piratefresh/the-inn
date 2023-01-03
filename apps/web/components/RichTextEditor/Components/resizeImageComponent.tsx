@@ -116,6 +116,7 @@ export const ResizeImageComponent = ({
         style={{ width: "10px", height: "10px" }}
       /> */}
       <Resizer onResize={handleResize} selected={selected} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className={classes.join(" ")}
         ref={imageRef}
@@ -125,6 +126,7 @@ export const ResizeImageComponent = ({
         draggable={true}
         data-drag-handle
         onLoad={(e) => handleAspectRatio(e)}
+        alt="uploaded image"
       />
     </NodeViewWrapper>
   );

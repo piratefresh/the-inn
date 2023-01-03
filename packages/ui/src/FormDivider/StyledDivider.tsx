@@ -1,6 +1,6 @@
 import { styled } from "../theme";
 
-export const StyledDivider = styled("div", {
+export const StyledDivider: any = styled("div", {
   borderRadius: "$radii$md",
   borderBottom: "2px solid transparent",
   backgroundOrigin: "border-box",

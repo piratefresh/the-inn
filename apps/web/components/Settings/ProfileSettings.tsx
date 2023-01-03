@@ -3,11 +3,10 @@ import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 import InputGroup from "@components/ui/InputGroup";
 import { useUpdateUserProfileMutation } from "@generated/graphql";
 import { createTagOptions, TagOptions } from "@utils/createTagOptions";
-import { Section } from "pages/user/settings";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { SettingsProps } from "Types/Settings";
-import { MultiSelect, Text, Input, Button } from "ui";
+import { MultiSelect, Text, Input, Button, Section } from "ui";
 
 interface ProfileSettingsProps extends SettingsProps {}
 

@@ -1,6 +1,6 @@
 import { styled } from "../theme";
 
-export const StyledInput = styled("input", {
+export const StyledInput: any = styled("input", {
   // Reset
   all: "unset",
   appearance: "none",

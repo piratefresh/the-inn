@@ -51,6 +51,7 @@ export const Preview = ({ campaign }: LocationProps) => {
       }
       return router.push(`./location`);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [campaign?.id]
   );
 

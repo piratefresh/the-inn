@@ -11,7 +11,7 @@ interface TablePaginationProps {
   pagination: PaginationState;
 }
 
-export const PaginationButton = styled("button", {
+export const PaginationButton: any = styled("button", {
   all: "unset",
   height: "32px",
   width: "32px",
@@ -24,7 +24,7 @@ export const PaginationButton = styled("button", {
     fontSize: "$18",
   },
 });
-export const PaginationEllipsis = styled("button", {
+export const PaginationEllipsis: any = styled("button", {
   all: "unset",
   height: "32px",
   width: "32px",

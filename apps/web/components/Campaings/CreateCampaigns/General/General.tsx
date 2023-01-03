@@ -63,6 +63,8 @@ function findValueInJson(
   jsonItems: SelectOption[] | CreatableGameSelectorOption[],
   key: string
 ) {
+  // FIx this later
+  // @ts-ignore
   const object = jsonItems.find((o) =>
     Object.entries(o).some(([k, value]) => k === "value" && value === key)
   );

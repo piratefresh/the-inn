@@ -2,17 +2,16 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.CampaignResolver = exports.AddPlayerCampaignInput = exports.CreateCampaignInput = exports.CreateCampaignResult = exports.AuthResult = void 0;
+exports.CampaignResolver = exports.AddPlayerCampaignInput = exports.CreateCampaignResult = exports.AuthResult = void 0;
 var _typeGraphql = require("type-graphql");
 var _myContext = require("../typedefs/MyContext");
 var _fieldsValidationError = require("../errors/FieldsValidationError");
 var _badCredentialsError = require("../errors/BadCredentialsError");
 var _campaign = require("../models/Campaign");
 var _nonExistingCampaignError = require("../errors/NonExistingCampaignError");
-var _difficulty = require("../typedefs/Difficulty");
 var _cloudinary = require("cloudinary");
 var _membershipRole = require("../typedefs/MembershipRole");
-var _experience = require("../typedefs/Experience");
+var _createCampaignInput = require("./CreateCampaignInput");
 function _defineProperty(obj, key, value) {
     if (key in obj) {
         Object.defineProperty(obj, key, {
@@ -78,105 +77,6 @@ const CreateCampaignResult = (0, _typeGraphql).createUnionType({
         ]
 });
 exports.CreateCampaignResult = CreateCampaignResult;
-let CreateCampaignInput = class CreateCampaignInput {
-};
-exports.CreateCampaignInput = CreateCampaignInput;
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
-], CreateCampaignInput.prototype, "title", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
-], CreateCampaignInput.prototype, "summary", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
-], CreateCampaignInput.prototype, "image", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", Boolean)
-], CreateCampaignInput.prototype, "isOnline", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
-], CreateCampaignInput.prototype, "city", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
-], CreateCampaignInput.prototype, "state", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", Number)
-], CreateCampaignInput.prototype, "lat", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", Number)
-], CreateCampaignInput.prototype, "lng", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", typeof Date === "undefined" ? Object : Date)
-], CreateCampaignInput.prototype, "startDate", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", typeof Date === "undefined" ? Object : Date)
-], CreateCampaignInput.prototype, "endDate", void 0);
-__decorate([
-    (0, _typeGraphql).Field(()=>[
-            String
-        ]
-    ),
-    __metadata("design:type", Array)
-], CreateCampaignInput.prototype, "days", void 0);
-__decorate([
-    (0, _typeGraphql).Field(()=>[
-            String
-        ]
-    ),
-    __metadata("design:type", Array)
-], CreateCampaignInput.prototype, "time_periods", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
-], CreateCampaignInput.prototype, "game_system", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", Number)
-], CreateCampaignInput.prototype, "max_seats", void 0);
-__decorate([
-    (0, _typeGraphql).Field(()=>_experience.Experience
-    ),
-    __metadata("design:type", typeof _experience.Experience === "undefined" ? Object : _experience.Experience)
-], CreateCampaignInput.prototype, "experience", void 0);
-__decorate([
-    (0, _typeGraphql).Field(()=>_difficulty.Difficulty
-    ),
-    __metadata("design:type", typeof _difficulty.Difficulty === "undefined" ? Object : _difficulty.Difficulty)
-], CreateCampaignInput.prototype, "puzzles", void 0);
-__decorate([
-    (0, _typeGraphql).Field(()=>_difficulty.Difficulty
-    ),
-    __metadata("design:type", typeof _difficulty.Difficulty === "undefined" ? Object : _difficulty.Difficulty)
-], CreateCampaignInput.prototype, "combat", void 0);
-__decorate([
-    (0, _typeGraphql).Field(()=>_difficulty.Difficulty
-    ),
-    __metadata("design:type", typeof _difficulty.Difficulty === "undefined" ? Object : _difficulty.Difficulty)
-], CreateCampaignInput.prototype, "roleplay", void 0);
-__decorate([
-    (0, _typeGraphql).Field(()=>[
-            String
-        ]
-    ),
-    __metadata("design:type", Array)
-], CreateCampaignInput.prototype, "tags", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", Number)
-], CreateCampaignInput.prototype, "price", void 0);
-exports.CreateCampaignInput = CreateCampaignInput = __decorate([
-    (0, _typeGraphql).InputType()
-], CreateCampaignInput);
 let AddPlayerCampaignInput = class AddPlayerCampaignInput {
 };
 exports.AddPlayerCampaignInput = AddPlayerCampaignInput;
@@ -184,13 +84,6 @@ __decorate([
     (0, _typeGraphql).Field(),
     __metadata("design:type", String)
 ], AddPlayerCampaignInput.prototype, "campaignId", void 0);
-__decorate([
-    (0, _typeGraphql).Field(()=>[
-            String
-        ]
-    ),
-    __metadata("design:type", Array)
-], AddPlayerCampaignInput.prototype, "playerIds", void 0);
 exports.AddPlayerCampaignInput = AddPlayerCampaignInput = __decorate([
     (0, _typeGraphql).InputType()
 ], AddPlayerCampaignInput);
@@ -209,61 +102,237 @@ __decorate([
 ImageSignature = __decorate([
     (0, _typeGraphql).ObjectType()
 ], ImageSignature);
+let CampaignPagination = class CampaignPagination {
+};
+__decorate([
+    (0, _typeGraphql).Field((_type)=>[
+            _campaign.Campaign
+        ]
+    ),
+    __metadata("design:type", Array)
+], CampaignPagination.prototype, "campaigns", void 0);
+__decorate([
+    (0, _typeGraphql).Field(),
+    __metadata("design:type", String)
+], CampaignPagination.prototype, "cursor", void 0);
+__decorate([
+    (0, _typeGraphql).Field((_type)=>Boolean
+    ),
+    __metadata("design:type", Boolean)
+], CampaignPagination.prototype, "hasNextPage", void 0);
+CampaignPagination = __decorate([
+    (0, _typeGraphql).ObjectType()
+], CampaignPagination);
+const generateAlgoliaCampaigns = async ({ campaigns  })=>{
+    return await Promise.all(campaigns.map(async (campaign)=>{
+        return _objectSpread({}, campaign, {
+            objectID: campaign.id,
+            members: 0,
+            pending: 0
+        });
+    }));
+};
 let CampaignResolver = class CampaignResolver {
     async hellogame() {
         return "hello game";
     }
-    async getCampaigns({ prisma , res  }) {
-        return prisma.campaign.findMany({});
+    async getCampaigns({ prisma  }) {
+        const campaigns = await prisma.campaign.findMany({
+            orderBy: {
+                updatedAt: "desc"
+            },
+            include: {
+                memberships: {
+                    include: {
+                        user: true
+                    }
+                },
+                gameMaster: true
+            }
+        });
+        return campaigns;
     }
-    async getCampaign(id, { prisma , res  }) {
+    async getCampaignsPagination(cursor, limit, { prisma , res , req  }) {
+        let queryResults = null;
+        if (cursor) queryResults = await prisma.campaign.findMany({
+            take: limit,
+            skip: 1,
+            cursor: {
+                id: cursor
+            },
+            orderBy: {
+                createdAt: "asc"
+            }
+        });
+        else queryResults = await prisma.campaign.findMany({
+            take: limit
+        });
+        if (queryResults.length > 0) {
+            const lastPostInResults = queryResults[queryResults.length - 1];
+            const after = lastPostInResults.id;
+            const secondQueryResults = await prisma.campaign.findMany({
+                take: limit,
+                cursor: {
+                    id: after
+                },
+                orderBy: {
+                    createdAt: "asc"
+                }
+            });
+            return {
+                campaigns: queryResults,
+                cursor: after,
+                hasNextPage: secondQueryResults.length >= limit
+            };
+        }
+        return {
+            campaigns: [],
+            cursor: null,
+            hasNextPage: false
+        };
+    }
+    async getCampaign(id, { prisma , res , req  }) {
         return prisma.campaign.findUnique({
             where: {
                 id
             },
             include: {
-                game_master: true,
+                gameMaster: true,
                 memberships: {
                     select: {
+                        role: true,
                         user: true,
-                        campaign: true
+                        campaign: true,
+                        application: true
                     }
                 }
             }
         });
     }
-    async createCampaign(createCampaignInput, { prisma , res , req  }) {
+    async getUserCampaign({ prisma , res , req  }) {
+        console.log("user ID: ", req.session.userId);
+        return prisma.campaign.findMany({
+            where: {
+                gameMaster: {
+                    id: req.session.userId
+                }
+            },
+            include: {
+                memberships: {
+                    include: {
+                        user: true
+                    }
+                },
+                gameMaster: true
+            }
+        });
+    }
+    async createCampaign(createCampaignInput, { prisma , req , theInnIndex  }) {
         try {
             const campaign = await prisma.campaign.create({
                 data: _objectSpread({}, createCampaignInput, {
-                    gmId: req.session.userId
-                })
+                    gameMaster: {
+                        connect: {
+                            id: req.session.userId
+                        }
+                    },
+                    memberships: {
+                        create: {
+                            role: _membershipRole.MembershipRole.GM,
+                            userId: req.session.userId
+                        }
+                    }
+                }),
+                include: {
+                    memberships: true
+                }
             });
+            const players = campaign.memberships.filter((member)=>member.role === _membershipRole.MembershipRole.PLAYER
+            );
+            await theInnIndex.saveObject(_objectSpread({}, campaign, {
+                objectID: campaign.id,
+                members: players.length,
+                pending: 0
+            }));
             return Object.assign(new _campaign.Campaign(), campaign);
         } catch (err) {
+            console.log("err: ", err);
+            throw err;
+        }
+    }
+    async updateCampaign(createCampaignInput, campaignId, { prisma , req , theInnIndex  }) {
+        try {
+            const campaign = await prisma.campaign.update({
+                where: {
+                    id: campaignId
+                },
+                data: _objectSpread({}, createCampaignInput)
+            });
+            await theInnIndex.saveObject(_objectSpread({}, campaign, {
+                objectID: campaign.id
+            }));
+            return Object.assign(new _campaign.Campaign(), campaign);
+        } catch (err) {
+            console.log("err: ", err);
+            throw err;
+        }
+    }
+    async deactivateCampaign(campaignId, { prisma , req , theInnIndex  }) {
+        try {
+            await prisma.campaign.update({
+                where: {
+                    id: campaignId
+                },
+                data: {
+                    isActive: false
+                }
+            });
+            await theInnIndex.partialUpdateObject({
+                isActive: false,
+                objectID: campaignId
+            });
+            return true;
+        } catch (err) {
+            console.log("err: ", err);
+            throw err;
+        }
+    }
+    async deleteCampaign(campaignId, { prisma , req , theInnIndex  }) {
+        try {
+            await prisma.campaign.deleteMany({
+                where: {
+                    id: campaignId,
+                    gameMaster: {
+                        id: req.session.userId
+                    }
+                }
+            });
+            await theInnIndex.deleteObject(campaignId);
+            return true;
+        } catch (err) {
+            console.log("err: ", err);
             throw err;
         }
     }
     async addCampaignPlayer(addPlayerCampaignInput, { prisma , res , req  }) {
         try {
-            const members = await prisma.user.findMany({
+            const user = await prisma.user.findUnique({
                 where: {
-                    id: {
-                        in: addPlayerCampaignInput.playerIds
-                    }
+                    id: req.session.userId
                 }
             });
-            const playersArr = await members.map((player)=>({
-                    userId: player.id,
+            const userMembership = await prisma.membership.create({
+                data: {
+                    role: _membershipRole.MembershipRole.PLAYER,
                     campaignId: addPlayerCampaignInput.campaignId,
-                    role: _membershipRole.MembershipRole.PLAYER
-                })
-            );
-            const createdPlayers = await prisma.membership.createMany({
-                data: playersArr,
-                skipDuplicates: true
+                    userId: user.id
+                },
+                include: {
+                    campaign: true,
+                    user: true
+                }
             });
-            if (createdPlayers) {
+            if (userMembership) {
                 const foundCampaign = await prisma.campaign.findUnique({
                     where: {
                         id: addPlayerCampaignInput.campaignId
@@ -271,14 +340,14 @@ let CampaignResolver = class CampaignResolver {
                     include: {
                         memberships: {
                             select: {
-                                user: true,
-                                campaign: true
+                                campaign: true,
+                                role: true,
+                                user: true
                             }
                         },
-                        game_master: true
+                        gameMaster: true
                     }
                 });
-                console.log("foundCampaign: ", foundCampaign);
                 return Object.assign(new _campaign.Campaign(), foundCampaign);
             }
         } catch (err) {
@@ -289,6 +358,7 @@ let CampaignResolver = class CampaignResolver {
         const timestamp = Math.round(new Date().getTime() / 1000);
         const signature = _cloudinary.v2.utils.api_sign_request({
             timestamp,
+            upload_preset: "the_inn_campaign",
             folder: "The inn/campaignmedia"
         }, process.env.CLOUDINARY_API_SECRET);
         return {
@@ -316,6 +386,23 @@ __decorate([
     ])
 ], CampaignResolver.prototype, "getCampaigns", null);
 __decorate([
+    (0, _typeGraphql).Query(()=>CampaignPagination
+    ),
+    __param(0, (0, _typeGraphql).Arg("cursor", {
+        nullable: true
+    })),
+    __param(1, (0, _typeGraphql).Arg("limit", {
+        defaultValue: 4
+    })),
+    __param(2, (0, _typeGraphql).Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [
+        String,
+        Number,
+        typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
+    ])
+], CampaignResolver.prototype, "getCampaignsPagination", null);
+__decorate([
     (0, _typeGraphql).Query(()=>_campaign.Campaign
     ),
     __param(0, (0, _typeGraphql).Arg("id")),
@@ -327,16 +414,62 @@ __decorate([
     ])
 ], CampaignResolver.prototype, "getCampaign", null);
 __decorate([
+    (0, _typeGraphql).Query(()=>[
+            _campaign.Campaign
+        ]
+    ),
+    __param(0, (0, _typeGraphql).Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [
+        typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
+    ])
+], CampaignResolver.prototype, "getUserCampaign", null);
+__decorate([
     (0, _typeGraphql).Mutation((_type)=>CreateCampaignResult
     ),
     __param(0, (0, _typeGraphql).Arg("createCampaignInput")),
     __param(1, (0, _typeGraphql).Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [
-        typeof CreateCampaignInput === "undefined" ? Object : CreateCampaignInput,
+        typeof _createCampaignInput.CreateCampaignInput === "undefined" ? Object : _createCampaignInput.CreateCampaignInput,
         typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
     ])
 ], CampaignResolver.prototype, "createCampaign", null);
+__decorate([
+    (0, _typeGraphql).Mutation((_type)=>CreateCampaignResult
+    ),
+    __param(0, (0, _typeGraphql).Arg("createCampaignInput")),
+    __param(1, (0, _typeGraphql).Arg("campaignId")),
+    __param(2, (0, _typeGraphql).Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [
+        typeof _createCampaignInput.CreateCampaignInput === "undefined" ? Object : _createCampaignInput.CreateCampaignInput,
+        String,
+        typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
+    ])
+], CampaignResolver.prototype, "updateCampaign", null);
+__decorate([
+    (0, _typeGraphql).Mutation((_type)=>Boolean
+    ),
+    __param(0, (0, _typeGraphql).Arg("campaignId")),
+    __param(1, (0, _typeGraphql).Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [
+        String,
+        typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
+    ])
+], CampaignResolver.prototype, "deactivateCampaign", null);
+__decorate([
+    (0, _typeGraphql).Mutation((_type)=>Boolean
+    ),
+    __param(0, (0, _typeGraphql).Arg("campaignId")),
+    __param(1, (0, _typeGraphql).Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [
+        String,
+        typeof _myContext.MyContext === "undefined" ? Object : _myContext.MyContext
+    ])
+], CampaignResolver.prototype, "deleteCampaign", null);
 __decorate([
     (0, _typeGraphql).Mutation((_type)=>CreateCampaignResult
     ),

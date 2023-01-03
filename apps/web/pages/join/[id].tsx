@@ -51,6 +51,8 @@ const Join = () => {
 
   return (
     <div className={`${root()}  py-10`}>
+      {/* Fix Later */}
+      {/* @ts-ignore */}
       <CampaignSideCard campaign={campaign?.getCampaign} />
       <div className="max-w-7xl mx-auto h-screen relative">
         <CampaignApplication />

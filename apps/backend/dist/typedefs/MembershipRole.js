@@ -9,6 +9,7 @@ exports.MembershipRole = MembershipRole;
 (function(MembershipRole) {
     MembershipRole["GM"] = "GM";
     MembershipRole["PLAYER"] = "PLAYER";
+    MembershipRole["PENDING"] = "PENDING";
 })(MembershipRole || (exports.MembershipRole = MembershipRole = {}));
 (0, _typeGraphql).registerEnumType(MembershipRole, {
     name: 'MembershipRole'

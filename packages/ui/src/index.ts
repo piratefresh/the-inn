@@ -58,3 +58,4 @@ export {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
 } from "./Dropdown";
+export { Section } from "./Section";

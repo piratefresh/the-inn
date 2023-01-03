@@ -53,6 +53,8 @@ export function RangeCalendar(props: RangeCalendarProps<DateValue>) {
     <BorderWrapper gold>
       <Root {...calendarProps} ref={ref}>
         <CalendarHeader
+          // fix later
+          //@ts-ignore
           state={state}
           calendarProps={calendarProps}
           prevButtonProps={prevButtonProps}

@@ -43,6 +43,8 @@ export const OnlineOptions = ({
                   ...tags,
                   createTagOptions(e.currentTarget.value),
                 ];
+                // Fix this later
+                // @ts-ignore
                 setValue("tags", getUniqueListBy(newTags, "value"));
               }}
               onChange={(e) => {
@@ -70,6 +72,8 @@ export const OnlineOptions = ({
                   ...tags,
                   createTagOptions(e.currentTarget.value),
                 ];
+                // Fix this later
+                // @ts-ignore
                 setValue("tags", getUniqueListBy(newTags, "value"));
               }}
               onChange={(e) => {

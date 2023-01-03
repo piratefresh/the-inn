@@ -1,5 +1,4 @@
 import { AvatarUpload } from "@components/AvatarUpload";
-import { AvatarUploadDialog } from "@components/AvatarUpload/AvatarUploadDialog";
 import {
   useCreateImageSignatureMutation,
   useUpdateUserProfileMutation,
@@ -8,7 +7,7 @@ import { uploadImage } from "@utils/uploadImage";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { SettingsProps } from "Types/Settings";
-import { Button, Dialog, Text } from "ui";
+import { Text } from "ui";
 
 interface HeaderFormProps {
   image: File;

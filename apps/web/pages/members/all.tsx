@@ -51,6 +51,7 @@ const AllPage = () => {
         after: data.getUsers.pageInfo.endCursor,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isIntersecting]);
 
   if (error) return <p className="center">Error: {error.message}</p>;

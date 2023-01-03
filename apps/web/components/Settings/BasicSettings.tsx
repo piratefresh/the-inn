@@ -1,5 +1,4 @@
-import { Section } from "pages/user/settings";
-import { Button, Input, Text } from "ui";
+import { Button, Input, Text, Section } from "ui";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import InputGroup from "@components/ui/InputGroup";
 import {

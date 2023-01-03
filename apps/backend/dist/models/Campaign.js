@@ -8,6 +8,7 @@ var _experience = require("../typedefs/Experience");
 var _difficulty = require("../typedefs/Difficulty");
 var _user = require("./User");
 var _membership = require("./Membership");
+var _campaignMessage = require("./CampaignMessage");
 var __decorate = (void 0) && (void 0).__decorate || function(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -42,11 +43,21 @@ __decorate([
     __metadata("design:type", String)
 ], Campaign.prototype, "summary", void 0);
 __decorate([
+    (0, _typeGraphql).Field(),
+    __metadata("design:type", String)
+], Campaign.prototype, "jsonSummary", void 0);
+__decorate([
     (0, _typeGraphql).Field({
         nullable: true
     }),
     __metadata("design:type", String)
-], Campaign.prototype, "additional_details", void 0);
+], Campaign.prototype, "additionalDetails", void 0);
+__decorate([
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], Campaign.prototype, "jsonAdditionalDetails", void 0);
 __decorate([
     (0, _typeGraphql).Field({
         nullable: true
@@ -56,27 +67,47 @@ __decorate([
 __decorate([
     (0, _typeGraphql).Field(),
     __metadata("design:type", String)
-], Campaign.prototype, "image", void 0);
+], Campaign.prototype, "imageUrl", void 0);
 __decorate([
     (0, _typeGraphql).Field(),
     __metadata("design:type", Boolean)
 ], Campaign.prototype, "isOnline", void 0);
 __decorate([
-    (0, _typeGraphql).Field(),
+    (0, _typeGraphql).Field({
+        defaultValue: "Campaign"
+    }),
+    __metadata("design:type", String)
+], Campaign.prototype, "campaignType", void 0);
+__decorate([
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Campaign.prototype, "city", void 0);
 __decorate([
-    (0, _typeGraphql).Field(),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", String)
 ], Campaign.prototype, "state", void 0);
 __decorate([
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], Campaign.prototype, "area", void 0);
+__decorate([
     (0, _typeGraphql).Field((_type)=>_typeGraphql.Float
-    ),
+    , {
+        nullable: true
+    }),
     __metadata("design:type", Number)
 ], Campaign.prototype, "lat", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>_typeGraphql.Float
-    ),
+    , {
+        nullable: true
+    }),
     __metadata("design:type", Number)
 ], Campaign.prototype, "lng", void 0);
 __decorate([
@@ -84,7 +115,9 @@ __decorate([
     __metadata("design:type", typeof Date === "undefined" ? Object : Date)
 ], Campaign.prototype, "startDate", void 0);
 __decorate([
-    (0, _typeGraphql).Field(),
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
     __metadata("design:type", typeof Date === "undefined" ? Object : Date)
 ], Campaign.prototype, "endDate", void 0);
 __decorate([
@@ -100,7 +133,15 @@ __decorate([
         ]
     ),
     __metadata("design:type", Array)
-], Campaign.prototype, "time_periods", void 0);
+], Campaign.prototype, "timePeriods", void 0);
+__decorate([
+    (0, _typeGraphql).Field(),
+    __metadata("design:type", String)
+], Campaign.prototype, "timezone", void 0);
+__decorate([
+    (0, _typeGraphql).Field(),
+    __metadata("design:type", String)
+], Campaign.prototype, "gmId", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>_experience.Experience
     ),
@@ -111,12 +152,26 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
-], Campaign.prototype, "voip_system", void 0);
+], Campaign.prototype, "voipSystem", void 0);
+__decorate([
+    (0, _typeGraphql).Field(),
+    __metadata("design:type", String)
+], Campaign.prototype, "gameSystem", void 0);
+__decorate([
+    (0, _typeGraphql).Field({
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], Campaign.prototype, "virtualTable", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>_typeGraphql.Int
     ),
     __metadata("design:type", Number)
-], Campaign.prototype, "max_seats", void 0);
+], Campaign.prototype, "maxSeats", void 0);
+__decorate([
+    (0, _typeGraphql).Field(),
+    __metadata("design:type", Boolean)
+], Campaign.prototype, "isActive", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>_difficulty.Difficulty
     ),
@@ -132,15 +187,6 @@ __decorate([
     ),
     __metadata("design:type", typeof _difficulty.Difficulty === "undefined" ? Object : _difficulty.Difficulty)
 ], Campaign.prototype, "roleplay", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
-], Campaign.prototype, "gmId", void 0);
-__decorate([
-    (0, _typeGraphql).Field((_type)=>_user.User
-    ),
-    __metadata("design:type", typeof _user.User === "undefined" ? Object : _user.User)
-], Campaign.prototype, "game_master", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>[
             String
@@ -163,13 +209,26 @@ __decorate([
     __metadata("design:type", Array)
 ], Campaign.prototype, "gallery", void 0);
 __decorate([
+    (0, _typeGraphql).Field((_type)=>_user.User
+    ),
+    __metadata("design:type", typeof _user.User === "undefined" ? Object : _user.User)
+], Campaign.prototype, "gameMaster", void 0);
+__decorate([
     (0, _typeGraphql).Field((_type)=>[
             _membership.Membership
         ]
     ),
     __metadata("design:type", Array)
 ], Campaign.prototype, "memberships", void 0);
+__decorate([
+    (0, _typeGraphql).Field((_type)=>[
+            _campaignMessage.CampaignMessage
+        ]
+    ),
+    __metadata("design:type", Array)
+], Campaign.prototype, "campaignMessage", void 0);
 exports.Campaign = Campaign = __decorate([
+    (0, _typeGraphql).InputType("campaignInput"),
     (0, _typeGraphql).ObjectType()
 ], Campaign);
 

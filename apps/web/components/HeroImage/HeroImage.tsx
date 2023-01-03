@@ -9,7 +9,7 @@ export const HeroImage = ({ image }: HeroImageProps) => {
   const classes = [HeroImageStyles["root"]];
   return (
     <div className={classes.join(" ")}>
-      <Image src={image} layout="fill" objectFit="cover" />
+      <Image src={image} layout="fill" objectFit="cover" alt="Hero Image" />
     </div>
   );
 };

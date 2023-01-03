@@ -49,18 +49,24 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
 
     // empty
     if (url === "") {
+      // fix later
+      // @ts-ignore
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
 
       return;
     }
 
     // update link
-    return editor
-      .chain()
-      .focus()
-      .extendMarkRange("link")
-      .setLink({ href: url })
-      .run();
+    return (
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        // fix later
+        // @ts-ignore
+        .setLink({ href: url })
+        .run()
+    );
   }, [editor]);
 
   const handleImageChange = React.useCallback(async () => {

@@ -40,6 +40,7 @@ __decorate([
     __metadata("design:type", typeof _user.User === "undefined" ? Object : _user.User)
 ], Session.prototype, "user", void 0);
 exports.Session = Session = __decorate([
+    (0, _typeGraphql).InputType("sessionInput"),
     (0, _typeGraphql).ObjectType()
 ], Session);
 

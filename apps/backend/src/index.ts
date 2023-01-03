@@ -13,7 +13,7 @@ import express from "express";
 import cors from "cors";
 import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { WebSocketServer } from "ws";
+import WebSocket, { WebSocketServer as WSWebSocketServer } from "ws";
 import { useServer as useWsServer } from "graphql-ws/lib/use/ws";
 import { MyContext } from "@typedefs/MyContext";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
@@ -84,6 +84,8 @@ const startServer = async () => {
   app.set("port", 3000);
 
   const httpServer = createServer(app);
+
+  const WebSocketServer = WebSocket.Server || WSWebSocketServer;
 
   // Creating the WebSocket server
   const wsServer = new WebSocketServer({

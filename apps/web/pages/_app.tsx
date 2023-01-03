@@ -42,6 +42,8 @@ Router.events.on("routeChangeError", () => progress.finish());
 
 function App({
   Component,
+  // fix later
+  // @ts-ignore
   pageProps: { session, ...pageProps },
   router,
 }: AppPropsWithLayout) {

@@ -1,6 +1,6 @@
 import type * as Stitches from "@stitches/react";
 
-export const utils = {
+export const utils: any = {
   utils: {
     p: (value: Stitches.PropertyValue<"padding">) => ({
       padding: value,

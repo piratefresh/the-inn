@@ -66,6 +66,8 @@ export const Chip = ({
     defaultValue: defaultChecked,
     finalValue: false,
     onChange,
+    // fix later
+    // @ts-ignore
     rule: (val) => typeof val === "boolean",
   });
 

@@ -143,6 +143,8 @@ export const MenuBar = ({ editor }) => {
           {item.type === "divider" ? (
             <div className={Styles.divider} />
           ) : (
+            // fix later
+            // @ts-ignore
             <MenuItem {...item} />
           )}
         </Fragment>

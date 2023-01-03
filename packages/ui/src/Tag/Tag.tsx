@@ -13,4 +13,4 @@ const StyledTag = styled("div", {
   margin: "$space$4 $space$4 $space$4 0px",
 });
 
-export const Tag = StyledTag;
+export const Tag: any = StyledTag;

@@ -1,10 +1,8 @@
-import React from "react"
+import React from "react";
 
 export const ImageComponent = () => {
-    const imageRef = React.useRef<HTMLImageElement>()
+  const imageRef = React.useRef<HTMLImageElement>();
 
-    
-    return (
-        <img ref={imageRef} />
-    )
-}
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img ref={imageRef} alt="image" />;
+};

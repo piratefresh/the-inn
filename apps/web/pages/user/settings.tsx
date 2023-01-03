@@ -17,14 +17,6 @@ import { HeaderSettings } from "@components/Settings/HeaderSettings";
 import { initUrqlClient } from "@utils/initUrqlClient";
 import { PasswordSettings } from "@components/Settings/PasswordSettings";
 
-export const Section = styled("section", {
-  padding: "$8",
-  margin: "$16 0px",
-  backgroundColor: "hsl(0, 0%, 9%)",
-  border: "1px solid $yellowBrand",
-  borderRadius: "$md",
-});
-
 const StyledTabsTrigger = styled(TabsTrigger, {
   borderRadius: "$md",
   borderRadiusBottomLeft: 0,

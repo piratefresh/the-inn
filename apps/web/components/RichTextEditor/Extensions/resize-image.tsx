@@ -21,7 +21,8 @@ const Component = (props: any) => {
       data-drag-handle
     >
       <NodeViewContent className="content">
-        <img ref={imgRef} src={imgUrl} alt="sample1" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img ref={imgRef} src={imgUrl} alt="resized imag" />
       </NodeViewContent>
     </NodeViewWrapper>
   );

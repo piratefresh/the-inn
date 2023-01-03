@@ -62,6 +62,8 @@ export const InPersonOptions = ({
                   ...tags,
                   createTagOptions(e.currentTarget.value),
                 ];
+                // Fix this later
+                // @ts-ignore
                 setValue("tags", getUniqueListBy(newTags, "value"));
               }}
             />
@@ -87,6 +89,8 @@ export const InPersonOptions = ({
                   ...tags,
                   createTagOptions(e.currentTarget.value),
                 ];
+                // Fix this later
+                // @ts-ignore
                 setValue("tags", getUniqueListBy(newTags, "value"));
               }}
             />

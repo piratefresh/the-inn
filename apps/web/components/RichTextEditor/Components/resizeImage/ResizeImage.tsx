@@ -99,7 +99,8 @@ export const ResizeImageComponent = ({
 
   return (
     <NodeViewWrapper as="span" className="relative inline-block">
-      <Resizer onResize={handleResize} selected={selected} />
+      <Resizer onResize={handleResize} selected={selected} />\
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className={classes.join(" ")}
         ref={imageRef}

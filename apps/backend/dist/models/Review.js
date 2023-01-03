@@ -49,6 +49,7 @@ __decorate([
     __metadata("design:type", typeof _user.User === "undefined" ? Object : _user.User)
 ], Review.prototype, "user", void 0);
 exports.Review = Review = __decorate([
+    (0, _typeGraphql).InputType("reviewInput"),
     (0, _typeGraphql).ObjectType()
 ], Review);
 

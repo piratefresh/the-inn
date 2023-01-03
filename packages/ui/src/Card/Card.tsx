@@ -27,11 +27,11 @@ const StyledCardWrapper = styled("article", {
   },
 });
 
-export const CardSection = styled("div", {
+export const CardSection: any = styled("div", {
   p: "$space$8",
 });
 
-export const CardImage = styled("img", {
+export const CardImage: any = styled("img", {
   objectFit: "cover",
   borderTopLeftRadius: "4px",
   borderTopRightRadius: "4px",

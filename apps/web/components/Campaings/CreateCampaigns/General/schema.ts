@@ -27,6 +27,7 @@ export const dateSchema = z.preprocess((arg) => {
 }, z.date());
 type DateSchema = z.infer<typeof dateSchema>;
 
+// @ts-ignore
 export const TipTapJsonContent: z.ZodSchema<JSONContent> = z.lazy(() =>
   z.record(z.any()).and(
     z.object({

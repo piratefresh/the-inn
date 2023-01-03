@@ -25,10 +25,6 @@ __decorate([
 __decorate([
     (0, _typeGraphql).Field(),
     __metadata("design:type", String)
-], Account.prototype, "userId", void 0);
-__decorate([
-    (0, _typeGraphql).Field(),
-    __metadata("design:type", String)
 ], Account.prototype, "type", void 0);
 __decorate([
     (0, _typeGraphql).Field(),
@@ -43,26 +39,25 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
-], Account.prototype, "refresh_token", void 0);
+], Account.prototype, "refreshToken", void 0);
 __decorate([
     (0, _typeGraphql).Field({
         nullable: true
     }),
     __metadata("design:type", String)
-], Account.prototype, "access_token", void 0);
+], Account.prototype, "accessToken", void 0);
 __decorate([
-    (0, _typeGraphql).Field((_type)=>_typeGraphql.Int
-    , {
+    (0, _typeGraphql).Field({
         nullable: true
     }),
     __metadata("design:type", Number)
-], Account.prototype, "expires_at", void 0);
+], Account.prototype, "expiresAt", void 0);
 __decorate([
     (0, _typeGraphql).Field({
         nullable: true
     }),
     __metadata("design:type", String)
-], Account.prototype, "token_type", void 0);
+], Account.prototype, "tokenType", void 0);
 __decorate([
     (0, _typeGraphql).Field({
         nullable: true
@@ -74,31 +69,36 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
-], Account.prototype, "id_token", void 0);
+], Account.prototype, "idToken", void 0);
 __decorate([
     (0, _typeGraphql).Field({
         nullable: true
     }),
     __metadata("design:type", String)
-], Account.prototype, "session_state", void 0);
+], Account.prototype, "sessionState", void 0);
 __decorate([
     (0, _typeGraphql).Field({
         nullable: true
     }),
     __metadata("design:type", String)
-], Account.prototype, "oauth_token_secret", void 0);
+], Account.prototype, "oauthTokenSecret", void 0);
 __decorate([
     (0, _typeGraphql).Field({
         nullable: true
     }),
     __metadata("design:type", String)
-], Account.prototype, "oauth_token", void 0);
+], Account.prototype, "oauthToken", void 0);
+__decorate([
+    (0, _typeGraphql).Field(),
+    __metadata("design:type", String)
+], Account.prototype, "userId", void 0);
 __decorate([
     (0, _typeGraphql).Field((_type)=>_user.User
     ),
     __metadata("design:type", typeof _user.User === "undefined" ? Object : _user.User)
 ], Account.prototype, "user", void 0);
 exports.Account = Account = __decorate([
+    (0, _typeGraphql).InputType("AccountInput"),
     (0, _typeGraphql).ObjectType()
 ], Account);
 

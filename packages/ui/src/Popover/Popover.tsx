@@ -11,30 +11,11 @@ interface MenuItem {
 interface PopoverProps {
   trigger: React.ReactNode;
   children: React.ReactNode;
+  // Fix later
+  menuItems: any;
 }
 
-const solutions = [
-  {
-    name: "Insights",
-    description: "Measure actions your users take",
-    href: "##",
-    icon: IconOne,
-  },
-  {
-    name: "Automations",
-    description: "Create your own targeted content",
-    href: "##",
-    icon: IconTwo,
-  },
-  {
-    name: "Reports",
-    description: "Keep track of your growth",
-    href: "##",
-    icon: IconThree,
-  },
-];
-
-export const Popover = ({trigger, menuItems}: PopoverProps) => {
+export const Popover = ({ trigger, menuItems }: PopoverProps) => {
   return (
     <div className="fixed top-16 w-full max-w-sm px-4">
       <HeadlessPopover className="relative">
@@ -64,7 +45,7 @@ export const Popover = ({trigger, menuItems}: PopoverProps) => {
               <HeadlessPopover.Panel className="absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
                 <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
-                    {menuItems.map(item => (
+                    {menuItems.map((item) => (
                       <a
                         key={item.name}
                         href={item.href}
