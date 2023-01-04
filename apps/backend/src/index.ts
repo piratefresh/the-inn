@@ -67,7 +67,13 @@ const startServer = async () => {
 
     app.use(
       cors({
-        origin: "*",
+        origin: [
+          "http://localhost:3001",
+          "http://localhost:4000",
+          "http://localhost:4000/graphql",
+          "https://the-inn.vercel.app/",
+          "https://the-inn-production.up.railway.app",
+        ],
         credentials: true,
       })
     );
@@ -130,7 +136,13 @@ const startServer = async () => {
     app.use(
       "/graphql",
       cors<cors.CorsRequest>({
-        origin: "*",
+        origin: [
+          "http://localhost:3001",
+          "http://localhost:4000",
+          "http://localhost:4000/graphql",
+          "https://the-inn.vercel.app/",
+          "https://the-inn-production.up.railway.app",
+        ],
         credentials: true,
       }),
       bodyParser.json(),
