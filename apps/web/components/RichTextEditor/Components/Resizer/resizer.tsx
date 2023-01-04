@@ -1,5 +1,5 @@
 import React from "react";
-import ResizerStyles from "./Resizer.module.scss";
+import ResizerStyles from "./resizer.module.scss";
 
 export const Direction = {
   Top: "top",
