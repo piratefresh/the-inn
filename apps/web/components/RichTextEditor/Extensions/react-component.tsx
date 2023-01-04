@@ -1,6 +1,6 @@
-import { TooltipHeader } from "@components/ui/Tooltip/TooltipHeader";
-import { TooltipBody } from "@components/ui/Tooltip/TooltipBody";
-import { Tooltip } from "@components/ui/Tooltip/Tooltip";
+// import { TooltipHeader } from "@components/ui/Tooltip/TooltipHeader";
+// import { TooltipBody } from "@components/ui/Tooltip/TooltipBody";
+// import { Tooltip } from "@components/ui/Tooltip/Tooltip";
 import { mergeAttributes, Node } from "@tiptap/core";
 import { NodeViewProps, ReactNodeViewRenderer } from "@tiptap/react";
 import { NodeViewContent, NodeViewWrapper } from "@tiptap/react";
@@ -14,7 +14,9 @@ export const Component = (props: NodeViewProps) => {
 
   const content = (
     <div>
-      <TooltipHeader
+      <div>{title}</div>
+      <div>{description}</div>
+      {/* <TooltipHeader
         title={title}
         description={description}
         binds="Binds when picked up"
@@ -22,16 +24,16 @@ export const Component = (props: NodeViewProps) => {
         itemLvl="29"
         type="item"
       />
-      <TooltipBody description={description} />
+      <TooltipBody description={description} /> */}
     </div>
   );
   return (
     <NodeViewWrapper className="react-component-with-content">
-      <Tooltip content={content}>
-        <span className="label" contentEditable={false}>
-          TEST COMPONEENT
-        </span>
-      </Tooltip>
+      {/* <Tooltip content={content}> */}
+      <span className="label" contentEditable={false}>
+        TEST COMPONEENT
+      </span>
+      {/* </Tooltip> */}
 
       <NodeViewContent className="content" />
     </NodeViewWrapper>

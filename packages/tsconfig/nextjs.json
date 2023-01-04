@@ -18,24 +18,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-     "paths": {
-      "@lib/*": ["lib/*"],
-      "@utils/*": ["utils/*"],
-      "@config/*": ["config/*"],
-      "@consts/*": ["consts/*"],
-      "@assets/*": ["assets/*"],
-      "@components/*": ["components/*"],
-      "@context/*": ["context/*"],
-      "Types/*": ["types/*"],
-      "@store/*": ["store/*"],
-      "@graphql/*": ["graphql/*"],
-      "@features/*": ["features/*"],
-      "@hooks/*": ["hooks/*"],
-      "@layouts/*": ["layouts/*"],
-      "@views/*": ["views/*"],
-      "@generated/*": ["generated/*"]
-    }
+    "emitDecoratorMetadata": true
   },
   "include": ["src", "next-env.d.ts"],
   "exclude": ["node_modules"]
