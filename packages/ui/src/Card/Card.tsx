@@ -63,3 +63,5 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     </StyledCardWrapper>
   )
 );
+
+Card.displayName = "Card";

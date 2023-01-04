@@ -89,3 +89,5 @@ export const Spoiler = forwardRef<HTMLDivElement, SpoilerProps>(
     );
   }
 );
+
+Spoiler.displayName = "Spoiler";

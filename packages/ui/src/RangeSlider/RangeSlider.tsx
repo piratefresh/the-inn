@@ -29,6 +29,8 @@ export const RangeSlider = React.forwardRef(
   }
 );
 
+RangeSlider.displayName = "RangeSlider";
+
 const StyledSlider = styled(Root, {
   position: "relative",
   display: "flex",

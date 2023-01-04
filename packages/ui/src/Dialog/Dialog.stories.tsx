@@ -25,8 +25,9 @@ export const Primary: Story = {
         trigger={<Button size="large">Edit profile</Button>}
         onOpen={setOpen}
         open={open}
-        children={args.children}
-      />
+      >
+        {args.children}
+      </Dialog>
     );
   },
 };

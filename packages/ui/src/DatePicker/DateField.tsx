@@ -86,3 +86,5 @@ function DateSegment({ segment, state }: DateSegmentProps) {
     </div>
   );
 }
+
+StyledField.displayName = "StyledField";

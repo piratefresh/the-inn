@@ -68,3 +68,7 @@ export const DropdownMenuRadioItem = React.forwardRef<
     </DropdownMenuPrimitive.RadioItem>
   );
 });
+
+DropdownMenuRadioItem.displayName = "DropdownMenuRadioItem";
+DropdownMenuCheckboxItem.displayName = "DropdownMenuCheckboxItem";
+DropdownMenuContent.displayName = "DropdownMenuContent";

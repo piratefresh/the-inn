@@ -112,4 +112,6 @@ const Chip = React.forwardRef<HTMLInputElement, ChipProps>(
 
 const Group = ChipGroup;
 
+Chip.displayName = "Chip";
+
 export { Chip, Group };
