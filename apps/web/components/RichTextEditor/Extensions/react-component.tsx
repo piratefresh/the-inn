@@ -1,4 +1,3 @@
-// import { Tooltip } from "@mantine/core";
 import { TooltipHeader } from "@components/ui/Tooltip/TooltipHeader";
 import { TooltipBody } from "@components/ui/Tooltip/TooltipBody";
 import { Tooltip } from "@components/ui/Tooltip/Tooltip";
