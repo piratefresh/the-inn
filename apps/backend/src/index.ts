@@ -65,20 +65,6 @@ const startServer = async () => {
 
     app.set("trust proxy", 1);
 
-    // app.use(
-    //   cors({
-    //     origin: [
-    //       "http://localhost:3001",
-    //       "http://localhost:4000",
-    //       "http://localhost:4000/graphql",
-    //       "https://the-inn.vercel.app/",
-    //       "https://the-inn-production.up.railway.app",
-    //       "https://the-inn-production.up.railway.app/graphql",
-    //     ],
-    //     credentials: true,
-    //   })
-    // );
-
     // app.use(rateLimiter);
 
     app.use(sessionMiddleware);
