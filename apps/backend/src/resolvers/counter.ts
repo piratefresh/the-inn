@@ -50,7 +50,7 @@ export class CounterResolver {
   }
 
   @Subscription({ topics: "NUMBER_INCREMENTED" })
-  numberIncremented(@Root() currentNumber: number): number {
+  numberIncremented(@Root() currentNumber: number): Number {
     console.log("payload: ", currentNumber);
     return 22;
   }

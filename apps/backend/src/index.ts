@@ -52,10 +52,10 @@ const startServer = async () => {
       UserResolver,
       CampaignResolver,
       ReviewResolver,
-      CounterResolver,
       PrivateMessageResolver,
       NotificationResolver,
       ApplicationResolver,
+      // CounterResolver,
     ],
     pubSub: pubsub,
   });
