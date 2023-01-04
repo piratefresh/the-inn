@@ -72,6 +72,7 @@
     "@stitches/react": "^1.2.8",
     "@tanstack/react-table": "^8.7.4",
     "date-fns": "^2.29.3",
+    "next": "12",
     "react-aria": "^3.18.0",
     "react-select": "^5.7.0",
     "react-stately": "^3.20.0",
