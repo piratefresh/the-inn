@@ -43,7 +43,8 @@ const theInnIndex = algoliaClient.initIndex("dev_campaigns");
 const pubsub = new AblyPubSub({ key: process.env.ABLY_API_KEY });
 
 const startServer = async () => {
-  const PORT = process.env.PORT || 4000;
+  const PORT: number = parseInt(process.env.PORT) ?? 4000;
+  const HOST: string = process.env.HOST ?? "0.0.0.0";
   const app = express();
 
   const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
@@ -79,7 +80,7 @@ const startServer = async () => {
 
   app.use(sessionMiddleware);
 
-  app.set("port", 3000);
+  // app.set("port", 3000);
 
   const httpServer = createServer(app);
 
@@ -159,7 +160,7 @@ const startServer = async () => {
   );
 
   // Now that our HTTP server is fully set up, we can listen to it.
-  httpServer.listen(PORT, () => {
+  httpServer.listen(PORT, HOST, () => {
     console.log(`🚀 Server is now running on http://localhost:${PORT}/graphql`);
     console.log(
       `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`
