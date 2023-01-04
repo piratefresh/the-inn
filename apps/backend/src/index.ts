@@ -42,123 +42,129 @@ const theInnIndex = algoliaClient.initIndex("dev_campaigns");
 const pubsub = new AblyPubSub({ key: process.env.ABLY_API_KEY });
 
 const startServer = async () => {
-  const PORT: number = parseInt(process.env.PORT) ?? 4000;
-  const HOST: string = process.env.HOST ?? "0.0.0.0";
-  const app = express();
+  try {
+    const PORT: number = parseInt(process.env.PORT) ?? 4000;
+    const HOST: string = process.env.HOST ?? "0.0.0.0";
+    const app = express();
 
-  const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
-    resolvers: [
-      UserResolver,
-      CampaignResolver,
-      ReviewResolver,
-      PrivateMessageResolver,
-      NotificationResolver,
-      ApplicationResolver,
-    ],
-    pubSub: pubsub,
-  });
+    console.log(`🚀 Server is now running on http://${HOST}:${PORT}/graphql`);
 
-  const schema = makeExecutableSchema({ typeDefs, resolvers });
+    const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
+      resolvers: [
+        UserResolver,
+        CampaignResolver,
+        ReviewResolver,
+        PrivateMessageResolver,
+        NotificationResolver,
+        ApplicationResolver,
+      ],
+      pubSub: pubsub,
+    });
 
-  app.set("trust proxy", 1);
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-  app.use(
-    cors({
-      origin: "*",
-      credentials: true,
-    })
-  );
+    app.set("trust proxy", 1);
 
-  // app.use(rateLimiter);
+    app.use(
+      cors({
+        origin: "*",
+        credentials: true,
+      })
+    );
 
-  app.use(sessionMiddleware);
+    // app.use(rateLimiter);
 
-  const httpServer = createServer(app);
+    app.use(sessionMiddleware);
 
-  const WebSocketServer = WebSocket.Server || WSWebSocketServer;
+    const httpServer = createServer(app);
 
-  // Creating the WebSocket server
-  const wsServer = new WebSocketServer({
-    // This is the `httpServer` we created in a previous step.
-    server: httpServer,
-    // Pass a different path here if app.use
-    // serves expressMiddleware at a different path
-    path: "/graphql",
-  });
+    const WebSocketServer = WebSocket.Server || WSWebSocketServer;
 
-  // Hand in the schema we just created and have the
-  // WebSocketServer start listening.
-  const serverCleanup = useWsServer(
-    {
-      schema, // Adding a context property lets you add data to your GraphQL operation context
-      // authenticate the user and set it on the connection context
-      context: ({ extra }) => ({ req: extra.request, prisma, theInnIndex }),
-      onConnect: ({ extra }) => {
-        sessionMiddleware(extra.request as any, {} as any, () => {});
-      },
-    },
-    wsServer
-  );
+    // Creating the WebSocket server
+    const wsServer = new WebSocketServer({
+      // This is the `httpServer` we created in a previous step.
+      server: httpServer,
+      // Pass a different path here if app.use
+      // serves expressMiddleware at a different path
+      path: "/graphql",
+    });
 
-  const server = new ApolloServer<MyContext>({
-    schema,
-    introspection: true,
-    csrfPrevention: true,
-    plugins: [
-      // Disable dosent support graphql-ws
-      // ApolloServerPluginLandingPageGraphQLPlayground(),
-      ApolloServerPluginLandingPageLocalDefault({ includeCookies: true }),
-      ApolloServerPluginDrainHttpServer({ httpServer }),
-      // Proper shutdown for the WebSocket server.
+    // Hand in the schema we just created and have the
+    // WebSocketServer start listening.
+    const serverCleanup = useWsServer(
       {
-        async serverWillStart() {
-          return {
-            async drainServer() {
-              await serverCleanup.dispose();
-            },
-          };
+        schema, // Adding a context property lets you add data to your GraphQL operation context
+        // authenticate the user and set it on the connection context
+        context: ({ extra }) => ({ req: extra.request, prisma, theInnIndex }),
+        onConnect: ({ extra }) => {
+          sessionMiddleware(extra.request as any, {} as any, () => {});
         },
       },
-    ],
-  });
-
-  await server.start();
-
-  app.use(
-    "/graphql",
-    cors<cors.CorsRequest>({
-      origin: "*",
-      credentials: true,
-    }),
-    bodyParser.json(),
-    urlencoded({ extended: false }),
-    expressMiddleware(server, {
-      context: async ({ req, res }) => {
-        return {
-          prisma,
-          req,
-          res,
-          redis,
-          theInnIndex,
-        };
-      },
-    })
-  );
-
-  // Now that our HTTP server is fully set up, we can listen to it.
-  httpServer.listen(PORT, HOST, () => {
-    console.log(`🚀 Server is now running on http://${HOST}:${PORT}/graphql`);
-    console.log(
-      `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`
+      wsServer
     );
-  });
 
-  redis.on("error", function (err) {
-    console.log("Could not establish a connection with redis. " + err);
-  });
-  redis.on("connect", function (err) {
-    console.log("Connected to redis successfully");
-  });
+    const server = new ApolloServer<MyContext>({
+      schema,
+      introspection: true,
+      csrfPrevention: true,
+      plugins: [
+        // Disable dosent support graphql-ws
+        // ApolloServerPluginLandingPageGraphQLPlayground(),
+        ApolloServerPluginLandingPageLocalDefault({ includeCookies: true }),
+        ApolloServerPluginDrainHttpServer({ httpServer }),
+        // Proper shutdown for the WebSocket server.
+        {
+          async serverWillStart() {
+            return {
+              async drainServer() {
+                await serverCleanup.dispose();
+              },
+            };
+          },
+        },
+      ],
+    });
+
+    await server.start();
+
+    app.use(
+      "/graphql",
+      cors<cors.CorsRequest>({
+        origin: "*",
+        credentials: true,
+      }),
+      bodyParser.json(),
+      urlencoded({ extended: false }),
+      expressMiddleware(server, {
+        context: async ({ req, res }) => {
+          return {
+            prisma,
+            req,
+            res,
+            redis,
+            theInnIndex,
+          };
+        },
+      })
+    );
+
+    // Now that our HTTP server is fully set up, we can listen to it.
+    httpServer.listen(PORT, HOST, () => {
+      console.log(`🚀 Server is now running on http://${HOST}:${PORT}/graphql`);
+      console.log(
+        `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`
+      );
+    });
+
+    redis.on("error", function (err) {
+      console.log("Could not establish a connection with redis. " + err);
+    });
+    redis.on("connect", function (err) {
+      console.log("Connected to redis successfully");
+    });
+  } catch (err) {
+    console.log("err: ", err);
+  }
 };
 // seedDB();
 // seedDBApplication();
