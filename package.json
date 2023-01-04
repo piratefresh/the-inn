@@ -16,7 +16,8 @@
     "dev:storybook": "pnpm --filter ui run storybook",
     "backend:prisma:generate": "cd apps/backend && npx prisma generate",
     "backend:prisma:migrate": "cd apps/backend && npx prisma migrate dev",
-    "gen:web": "pnpm --filter web run gen"
+    "gen:web": "pnpm --filter web run gen",
+    "build:backend": "turbo run build --scope=backend"
   },
   "devDependencies": {
     "prettier": "^2.8.1",

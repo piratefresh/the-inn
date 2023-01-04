@@ -73,8 +73,6 @@ const startServer = async () => {
 
   app.use(sessionMiddleware);
 
-  // app.set("port", 3000);
-
   const httpServer = createServer(app);
 
   const WebSocketServer = WebSocket.Server || WSWebSocketServer;
@@ -149,7 +147,7 @@ const startServer = async () => {
 
   // Now that our HTTP server is fully set up, we can listen to it.
   httpServer.listen(PORT, HOST, () => {
-    console.log(`🚀 Server is now running on ${HOST}:${PORT}/graphql`);
+    console.log(`🚀 Server is now running on http://${HOST}:${PORT}/graphql`);
     console.log(
       `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`
     );
