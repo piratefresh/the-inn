@@ -9,12 +9,6 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 module.exports = withBundleAnalyzer(
   withTM({
     reactStrictMode: true,
-    presets: ["next/babel"],
-    plugins: [
-      ["styled-components", { ssr: true }],
-      "istanbul",
-      ["@babel/plugin-proposal-decorators", { legacy: true }],
-    ],
     images: {
       domains: ["res.cloudinary.com"],
     },

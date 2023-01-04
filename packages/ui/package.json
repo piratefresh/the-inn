@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "npx tailwindcss -i ./styles/tailwind.css -o ./dist/output.css --watch",
     "build": "npx tailwindcss -i ./styles/tailwind.css -o ./dist/output.css",
-    "lint": "TIMING=1 eslint src/**/*.ts* --fix",
+    "lint": "eslint src/**/*.ts* --fix",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -37,6 +37,7 @@
     "concurrently": "^7.6.0",
     "config": "workspace:*",
     "eslint": "^8.15.0",
+    "eslint-config-custom": "workspace:*",
     "postcss": "^8.4.19",
     "postcss-import": "^15.1.0",
     "react": "^18.2.0",
