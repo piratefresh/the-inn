@@ -243,7 +243,8 @@ export class CampaignResolver {
       });
 
       const players = campaign.memberships.filter(
-        (member) => member.role === MembershipRole.PLAYER
+        // Fix later
+        (member: any) => member.role === MembershipRole.PLAYER
       );
 
       await theInnIndex.saveObject({

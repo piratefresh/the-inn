@@ -17,7 +17,6 @@ function useClientId() {
 }
 
 function getReactId() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const id = useReactId();
   return id ? `mantine-${id.replace(/:/g, "")}` : "";
 }
@@ -25,6 +24,5 @@ function getReactId() {
 export function useId(staticId?: string) {
   return typeof staticId === "string"
     ? staticId
-    : // eslint-disable-next-line react-hooks/rules-of-hooks
-      getReactId() || useClientId();
+    : getReactId() || useClientId();
 }

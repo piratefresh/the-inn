@@ -8,7 +8,7 @@ dotenv.config();
 export const sessionMiddleware = session({
   name: COOKIE_NAME,
   store: new RedisStore({
-    client: redis,
+    client: redis as any,
     ttl: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
     prefix: redisPrefices.redisSessionPrefix,
   }),

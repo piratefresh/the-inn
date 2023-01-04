@@ -1,9 +1,9 @@
 import React from "react";
 import { styled } from "../theme";
 import { useChipGroup } from "./ChipGroup/ChipGroup.context";
-import { useId } from "web/hooks/useId";
+import { useId } from "../hooks/useId";
 import { ChipGroup } from "./ChipGroup";
-import { useUncontrolled } from "web/hooks/useUncontrolled";
+import { useUncontrolled } from "../hooks/useUncontrolled";
 
 const StyledChip = styled("input", {
   width: 0,

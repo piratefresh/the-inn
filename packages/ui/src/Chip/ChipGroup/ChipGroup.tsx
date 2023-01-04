@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "../../theme";
 import { sizes } from "../../theme/foundation/sizes";
 import { ChipGroupProvider } from "./ChipGroup.context";
-import { useUncontrolled } from "web/hooks/useUncontrolled";
+import { useUncontrolled } from "../../hooks/useUncontrolled";
 
 export type GroupPosition = "right" | "center" | "left" | "apart";
 

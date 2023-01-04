@@ -11,16 +11,16 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "dev:backend": "pnpm workspace backend pnpm dev",
-    "dev:web": "pnpm workspace web pnpm dev",
-    "dev:storybook": "pnpm workspace docs pnpm storybook",
+    "dev:backend": "pnpm --filter backend run dev",
+    "dev:web": "pnpm --filter web run dev",
+    "dev:storybook": "pnpm --filter docs run storybook",
     "backend:prisma:generate": "cd apps/backend && npx prisma generate",
     "backend:prisma:migrate": "cd apps/backend && npx prisma migrate dev",
-    "gen:web": "pnpm workspace web pnpm gen"
+    "gen:web": "pnpm --filter web run gen"
   },
   "devDependencies": {
-    "prettier": "^2.5.1",
-    "turbo": "latest"
+    "prettier": "^2.8.1",
+    "turbo": "^1.6.3"
   },
   "engines": {
     "npm": ">=7.0.0",
