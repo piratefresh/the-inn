@@ -16,6 +16,7 @@ export { Input } from "./Input";
 export { MultiSelect } from "./MultiSelect";
 export { RadioGroup } from "./RadioGroup";
 export { Select } from "./Select";
+export type { SelectOption } from "./Select";
 export { Tag } from "./Tag";
 export { theme, config, css, styled, createTheme } from "./theme";
 export { TimeField } from "./TimeField";
