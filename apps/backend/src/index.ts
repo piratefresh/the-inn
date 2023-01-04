@@ -7,7 +7,6 @@ import { PrismaClient } from "@prisma/client";
 import { UserResolver } from "@resolvers/user";
 import { CampaignResolver } from "@resolvers/campaign";
 import { ReviewResolver } from "@resolvers/review";
-import { CounterResolver } from "@resolvers/counter";
 import { PrivateMessageResolver } from "@resolvers/privateMessage";
 import express from "express";
 import cors from "cors";
@@ -55,7 +54,6 @@ const startServer = async () => {
       PrivateMessageResolver,
       NotificationResolver,
       ApplicationResolver,
-      // CounterResolver,
     ],
     pubSub: pubsub,
   });
@@ -66,12 +64,7 @@ const startServer = async () => {
 
   app.use(
     cors({
-      origin: [
-        "http://localhost:3001",
-        "http://localhost:4000",
-        "http://localhost:4000/graphql",
-        "https://the-inn-production.up.railway.app",
-      ],
+      origin: "*",
       credentials: true,
     })
   );
@@ -136,12 +129,7 @@ const startServer = async () => {
   app.use(
     "/graphql",
     cors<cors.CorsRequest>({
-      origin: [
-        "http://localhost:3001",
-        "http://localhost:4000",
-        "http://localhost:4000/graphql",
-        "https://the-inn-production.up.railway.app",
-      ],
+      origin: "*",
       credentials: true,
     }),
     bodyParser.json(),
@@ -161,7 +149,7 @@ const startServer = async () => {
 
   // Now that our HTTP server is fully set up, we can listen to it.
   httpServer.listen(PORT, HOST, () => {
-    console.log(`🚀 Server is now running on http://localhost:${PORT}/graphql`);
+    console.log(`🚀 Server is now running on ${HOST}:${PORT}/graphql`);
     console.log(
       `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`
     );

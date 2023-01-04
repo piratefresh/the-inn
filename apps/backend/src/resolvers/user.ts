@@ -26,7 +26,7 @@ import { NonExistingUserError } from "@errors/NonUserExists";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { issueToken, sendConfirmationEmail } from "@utils/sendEmailUtils";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
-import { EdgeType, ConnectionType } from "typegraphql-relay-connections";
+import { EdgeType } from "typegraphql-relay-connections";
 import { PageInfo } from "@typedefs/relay/PageInfo";
 
 export const AuthResult = createUnionType({

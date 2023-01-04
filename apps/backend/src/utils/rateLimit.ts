@@ -13,7 +13,7 @@
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis/with-fetch";
-import Reply from "./src/Reply";
+import { Request, Response, NextFunction } from "express";
 
 // Setup rate-limiter
 const rl = new Ratelimit({
@@ -22,21 +22,22 @@ const rl = new Ratelimit({
 });
 
 // Rate-limiter middleware function
-export async function rateLimiter(req, res, next) {
+export async function rateLimiter(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // Get ip address from headers
   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
   // Use upstash to see if ip is rate-limited
-  const { success, limit, remaining, reset } = await rl.limit(ip);
+  const { success, limit, remaining, reset } = await rl.limit(ip as string);
 
   // Return rate limit info in headers
-  res.header("X-Rate-Limit-Limit", limit);
-  res.header("X-Rate-Limit-Remaining", remaining);
-  res.header("X-Rate-Limit-Reset", reset);
+  res.header("X-Rate-Limit-Limit", limit.toString());
+  res.header("X-Rate-Limit-Remaining", remaining.toString());
+  res.header("X-Rate-Limit-Reset", reset.toString());
 
   // If request is allowed, continue
   if (success) return next();
-
-  // Or, show 429 error
-  Reply(req, res, 429, {});
 }
