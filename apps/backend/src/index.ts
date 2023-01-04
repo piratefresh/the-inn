@@ -43,7 +43,7 @@ const theInnIndex = algoliaClient.initIndex("dev_campaigns");
 const pubsub = new AblyPubSub({ key: process.env.ABLY_API_KEY });
 
 const startServer = async () => {
-  const PORT = 4000;
+  const PORT = process.env.PORT || 4000;
   const app = express();
 
   const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
