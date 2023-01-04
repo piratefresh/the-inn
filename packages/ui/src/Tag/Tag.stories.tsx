@@ -1,15 +1,19 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
+import { Tag } from "./Tag";
 
-export default {
-  title: "z3us components/Pill",
+let meta: Meta<typeof Tag> = {
+  title: "MGUI/Tag",
   component: Tag,
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
-} as ComponentMeta<typeof Tag>;
+};
 
-const Template: ComponentStory<typeof Tag> = (args) => {
-  const { children } = args;
-  const as = "div";
-  return <Tag as={as}>{children}</Tag>;
+export default meta;
+type Story = StoryObj<typeof Tag>;
+
+export const Primary: Story = {
+  args: {
+    as: "div",
+    children: "test",
+  },
+  render: (args) => <Tag as={args.as}>{args.children}</Tag>,
 };

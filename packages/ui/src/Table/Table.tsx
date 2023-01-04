@@ -11,6 +11,12 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import {
+  NumberParam,
+  StringParam,
+  useQueryParams,
+  withDefault,
+} from "use-query-params";
 import React from "react";
 import { TablePagination } from "./TablePagination";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
@@ -36,6 +42,9 @@ export type TableProps<TData extends object> = {
   rowSelection?: RowSelectionState;
 };
 
+const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_INDEX = 1;
+
 export const Table = <TData extends object>({
   data,
   columns,
@@ -49,7 +58,38 @@ export const Table = <TData extends object>({
   sorting,
   rowSelection,
 }: TableProps<TData>) => {
-  // const [globalFilter, setGlobalFilter] = React.useState("");
+  // Url Param Query States
+  const [params, setParams] = useQueryParams({
+    pageSize: withDefault(NumberParam, DEFAULT_PAGE_SIZE),
+    page: withDefault(NumberParam, DEFAULT_PAGE_INDEX),
+    q: StringParam,
+    sort: StringParam,
+  });
+
+  const {
+    page: pageParam,
+    pageSize: pageSizeParam,
+    q: qParam,
+    sort: sortParam,
+  } = params;
+
+  // External Table States
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+
+  const [{ pageIndex, pageSize }, setPagination] =
+    React.useState<PaginationState>({
+      pageIndex: pageParam === 0 ? 1 : pageParam,
+      pageSize: pageSizeParam,
+    });
+
+  const pagination = React.useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  );
 
   const table = useReactTable({
     data,

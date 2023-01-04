@@ -1,9 +1,9 @@
 import React from "react";
-import { ComponentMeta, Story } from "@storybook/react";
-import { Card } from "ui/src/Card";
-import { Header, Text } from "ui/src/Typography";
-import { styled } from "ui/src/theme";
-import { Tag } from "ui/src/Tag";
+import { Meta, StoryObj } from "@storybook/react";
+import { Card } from "./Card";
+import { Header, Text } from "../Typography";
+import { styled } from "../theme";
+import { Tag } from "../Tag";
 import { CardImage, CardProps, CardSection } from "./Card";
 
 const campaigns = [
@@ -106,87 +106,110 @@ const StyledText = styled(Text, {
   whiteSpace: "nowrap",
 });
 
-interface StoryCardProps extends CardProps {
-  campaign: any;
-}
-
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
-  title: "MGUI/Card",
+const meta: Meta<typeof Card> = {
+  title: "Card",
   component: Card,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
-  parameters: {
-    backgrounds: {
-      default: "facebook",
-      values: [{ name: "facebook", value: "#273435" }],
-    },
-  },
-} as ComponentMeta<typeof Card>;
-
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: Story<StoryCardProps> = (args) => (
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(4, 1fr)",
-      gap: "1rem",
-    }}
-  >
-    {campaigns.map((campaign) => (
-      <div style={{ maxWidth: "275px" }} key={campaign.name}>
-        <Card
-          style={{ display: "flex", flexDirection: "column", height: "100%" }}
-          {...args}
-        >
-          <CardImage
-            gold={args.gold}
-            width="100%"
-            height="175px"
-            src={campaign.imageURL}
-          />
-
-          <CardSection style={{ flex: 1 }}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <StyledText size="sm" weight="medium">
-                {campaign.gameSystem}
-              </StyledText>
-              <StyledText size="sm" weight="medium">
-                {campaign.members.length} out of {campaign.partySize} Players
-              </StyledText>
-            </div>
-            <Header size="xl">{campaign.name}</Header>
-            <StyledText size="sm">{campaign.startDate}</StyledText>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-              }}
-            >
-              {campaign.tags.map((tag) => (
-                <Tag key={tag}>{tag}</Tag>
-              ))}
-            </div>
-          </CardSection>
-        </Card>
-      </div>
-    ))}
-  </div>
-);
-
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  children: "Card",
-  gold: true,
-  campaigns,
 };
-export const Single = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Single.args = {
-  children: "Card",
-  gold: true,
-  campaigns: [campaigns[0]],
+
+export default meta;
+type Story = StoryObj<typeof Card>;
+
+export const Primary: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "1rem",
+      }}
+    >
+      {campaigns.map((campaign) => (
+        <div style={{ maxWidth: "275px" }} key={campaign.name}>
+          <Card
+            style={{ display: "flex", flexDirection: "column", height: "100%" }}
+          >
+            <CardImage
+              gold
+              width="100%"
+              height="175px"
+              src={campaign.imageURL}
+            />
+
+            <CardSection style={{ flex: 1 }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <StyledText size="sm" weight="medium">
+                  {campaign.gameSystem}
+                </StyledText>
+                <StyledText size="sm" weight="medium">
+                  {campaign.members.length} out of {campaign.partySize} Players
+                </StyledText>
+              </div>
+              <Header size="xl">{campaign.name}</Header>
+              <StyledText size="sm">{campaign.startDate}</StyledText>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                }}
+              >
+                {campaign.tags.map((tag) => (
+                  <Tag key={tag}>{tag}</Tag>
+                ))}
+              </div>
+            </CardSection>
+          </Card>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const SingleCard: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "1rem",
+      }}
+    >
+      {[campaigns[0]].map((campaign) => (
+        <div style={{ maxWidth: "275px" }} key={campaign.name}>
+          <Card
+            style={{ display: "flex", flexDirection: "column", height: "100%" }}
+          >
+            <CardImage
+              gold
+              width="100%"
+              height="175px"
+              src={campaign.imageURL}
+            />
+
+            <CardSection style={{ flex: 1 }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <StyledText size="sm" weight="medium">
+                  {campaign.gameSystem}
+                </StyledText>
+                <StyledText size="sm" weight="medium">
+                  {campaign.members.length} out of {campaign.partySize} Players
+                </StyledText>
+              </div>
+              <Header size="xl">{campaign.name}</Header>
+              <StyledText size="sm">{campaign.startDate}</StyledText>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                }}
+              >
+                {campaign.tags.map((tag) => (
+                  <Tag key={tag}>{tag}</Tag>
+                ))}
+              </div>
+            </CardSection>
+          </Card>
+        </div>
+      ))}
+    </div>
+  ),
 };

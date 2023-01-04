@@ -1,51 +1,60 @@
+import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { Input } from "ui/src/Input";
+import { Input } from "./Input";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof Input> = {
   title: "MGUI/Form/Input",
   component: Input,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: "color" },
+};
+
+export default meta;
+type Story = StoryObj<typeof Input>;
+
+export const Primary: Story = {
+  args: {
+    value: "Input",
+    gold: true,
+    size: "medium",
   },
-} as ComponentMeta<typeof Input>;
+  render: (args) => {
+    return <Input {...args} />;
+  },
+};
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Input> = (args) => <Input {...args} />;
+export const Unstyled: Story = {
+  ...Primary,
+  args: {
+    ...Primary.args,
+    value: "Input",
+    gold: false,
+  },
+};
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  value: "Input",
-  gold: true,
-  size: "medium",
+export const Small: Story = {
+  ...Primary,
+  args: {
+    ...Primary.args,
+    value: "Input",
+    gold: true,
+    size: "small",
+  },
 };
-export const Unstyled = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Unstyled.args = {
-  value: "Input",
-  gold: false,
+
+export const Medium: Story = {
+  ...Primary,
+  args: {
+    ...Primary.args,
+    value: "Input",
+    gold: true,
+    size: "medium",
+  },
 };
-export const Small = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Small.args = {
-  value: "Input",
-  gold: true,
-  size: "small",
-};
-export const Medium = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Medium.args = {
-  value: "Input",
-  gold: true,
-  size: "medium",
-};
-export const Large = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Large.args = {
-  value: "Input",
-  gold: true,
-  size: "large",
+export const Large: Story = {
+  ...Primary,
+  args: {
+    ...Primary.args,
+    value: "Input",
+    gold: true,
+    size: "large",
+  },
 };

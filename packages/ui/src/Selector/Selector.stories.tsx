@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { Selector } from "ui/src/Selector";
+import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
+import { Chip } from "../Chip";
+import { Selector } from "./Selector";
 
 const OPTIONS = [
   { value: "chocolate", label: "Chocolate" },
@@ -8,32 +9,22 @@ const OPTIONS = [
   { value: "vanilla", label: "Vanilla" },
 ];
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof Chip> = {
   title: "MGUI/Form/Selector",
-  component: Selector,
-  parameters: {
-    backgrounds: {
-      default: "facebook",
-      values: [{ name: "facebook", value: "#273435" }],
-    },
-  },
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
-} as ComponentMeta<typeof Selector>;
-
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = (args) => {
-  const [option, setSelectoredOption] = React.useState(OPTIONS[0]);
-  return (
-    <div style={{ maxWidth: "300px" }}>
-      <Selector options={OPTIONS} />
-    </div>
-  );
+  component: Chip,
 };
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {};
+export default meta;
+type Story = StoryObj<typeof Chip>;
+
+export const Primary: Story = {
+  args: {},
+  render: (args) => {
+    const [option, setSelectoredOption] = React.useState(OPTIONS[0]);
+    return (
+      <div style={{ maxWidth: "300px" }}>
+        <Selector options={OPTIONS} />
+      </div>
+    );
+  },
+};

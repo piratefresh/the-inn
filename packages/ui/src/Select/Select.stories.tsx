@@ -1,6 +1,6 @@
+import { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { Select } from "ui/src/Select";
+import { Select } from "./Select";
 
 const OPTIONS = [
   { value: 1, name: "Dungeon and Dragons" },
@@ -10,36 +10,26 @@ const OPTIONS = [
   { value: 5, name: "Shadowrun" },
 ];
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof Select> = {
   title: "MGUI/Form/Select",
   component: Select,
-  parameters: {
-    backgrounds: {
-      default: "facebook",
-      values: [{ name: "facebook", value: "#273435" }],
-    },
-  },
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
-} as ComponentMeta<typeof Select>;
-
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Select> = (args) => {
-  const [option, setSelectedOption] = React.useState(OPTIONS[0]);
-  return (
-    <div style={{ maxWidth: "300px" }}>
-      <Select
-        options={OPTIONS}
-        onChange={setSelectedOption}
-        selected={option}
-      />
-    </div>
-  );
 };
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {};
+export default meta;
+type Story = StoryObj<typeof Select>;
+
+export const Primary: Story = {
+  args: {},
+  render: (args) => {
+    const [option, setSelectedOption] = React.useState(OPTIONS[0]);
+    return (
+      <div style={{ maxWidth: "300px" }}>
+        <Select
+          options={OPTIONS}
+          onChange={setSelectedOption}
+          selected={option}
+        />
+      </div>
+    );
+  },
+};

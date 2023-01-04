@@ -1,55 +1,60 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { Checkbox } from ".";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
-  title: "MGUI/Form/Checkbox",
+const meta: Meta<typeof Checkbox> = {
+  title: "Checkbox",
   component: Checkbox,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-} as ComponentMeta<typeof Checkbox>;
-
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Checkbox> = (args) => {
-  const [checked, setChecked] = React.useState<boolean>(false);
-  const [hover, setHover] = React.useState<boolean>(false);
-
-  return (
-    <Checkbox
-      {...args}
-      onChange={(e) => setChecked(e.target.checked)}
-      onMouseOver={() => setHover(true)}
-      onMouseOut={() => setHover(false)}
-      hover={hover}
-      checked={checked}
-    />
-  );
 };
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  checked: false,
-  name: "checkbox-1",
+export default meta;
+
+export const Primary: StoryObj<typeof Checkbox> = {
+  args: {
+    checked: false,
+    name: "checkbox-1",
+  },
+  render: (args) => {
+    const [checked, setChecked] = React.useState<boolean>(false);
+    const [hover, setHover] = React.useState<boolean>(false);
+    return (
+      <Checkbox
+        {...args}
+        onChange={(e) => setChecked(e.target.checked)}
+        onMouseOver={() => setHover(true)}
+        onMouseOut={() => setHover(false)}
+        hover={hover}
+        checked={checked}
+      />
+    );
+  },
 };
-export const Small = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Small.args = {
-  checked: false,
-  name: "checkbox-1",
-  size: "small",
+
+export const Small: StoryObj<typeof Checkbox> = {
+  ...Primary,
+  args: {
+    ...Primary.args,
+    checked: false,
+    name: "checkbox-1",
+    size: "small",
+  },
 };
-export const Medium = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Medium.args = {
-  checked: false,
-  name: "checkbox-1",
-  size: "medium",
+
+export const Medium: StoryObj<typeof Checkbox> = {
+  ...Primary,
+  args: {
+    ...Primary.args,
+    checked: false,
+    name: "checkbox-1",
+    size: "medium",
+  },
 };
-export const Large = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Large.args = {
-  checked: false,
-  name: "checkbox-1",
-  size: "large",
+
+export const Large: StoryObj<typeof Checkbox> = {
+  ...Primary,
+  args: {
+    ...Primary.args,
+    name: "checkbox-1",
+    size: "large",
+  },
 };

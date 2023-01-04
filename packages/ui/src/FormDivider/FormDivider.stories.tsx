@@ -1,24 +1,22 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { FormDivider, FormDividerProps } from "ui/src/FormDivider";
+import { Meta, StoryObj } from "@storybook/react";
+import { FormDivider, FormDividerProps } from "./FormDivider";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof FormDivider> = {
   title: "MGUI/Form/FormDivider",
   component: FormDivider,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    label: { control: "string" },
+};
+
+export default meta;
+type Story = StoryObj<typeof FormDivider>;
+
+export const Primary: Story = {
+  args: {
+    label: "FormDivider",
   },
-} as ComponentMeta<typeof FormDivider>;
-
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof FormDivider> = (args) => (
-  <FormDivider {...args} />
-);
-
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  label: "FormDivider",
+  render: (args) => {
+    const [checked, setChecked] = React.useState(false);
+    const [value, setValue] = React.useState<string[]>(["react"]);
+    return <FormDivider {...args} />;
+  },
 };

@@ -1,27 +1,27 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
+import { FormGroup } from "./FormGroup";
+import { Input } from "../Input";
 
-import { FormGroup } from "ui/src/FormGroup";
-import { Input } from "ui/src/Input";
-
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof FormGroup> = {
   title: "MGUI/Form/FormGroup",
   component: FormGroup,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-} as ComponentMeta<typeof FormGroup>;
+};
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof FormGroup> = (args) => (
-  <FormGroup {...args}>
-    <Input size="medium" gold />
-  </FormGroup>
-);
+export default meta;
+type Story = StoryObj<typeof FormGroup>;
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  label: "Name",
-  helperText: "The name of the campaign",
-  color: "loContrast",
+export const Primary: Story = {
+  args: {
+    label: "Name",
+    helperText: "The name of the campaign",
+    color: "loContrast",
+  },
+  render: (args) => {
+    return (
+      <FormGroup {...args}>
+        <Input size="medium" gold />
+      </FormGroup>
+    );
+  },
 };

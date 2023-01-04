@@ -1,8 +1,8 @@
+import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { RangeSlider } from "ui/src/RangeSlider";
-import { styled } from "ui/src/theme";
-import { Input } from "ui/src/Input";
+import { Input } from "../Input";
+import { styled } from "../theme";
+import { RangeSlider } from "./RangeSlider";
 
 const StyledInput = styled(Input, {});
 
@@ -12,42 +12,31 @@ const StyledInputGroup = styled("div", {
   marginTop: "$8",
 });
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof RangeSlider> = {
   title: "MGUI/Form/RangeSlider",
   component: RangeSlider,
-  parameters: {
-    backgrounds: {
-      default: "facebook",
-      values: [{ name: "facebook", value: "#273435" }],
-    },
-  },
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
-} as ComponentMeta<typeof RangeSlider>;
-
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof RangeSlider> = (args) => {
-  const [value, setValue] = React.useState([25]);
-
-  return (
-    <div>
-      <RangeSlider
-        defaultValue={[25]}
-        value={value}
-        minStepsBetweenThumbs={1}
-        onValueChange={setValue}
-      />
-
-      <StyledInputGroup>
-        <StyledInput gold value={`$ ${value}` as string} />
-      </StyledInputGroup>
-    </div>
-  );
 };
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {};
+export default meta;
+type Story = StoryObj<typeof RangeSlider>;
+
+export const Primary: Story = {
+  args: {},
+  render: (args) => {
+    const [value, setValue] = React.useState([25]);
+    return (
+      <div>
+        <RangeSlider
+          defaultValue={[25]}
+          value={value}
+          minStepsBetweenThumbs={1}
+          onValueChange={setValue}
+        />
+
+        <StyledInputGroup>
+          <StyledInput gold value={`$ ${value}` as string} />
+        </StyledInputGroup>
+      </div>
+    );
+  },
+};

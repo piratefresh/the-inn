@@ -1,33 +1,19 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { TimeField } from "ui/src/TimeField";
-import {
-  useDatePickerState,
-  useDateRangePickerState,
-} from "@react-stately/datepicker";
-import { useDateRangePicker } from "@react-aria/datepicker";
-import { today, now, getLocalTimeZone } from "@internationalized/date";
+import { StoryObj, Meta } from "@storybook/react";
+import { TimeField } from "./TimeField";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof TimeField> = {
   title: "MGUI/TimeField",
   component: TimeField,
-  parameters: {
-    backgrounds: {
-      default: "facebook",
-      values: [{ name: "facebook", value: "#273435" }],
-    },
-  },
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
-} as ComponentMeta<typeof TimeField>;
+};
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof TimeField> = (args) => {
-  return (
-    <>
+export default meta;
+type Story = StoryObj<typeof TimeField>;
+
+export const Primary: Story = {
+  args: {},
+  render: (args) => {
+    return (
       <div
         style={{
           width: 400,
@@ -36,10 +22,6 @@ const Template: ComponentStory<typeof TimeField> = (args) => {
       >
         <TimeField label="Appointment time" locale="" />
       </div>
-    </>
-  );
+    );
+  },
 };
-
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {};

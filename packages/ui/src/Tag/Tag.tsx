@@ -1,4 +1,5 @@
 import { blackA } from "@radix-ui/colors";
+import React from "react";
 import { styled } from "../theme";
 
 const StyledTag = styled("div", {
@@ -13,4 +14,15 @@ const StyledTag = styled("div", {
   margin: "$space$4 $space$4 $space$4 0px",
 });
 
-export const Tag: any = StyledTag;
+interface TagProps {
+  children: React.ReactNode;
+  as?: string;
+}
+
+export const Tag = ({ children, as, ...props }: TagProps) => {
+  return (
+    <StyledTag as={as} {...props}>
+      {children}
+    </StyledTag>
+  );
+};

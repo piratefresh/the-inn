@@ -239,7 +239,7 @@ const ApplicationPage = () => {
 
   if (fetching && !campaign && fetchingApplications && !applications)
     return <div>Loading....</div>;
-  console.log("pagination: ", pagination);
+
   return (
     <div className="max-w-7xl mx-auto relative py-16">
       <div className="my-8">

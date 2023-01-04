@@ -1,10 +1,8 @@
-import { DefaultProps, Selectors } from "@mantine/styles";
 import { useUncontrolled } from "@mantine/hooks";
 import { Box } from "@mantine/core";
 
 export interface ChipProps
-  extends DefaultProps,
-    Omit<React.ComponentPropsWithoutRef<"input">, "size" | "onChange"> {
+  extends Omit<React.ComponentPropsWithoutRef<"input">, "size" | "onChange"> {
   /** Chip radius from theme or number to set value in px */
   radius?: string;
 
@@ -28,6 +26,10 @@ export interface ChipProps
 
   /** Calls when checked state changes */
   onChange?(checked: boolean): void;
+
+  classNames?: string;
+
+  styles?: React.CSSProperties;
 
   /** Active color from theme, defaults to theme.primaryColor */
   color?: string;

@@ -1,26 +1,19 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Table } from "./Table";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Button } from "../Button";
 import { IndeterminateCheckbox } from "./IndeterminateCheckbox";
 import { makeData, Person } from "./makeData";
 import Link from "next/link";
+import { Meta, StoryObj } from "@storybook/react";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof Table> = {
   title: "MGUI/Table",
   component: Table,
-  parameters: {
-    backgrounds: {
-      default: "dark",
-      values: [
-        { name: "dark", value: "rgb(13, 10, 0)" },
-        { name: "facebook", value: "#3b5998" },
-      ],
-    },
-  },
-} as ComponentMeta<typeof Table>;
+};
+
+export default meta;
+type Story = StoryObj<typeof Table>;
 
 const columnHelper = createColumnHelper<Person>();
 
@@ -94,14 +87,11 @@ const COLUMNS: ColumnDef<Person, any>[] = [
   }),
 ];
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Table> = (args) => {
-  const columns = React.useMemo(() => COLUMNS, []);
-  const data = React.useMemo(() => makeData(150), []);
-
-  return <Table columns={columns} data={data} />;
+export const Primary: Story = {
+  args: {},
+  render: (args) => {
+    const columns = React.useMemo(() => COLUMNS, []);
+    const data = React.useMemo(() => makeData(150), []);
+    return <Table columns={columns} data={data} />;
+  },
 };
-
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {};

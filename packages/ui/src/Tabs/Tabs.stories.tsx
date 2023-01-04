@@ -1,19 +1,49 @@
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { Tabs } from "ui/src/Tabs";
+import { Meta, StoryObj } from "@storybook/react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof Tabs> = {
   title: "MGUI/Tabs",
   component: Tabs,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-} as ComponentMeta<typeof Tabs>;
+};
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Tabs> = (args) => <Tabs />;
+export default meta;
+type Story = StoryObj<typeof Tabs>;
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  children:
-    "“George is a fantastic GM.  He really knows the rules and helps beginners.  He always makes sure everyone I comfortable and having fun.  I love that he uses different voices for different NPCs.”",
+export const Primary: Story = {
+  args: {},
+  render: (args) => {
+    return (
+      <Tabs defaultValue="basic" className="text-white">
+        <div
+          className="max-w-7xl mx-auto my-16 grid"
+          style={{ gridTemplateColumns: "auto", gridAutoRows: "max-content" }}
+        >
+          <TabsList className="flex mt-8 border-b border-brandYellow">
+            <TabsTrigger
+              className="flex flex-row items-center justify-center px-8 h-16 border border-brandYellow hover:text-brandYellow hover:bg-brandLightBlack data-[state=active]:text-brandYellow"
+              value="basic"
+            >
+              Basic Settings
+            </TabsTrigger>
+            <TabsTrigger
+              className="flex flex-row items-center justify-center px-8 h-16 border border-brandYellow hover:text-brandYellow hover:bg-brandLightBlack data-[size=active]:text-brandYellow"
+              value="profile"
+            >
+              Profile
+            </TabsTrigger>
+            <TabsTrigger
+              className="flex flex-row items-center justify-center px-8 h-16 border border-brandYellow hover:text-brandYellow hover:bg-brandLightBlack data-[size=active]:text-brandYellow"
+              value="password"
+            >
+              Password
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="basic">Basic Settings</TabsContent>
+          <TabsContent value="profile">Profile</TabsContent>
+          <TabsContent value="password">Passsword</TabsContent>
+        </div>
+      </Tabs>
+    );
+  },
 };

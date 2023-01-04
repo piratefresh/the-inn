@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { useArgs } from "@storybook/client-api";
-import { RadioGroup } from "ui/src/RadioGroup";
+import { RadioGroup } from "./RadioGroup";
 
 const OPTIONS = [
   { value: "Low", label: "Low" },
@@ -9,52 +7,42 @@ const OPTIONS = [
   { value: "High", label: "High" },
 ];
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof RadioGroup> = {
   title: "MGUI/Form/RadioGroup",
   component: RadioGroup,
-  parameters: {
-    backgrounds: {
-      default: "facebook",
-      values: [{ name: "facebook", value: "#273435" }],
-    },
-  },
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
+};
+
+export default meta;
+type Story = StoryObj<typeof RadioGroup>;
+
+export const Primary: Story = {
   args: {
-    value: "",
-
-    onChange: (v: string) => {},
+    options: OPTIONS,
+    direction: "column",
+    width: "250px",
   },
-} as ComponentMeta<typeof RadioGroup>;
-
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof RadioGroup> = (args) => {
-  const [checked, setChecked] = React.useState<string>("Low");
-
-  return (
-    <RadioGroup
-      {...args}
-      value={checked}
-      onChange={(v) => setChecked(v)}
-      options={args.options}
-      direction={args.direction}
-      width={args.width}
-    />
-  );
+  render: (args) => {
+    const [checked, setChecked] = React.useState<string>("Low");
+    return (
+      <RadioGroup
+        {...args}
+        value={checked}
+        onChange={(v) => setChecked(v)}
+        options={args.options}
+        direction={args.direction}
+        width={args.width}
+      />
+    );
+  },
 };
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  options: OPTIONS,
-  direction: "column",
-  width: "250px",
-};
-export const Row = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Row.args = {
-  options: OPTIONS,
-  direction: "row",
-  width: "250px",
-  height: "100px",
+export const Row: Story = {
+  ...Primary,
+  args: {
+    ...Primary.args,
+    options: OPTIONS,
+    direction: "row",
+    width: "250px",
+    height: "100px",
+  },
 };
