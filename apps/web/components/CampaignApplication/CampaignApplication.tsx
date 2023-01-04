@@ -17,10 +17,10 @@ import {
   ChipGroup,
   Button,
   FormDivider,
+  SelectOption,
 } from "ui";
 import { Checkbox } from "@mantine/core";
 import { SKILL_LEVELS } from "consts/skillLevels";
-import { SelectOption } from "../Select";
 import InputGroup from "@components/ui/InputGroup";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ApplicationSchema } from "./CampaignApplicationSchema";
@@ -35,25 +35,6 @@ interface CampaignApplicationForm {
   timePeriods: string[];
   experience: Experience;
 }
-
-const itemsCenter = css({
-  itemsAlign: "center",
-});
-
-const Flex = styled("div", {
-  display: "flex",
-
-  variants: {
-    flexDirection: {
-      row: {
-        flexDirection: "row",
-      },
-      column: {
-        flexDirection: "column",
-      },
-    },
-  },
-});
 
 export const CampaignApplication = () => {
   const router = useRouter();
