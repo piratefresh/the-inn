@@ -13,7 +13,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "dev:backend": "pnpm --filter backend run dev",
     "dev:web": "pnpm --filter web run dev",
-    "dev:storybook": "pnpm --filter docs run storybook",
+    "dev:storybook": "pnpm --filter ui run storybook",
     "backend:prisma:generate": "cd apps/backend && npx prisma generate",
     "backend:prisma:migrate": "cd apps/backend && npx prisma migrate dev",
     "gen:web": "pnpm --filter web run gen"

@@ -107,7 +107,7 @@ const StyledText = styled(Text, {
 });
 
 const meta: Meta<typeof Card> = {
-  title: "Card",
+  title: "MGUI/Card",
   component: Card,
 };
 
@@ -115,7 +115,11 @@ export default meta;
 type Story = StoryObj<typeof Card>;
 
 export const Primary: Story = {
-  render: () => (
+  args: {
+    background: "dark",
+    gold: true,
+  },
+  render: (args) => (
     <div
       style={{
         display: "grid",
@@ -126,10 +130,11 @@ export const Primary: Story = {
       {campaigns.map((campaign) => (
         <div style={{ maxWidth: "275px" }} key={campaign.name}>
           <Card
+            {...args}
             style={{ display: "flex", flexDirection: "column", height: "100%" }}
           >
             <CardImage
-              gold
+              gold={args.gold}
               width="100%"
               height="175px"
               src={campaign.imageURL}

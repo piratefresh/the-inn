@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { Card, CardImage, CardSection, Header, Tag, Text } from "ui";
 import Link from "next/link";
 import { GetCampaignsQuery, MembershipRole } from "@generated/graphql";
-import { styled } from "ui/src/theme";
+import { styled } from "ui";
 import React from "react";
 
 export interface CampaignProps {

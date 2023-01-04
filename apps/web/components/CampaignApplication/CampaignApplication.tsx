@@ -20,7 +20,7 @@ import {
 } from "ui";
 import { Checkbox } from "@mantine/core";
 import { SKILL_LEVELS } from "consts/skillLevels";
-import { SelectOption } from "ui/src/Select/Select";
+import { SelectOption } from "../Select";
 import InputGroup from "@components/ui/InputGroup";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ApplicationSchema } from "./CampaignApplicationSchema";

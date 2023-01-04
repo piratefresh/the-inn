@@ -1,5 +1,5 @@
 import React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { Avatar } from "./Avatar";
 
 const meta: Meta<typeof Avatar> = {
@@ -7,7 +7,7 @@ const meta: Meta<typeof Avatar> = {
    * See https://storybook.js.org/docs/7.0/react/configure/overview#configure-story-loading
    * to learn how to generate automatic titles
    */
-  title: "Avatar",
+  title: "MGUI/Avatar",
   component: Avatar,
 };
 

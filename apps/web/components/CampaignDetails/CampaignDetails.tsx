@@ -1,5 +1,5 @@
 import { styled, Text, Tag } from "ui";
-import { ITimezoneOption } from "ui/src/TimeZonePicker/TimeZonePicker";
+import { ITimezoneOption } from "ui";
 
 const StyledTag = styled(Tag, {
   marginLeft: "$4",

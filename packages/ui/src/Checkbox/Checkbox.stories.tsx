@@ -1,9 +1,9 @@
 import React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { Checkbox } from ".";
 
 const meta: Meta<typeof Checkbox> = {
-  title: "Checkbox",
+  title: "MGUI/Checkbox",
   component: Checkbox,
 };
 

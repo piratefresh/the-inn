@@ -8,7 +8,6 @@ import { DOMAttributes, FocusableElement } from "@react-types/shared";
 import React, { forwardRef, useRef } from "react";
 import { AriaDateFieldProps, useLocale } from "react-aria";
 import { DateFieldState } from "react-stately";
-import { Text } from "../Typography";
 
 function createCalendar(identifier: string) {
   switch (identifier) {
@@ -23,6 +22,7 @@ type DateFieldProps = AriaDateFieldProps<DateValue> & {
   label?: React.ReactNode;
   labelProps?: DOMAttributes<FocusableElement>;
   name?: string;
+  onClick?: () => void;
 };
 export function DateField(props: DateFieldProps) {
   const { locale } = useLocale();

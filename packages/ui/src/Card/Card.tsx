@@ -2,7 +2,6 @@ import React from "react";
 import { styled } from "../theme";
 
 const StyledCardWrapper = styled("article", {
-  backgroundColor: "$loContrast",
   variants: {
     background: {
       dark: {
@@ -21,7 +20,7 @@ const StyledCardWrapper = styled("article", {
         backgroundOrigin: "border-box",
         backgroundClip: "content-box, border-box",
         backgroundImage:
-          "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
+          "linear-gradient(rgb(24,24,24), rgb(24,24,24)),linear-gradient($yellowBrand, $orangeBrand)",
       },
     },
   },
