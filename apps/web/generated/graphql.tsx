@@ -411,7 +411,6 @@ export type PrivateMessageInput = {
 
 export type Query = {
   __typename?: 'Query';
-  currentNumber: Scalars['Int'];
   getAllNotifications: Array<Notification>;
   getAllPrivateMessages: Array<PrivateMessage>;
   getApplicationCampaign: ApplicationConnection;
@@ -506,7 +505,6 @@ export type Subscription = {
   __typename?: 'Subscription';
   newCampaignApplication: NewCampaignNotification;
   newPrivateMessage: PrivateMessage;
-  numberIncremented: Scalars['Float'];
   subscription: Scalars['String'];
 };
 
