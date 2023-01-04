@@ -117,6 +117,8 @@ export class CampaignResolver {
       },
     });
 
+    console.log("campaigns: ", campaigns);
+
     return campaigns;
   }
   @Query(() => CampaignPagination)
