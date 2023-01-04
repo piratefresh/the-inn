@@ -1,10 +1,10 @@
-import _uniqueId from "lodash/uniqueId";
+import { v4 as uuidv4 } from "uuid";
 import { styled } from "ui";
 
 const DUMMY_DATA = [
   {
     message: "Hello",
-    id: _uniqueId(),
+    id: uuidv4(),
     sender: {
       firstName: "Magnus",
       lastName: "Nilsen",
@@ -22,7 +22,7 @@ const DUMMY_DATA = [
   },
   {
     message: "Hello To you",
-    id: _uniqueId(),
+    id: uuidv4(),
     sender: {
       firstName: "Ron",
       lastName: "Test",
@@ -40,7 +40,7 @@ const DUMMY_DATA = [
   },
   {
     message: "Whats up",
-    id: _uniqueId(),
+    id: uuidv4(),
     sender: {
       firstName: "Magnus",
       lastName: "Nilsen",
@@ -58,7 +58,7 @@ const DUMMY_DATA = [
   },
   {
     message: "I don't know",
-    id: _uniqueId(),
+    id: uuidv4(),
     sender: {
       firstName: "Ron",
       lastName: "Test",
