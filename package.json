@@ -17,7 +17,11 @@
     "backend:prisma:generate": "cd apps/backend && npx prisma generate",
     "backend:prisma:migrate": "cd apps/backend && npx prisma migrate dev",
     "gen:web": "pnpm --filter web run gen",
-    "build:backend": "turbo run build --scope=backend"
+    "build:backend": "turbo run build --scope=backend",
+    "build:frontend": "turbo run build --filter=frontend",
+    "heroku-postbuild": "if [ $CLIENT_ENV ]; then yarn run prod-frontend; elif [ $SERVER_ENV ]; then yarn run prod-backend; else echo no environment detected, please set CLIENT_ENV or SERVER_ENV; fi",
+    "prod-frontend": "yarn run build:frontend",
+    "prod-backend": "yarn run build:backend"
   },
   "devDependencies": {
     "prettier": "^2.8.1",

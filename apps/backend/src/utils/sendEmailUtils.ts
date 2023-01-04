@@ -14,11 +14,11 @@ export async function sendConfirmationEmail(email: string, token: string) {
       templateId: "d-7065a428853042ca90d2abfbf85d2c3d",
       dynamicTemplateData: {
         url: `${process.env
-          .FRONTEND_URL!}/confirm-user-callback?token=${token}&email=${email}`,
+          .NEXT_PUBLIC_FRONTEND!}/confirm-user-callback?token=${token}&email=${email}`,
       },
       hideWarnings: true,
     };
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    sgMail.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY);
 
     await sgMail.send(message);
   } catch (error: any) {
