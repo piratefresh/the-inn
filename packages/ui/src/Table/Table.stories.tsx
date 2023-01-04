@@ -70,7 +70,7 @@ const COLUMNS: ColumnDef<Person, any>[] = [
     header: () => <span>Games Played</span>,
     footer: (info) => info.column.id,
   }),
-  columnHelper.accessor("experiance", {
+  columnHelper.accessor("experience", {
     header: "Experiance",
     footer: (info) => info.column.id,
   }),
@@ -92,6 +92,6 @@ export const Primary: Story = {
   render: (args) => {
     const columns = React.useMemo(() => COLUMNS, []);
     const data = React.useMemo(() => makeData(150), []);
-    return <Table columns={columns} data={data} />;
+    return <Table pagination={} columns={columns} data={data} />;
   },
 };

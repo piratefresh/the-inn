@@ -71,6 +71,7 @@
     "@react-aria/datepicker": "^3.1.0",
     "@react-aria/i18n": "^3.5.1",
     "@react-aria/overlays": "^3.12.1",
+    "@react-stately/calendar": "^3.0.5",
     "@react-stately/datepicker": "^3.2.1",
     "@react-types/shared": "^3.16.0",
     "@stitches/react": "^1.2.8",
