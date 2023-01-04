@@ -2,7 +2,7 @@ import UploadDropZone from "@rpldy/upload-drop-zone";
 import { useBatchAddListener, useRequestPreSend } from "@rpldy/uploady";
 import clsx from "clsx";
 import { forwardRef, useCallback, useEffect, useState } from "react";
-import DropZoneStyles from "./Dropzone.module.css";
+import DropZoneStyles from "./Dropzone.module.scss";
 import { useCreateImageSignatureMutation } from "@generated/graphql";
 import Image from "next/image";
 import React from "react";

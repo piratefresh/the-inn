@@ -18,7 +18,7 @@ import InputGroup from "@components/ui/InputGroup";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
-import GeneralStyles from "./General.module.css";
+import GeneralStyles from "./General.module.scss";
 import { ClickableDropZone } from "@components/Dropzone/ClickableDropZone";
 import {
   Button,

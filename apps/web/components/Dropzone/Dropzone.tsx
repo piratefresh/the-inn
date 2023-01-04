@@ -4,7 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import update from "immutability-helper";
 import { DndProvider } from "react-dnd";
 import { v4 as uuidv4 } from "uuid";
-import DropZoneStyles from "./Dropzone.module.css";
+import DropZoneStyles from "./Dropzone.module.scss";
 import { useRequestPreSend } from "@rpldy/uploady";
 import { DropZone } from "./TargetBox";
 import { FileCard } from "./FileCard";

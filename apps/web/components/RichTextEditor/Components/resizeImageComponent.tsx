@@ -3,7 +3,7 @@ import { Editor, NodeViewWrapper } from "@tiptap/react";
 import React from "react";
 import Resizer from "./Resizer";
 import { Direction } from "./Resizer/resizer";
-import resizeImageComponentStyles from "./component.module.css";
+import resizeImageComponentStyles from "./component.module.scss";
 
 interface IResizeImageComponent {
   isDraggable: boolean;
