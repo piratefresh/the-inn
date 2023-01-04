@@ -76,6 +76,7 @@
     "next-query-params": "^4.1.0",
     "next-themes": "^0.2.1",
     "next-urql": "^4.0.0",
+    "prosemirror-model": "^1.18.3",
     "prosemirror-state": "^1.4.2",
     "react": "^18.2.0",
     "react-aria": "^3.22.0",
