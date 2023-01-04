@@ -1,6 +1,6 @@
 import { blackA } from "@radix-ui/colors";
 import React from "react";
-import { styled } from "../theme";
+import { styled, VariantProps } from "../theme";
 
 const StyledTag = styled("div", {
   display: "inline-flex",
@@ -14,15 +14,11 @@ const StyledTag = styled("div", {
   margin: "$space$4 $space$4 $space$4 0px",
 });
 
-interface TagProps {
-  children: React.ReactNode;
+interface TagProps extends React.ComponentProps<typeof StyledTag> {
+  children?: React.ReactNode;
   as?: string;
 }
 
-export const Tag = ({ children, as, ...props }: TagProps) => {
-  return (
-    <StyledTag as={as} {...props}>
-      {children}
-    </StyledTag>
-  );
+export const Tag = ({ children, ...props }: TagProps) => {
+  return <StyledTag {...props}>{children}</StyledTag>;
 };
