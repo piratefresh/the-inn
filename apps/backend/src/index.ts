@@ -73,6 +73,7 @@ const startServer = async () => {
           "http://localhost:4000/graphql",
           "https://the-inn.vercel.app/",
           "https://the-inn-production.up.railway.app",
+          "https://the-inn-production.up.railway.app/graphql",
         ],
         credentials: true,
       })
@@ -142,6 +143,7 @@ const startServer = async () => {
           "http://localhost:4000/graphql",
           "https://the-inn.vercel.app/",
           "https://the-inn-production.up.railway.app",
+          "https://the-inn-production.up.railway.app/graphql",
         ],
         credentials: true,
       }),
