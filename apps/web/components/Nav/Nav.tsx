@@ -14,7 +14,7 @@ import { BellIcon, TicketIcon, UserIcon } from "@heroicons/react/24/solid";
 import { Menu, HeadlessMenu, Text } from "ui";
 
 const navSubItems = {
-  campaign: [
+  campaigns: [
     {
       label: "Find Campaigns",
       href: "/campaigns/findcampaigns",
