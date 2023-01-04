@@ -440,6 +440,7 @@ importers:
       '@radix-ui/react-slider': ^1.1.0
       '@radix-ui/react-tabs': ^1.0.1
       '@radix-ui/react-tooltip': ^1.0.2
+      '@react-aria/button': ^3.6.4
       '@react-aria/calendar': ^3.0.1
       '@react-aria/datepicker': ^3.1.0
       '@react-aria/i18n': ^3.5.1
@@ -503,6 +504,7 @@ importers:
       '@radix-ui/react-slider': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-tabs': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-tooltip': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
+      '@react-aria/button': 3.6.4_react@18.2.0
       '@react-aria/calendar': 3.0.5_biqbaboplfbrettd7655fr4n2y
       '@react-aria/datepicker': 3.2.1_biqbaboplfbrettd7655fr4n2y
       '@react-aria/i18n': 3.6.3_react@18.2.0
