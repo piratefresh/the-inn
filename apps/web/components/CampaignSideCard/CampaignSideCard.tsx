@@ -1,8 +1,9 @@
 import { CreateCampaignState } from "@features/createCampaign/createCampaignSlice";
+import { GetCampaignQuery } from "@generated/graphql";
 import { styled, Text, Button } from "ui";
 
 interface CampaignSideCardProps {
-  campaign: CreateCampaignState;
+  campaign: CreateCampaignState | GetCampaignQuery["getCampaign"];
   onSubmit?: () => void;
   submitText?: string;
 }

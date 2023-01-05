@@ -6,7 +6,6 @@ import {
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
-import { usePalette } from "react-palette";
 import { Avatar, Button, Card, CardImage, HeroImage, styled, Text } from "ui";
 
 const StyledCard = styled(Card, {
@@ -44,6 +43,8 @@ interface CampaignCardSmallProps {
   campaign: GetCampaignsQuery["getCampaigns"][0];
 }
 
+const MAX_SHOW_APPLICANTS = 5;
+
 export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
   const [_, deleteCampaign] = useDeleteCampaignMutation();
   const [__, deactivateCampaign] = useDeactivateCampaignMutation();
@@ -58,10 +59,6 @@ export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
       campaignId: campaign.id,
     });
   };
-
-  const { data, loading, error } = usePalette(
-    "https://res.cloudinary.com/film-it/image/upload/v1654054323/xwea8auorlrsf6zhuvet.jpg"
-  );
 
   if (!campaign) return <div>...loading</div>;
 
@@ -102,16 +99,25 @@ export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
         </div>
 
         <div className="flex flex-row items-center ml-2">
-          {campaign.memberships.map((member) => {
-            return member.user.imageUrl ? (
-              <Avatar
-                imageUrl={member.user.imageUrl}
-                name={`${member.user.firstName} ${member.user.lastName}`}
-              />
-            ) : (
-              <MemberCircle />
-            );
-          })}
+          {campaign.memberships
+            .slice(1)
+            .slice(-MAX_SHOW_APPLICANTS)
+            .map((member) => {
+              return member.user.imageUrl ? (
+                <Avatar
+                  imageUrl={member.user.imageUrl}
+                  name={`${member.user.firstName} ${member.user.lastName}`}
+                />
+              ) : (
+                <MemberCircle />
+              );
+            })}
+          {campaign.memberships.length > MAX_SHOW_APPLICANTS && (
+            <Text>
+              +{campaign.memberships.length - MAX_SHOW_APPLICANTS} More
+            </Text>
+          )}
+          {campaign.memberships.length > 1 && <Text> Applicants</Text>}
         </div>
 
         <div className="border-yellow-500 border-b my-4" />

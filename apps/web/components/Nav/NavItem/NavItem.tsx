@@ -51,7 +51,7 @@ export const NavItemButton = ({ label, onClick, href = "" }: NavItemProps) => {
 
   return (
     <li
-      className={`font-sans list-none mr-8 text-brandBlack dark:text-white ${
+      className={`cursor-pointer font-sans list-none mr-8 text-brandBlack dark:text-white ${
         isSelected ? "font-bold" : ""
       }`}
     >

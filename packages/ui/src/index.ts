@@ -19,6 +19,7 @@ export { Select } from "./Select";
 export type { SelectOption } from "./Select";
 export { Tag } from "./Tag";
 export { theme, config, css, styled, createTheme } from "./theme";
+export { media, mediaString } from "./theme/foundation/media";
 export { TimeField } from "./TimeField";
 export { Header, Text } from "./Typography";
 export { Box } from "./Box";
@@ -61,3 +62,20 @@ export {
   DropdownMenuSeparator,
 } from "./Dropdown";
 export { Section } from "./Section";
+export { Spoiler } from "./Spoiler";
+export {
+  NavigationMenuRoot,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuSub,
+  NavigationMenuViewport,
+  NavigationMenuPrimitive,
+  ViewportPosition,
+  ListItemLink,
+  List,
+  ListItem,
+} from "./NavigationMenu";

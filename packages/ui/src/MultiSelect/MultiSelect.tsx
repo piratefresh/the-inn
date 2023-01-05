@@ -30,7 +30,7 @@ export function getUniqueListBy(
 const colourStyles: StylesConfig<String, true> = {
   control: (styles) => ({
     ...styles,
-    height: 42,
+
     borderRadius: 6,
     cursor: "pointer",
     border: "3px solid transparent",

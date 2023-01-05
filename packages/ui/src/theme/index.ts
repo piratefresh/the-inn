@@ -20,6 +20,7 @@ import { createStitches } from "@stitches/react";
 import { borderRadius } from "./foundation/borderRadius";
 import { borderStyles, borderWidth } from "./foundation/borders";
 import { font } from "./foundation/font";
+import { media } from "./foundation/media";
 import { shadows } from "./foundation/shadow";
 import { sizes } from "./foundation/sizes";
 import { spacing } from "./foundation/spacing";
@@ -93,6 +94,7 @@ export const { config, css, styled, createTheme, theme } = createStitches({
   utils: {
     ...utils.utils,
   },
+  media,
 });
 
 const darkTheme = createTheme({

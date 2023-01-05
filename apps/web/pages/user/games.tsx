@@ -28,7 +28,7 @@ export async function getServerSideProps({
 
 const UserGamesPage = () => {
   return (
-    <div className="max-w-7xl mx-auto my-16">
+    <div className="lg:max-w-7xl mx-auto my-16">
       <UserGames />
     </div>
   );

@@ -5,7 +5,7 @@ import {
 } from "@features/createCampaign/createCampaignSlice";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Header } from "ui/src/Typography";
-import React, { useEffect } from "react";
+import React from "react";
 import { Editor } from "@tiptap/react";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Select } from "ui/src/Select";
@@ -26,8 +26,8 @@ import {
   RadioGroup,
   RangeSlider,
   TimeZonePicker,
-  Tooltip,
   Text,
+  mediaString,
 } from "ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { generalSchema } from "./schema";
@@ -41,6 +41,7 @@ import { SelectOption } from "ui/src/Select/Select";
 import { today, getLocalTimeZone, parseDate } from "@internationalized/date";
 import { GetCampaignQuery } from "@generated/graphql";
 import Games from "../../../CreatableGameSelector/games.json";
+import { useMediaQuery } from "@hooks/useMediaQueries";
 
 export interface CustomEditorProps extends Editor {
   insertContent: (string) => void;
@@ -99,6 +100,10 @@ export const General = ({ campaign }: GeneralProps) => {
         campaign?.experience
       ) as unknown as SelectOption) ?? SKILL_LEVELS[0]
     );
+
+  const xs = useMediaQuery(mediaString.xs);
+  const sm = useMediaQuery(mediaString.sm);
+  const isMobile = xs || sm;
 
   const {
     handleSubmit,
@@ -161,7 +166,7 @@ export const General = ({ campaign }: GeneralProps) => {
   };
 
   return (
-    <div className="relative mx-auto" style={{ width: "1024px" }}>
+    <>
       <div className="mt-8">
         <Header
           as="h1"
@@ -172,7 +177,7 @@ export const General = ({ campaign }: GeneralProps) => {
         </Header>
       </div>
       <FormDivider label="General" />
-      {/* <InputWrapper className="my-12" label="" error={errors?.image}> */}
+
       <form className="relative" onSubmit={handleSubmit(onSubmit, onInvalid)}>
         <InputGroup label="" error={errors?.image || errors?.imageUrl}>
           <Controller
@@ -269,8 +274,10 @@ export const General = ({ campaign }: GeneralProps) => {
             name="campaignType"
             render={({ field: { onChange, value } }) => (
               <RadioGroup
+                className="whitespace-nowrap"
                 direction="row"
-                height="100px"
+                height={isMobile ? "25px" : "100px"}
+                width={isMobile ? "60px" : "250px"}
                 onChange={onChange}
                 options={[
                   {
@@ -283,12 +290,11 @@ export const General = ({ campaign }: GeneralProps) => {
                   },
                 ]}
                 value={value}
-                width="250px"
               />
             )}
           />
         </InputGroup>
-        <div className="grid grid-cols-2 gap-12 my-12">
+        <div className="grid lg:grid-cols-2 gap-12 my-12">
           <InputGroup label="*Game System" error={errors?.gameSystem}>
             <Controller
               control={control}
@@ -429,7 +435,7 @@ export const General = ({ campaign }: GeneralProps) => {
           </InputGroup>
         </div>
 
-        <div className="grid grid-cols-2 gap-12 my-12">
+        <div className="grid lg:grid-cols-2 gap-12 my-12">
           <InputGroup label="*Time" error={errors?.timePeriods}>
             <Controller
               name="timePeriods"
@@ -482,7 +488,7 @@ export const General = ({ campaign }: GeneralProps) => {
             />
           </InputGroup>
         </div>
-        <div className="grid grid-cols-2 gap-12 my-12">
+        <div className="grid lg:grid-cols-2 gap-12 my-12">
           <InputGroup label="*Days" error={errors?.days}>
             <Controller
               name="days"
@@ -526,6 +532,6 @@ export const General = ({ campaign }: GeneralProps) => {
       </form>
 
       {/* <DevTool control={control} /> */}
-    </div>
+    </>
   );
 };

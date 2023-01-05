@@ -41,6 +41,7 @@ export async function getServerSideProps({
 const Join = () => {
   const router = useRouter();
   const { id } = router.query;
+
   const [{ data: campaign, fetching }] = useGetCampaignQuery({
     variables: {
       id: id as string,
@@ -50,13 +51,8 @@ const Join = () => {
   if (fetching && !campaign) return <div>Loading....</div>;
 
   return (
-    <div className={`${root()}  py-10`}>
-      {/* Fix Later */}
-      {/* @ts-ignore */}
-      <CampaignSideCard campaign={campaign?.getCampaign} />
-      <div className="max-w-7xl mx-auto h-screen relative">
-        <CampaignApplication />
-      </div>
+    <div className={`${root()} py-10`}>
+      <CampaignApplication campaign={campaign.getCampaign} />
     </div>
   );
 };

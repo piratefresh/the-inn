@@ -11,8 +11,10 @@ import {
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { useRouter } from "next/router";
 import React from "react";
-import { Button, HeroImage, styled, Tag, Text } from "ui";
+import { Button, HeroImage, styled, Text, mediaString } from "ui";
 import { ITimezoneOption } from "ui/src/TimeZonePicker/TimeZonePicker";
+import { useMediaQuery } from "@hooks/useMediaQueries";
+import { CampaignBottomCard } from "@components/CampaignBottomCard";
 
 const PriceButton = styled("button", {
   position: "absolute",
@@ -37,6 +39,10 @@ export const Preview = ({ campaign }: LocationProps) => {
   const [_, createCampaign] = useCreateCampaignMutation();
   const [__, updateCampaign] = useUpdateCampaignMutation();
   const router = useRouter();
+
+  const xs = useMediaQuery(mediaString.xs);
+  const sm = useMediaQuery(mediaString.sm);
+  const isMobile = xs || sm;
 
   const isEditing = React.useMemo(
     () => router.pathname.includes("editcampaign"),
@@ -94,15 +100,25 @@ export const Preview = ({ campaign }: LocationProps) => {
 
   return (
     <>
-      <CampaignSideCard
-        campaign={createCampaignData}
-        onSubmit={onSubmit}
-        submitText={isEditing ? "Update Campaign" : "Create Campaign"}
-      />
-      <div className="max-w-7xl mx-auto relative">
+      {isMobile ? (
+        <CampaignBottomCard
+          campaign={createCampaignData}
+          onSubmit={onSubmit}
+          submitText={isEditing ? "Update Campaign" : "Create Campaign"}
+        />
+      ) : (
+        <CampaignSideCard
+          campaign={createCampaignData}
+          onSubmit={onSubmit}
+          submitText={isEditing ? "Update Campaign" : "Create Campaign"}
+        />
+      )}
+
+      <div className="lg:max-w-7xl mx-auto w-full relative mb-40">
         {createCampaignData.price && (
           <PriceButton>${createCampaignData.price}</PriceButton>
         )}
+
         <HeroImage
           height={500}
           width={1280}
@@ -110,7 +126,8 @@ export const Preview = ({ campaign }: LocationProps) => {
           gold
           src={createCampaignData.imageUrl}
         />
-        <div className="my-16">
+
+        <div className="flex flex-row flex-wrap my-16">
           <CampaignTags tags={createCampaignData.tags} />
         </div>
         <div className="my-16">
@@ -123,6 +140,7 @@ export const Preview = ({ campaign }: LocationProps) => {
             style={{ fontFamily: "Alegreya Sans" }}
             size="4xl"
             color="loContrast"
+            className="break-words"
           >
             {createCampaignData.gameSystem} |{" "}
             {`${createCampaignData.maxSeats} Players `}|
@@ -131,17 +149,19 @@ export const Preview = ({ campaign }: LocationProps) => {
           </Text>
         </div>
 
-        <div className="my-16">
-          <CampaignDetails
-            city={createCampaignData.city}
-            days={createCampaignData.days}
-            experience={createCampaignData.experience}
-            state={createCampaignData.state}
-            timePeriods={createCampaignData.timePeriods}
-            timezone={createCampaignData.timezone as ITimezoneOption}
-            isOnline={createCampaignData.isOnline}
-          />
-        </div>
+        {!isMobile && (
+          <div className="my-16 whitespace-pre-wrap">
+            <CampaignDetails
+              city={createCampaignData.city}
+              days={createCampaignData.days}
+              experience={createCampaignData.experience}
+              state={createCampaignData.state}
+              timePeriods={createCampaignData.timePeriods}
+              timezone={createCampaignData.timezone as ITimezoneOption}
+              isOnline={createCampaignData.isOnline}
+            />
+          </div>
+        )}
 
         <div className="my-16">
           <ReadOnly textString={createCampaignData.jsonSummary} />
@@ -161,7 +181,7 @@ export const Preview = ({ campaign }: LocationProps) => {
         >
           Previous
         </Button>
-        <Button onClick={onSubmit}>
+        <Button size="large" onClick={onSubmit}>
           {isEditing ? "Update Campaign" : "Create Campaign"}
         </Button>
       </div>

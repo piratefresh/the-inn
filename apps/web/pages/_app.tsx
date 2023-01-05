@@ -19,6 +19,7 @@ import { createUrqlClient } from "@utils/createUrqlClient";
 import { configureAbly } from "@ably-labs/react-hooks";
 import { AppPropsWithLayout } from "Types/LayoutPage";
 import { UserPageLayout } from "@layouts/UserPageLayout";
+import { MediaContextProvider } from "@utils/responsive";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_ID,
@@ -73,20 +74,22 @@ function App({
       <SessionProvider session={session}>
         <ThemeProvider attribute="class" defaultTheme="dark">
           <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
-            <QueryParamProvider adapter={NextAdapter}>
-              <Provider store={store}>
-                <InstantSearch
-                  searchClient={searchClient}
-                  indexName="dev_campaigns"
-                >
-                  <NotificationsProvider position="top-center">
-                    <Layout {...layoutProps}>
-                      <Component {...pageProps} />
-                    </Layout>
-                  </NotificationsProvider>
-                </InstantSearch>
-              </Provider>
-            </QueryParamProvider>
+            <MediaContextProvider disableDynamicMediaQueries>
+              <QueryParamProvider adapter={NextAdapter}>
+                <Provider store={store}>
+                  <InstantSearch
+                    searchClient={searchClient}
+                    indexName="dev_campaigns"
+                  >
+                    <NotificationsProvider position="top-center">
+                      <Layout {...layoutProps}>
+                        <Component {...pageProps} />
+                      </Layout>
+                    </NotificationsProvider>
+                  </InstantSearch>
+                </Provider>
+              </QueryParamProvider>
+            </MediaContextProvider>
           </MantineProvider>
         </ThemeProvider>
       </SessionProvider>

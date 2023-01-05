@@ -16,6 +16,7 @@ export const GROUP_POSITIONS = {
 const StyledGroup = styled("div", {
   display: "flex",
   flexDirection: "row",
+  flexWrap: "wrap",
   variants: {
     position: {
       left: {
@@ -29,6 +30,11 @@ const StyledGroup = styled("div", {
       },
       apart: {
         justifyContent: GROUP_POSITIONS.apart,
+      },
+    },
+    noWrap: {
+      true: {
+        flexWrap: "nowrap",
       },
     },
   },
@@ -63,6 +69,8 @@ export interface ChipGroupProps<T extends boolean = false | true> {
 
   /** <Chip /> components */
   children?: React.ReactNode;
+
+  className?: string;
 }
 
 export const ChipGroup = ({
@@ -72,6 +80,7 @@ export const ChipGroup = ({
   spacing,
   position,
   multiple,
+  className,
   children,
   ...others
 }: ChipGroupProps) => {
@@ -107,6 +116,7 @@ export const ChipGroup = ({
         css={{
           gap: "$12",
         }}
+        className={className}
         {...others}
       >
         {children}

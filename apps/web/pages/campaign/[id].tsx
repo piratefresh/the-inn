@@ -2,7 +2,7 @@ import { CampaignCard } from "@components/CampaignCard";
 import { useGetCampaignQuery, useGetCampaignsQuery } from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
 import { useRouter } from "next/router";
-import { Avatar, HeroImage, Note, Text } from "ui";
+import { Avatar, HeroImage, Note, Text, mediaString } from "ui";
 import React from "react";
 import { ReadOnly } from "@components/RichTextEditor/ReadOnly";
 import { styled } from "@components/Theme/Theme";
@@ -11,6 +11,8 @@ import { CampaignDetails } from "@components/CampaignDetails";
 import { ITimezoneOption } from "ui/src/TimeZonePicker/TimeZonePicker";
 import { CampaignSideCard } from "@components/CampaignSideCard/CampaignSideCard";
 import { CampaignApplication } from "@components/CampaignApplication";
+import { useMediaQuery } from "@hooks/useMediaQueries";
+import { CampaignBottomCard } from "@components/CampaignBottomCard";
 
 const MemberAvatar = styled("img", {
   borderRadius: "9999px",
@@ -20,6 +22,10 @@ const MemberAvatar = styled("img", {
 const Campaign = () => {
   const router = useRouter();
   const { id } = router.query;
+
+  const xs = useMediaQuery(mediaString.xs);
+  const sm = useMediaQuery(mediaString.sm);
+  const isMobile = xs || sm;
 
   const [{ data: campaign, fetching }] = useGetCampaignQuery({
     variables: {
@@ -34,7 +40,7 @@ const Campaign = () => {
     <div>Loading...</div>
   ) : (
     <div className="my-14 mx-auto">
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {campaigns?.getCampaigns.slice(0, 4).map((campaign) => (
           <div style={{ maxWidth: "275px" }} key={campaign.title}>
             <CampaignCard campaign={campaign} />
@@ -52,13 +58,18 @@ const Campaign = () => {
 
   return (
     <>
-      <CampaignSideCard
-        // fix later
-        // @ts-ignore
-        campaign={campaign?.getCampaign}
-        onSubmit={handleJoinCampaign}
-      />
-      <div className="mt-16 max-w-7xl mx-auto relative">
+      {isMobile ? (
+        <CampaignBottomCard
+          campaign={campaign?.getCampaign}
+          onSubmit={handleJoinCampaign}
+        />
+      ) : (
+        <CampaignSideCard
+          campaign={campaign?.getCampaign}
+          onSubmit={handleJoinCampaign}
+        />
+      )}
+      <div className="mt-16 max-w-7xl mx-auto relative px-4">
         <div className="relative aspect-w-16 aspect-h-9 flex flex-col justify-center items-center">
           <HeroImage
             className=""
@@ -82,6 +93,7 @@ const Campaign = () => {
               style={{ fontFamily: "Alegreya Sans" }}
               size="4xl"
               color="loContrast"
+              className="break-words"
             >
               {campaign?.getCampaign.gameSystem} |{" "}
               {`${campaign?.getCampaign.maxSeats} Players `}|
@@ -100,20 +112,21 @@ const Campaign = () => {
               </div>
             ))}
           </div>
-
-          <div className="my-16">
-            <CampaignDetails
-              city={campaign?.getCampaign.city}
-              days={campaign?.getCampaign.days}
-              experience={campaign?.getCampaign.experience}
-              state={campaign?.getCampaign.state}
-              timePeriods={campaign?.getCampaign.timePeriods}
-              timezone={
-                campaign?.getCampaign.timezone as unknown as ITimezoneOption
-              }
-              isOnline={campaign?.getCampaign.isOnline}
-            />
-          </div>
+          {!isMobile && (
+            <div className="my-16">
+              <CampaignDetails
+                city={campaign?.getCampaign.city}
+                days={campaign?.getCampaign.days}
+                experience={campaign?.getCampaign.experience}
+                state={campaign?.getCampaign.state}
+                timePeriods={campaign?.getCampaign.timePeriods}
+                timezone={
+                  campaign?.getCampaign.timezone as unknown as ITimezoneOption
+                }
+                isOnline={campaign?.getCampaign.isOnline}
+              />
+            </div>
+          )}
 
           <div className="my-16">
             <Text size="4xl" color="lightContrast" className="font-trejanSans">
@@ -131,7 +144,8 @@ const Campaign = () => {
             />
           </div>
 
-          <div className="my-14 mx-auto">
+          {/* ADD LATER FEATURE SEE REVIEWS */}
+          {/* <div className="my-14 mx-auto">
             <Note>
               <Text
                 style={{ lineHeight: "125%", textTransform: "uppercase" }}
@@ -146,7 +160,7 @@ const Campaign = () => {
                 NPCs.”
               </Text>
             </Note>
-          </div>
+          </div> */}
           {SimilarCampaigns}
         </div>
       </div>

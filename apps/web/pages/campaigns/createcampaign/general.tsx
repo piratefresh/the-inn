@@ -50,7 +50,9 @@ const CreateGeneralCampaign = () => {
       autoUpload={false}
       noPortal
     >
-      <div className={`${root()} px-100 py-10`}>
+      <div
+        className={`${root()} relative mx-auto w-full lg:max-w-7xl py-10 px-4 lg:px100`}
+      >
         <General />
       </div>
     </Uploady>

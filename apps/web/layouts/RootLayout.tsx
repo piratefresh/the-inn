@@ -11,7 +11,7 @@ export const RootLayout: React.FC = ({ children }: ILayoutProps) => {
   return (
     <div>
       <Nav />
-      <div className={`${layoutStyles.mainLayout}`}>
+      <div className="">
         <main className="relative col-span-full">{children}</main>
         {/* <Footer /> */}
       </div>

@@ -1,4 +1,5 @@
 import {
+  GetCampaignQuery,
   useAddPlayerApplicationMutation,
   useGetCampaignQuery,
 } from "@generated/graphql";
@@ -9,9 +10,8 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
-  styled,
   Text,
-  css,
+  mediaString,
   Select,
   Chip,
   ChipGroup,
@@ -24,8 +24,14 @@ import { SKILL_LEVELS } from "consts/skillLevels";
 import InputGroup from "@components/ui/InputGroup";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ApplicationSchema } from "./CampaignApplicationSchema";
-import { DevTool } from "@hookform/devtools";
+import { useMediaQuery } from "@hooks/useMediaQueries";
+import { CampaignBottomCard } from "@components/CampaignBottomCard";
+import { CampaignSideCard } from "@components/CampaignSideCard";
+import Link from "next/link";
 
+interface CampaignApplicationProps {
+  campaign: GetCampaignQuery["getCampaign"];
+}
 interface CampaignApplicationForm {
   campaignId: string;
   message: string;
@@ -36,17 +42,15 @@ interface CampaignApplicationForm {
   experience: Experience;
 }
 
-export const CampaignApplication = () => {
+export const CampaignApplication = ({ campaign }: CampaignApplicationProps) => {
   const router = useRouter();
   const { id } = router.query;
   const [selectedGameLevel, setSelectedGameLevel] =
     React.useState<SelectOption>(SKILL_LEVELS[0]);
 
-  const [{ data: campaign, fetching }] = useGetCampaignQuery({
-    variables: {
-      id: id as string,
-    },
-  });
+  const xs = useMediaQuery(mediaString.xs);
+  const sm = useMediaQuery(mediaString.sm);
+  const isMobile = xs || sm;
 
   const [
     { fetching: fetchingPlayerApplcation, data: playerApplcation },
@@ -101,14 +105,20 @@ export const CampaignApplication = () => {
     }
   };
 
-  if (fetching) return <div>Loading...</div>;
-
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
+      {isMobile ? (
+        <CampaignBottomCard campaign={campaign} />
+      ) : (
+        <CampaignSideCard campaign={campaign} />
+      )}
+      <form
+        onSubmit={handleSubmit(onSubmit, onInvalid)}
+        className="max-w-7xl mx-auto h-screen relative px-4 mb-40"
+      >
         <div className="my-16">
           <Text size="4xl" color="loContrast" className="mb-4">
-            Request to join &quot;{campaign.getCampaign.title}&quot;
+            Request to join &quot;{campaign.title}&quot;
           </Text>
           <FormDivider label="" />
         </div>
@@ -225,13 +235,17 @@ export const CampaignApplication = () => {
         </div>
 
         <FormDivider label="" />
-        <div className="mt-4">
+        <div className="flex gap-4 mt-4">
+          <Button size="large" type="button">
+            <Link href={`/campaign/${campaign.id}`}>
+              <a>Back</a>
+            </Link>
+          </Button>
           <Button size="large" type="submit">
             Confirm
           </Button>
         </div>
       </form>
-      <DevTool control={control} />
     </>
   );
 };

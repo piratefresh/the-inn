@@ -69,7 +69,7 @@ const Home: NextPageWithLayout = () => {
       </div>
 
       <div className="relative">
-        <div className="relative py-20 max-w-7xl mx-auto">
+        <div className="relative py-20 mx-auto lg:max-w-7xl">
           <h2 className="font-oldFenris text-white text-4xl mb-12">
             Trending Tags
           </h2>
@@ -77,7 +77,7 @@ const Home: NextPageWithLayout = () => {
             Upcoming Games
           </h2>
 
-          <div className="grid grid-cols-4 gap-8">
+          <div className="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {campaigns?.getCampaigns.map((campaign) => (
               <div style={{ maxWidth: "275px" }} key={campaign.title}>
                 <CampaignCard campaign={campaign} />

@@ -11,7 +11,7 @@ import { Text } from "ui";
 function CardGrid(props: UseHitsProps) {
   const { hits } = useHits(props);
   return (
-    <div className="grid grid-cols-4 gap-8">
+    <div className="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       {hits?.map((campaign: any) => (
         <div style={{ maxWidth: "275px" }} key={campaign.title}>
           <CampaignCard campaign={campaign} />
@@ -48,14 +48,14 @@ function CustomRefinementList(props: UseRefinementListProps) {
 
 const FindCampaignsPage = () => {
   return (
-    <>
+    <div className="px-4">
       <div>
         <CustomRefinementList attribute="days" />
         <CustomRefinementList attribute="gameSystem" />
         <CustomRefinementList attribute="voipSystem" />
         <CustomRefinementList attribute="virtualTable" />
       </div>
-      <div className="max-w-7xl mx-auto">
+      <div className="lg:max-w-7xl mx-auto w-full">
         <Text
           as="h2"
           size="7xl"
@@ -66,7 +66,7 @@ const FindCampaignsPage = () => {
         </Text>
         <CardGrid />
       </div>
-    </>
+    </div>
   );
 };
 

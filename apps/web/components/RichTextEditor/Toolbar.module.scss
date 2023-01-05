@@ -1,5 +1,5 @@
 .root {
-  @apply sticky top-0 flex flex-row items-center py-2 bg-white text-black rounded-md rounded-br-none rounded-bl-none z-10;
+  @apply sticky top-0 flex flex-row flex-wrap gap-2 items-center py-2 bg-white text-black rounded-md rounded-br-none rounded-bl-none z-10;
   border-bottom: 3px solid transparent;
   background-image: linear-gradient(#fcfcfc, #fcfcfc),
     linear-gradient(90deg, #ffd166, #9f5e25);

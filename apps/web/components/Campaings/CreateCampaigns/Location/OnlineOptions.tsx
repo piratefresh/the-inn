@@ -22,9 +22,8 @@ export const OnlineOptions = ({
   setValue,
   tags,
 }: OnlineOptions) => {
-  console.log("tags: ", tags);
   return (
-    <div className="grid grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8">
       <InputGroup
         className="my-8"
         label="*Voice System"

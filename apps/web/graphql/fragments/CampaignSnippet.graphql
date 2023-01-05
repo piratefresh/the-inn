@@ -16,6 +16,7 @@ fragment CampaignSnippet on Campaign {
   updatedAt
   tags
   maxSeats
+  gmId
   memberships {
     role
     user {

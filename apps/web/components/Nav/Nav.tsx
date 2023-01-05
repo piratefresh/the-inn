@@ -11,7 +11,12 @@ import {
   useSetNotificationsReadMutation,
 } from "@generated/graphql";
 import { BellIcon, TicketIcon, UserIcon } from "@heroicons/react/24/solid";
-import { Menu, HeadlessMenu, Text } from "ui";
+import { Menu, HeadlessMenu, Text, mediaString } from "ui";
+import { useMediaQuery } from "@hooks/useMediaQueries";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { MobileNav } from "./MobileNav";
+import { useLockScroll } from "@hooks/useLockScroll";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 const navSubItems = {
   campaigns: [
@@ -44,10 +49,9 @@ export const Nav = () => {
   const [_, setNotificationsRead] = useSetNotificationsReadMutation();
 
   const router = useRouter();
-
-  const handleOpenNotificationPanel = () => {
-    setOpen(true);
-  };
+  const xs = useMediaQuery(mediaString.xs);
+  const sm = useMediaQuery(mediaString.sm);
+  const isMobile = xs || sm;
 
   const handleSetNotificationsRead = React.useMemo(
     () => async () => {
@@ -148,6 +152,64 @@ export const Nav = () => {
     [router, session, notifications, handleSetNotificationsRead]
   );
 
+  useLockScroll(open, "root");
+
+  const handleCloseNav = () => setOpen(false);
+
+  if (isMobile) {
+    return (
+      <>
+        <nav className="flex flex-row justify-between p-4">
+          <div className="cursor-pointer">
+            {!open ? (
+              <HamburgerMenuIcon
+                className="h-6 w-6 text-white"
+                onClick={() => setOpen(!open)}
+              />
+            ) : (
+              <Cross1Icon
+                className="h-6 w-6 text-white"
+                onClick={() => setOpen(!open)}
+              />
+            )}
+          </div>
+
+          <div className="flex justify-end whitespace-nowrap">{userInfo}</div>
+        </nav>
+        {open && (
+          <div className="bg-brandLightBlack h-screen w-screen p-4">
+            <ul>
+              <li>
+                <Text color="loContrast" size="2xl" className="font-oldFenris">
+                  Campaign
+                </Text>
+                <ul className="text-white font-alegreyaSans">
+                  <NavItemLink
+                    onClick={handleCloseNav}
+                    label="Create Campaign"
+                    href="/campaigns/createcampaign/general"
+                  />
+                  <NavItemLink
+                    onClick={handleCloseNav}
+                    label="Find Campaigns"
+                    href="/campaigns/findcampaigns"
+                  />
+                </ul>
+              </li>
+              <li>
+                <Text color="loContrast" size="2xl" className="font-oldFenris">
+                  Members
+                </Text>
+                <ul className="text-white font-alegreyaSans">
+                  <li className="cursor-pointer py-2">Find Member</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        )}
+      </>
+    );
+  }
   return (
     <>
       <nav className={`${NavStyles["nav"]}`}>

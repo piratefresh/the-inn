@@ -46,7 +46,7 @@ export const InPersonOptions = ({
         />
       </InputGroup>
     </div>
-    <div className="grid grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8">
       <InputGroup className="my-8" label="*City" error={errors?.city}>
         <Controller
           control={control}

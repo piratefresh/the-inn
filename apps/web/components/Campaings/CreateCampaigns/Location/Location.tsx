@@ -9,16 +9,15 @@ import { Checkbox } from "@mantine/core";
 import InputGroup from "@components/ui/InputGroup";
 import router from "next/router";
 import { FormDivider } from "@components/ui/FormDivider";
-import { Box, Button, MultiSelect } from "ui";
-import { DevTool } from "@hookform/devtools";
+import { Box, Button, MultiSelect, mediaString } from "ui";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 import { CustomEditorProps } from "../General/General";
 import { LocationSchema } from "../General/schema";
-
 import { createTagOptions } from "@utils/createTagOptions";
 import { GetCampaignQuery } from "@generated/graphql";
 import { OnlineOptions } from "./OnlineOptions";
 import { InPersonOptions } from "./InPersonOptions";
+import { useMediaQuery } from "@hooks/useMediaQueries";
 
 interface LocationProps {
   campaign?: GetCampaignQuery["getCampaign"];
@@ -28,6 +27,10 @@ export const Location = ({ campaign }: LocationProps) => {
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
   let campaignIsOnline = false;
+
+  const xs = useMediaQuery(mediaString.xs);
+  const sm = useMediaQuery(mediaString.sm);
+  const isMobile = xs || sm;
 
   // Used to retrieve json object from text editor
   const richTextEditorRef = React.useRef<CustomEditorProps>();
@@ -39,7 +42,6 @@ export const Location = ({ campaign }: LocationProps) => {
     setValue,
     clearErrors,
     watch,
-
     formState: { errors },
   } = useForm<IStep2>({
     defaultValues: campaign
@@ -127,12 +129,15 @@ export const Location = ({ campaign }: LocationProps) => {
     />
   );
 
-  console.log("router.pathname: ");
-
   return (
-    <div className="relative mx-auto" style={{ width: "1024px" }}>
+    <>
       <div className="mt-8">
-        <Header as="h1" size="4xl" color="loContrast">
+        <Header
+          as="h1"
+          size="4xl"
+          color="loContrast"
+          className="font-oldFenris"
+        >
           Location
         </Header>
       </div>
@@ -175,7 +180,7 @@ export const Location = ({ campaign }: LocationProps) => {
             render={({ field: { onChange, value } }) => (
               <RadioGroup
                 direction="row"
-                height="100px"
+                height={isMobile ? "25px" : "100px"}
                 onChange={onChange}
                 options={[
                   {
@@ -192,7 +197,7 @@ export const Location = ({ campaign }: LocationProps) => {
                   },
                 ]}
                 value={value}
-                width="250px"
+                width={isMobile ? "50px" : "250px"}
               />
             )}
           />
@@ -204,7 +209,7 @@ export const Location = ({ campaign }: LocationProps) => {
             render={({ field: { onChange, value } }) => (
               <RadioGroup
                 direction="row"
-                height="100px"
+                height={isMobile ? "25px" : "100px"}
                 onChange={onChange}
                 options={[
                   {
@@ -221,7 +226,7 @@ export const Location = ({ campaign }: LocationProps) => {
                   },
                 ]}
                 value={value}
-                width="250px"
+                width={isMobile ? "50px" : "250px"}
               />
             )}
           />
@@ -233,7 +238,7 @@ export const Location = ({ campaign }: LocationProps) => {
             render={({ field: { onChange, value } }) => (
               <RadioGroup
                 direction="row"
-                height="100px"
+                height={isMobile ? "25px" : "100px"}
                 onChange={onChange}
                 options={[
                   {
@@ -250,7 +255,7 @@ export const Location = ({ campaign }: LocationProps) => {
                   },
                 ]}
                 value={value}
-                width="250px"
+                width={isMobile ? "50px" : "250px"}
               />
             )}
           />
@@ -315,7 +320,6 @@ export const Location = ({ campaign }: LocationProps) => {
           </Button>
         </Box>
       </form>
-      <DevTool control={control} />
-    </div>
+    </>
   );
 };

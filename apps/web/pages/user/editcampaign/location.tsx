@@ -45,7 +45,7 @@ const CreateLocationCampaign = () => {
 
   if (fetching) return <div>Loading...</div>;
   return (
-    <div className={`${root()} px-100 py-10`}>
+    <div className={`${root()} py-10 px-100`}>
       <Location campaign={campaign.getCampaign} />
     </div>
   );

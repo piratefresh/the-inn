@@ -59,7 +59,12 @@ export interface OptionProps {
   label: string;
 }
 
-export interface RadioGroupProps {
+type RadioGroupPrimitivProps = React.ComponentProps<
+  typeof RadioGroupPrimitive["Root"]
+>;
+
+export interface RadioGroupProps
+  extends Omit<RadioGroupPrimitivProps, "onChange"> {
   value: string;
   height?: string;
   width?: string;
@@ -75,6 +80,7 @@ export const RadioGroup = ({
   height,
   width,
   direction,
+  ...props
 }: RadioGroupProps) => {
   //   const [value, setValue] = React.useState<string>("Low");
   return (
@@ -82,6 +88,7 @@ export const RadioGroup = ({
       value={value}
       onValueChange={(v) => onChange(v)}
       direction={direction}
+      {...props}
     >
       {options.map((option) => (
         <Flex

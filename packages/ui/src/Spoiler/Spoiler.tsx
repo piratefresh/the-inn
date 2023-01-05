@@ -1,5 +1,6 @@
 import React, { useState, useEffect, forwardRef } from "react";
-import { useElementSize } from "@mantine/hooks";
+import { useElementSize } from "../hooks/useElementSize";
+
 import { styled } from "../theme";
 
 const Root = styled("div", {
@@ -22,13 +23,13 @@ const StyledContent = styled("div", {
 
 export interface SpoilerProps extends React.ComponentPropsWithoutRef<"div"> {
   /** Max height of visible content, when this point is reached spoiler appears */
-  maxHeight: number;
+  maxHeight?: number;
 
   /** Label for close spoiler action */
-  hideLabel: React.ReactNode;
+  hideLabel?: React.ReactNode;
 
   /** Label for open spoiler action */
-  showLabel: React.ReactNode;
+  showLabel?: React.ReactNode;
 
   /** Get ref of spoiler toggle button */
   controlRef?: React.ForwardedRef<HTMLButtonElement>;

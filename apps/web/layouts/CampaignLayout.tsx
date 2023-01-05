@@ -11,8 +11,8 @@ export const CampaignLayout: React.FC = ({ children }: ILayoutProps) => {
   return (
     <div className={layoutStyles.parent}>
       <Nav />
-      <div className={layoutStyles.mainLayout}>
-        <main className="relative col-span-full">{children}</main>
+      <div className="flex">
+        <main className="relative col-span-full w-full">{children}</main>
         {/* <Footer /> */}
       </div>
     </div>

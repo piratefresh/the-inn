@@ -8,8 +8,8 @@ import { nextAuthOptions } from "pages/api/auth/[...nextauth]";
 const CreatePreviewCampaign = () => {
   useIsAuth();
   return (
-    <div>
-      <Preview />
+    <div className="relative mx-auto w-full lg:max-w-7xl py-10 px-4 lg:px100">
+      <Preview />;
     </div>
   );
 };
