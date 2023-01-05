@@ -15,7 +15,8 @@
     "db:push": "prisma db push --skip-generate",
     "db:migration:generate": "prisma migrate dev --create-only",
     "db:migration:run": "prisma migrate dev",
-    "db:migration:deploy": "prisma migrate deploy"
+    "db:migration:deploy": "prisma migrate deploy",
+    "studio": "prisma studio"
   },
   "dependencies": {
     "@apollo/server": "^4.1.1",

@@ -1,6 +1,10 @@
 import React from "react";
 import { Table } from "./Table";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  createColumnHelper,
+  PaginationState,
+} from "@tanstack/react-table";
 import { Button } from "../Button";
 import { IndeterminateCheckbox } from "./IndeterminateCheckbox";
 import { makeData, Person } from "./makeData";
@@ -92,6 +96,20 @@ export const Primary: Story = {
   render: (args) => {
     const columns = React.useMemo(() => COLUMNS, []);
     const data = React.useMemo(() => makeData(150), []);
-    return <Table pagination={} columns={columns} data={data} />;
+
+    const [{ pageIndex, pageSize }, setPagination] =
+      React.useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+      });
+
+    const pagination = React.useMemo(
+      () => ({
+        pageIndex,
+        pageSize,
+      }),
+      [pageIndex, pageSize]
+    );
+    return <Table pagination={pagination} columns={columns} data={data} />;
   },
 };

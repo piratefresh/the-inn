@@ -18,7 +18,7 @@ export async function sendConfirmationEmail(email: string, token: string) {
       },
       hideWarnings: true,
     };
-    sgMail.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY);
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     await sgMail.send(message);
   } catch (error: any) {
