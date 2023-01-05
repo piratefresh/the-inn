@@ -82,7 +82,11 @@ export const Spoiler = forwardRef<HTMLDivElement, SpoilerProps>(
         </StyledContent>
 
         {spoiler && (
-          <a ref={controlRef} onClick={() => setShowState((opened) => !opened)}>
+          <a
+            // fix later
+            ref={controlRef as any}
+            onClick={() => setShowState((opened) => !opened)}
+          >
             {spoilerMoreContent}
           </a>
         )}
