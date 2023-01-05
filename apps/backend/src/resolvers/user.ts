@@ -218,6 +218,9 @@ export class UserResolver {
       where: {
         id,
       },
+      include: {
+        memberships: true,
+      },
     });
   }
 

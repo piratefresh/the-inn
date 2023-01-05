@@ -1,9 +1,14 @@
 import { CampaignCard } from "@components/CampaignCard";
 import { ReadOnly } from "@components/RichTextEditor/ReadOnly";
-import { useGetCampaignsQuery, useGetUserQuery } from "@generated/graphql";
+import {
+  MembershipRole,
+  useGetCampaignsQuery,
+  useGetUserQuery,
+} from "@generated/graphql";
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import Image from "next/image";
 import { useRouter } from "next/router";
+
 import { Note, styled, Text } from "ui";
 
 const StyledMiddleContainer = styled("div", {
@@ -93,6 +98,13 @@ const UserPage = () => {
 
   if (fetching) return <div>...Loading</div>;
 
+  const hostedGames = data.getUser.memberships.filter(
+    (member) => member.role === MembershipRole.Gm
+  );
+  const joinedGames = data.getUser.memberships.filter(
+    (member) => member.role === MembershipRole.Player
+  );
+
   return (
     <>
       <div className="max-w-7xl mx-auto">
@@ -103,7 +115,7 @@ const UserPage = () => {
             </Text>
             <div className="my-8">
               <Text className="font-alegreyaSans my-8" size="lg" color="gold">
-                Good guy | 100 reviews
+                Good guy | 0 reviews
               </Text>
               <Text color="loContrast" size="lg">
                 <ReadOnly textString={data.getUser.htmlAboutMe} />
@@ -144,7 +156,7 @@ const UserPage = () => {
           <div className="flex flex-row justify-around items-center">
             <div className="flex flex-col">
               <Text size="7xl" color="loContrast" className="font-trejanSans">
-                60
+                {hostedGames.length}
               </Text>
               <Text size="4xl" color="loContrast" className="font-trejanSans">
                 Hosted Games
@@ -152,7 +164,7 @@ const UserPage = () => {
             </div>
             <div className="flex flex-col">
               <Text size="7xl" color="loContrast" className="font-trejanSans">
-                80%
+                0
               </Text>
               <Text size="4xl" color="loContrast" className="font-trejanSans">
                 Completed
@@ -160,14 +172,14 @@ const UserPage = () => {
             </div>
             <div className="flex flex-col">
               <Text size="7xl" color="loContrast" className="font-trejanSans">
-                10
+                {joinedGames.length}
               </Text>
               <Text size="4xl" color="loContrast" className="font-trejanSans">
                 Joined
               </Text>
             </div>
           </div>
-          <div className="flex flex-row mt-12 mb-0 justify-around gap-4 overflow-x-auto">
+          {/* <div className="flex flex-row mt-12 mb-0 justify-around gap-4 overflow-x-auto">
             <Note>
               “George is a fantastic GM. He really knows the rules and helps
               beginners. He always makes sure everyone I comfortable and having
@@ -178,7 +190,7 @@ const UserPage = () => {
               beginners. He always makes sure everyone I comfortable and having
               fun. I love that he uses different voices for different NPCs.”
             </Note>
-          </div>
+          </div> */}
         </div>
 
         <StyledFlame2 />

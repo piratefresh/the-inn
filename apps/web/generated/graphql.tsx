@@ -729,7 +729,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', aboutMe?: string | null, htmlPlayStyle?: string | null, playStyle?: string | null, htmlGmStyle?: string | null, gmStyle?: string | null, htmlAboutMe?: string | null, tags: Array<string>, profileCSS?: string | null, twitch?: string | null, instagram?: string | null, facebook?: string | null, youtube?: string | null, discord?: string | null, id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } };
+export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', aboutMe?: string | null, htmlPlayStyle?: string | null, playStyle?: string | null, htmlGmStyle?: string | null, gmStyle?: string | null, htmlAboutMe?: string | null, tags: Array<string>, profileCSS?: string | null, twitch?: string | null, instagram?: string | null, facebook?: string | null, youtube?: string | null, discord?: string | null, id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null, memberships: Array<{ __typename?: 'Membership', campaignId: string, role: MembershipRole }> } };
 
 export type GetUserCampaignQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1190,6 +1190,10 @@ export const GetUserDocument = gql`
     facebook
     youtube
     discord
+    memberships {
+      campaignId
+      role
+    }
   }
 }
     ${UserSnippetFragmentDoc}`;

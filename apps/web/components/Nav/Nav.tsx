@@ -129,7 +129,7 @@ export const Nav = () => {
                   callbackUrl: "/auth/signin",
                 });
 
-                router.push("auth/signin");
+                router.push("/auth/signin");
               }}
             >
               Sign Out
