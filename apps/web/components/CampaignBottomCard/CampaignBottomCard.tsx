@@ -1,5 +1,5 @@
 import { CreateCampaignState } from "@features/createCampaign/createCampaignSlice";
-import { GetCampaignQuery } from "@generated/graphql";
+import { Campaign, GetCampaignQuery } from "@generated/graphql";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { styled, Text, Button, Spoiler } from "ui";
@@ -36,7 +36,8 @@ export const CampaignBottomCard = ({
   submitText,
 }: CampaignBottomCardProps) => {
   const { data: session } = useSession();
-  const isOwner = session.id === campaign.gmId;
+  const isOwner =
+    session.id === (campaign as GetCampaignQuery["getCampaign"]).gmId;
   return (
     <SideCard>
       <Text size="lg" color="lightContrast" className="font-trejanSans">
@@ -111,7 +112,11 @@ export const CampaignBottomCard = ({
       )}
       {isOwner && (
         <Button size="large" fullWidth type="button">
-          <Link href={`/user/editcampaign/general?id=${campaign.id}`}>
+          <Link
+            href={`/user/editcampaign/general?id=${
+              (campaign as GetCampaignQuery["getCampaign"]).id
+            }`}
+          >
             <a>Edit</a>
           </Link>
         </Button>
