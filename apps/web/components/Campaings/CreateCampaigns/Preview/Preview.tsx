@@ -40,9 +40,7 @@ export const Preview = ({ campaign }: LocationProps) => {
   const [__, updateCampaign] = useUpdateCampaignMutation();
   const router = useRouter();
 
-  const xs = useMediaQuery(mediaString.xs);
-  const sm = useMediaQuery(mediaString.sm);
-  const isMobile = xs || sm;
+  const isDesktop = useMediaQuery(mediaString.lg);
 
   const isEditing = React.useMemo(
     () => router.pathname.includes("editcampaign"),
@@ -100,7 +98,7 @@ export const Preview = ({ campaign }: LocationProps) => {
 
   return (
     <>
-      {isMobile ? (
+      {!isDesktop ? (
         <CampaignBottomCard
           campaign={createCampaignData}
           onSubmit={onSubmit}
@@ -149,7 +147,7 @@ export const Preview = ({ campaign }: LocationProps) => {
           </Text>
         </div>
 
-        {!isMobile && (
+        {!isDesktop && (
           <div className="my-16 whitespace-pre-wrap">
             <CampaignDetails
               city={createCampaignData.city}

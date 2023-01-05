@@ -28,9 +28,7 @@ export const Location = ({ campaign }: LocationProps) => {
   const dispatch = useAppDispatch();
   let campaignIsOnline = false;
 
-  const xs = useMediaQuery(mediaString.xs);
-  const sm = useMediaQuery(mediaString.sm);
-  const isMobile = xs || sm;
+  const isDesktop = useMediaQuery(mediaString.lg);
 
   // Used to retrieve json object from text editor
   const richTextEditorRef = React.useRef<CustomEditorProps>();
@@ -180,7 +178,7 @@ export const Location = ({ campaign }: LocationProps) => {
             render={({ field: { onChange, value } }) => (
               <RadioGroup
                 direction="row"
-                height={isMobile ? "25px" : "100px"}
+                height={!isDesktop ? "25px" : "100px"}
                 onChange={onChange}
                 options={[
                   {
@@ -197,7 +195,7 @@ export const Location = ({ campaign }: LocationProps) => {
                   },
                 ]}
                 value={value}
-                width={isMobile ? "50px" : "250px"}
+                width={!isDesktop ? "50px" : "250px"}
               />
             )}
           />
@@ -209,7 +207,7 @@ export const Location = ({ campaign }: LocationProps) => {
             render={({ field: { onChange, value } }) => (
               <RadioGroup
                 direction="row"
-                height={isMobile ? "25px" : "100px"}
+                height={!isDesktop ? "25px" : "100px"}
                 onChange={onChange}
                 options={[
                   {
@@ -226,7 +224,7 @@ export const Location = ({ campaign }: LocationProps) => {
                   },
                 ]}
                 value={value}
-                width={isMobile ? "50px" : "250px"}
+                width={!isDesktop ? "50px" : "250px"}
               />
             )}
           />
@@ -238,7 +236,7 @@ export const Location = ({ campaign }: LocationProps) => {
             render={({ field: { onChange, value } }) => (
               <RadioGroup
                 direction="row"
-                height={isMobile ? "25px" : "100px"}
+                height={!isDesktop ? "25px" : "100px"}
                 onChange={onChange}
                 options={[
                   {
@@ -255,7 +253,7 @@ export const Location = ({ campaign }: LocationProps) => {
                   },
                 ]}
                 value={value}
-                width={isMobile ? "50px" : "250px"}
+                width={!isDesktop ? "50px" : "250px"}
               />
             )}
           />

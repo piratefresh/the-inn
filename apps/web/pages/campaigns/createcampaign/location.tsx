@@ -33,9 +33,7 @@ export async function getServerSideProps({
 const CreateLocationCampaign = () => {
   useIsAuth();
   return (
-    <div
-      className={`${root()} relative mx-auto w-full lg:max-w-7xl py-10 px-4 lg:px100`}
-    >
+    <div className={`relative mx-auto w-full lg:max-w-7xl py-10 px-4 lg:px100`}>
       <Location />
     </div>
   );

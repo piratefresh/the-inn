@@ -51,7 +51,7 @@ const CreateGeneralCampaign = () => {
       noPortal
     >
       <div
-        className={`${root()} relative mx-auto w-full lg:max-w-7xl py-10 px-4 lg:px100`}
+        className={`relative mx-auto w-full lg:max-w-7xl py-10 px-4 lg:px100`}
       >
         <General />
       </div>

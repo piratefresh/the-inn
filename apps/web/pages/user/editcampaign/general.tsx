@@ -63,7 +63,7 @@ const CreateGeneralCampaign = () => {
       autoUpload={false}
       noPortal
     >
-      <div className={`${root()} px-100 py-10`}>
+      <div className={` px-100 py-10`}>
         <General campaign={campaign.getCampaign} />
       </div>
     </Uploady>

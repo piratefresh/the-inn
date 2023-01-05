@@ -101,9 +101,7 @@ export const General = ({ campaign }: GeneralProps) => {
       ) as unknown as SelectOption) ?? SKILL_LEVELS[0]
     );
 
-  const xs = useMediaQuery(mediaString.xs);
-  const sm = useMediaQuery(mediaString.sm);
-  const isMobile = xs || sm;
+  const isDesktop = useMediaQuery(mediaString.lg);
 
   const {
     handleSubmit,
@@ -276,8 +274,8 @@ export const General = ({ campaign }: GeneralProps) => {
               <RadioGroup
                 className="whitespace-nowrap"
                 direction="row"
-                height={isMobile ? "25px" : "100px"}
-                width={isMobile ? "60px" : "250px"}
+                height={!isDesktop ? "25px" : "100px"}
+                width={!isDesktop ? "60px" : "250px"}
                 onChange={onChange}
                 options={[
                   {

@@ -48,9 +48,7 @@ export const CampaignApplication = ({ campaign }: CampaignApplicationProps) => {
   const [selectedGameLevel, setSelectedGameLevel] =
     React.useState<SelectOption>(SKILL_LEVELS[0]);
 
-  const xs = useMediaQuery(mediaString.xs);
-  const sm = useMediaQuery(mediaString.sm);
-  const isMobile = xs || sm;
+  const isDesktop = useMediaQuery(mediaString.lg);
 
   const [
     { fetching: fetchingPlayerApplcation, data: playerApplcation },
@@ -107,7 +105,7 @@ export const CampaignApplication = ({ campaign }: CampaignApplicationProps) => {
 
   return (
     <>
-      {isMobile ? (
+      {!isDesktop ? (
         <CampaignBottomCard campaign={campaign} />
       ) : (
         <CampaignSideCard campaign={campaign} />

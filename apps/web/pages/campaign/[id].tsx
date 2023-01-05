@@ -23,9 +23,7 @@ const Campaign = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const xs = useMediaQuery(mediaString.xs);
-  const sm = useMediaQuery(mediaString.sm);
-  const isMobile = xs || sm;
+  const isDesktop = useMediaQuery(mediaString.lg);
 
   const [{ data: campaign, fetching }] = useGetCampaignQuery({
     variables: {
@@ -58,7 +56,7 @@ const Campaign = () => {
 
   return (
     <>
-      {isMobile ? (
+      {!isDesktop ? (
         <CampaignBottomCard
           campaign={campaign?.getCampaign}
           onSubmit={handleJoinCampaign}
@@ -112,7 +110,7 @@ const Campaign = () => {
               </div>
             ))}
           </div>
-          {!isMobile && (
+          {isDesktop && (
             <div className="my-16">
               <CampaignDetails
                 city={campaign?.getCampaign.city}
