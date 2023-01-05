@@ -16,6 +16,7 @@ import { ProfileSettings } from "@components/Settings/ProfileSettings";
 import { HeaderSettings } from "@components/Settings/HeaderSettings";
 import { initUrqlClient } from "@utils/initUrqlClient";
 import { PasswordSettings } from "@components/Settings/PasswordSettings";
+import { Loader } from "@components/Loader";
 
 const StyledTabsTrigger = styled(TabsTrigger, {
   borderRadius: "$md",
@@ -74,7 +75,7 @@ const SettingsPage = () => {
     };
   }, [data]);
 
-  if (!user || fetching) return <div>Loading...</div>;
+  if (!user || fetching) return <Loader />;
 
   return (
     <Tabs defaultValue="basic" className="text-white">

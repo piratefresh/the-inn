@@ -48,7 +48,7 @@ function CustomRefinementList(props: UseRefinementListProps) {
 
 const FindCampaignsPage = () => {
   return (
-    <div className="px-4">
+    <div className="flex flex-row px-4">
       <div>
         <CustomRefinementList attribute="days" />
         <CustomRefinementList attribute="gameSystem" />

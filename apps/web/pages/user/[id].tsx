@@ -8,7 +8,7 @@ import {
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
+import { Loader } from "@components/Loader";
 import { Note, styled, Text } from "ui";
 
 const StyledMiddleContainer = styled("div", {
@@ -96,7 +96,7 @@ const UserPage = () => {
     </div>
   );
 
-  if (fetching) return <div>...Loading</div>;
+  if (fetching) return <Loader />;
 
   const hostedGames = data.getUser.memberships.filter(
     (member) => member.role === MembershipRole.Gm

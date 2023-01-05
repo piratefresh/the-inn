@@ -6,6 +6,7 @@ import { GetServerSidePropsContext } from "next";
 import { nextAuthOptions } from "pages/api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import { useGetCampaignQuery } from "@generated/graphql";
+import { Loader } from "@components/Loader";
 
 const CreatePreviewCampaign = () => {
   useIsAuth();
@@ -18,7 +19,7 @@ const CreatePreviewCampaign = () => {
     },
   });
 
-  if (fetching) return <div>loading...</div>;
+  if (fetching) return <Loader />;
 
   return (
     <div>

@@ -1,4 +1,5 @@
 import { Location } from "@components/Campaings/CreateCampaigns/Location";
+import { Loader } from "@components/Loader";
 import { useGetCampaignQuery } from "@generated/graphql";
 import { css } from "@stitches/react";
 import { useIsAuth } from "@utils/useIsAuth";
@@ -43,7 +44,7 @@ const CreateLocationCampaign = () => {
     },
   });
 
-  if (fetching) return <div>Loading...</div>;
+  if (fetching) return <Loader />;
   return (
     <div className={` py-10 px-100`}>
       <Location campaign={campaign.getCampaign} />

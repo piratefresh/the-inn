@@ -9,6 +9,7 @@ import React from "react";
 import { Types } from "ably";
 import { NextPageWithLayout } from "Types/LayoutPage";
 import { UserPageLayout } from "@layouts/UserPageLayout";
+import { Loader } from "@components/Loader";
 
 const Home: NextPageWithLayout = () => {
   const [{ data: campaigns, fetching, error }] = useGetCampaignsQuery();
@@ -24,6 +25,8 @@ const Home: NextPageWithLayout = () => {
       {msg.clientId}: {msg.data}
     </li>
   ));
+
+  if (fetching) return <Loader />;
 
   return (
     <>

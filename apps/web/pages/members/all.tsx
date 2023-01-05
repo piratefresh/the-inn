@@ -2,6 +2,7 @@ import { UserCard } from "@components/UserCard";
 import { GetUsersQuery, useGetUsersQuery } from "@generated/graphql";
 import React from "react";
 import { Text, Button } from "ui";
+import { Loader } from "@components/Loader";
 
 const LIMIT = 8;
 
@@ -65,7 +66,7 @@ const AllPage = () => {
         ))}
       </div>
 
-      {fetching && <li>Loading...</li>}
+      {fetching && <Loader />}
 
       {data?.getUsers.pageInfo.hasNextPage && (
         <Button

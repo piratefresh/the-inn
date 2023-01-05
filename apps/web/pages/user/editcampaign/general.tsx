@@ -1,4 +1,5 @@
 import { General } from "@components/Campaings/CreateCampaigns/General";
+import { Loader } from "@components/Loader";
 import { useGetCampaignQuery } from "@generated/graphql";
 import Uploady from "@rpldy/uploady";
 import { css } from "@stitches/react";
@@ -46,7 +47,7 @@ const CreateGeneralCampaign = () => {
     },
   });
 
-  if (fetching) return <div>Loading...</div>;
+  if (fetching) return <Loader />;
 
   return (
     // @ts-ignore

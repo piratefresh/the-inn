@@ -13,6 +13,7 @@ import { CampaignSideCard } from "@components/CampaignSideCard/CampaignSideCard"
 import { CampaignApplication } from "@components/CampaignApplication";
 import { useMediaQuery } from "@hooks/useMediaQueries";
 import { CampaignBottomCard } from "@components/CampaignBottomCard";
+import { Loader } from "@components/Loader";
 
 const MemberAvatar = styled("img", {
   borderRadius: "9999px",
@@ -52,7 +53,7 @@ const Campaign = () => {
     router.push(`/join/${id}`);
   };
 
-  if (fetching && !campaign) return <div>Loading....</div>;
+  if (fetching && !campaign) return <Loader />;
 
   return (
     <>

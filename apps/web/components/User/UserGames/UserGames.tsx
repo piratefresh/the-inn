@@ -1,4 +1,5 @@
 import { CampaignCard, CampaignCardSmall } from "@components/CampaignCard";
+import { Loader } from "@components/Loader";
 import { useGetUserCampaignQuery } from "@generated/graphql";
 import { useSession } from "next-auth/react";
 import { Text } from "ui";
@@ -7,7 +8,7 @@ export const UserGames = () => {
   const { data: session, status } = useSession();
   const [{ data: myCampaigns, fetching }] = useGetUserCampaignQuery();
 
-  if (fetching) return <div>...Loading</div>;
+  if (fetching) return <Loader />;
   return (
     <div>
       <div className="my-16">
