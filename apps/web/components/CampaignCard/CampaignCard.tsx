@@ -13,6 +13,7 @@ export interface CampaignProps {
   maxSeats: number;
   members?: number;
   pending?: number;
+  gameMaster?: GetCampaignsQuery["getCampaigns"][0]["gameMaster"];
   memberships?: GetCampaignsQuery["getCampaigns"][0]["memberships"];
   startDate: GetCampaignsQuery["getCampaigns"][0]["startDate"];
   tags: string[];
@@ -27,7 +28,6 @@ const StyledText = styled(Text, {
   margin: "0 0px",
   lineHeight: "$lineHeights$tall",
   color: "#666",
-  whiteSpace: "nowrap",
 });
 
 const StyledCardImage = styled(CardImage, {
@@ -54,6 +54,7 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
         : campaign.members,
     [campaign.members, campaign.memberships]
   );
+
   return (
     <Card
       background="dark"
@@ -63,15 +64,24 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
         height: "100%",
       }}
     >
-      <StyledCardImage
-        gold
-        width="100%"
-        height="175px"
-        src={campaign.imageUrl}
-      />
+      <Link
+        className="cursor-pointer"
+        passHref
+        href={`/campaign/${campaign.id}`}
+      >
+        <StyledCardImage
+          gold
+          width="100%"
+          height="175px"
+          src={campaign.imageUrl}
+        />
+      </Link>
 
       <CardSection style={{ flex: 1 }}>
         <div className="flex flex-col my-2">
+          <StyledText size="sm" weight="medium">
+            {campaign.gameMaster.firstName} {campaign.gameMaster.lastName}
+          </StyledText>
           <StyledText size="sm" weight="medium">
             {campaign.gameSystem}
           </StyledText>
@@ -89,7 +99,7 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
         </div>
         <Link href={`/campaign/${campaign.id}`}>
           <a style={{ cursor: "pointer" }}>
-            <Header className="font-oldFenris" size="xl">
+            <Header className="font-oldFenris break-words" size="xl">
               {campaign.title}
             </Header>
           </a>

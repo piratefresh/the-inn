@@ -17,6 +17,12 @@ fragment CampaignSnippet on Campaign {
   tags
   maxSeats
   gmId
+  gameMaster {
+    id
+    firstName
+    lastName
+    imageUrl
+  }
   memberships {
     role
     user {
