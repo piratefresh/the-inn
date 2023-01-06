@@ -17,6 +17,8 @@ const Campaign = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  return <div>HELLO CAMOAUGN</div>;
+
   const isDesktop = useMediaQuery(mediaString.lg);
 
   const [{ data: campaign, fetching }] = useGetCampaignQuery({
