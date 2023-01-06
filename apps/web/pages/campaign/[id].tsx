@@ -27,8 +27,6 @@ const Campaign = () => {
 
   console.log("campaign: ", campaign);
 
-  return <div>HELLO CAMOAUGN</div>;
-
   // const [{ data: campaigns, fetching: fetchingCampaigns, error }] =
   //   useGetCampaignsQuery();
 
@@ -40,7 +38,7 @@ const Campaign = () => {
 
   return (
     <>
-      {!isDesktop ? (
+      {/* {!isDesktop ? (
         <CampaignBottomCard
           campaign={campaign?.getCampaign}
           onSubmit={handleJoinCampaign}
@@ -50,7 +48,7 @@ const Campaign = () => {
           campaign={campaign?.getCampaign}
           onSubmit={handleJoinCampaign}
         />
-      )}
+      )} */}
       <div className="mt-16 max-w-7xl mx-auto relative px-4">
         <div className="relative aspect-w-16 aspect-h-9 flex flex-col justify-center items-center">
           <HeroImage
