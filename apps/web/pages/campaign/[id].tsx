@@ -28,8 +28,6 @@ const Campaign = () => {
     },
   });
 
-  const isOwner = session?.id === campaign.getCampaign.gmId;
-
   // const [{ data: campaigns, fetching: fetchingCampaigns, error }] =
   //   useGetCampaignsQuery();
 
@@ -38,6 +36,8 @@ const Campaign = () => {
   };
 
   if (fetching && !campaign) return <Loader />;
+
+  const isOwner = session?.id === campaign?.getCampaign.gmId;
 
   return (
     <>
