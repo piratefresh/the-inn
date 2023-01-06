@@ -6,6 +6,7 @@ import { styled, Text, Button, Spoiler } from "ui";
 
 interface CampaignBottomCardProps {
   campaign: CreateCampaignState | GetCampaignQuery["getCampaign"];
+  isOwner?: boolean;
   onSubmit?: () => void;
   submitText?: string;
 }
@@ -31,13 +32,11 @@ const SideCard = styled("div", {
 });
 
 export const CampaignBottomCard = ({
+  isOwner = false,
   campaign,
   onSubmit,
   submitText,
 }: CampaignBottomCardProps) => {
-  const { data: session } = useSession();
-  const isOwner =
-    session.id === (campaign as GetCampaignQuery["getCampaign"]).gmId;
   return (
     <SideCard>
       <Text size="lg" color="lightContrast" className="font-trejanSans">

@@ -66,88 +66,88 @@ export const Nav = () => {
     [notifications, setNotificationsRead]
   );
 
-  // const userInfo = React.useMemo(
-  //   () =>
-  //     session.id ? (
-  //       <div className="flex items-center relative">
-  //         <div className="mx-8">
-  //           <Menu
-  //             onClick={handleSetNotificationsRead}
-  //             trigger={
-  //               <>
-  //                 <div className="absolute top-0 rounded-full bg-red-500 px-2 z-10">
-  //                   {notifications?.getUnreadNotifications.length}
-  //                 </div>
-  //                 <BellIcon className="h-6 w-6" />
-  //               </>
-  //             }
-  //           >
-  //             <div className="p-4">
-  //               {notifications?.getUnreadNotifications.length > 0 ? (
-  //                 notifications.getUnreadNotifications.map((notification) => (
-  //                   <a href={`/campaign/${notification.relatedId}`}>
-  //                     {notification.message}
-  //                   </a>
-  //                 ))
-  //               ) : (
-  //                 <Text color="hiContrast">No Notification</Text>
-  //               )}
-  //             </div>
-  //           </Menu>
-  //         </div>
-  //         <div className="text-white mr-4">
-  //           <Link href={`/user/${session.id}`}>{session.user.name}</Link>
-  //         </div>
+  const userInfo = React.useMemo(
+    () =>
+      session.id ? (
+        <div className="flex items-center relative">
+          <div className="mx-8">
+            <Menu
+              onClick={handleSetNotificationsRead}
+              trigger={
+                <>
+                  <div className="absolute top-0 rounded-full bg-red-500 px-2 z-10">
+                    {notifications?.getUnreadNotifications.length}
+                  </div>
+                  <BellIcon className="h-6 w-6" />
+                </>
+              }
+            >
+              <div className="p-4">
+                {notifications?.getUnreadNotifications.length > 0 ? (
+                  notifications.getUnreadNotifications.map((notification) => (
+                    <a href={`/campaign/${notification.relatedId}`}>
+                      {notification.message}
+                    </a>
+                  ))
+                ) : (
+                  <Text color="hiContrast">No Notification</Text>
+                )}
+              </div>
+            </Menu>
+          </div>
+          <div className="text-white mr-4">
+            <Link href={`/user/${session.id}`}>{session.user.name}</Link>
+          </div>
 
-  //         <Menu
-  //           onClick={handleSetNotificationsRead}
-  //           trigger={<Avatar src={session.user.image} />}
-  //         >
-  //           <HeadlessMenu.Item>
-  //             <Link href="/user/settings">
-  //               <a className="flex flex-row items-center justify-center px-2 py-2">
-  //                 <UserIcon className="h-6 w-6" />
-  //                 Account Settings
-  //               </a>
-  //             </Link>
-  //           </HeadlessMenu.Item>
-  //           <HeadlessMenu.Item>
-  //             <Link href="/user/games">
-  //               <a className="flex flex-row items-center justify-center px-2 py-2">
-  //                 <TicketIcon className="h-6 w-6" /> My Adventures
-  //               </a>
-  //             </Link>
-  //           </HeadlessMenu.Item>
-  //         </Menu>
+          <Menu
+            onClick={handleSetNotificationsRead}
+            trigger={<Avatar src={session.user.image} />}
+          >
+            <HeadlessMenu.Item>
+              <Link href="/user/settings">
+                <a className="flex flex-row items-center justify-center px-2 py-2">
+                  <UserIcon className="h-6 w-6" />
+                  Account Settings
+                </a>
+              </Link>
+            </HeadlessMenu.Item>
+            <HeadlessMenu.Item>
+              <Link href="/user/games">
+                <a className="flex flex-row items-center justify-center px-2 py-2">
+                  <TicketIcon className="h-6 w-6" /> My Adventures
+                </a>
+              </Link>
+            </HeadlessMenu.Item>
+          </Menu>
 
-  //         <div className="ml-4">
-  //           <a
-  //             className="text-white cursor-pointer"
-  //             onClick={() => {
-  //               signOut({
-  //                 redirect: false,
-  //                 callbackUrl: "/auth/signin",
-  //               });
+          <div className="ml-4">
+            <a
+              className="text-white cursor-pointer"
+              onClick={() => {
+                signOut({
+                  redirect: false,
+                  callbackUrl: "/auth/signin",
+                });
 
-  //               router.push("/auth/signin");
-  //             }}
-  //           >
-  //             Sign Out
-  //           </a>
-  //         </div>
-  //       </div>
-  //     ) : (
-  //       <div className="flex flex-row text-white">
-  //         <div className="mr-4">
-  //           <Link href="./auth/signin">Sign In</Link>
-  //         </div>
-  //         <div>
-  //           <Link href="./auth/signup">Sign Up</Link>
-  //         </div>
-  //       </div>
-  //     ),
-  //   [router, session, notifications, handleSetNotificationsRead]
-  // );
+                router.push("/auth/signin");
+              }}
+            >
+              Sign Out
+            </a>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-row text-white">
+          <div className="mr-4">
+            <Link href="./auth/signin">Sign In</Link>
+          </div>
+          <div>
+            <Link href="./auth/signup">Sign Up</Link>
+          </div>
+        </div>
+      ),
+    [router, session, notifications, handleSetNotificationsRead]
+  );
 
   useLockScroll(open, "root");
 
@@ -171,7 +171,7 @@ export const Nav = () => {
             )}
           </div>
 
-          {/* <div className="flex justify-end whitespace-nowrap">{userInfo}</div> */}
+          <div className="flex justify-end whitespace-nowrap">{userInfo}</div>
         </nav>
         {open && (
           <div className="bg-brandLightBlack h-screen w-screen p-4">
@@ -239,9 +239,9 @@ export const Nav = () => {
           />
         </div>
 
-        {/* <div className="flex justify-end col-start-11 col-end-13">
+        <div className="flex justify-end col-start-11 col-end-13">
           {userInfo}
-        </div> */}
+        </div>
       </nav>
       {subMenu && (
         <nav

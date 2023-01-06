@@ -12,10 +12,12 @@ import { useMediaQuery } from "@hooks/useMediaQueries";
 import { CampaignBottomCard } from "@components/CampaignBottomCard";
 import { Loader } from "@components/Loader";
 import { SimilarCampaigns } from "@components/SimilarCampaings";
+import { useSession } from "next-auth/react";
 
 const Campaign = () => {
   const router = useRouter();
   const { id } = router.query;
+  const { data: session } = useSession();
 
   const isDesktop = useMediaQuery(mediaString.lg);
 
@@ -25,7 +27,7 @@ const Campaign = () => {
     },
   });
 
-  console.log("campaign: ", campaign);
+  const isOwner = session?.id === campaign.getCampaign.gmId;
 
   // const [{ data: campaigns, fetching: fetchingCampaigns, error }] =
   //   useGetCampaignsQuery();
@@ -38,6 +40,19 @@ const Campaign = () => {
 
   return (
     <>
+      {!isDesktop ? (
+        <CampaignBottomCard
+          campaign={campaign?.getCampaign}
+          isOwner={isOwner}
+          onSubmit={handleJoinCampaign}
+        />
+      ) : (
+        <CampaignSideCard
+          campaign={campaign?.getCampaign}
+          isOwner={isOwner}
+          onSubmit={handleJoinCampaign}
+        />
+      )}
       <div className="mt-16 max-w-7xl mx-auto relative px-4">
         <div className="relative aspect-w-16 aspect-h-9 flex flex-col justify-center items-center">
           <HeroImage
