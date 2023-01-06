@@ -13,6 +13,7 @@ import { CampaignBottomCard } from "@components/CampaignBottomCard";
 import { Loader } from "@components/Loader";
 import { SimilarCampaigns } from "@components/SimilarCampaings";
 import { useSession } from "next-auth/react";
+import { Media } from "@utils/responsive";
 
 const Campaign = () => {
   const router = useRouter();
@@ -68,9 +69,24 @@ const Campaign = () => {
         <div className="relative mt-12">
           <CampaignTags tags={campaign?.getCampaign.tags} />
           <div className="my-16">
-            <Text size="7xl" color="lightContrast" className="font-trejanSans">
-              {campaign?.getCampaign.title}
-            </Text>
+            <Media greaterThan="lg">
+              <Text
+                size="4xl"
+                color="lightContrast"
+                className="font-trejanSans"
+              >
+                {campaign?.getCampaign.title}
+              </Text>
+            </Media>
+            <Media at="xs">
+              <Text
+                size="7xl"
+                color="lightContrast"
+                className="font-trejanSans"
+              >
+                {campaign?.getCampaign.title}
+              </Text>
+            </Media>
           </div>
           <div className="my-16">
             <Text

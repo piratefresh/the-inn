@@ -4,6 +4,7 @@ import { styled, Text, Button, Spoiler } from "ui";
 
 interface CampaignSideCardProps {
   campaign: CreateCampaignState | GetCampaignQuery["getCampaign"];
+  isOwner?: boolean;
   onSubmit?: () => void;
   submitText?: string;
 }
@@ -33,6 +34,7 @@ const SideCard = styled("div", {
 
 export const CampaignSideCard = ({
   campaign,
+  isOwner = false,
   onSubmit,
   submitText,
 }: CampaignSideCardProps) => {
@@ -102,7 +104,7 @@ export const CampaignSideCard = ({
         </div>
       </Spoiler>
 
-      {onSubmit && (
+      {!isOwner && onSubmit && (
         <div className="my-2 w-full">
           <Button size="large" fullWidth onClick={onSubmit}>
             {submitText ? submitText : "Join Campaign"}
