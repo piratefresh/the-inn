@@ -1,24 +1,17 @@
-import { CampaignCard } from "@components/CampaignCard";
-import { useGetCampaignQuery, useGetCampaignsQuery } from "@generated/graphql";
+import { useGetCampaignQuery } from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
 import { useRouter } from "next/router";
-import { Avatar, HeroImage, Note, Text, mediaString } from "ui";
+import { HeroImage, Text, mediaString } from "ui";
 import React from "react";
 import { ReadOnly } from "@components/RichTextEditor/ReadOnly";
-import { styled } from "@components/Theme/Theme";
 import { CampaignTags } from "@components/CampaignTags";
 import { CampaignDetails } from "@components/CampaignDetails";
 import { ITimezoneOption } from "ui/src/TimeZonePicker/TimeZonePicker";
 import { CampaignSideCard } from "@components/CampaignSideCard/CampaignSideCard";
-import { CampaignApplication } from "@components/CampaignApplication";
 import { useMediaQuery } from "@hooks/useMediaQueries";
 import { CampaignBottomCard } from "@components/CampaignBottomCard";
 import { Loader } from "@components/Loader";
-
-const MemberAvatar = styled("img", {
-  borderRadius: "9999px",
-  backgroundColor: "$yellowBrand",
-});
+import { SimilarCampaigns } from "@components/SimilarCampaings";
 
 const Campaign = () => {
   const router = useRouter();
@@ -32,22 +25,8 @@ const Campaign = () => {
     },
   });
 
-  const [{ data: campaigns, fetching: fetchingCampaigns, error }] =
-    useGetCampaignsQuery();
-
-  const SimilarCampaigns = fetchingCampaigns ? (
-    <div>Loading...</div>
-  ) : (
-    <div className="my-14 mx-auto">
-      <div className="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {campaigns?.getCampaigns.slice(0, 4).map((campaign) => (
-          <div style={{ maxWidth: "275px" }} key={campaign.title}>
-            <CampaignCard campaign={campaign} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  // const [{ data: campaigns, fetching: fetchingCampaigns, error }] =
+  //   useGetCampaignsQuery();
 
   const handleJoinCampaign = () => {
     router.push(`/join/${id}`);
@@ -103,10 +82,6 @@ const Campaign = () => {
           <div className="flex flex-row">
             {campaign?.getCampaign.memberships.map((member) => (
               <div className="flex flex-col">
-                <Avatar
-                  name={`${member.user.firstName} ${member.user.lastName}`}
-                  imageUrl={`https://joeschmoe.io/api/v1/${member.user.firstName}`}
-                />
                 <Text color="loContrast">{member.user.firstName}</Text>
               </div>
             ))}
@@ -160,7 +135,7 @@ const Campaign = () => {
               </Text>
             </Note>
           </div> */}
-          {SimilarCampaigns}
+          {/* <SimilarCampaigns campaigns={campaings.getCampaings} /> */}
         </div>
       </div>
     </>

@@ -30,6 +30,7 @@ const StyledButton = styled("button", {
   padding: "$space$2",
   fontSize: "$fontSizes$sm",
   fontFamily: "Inter",
+  cursor: "pointer",
 
   variants: {
     color: {
