@@ -17,8 +17,6 @@ const Campaign = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  return <div>HELLO CAMOAUGN</div>;
-
   const isDesktop = useMediaQuery(mediaString.lg);
 
   const [{ data: campaign, fetching }] = useGetCampaignQuery({
@@ -26,6 +24,10 @@ const Campaign = () => {
       id: id as string,
     },
   });
+
+  console.log("campaign: ", campaign);
+
+  return <div>HELLO CAMOAUGN</div>;
 
   // const [{ data: campaigns, fetching: fetchingCampaigns, error }] =
   //   useGetCampaignsQuery();
