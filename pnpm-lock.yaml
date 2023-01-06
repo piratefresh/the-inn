@@ -76,7 +76,7 @@ importers:
       '@devoxa/prisma-relay-cursor-connection': 2.2.2_@prisma+client@4.8.0
       '@faker-js/faker': 7.6.0
       '@graphql-tools/schema': 9.0.12_graphql@16.6.0
-      '@prisma/client': 4.8.0_prisma@4.8.0
+      '@prisma/client': 4.8.0_prisma@4.8.1
       '@sendgrid/mail': 7.7.0
       '@upstash/ratelimit': 0.1.5_@upstash+redis@1.18.5
       '@upstash/redis': 1.18.5
@@ -124,7 +124,7 @@ importers:
       '@types/jsonwebtoken': 9.0.0
       '@types/ws': 8.5.4
       nodemon: 2.0.20
-      prisma: 4.8.0
+      prisma: 4.8.1
       rimraf: 3.0.2
       ts-node: 10.9.1_wiov2xnxutssp33bmsvup4kx3q
       tsconfig-paths: 4.1.2
@@ -2282,7 +2282,7 @@ packages:
     peerDependencies:
       '@prisma/client': ^2.0.0 || ^3.0.0 || ^4.0.0
     dependencies:
-      '@prisma/client': 4.8.0_prisma@4.8.0
+      '@prisma/client': 4.8.0_prisma@4.8.1
       graphql-fields: 2.0.3
     dev: false
 
@@ -4243,6 +4243,20 @@ packages:
       '@prisma/engines-version': 4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe
       prisma: 4.8.0
 
+  /@prisma/client/4.8.0_prisma@4.8.1:
+    resolution: {integrity: sha512-Y1riB0p2W52kh3zgssP/YAhln3RjBFcJy3uwEiyjmU+TQYh6QTZDRFBo3JtBWuq2FyMOl1Rye8jxzUP+n0l5Cg==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe
+      prisma: 4.8.1
+    dev: false
+
   /@prisma/debug/3.14.0:
     resolution: {integrity: sha512-cvA2NRJU6oLCFpYcOJO6jjUZZcPwQqdKYVpa6OY+jFrSwLdYLgSPjrfbnBPOD2z1gzODdnrWYfpz3wPKVhZ0IQ==}
     dependencies:
@@ -4290,6 +4304,10 @@ packages:
 
   /@prisma/engines/4.8.0:
     resolution: {integrity: sha512-A1Asn2rxZMlLAj1HTyfaCv0VQrLUv034jVay05QlqZg1qiHPeA3/pGTfNMijbsMYCsGVxfWEJuaZZuNxXGMCrA==}
+    requiresBuild: true
+
+  /@prisma/engines/4.8.1:
+    resolution: {integrity: sha512-93tctjNXcIS+i/e552IO6tqw17sX8liivv8WX9lDMCpEEe3ci+nT9F+1oHtAafqruXLepKF80i/D20Mm+ESlOw==}
     requiresBuild: true
 
   /@prisma/fetch-engine/3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
@@ -16584,6 +16602,14 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.8.0
+
+  /prisma/4.8.1:
+    resolution: {integrity: sha512-ZMLnSjwulIeYfaU1O6/LF6PEJzxN5par5weykxMykS9Z6ara/j76JH3Yo2AH3bgJbPN4Z6NeCK9s5fDkzf33cg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.8.1
 
   /private/0.1.8:
     resolution: {integrity: sha512-VvivMrbvd2nKkiG38qjULzlc+4Vx4wm/whI9pQD35YrARNnhxeiRktSOhSukRLFNlzg6Br/cJPet5J/u19r/mg==}
