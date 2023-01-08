@@ -12,7 +12,7 @@ export const CampaignTags = ({ tags }: CampaignTagsProps) => {
           <Text
             color="hiContrast"
             style={{ fontFamily: "Alegreya Sans" }}
-            size="4xl"
+            size="xl"
             className="whitespace-pre-wrap"
           >
             {tag}

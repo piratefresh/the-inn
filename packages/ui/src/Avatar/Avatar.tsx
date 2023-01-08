@@ -34,7 +34,7 @@ const AvatarFallback = styled(AvatarPrimitive.Fallback, {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: "white",
+  backgroundColor: "$lightBlackBrand",
   color: "$yellowBrand",
   fontSize: 15,
   lineHeight: 1,

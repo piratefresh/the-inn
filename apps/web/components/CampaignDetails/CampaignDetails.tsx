@@ -26,12 +26,12 @@ export const CampaignDetails = ({
 }: CampaignDetailsProps) => {
   return (
     <>
-      <Text size="4xl" color="lightContrast" className="font-trejanSans">
+      <Text size="xl" color="lightContrast" className="font-trejanSans">
         Game Details
       </Text>
 
       <Text
-        size="4xl"
+        size="xl"
         color="loContrast"
         className="flex items-center font-alegreyaSans"
       >
@@ -39,7 +39,7 @@ export const CampaignDetails = ({
         <div className="flex items-center">
           {days.map((day) => (
             <StyledTag>
-              <Text color="hiContrast" weight="bold" size="4xl">
+              <Text color="hiContrast" weight="bold" size="xl">
                 {day}
               </Text>
             </StyledTag>
@@ -48,7 +48,7 @@ export const CampaignDetails = ({
         in the{" "}
         {timePeriods.map((time) => (
           <StyledTag>
-            <Text color="hiContrast" weight="bold" size="4xl">
+            <Text color="hiContrast" weight="bold" size="xl">
               {time}
             </Text>
           </StyledTag>
@@ -57,11 +57,11 @@ export const CampaignDetails = ({
       </Text>
 
       <div className="flex items-center">
-        <Text size="4xl" color="loContrast" className="font-alegreyaSans">
+        <Text size="xl" color="loContrast" className="font-alegreyaSans">
           This game is recommended for
         </Text>
         <StyledTag>
-          <Text color="hiContrast" size="4xl" className="font-alegreyaSans">
+          <Text color="hiContrast" size="xl" className="font-alegreyaSans">
             {experience}
           </Text>
         </StyledTag>
@@ -69,16 +69,16 @@ export const CampaignDetails = ({
 
       {!isOnline && (
         <div className="flex items-center">
-          <Text size="4xl" color="loContrast" className="font-alegreyaSans">
+          <Text size="xl" color="loContrast" className="font-alegreyaSans">
             Will be played near{" "}
             <StyledTag>
-              <Text color="hiContrast" weight="bold" size="4xl">
+              <Text color="hiContrast" weight="bold" size="xl">
                 {city}
               </Text>
             </StyledTag>
             ,
             <StyledTag>
-              <Text color="hiContrast" weight="bold" size="4xl">
+              <Text color="hiContrast" weight="bold" size="xl">
                 {state}
               </Text>
             </StyledTag>{" "}

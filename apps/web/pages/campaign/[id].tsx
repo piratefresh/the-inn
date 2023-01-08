@@ -1,7 +1,7 @@
 import { useGetCampaignQuery } from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
 import { useRouter } from "next/router";
-import { HeroImage, Text, mediaString } from "ui";
+import { HeroImage, Text, mediaString, Avatar } from "ui";
 import React from "react";
 import { ReadOnly } from "@components/RichTextEditor/ReadOnly";
 import { CampaignTags } from "@components/CampaignTags";
@@ -68,30 +68,15 @@ const Campaign = () => {
         </div>
         <div className="relative mt-12">
           <CampaignTags tags={campaign?.getCampaign.tags} />
-          <div className="my-16">
-            <Media greaterThan="lg">
-              <Text
-                size="4xl"
-                color="lightContrast"
-                className="font-trejanSans"
-              >
-                {campaign?.getCampaign.title}
-              </Text>
-            </Media>
-            <Media at="xs">
-              <Text
-                size="7xl"
-                color="lightContrast"
-                className="font-trejanSans"
-              >
-                {campaign?.getCampaign.title}
-              </Text>
-            </Media>
+          <div className="my-8">
+            <Text size="xl" color="lightContrast" className="font-trejanSans">
+              {campaign?.getCampaign.title}
+            </Text>
           </div>
-          <div className="my-16">
+          <div className="my-8">
             <Text
               style={{ fontFamily: "Alegreya Sans" }}
-              size="4xl"
+              size="xl"
               color="loContrast"
               className="break-words"
             >
@@ -103,13 +88,17 @@ const Campaign = () => {
 
           <div className="flex flex-row">
             {campaign?.getCampaign.memberships.map((member) => (
-              <div className="flex flex-col">
-                <Text color="loContrast">{member.user.firstName}</Text>
+              <div className="flex flex-col items-center" key={member.user.id}>
+                <Avatar
+                  imageUrl={member.user.imageUrl}
+                  name={member.user.firstName}
+                />
+                <Text>{member.role}</Text>
               </div>
             ))}
           </div>
           {isDesktop && (
-            <div className="my-16">
+            <div className="my-8">
               <CampaignDetails
                 city={campaign?.getCampaign.city}
                 days={campaign?.getCampaign.days}
@@ -124,15 +113,15 @@ const Campaign = () => {
             </div>
           )}
 
-          <div className="my-16">
-            <Text size="4xl" color="lightContrast" className="font-trejanSans">
+          <div className="my-8">
+            <Text size="xl" color="lightContrast" className="font-trejanSans">
               About the Campaign
             </Text>
             <ReadOnly textString={campaign?.getCampaign.jsonSummary} />
           </div>
 
-          <div className="my-16">
-            <Text size="4xl" color="lightContrast" className="font-trejanSans">
+          <div className="my-8">
+            <Text size="xl" color="lightContrast" className="font-trejanSans">
               Additional Details
             </Text>
             <ReadOnly

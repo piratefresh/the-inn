@@ -239,9 +239,9 @@ export const Nav = () => {
           />
         </div>
 
-        {/* <div className="flex justify-end col-start-11 col-end-13">
+        <div className="flex justify-end col-start-11 col-end-13">
           {userInfo}
-        </div> */}
+        </div>
       </nav>
       {subMenu && (
         <nav

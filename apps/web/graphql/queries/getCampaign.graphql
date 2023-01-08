@@ -4,8 +4,10 @@ query GetCampaign($id: String!) {
     memberships {
       role
       user {
+        id
         firstName
         lastName
+        imageUrl
       }
     }
     gameMaster {

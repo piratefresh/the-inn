@@ -712,7 +712,7 @@ export type GetCampaignQueryVariables = Exact<{
 }>;
 
 
-export type GetCampaignQuery = { __typename?: 'Query', getCampaign: { __typename?: 'Campaign', id: string, createdAt: any, updatedAt: any, title: string, summary: string, jsonSummary: string, additionalDetails?: string | null, jsonAdditionalDetails?: string | null, note?: string | null, imageUrl: string, isOnline: boolean, campaignType: string, city?: string | null, state?: string | null, area?: string | null, lat?: number | null, lng?: number | null, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, timezone: string, gmId: string, experience: Experience, voipSystem?: string | null, gameSystem: string, virtualTable?: string | null, maxSeats: number, isActive: boolean, puzzles: Difficulty, combat: Difficulty, roleplay: Difficulty, tags: Array<string>, price?: number | null, gallery: Array<string>, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string } }>, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } } };
+export type GetCampaignQuery = { __typename?: 'Query', getCampaign: { __typename?: 'Campaign', id: string, createdAt: any, updatedAt: any, title: string, summary: string, jsonSummary: string, additionalDetails?: string | null, jsonAdditionalDetails?: string | null, note?: string | null, imageUrl: string, isOnline: boolean, campaignType: string, city?: string | null, state?: string | null, area?: string | null, lat?: number | null, lng?: number | null, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, timezone: string, gmId: string, experience: Experience, voipSystem?: string | null, gameSystem: string, virtualTable?: string | null, maxSeats: number, isActive: boolean, puzzles: Difficulty, combat: Difficulty, roleplay: Difficulty, tags: Array<string>, price?: number | null, gallery: Array<string>, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } }>, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } } };
 
 export type GetCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1133,8 +1133,10 @@ export const GetCampaignDocument = gql`
     memberships {
       role
       user {
+        id
         firstName
         lastName
+        imageUrl
       }
     }
     gameMaster {
