@@ -102,7 +102,80 @@ export class CampaignResolver {
     return "hello game";
   }
   @Query(() => [Campaign])
-  async getCampaigns(@Ctx() { prisma }: MyContext) {
+  async updateAlgoliaCampaigns(@Ctx() { prisma, theInnIndex }: MyContext) {
+    const campaigns = await prisma.campaign.findMany({
+      orderBy: {
+        updatedAt: "desc",
+      },
+      include: {
+        memberships: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                imageUrl: true,
+              },
+            },
+          },
+        },
+        gameMaster: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            imageUrl: true,
+          },
+        },
+      },
+    });
+    try {
+      const formatCampaigns = campaigns.map((campaign) => ({
+        id: campaign.id,
+        objectID: campaign.id,
+        title: campaign.title,
+        createdAt: campaign.createdAt,
+        updatedAt: campaign.updatedAt,
+        summary: campaign.summary,
+        // additionalDetails: campaign.additionalDetails,
+        imageUrl: campaign.imageUrl,
+        campaignType: campaign.campaignType,
+        city: campaign.city,
+        state: campaign.state,
+        area: campaign.area,
+        lat: campaign.lat,
+        lng: campaign.lng,
+        startDate: campaign.startDate,
+        days: campaign.days,
+        timePeriods: campaign.timePeriods,
+        timezone: campaign.timezone,
+        gmId: campaign.gmId,
+        experience: campaign.experience,
+        voipSystem: campaign.voipSystem,
+        gameSystem: campaign.gameSystem,
+        virtualTable: campaign.virtualTable,
+        maxSeats: campaign.maxSeats,
+        isActive: campaign.isActive,
+        puzzles: campaign.puzzles,
+        combat: campaign.combat,
+        roleplay: campaign.roleplay,
+        tags: campaign.tags,
+        price: campaign.price,
+        memberships: campaign.memberships,
+        gameMaster: campaign.gameMaster,
+      }));
+      await theInnIndex.saveObjects(formatCampaigns, {
+        autoGenerateObjectIDIfNotExist: true,
+      });
+    } catch (err) {
+      console.log("err: ", JSON.stringify(err));
+    }
+
+    return campaigns;
+  }
+  @Query(() => [Campaign])
+  async getCampaigns(@Ctx() { prisma, theInnIndex }: MyContext) {
     const campaigns = await prisma.campaign.findMany({
       orderBy: {
         updatedAt: "desc",
@@ -116,8 +189,13 @@ export class CampaignResolver {
         gameMaster: true,
       },
     });
-
-    console.log("campaigns: ", campaigns);
+    try {
+      await theInnIndex.saveObjects(campaigns, {
+        autoGenerateObjectIDIfNotExist: true,
+      });
+    } catch (err) {
+      console.log("err: ", err);
+    }
 
     return campaigns;
   }

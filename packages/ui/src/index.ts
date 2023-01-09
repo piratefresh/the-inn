@@ -29,7 +29,7 @@ export { TimeZonePicker, allTimezones } from "./TimeZonePicker";
 export type { ITimezoneOption } from "./TimeZonePicker";
 export { Selector, AsyncSelector } from "./Selector";
 export { RangeSlider } from "./RangeSlider";
-export { Dialog } from "./Dialog";
+export { Dialog, RadixDialog } from "./Dialog";
 export { Popover } from "./Popover";
 export { Menu, HeadlessMenu } from "./Menu";
 export { Avatar } from "./Avatar";
@@ -79,3 +79,5 @@ export {
   List,
   ListItem,
 } from "./NavigationMenu";
+export { Collapsible } from "./Collapsible";
+export { Accordion } from "./Accordion";

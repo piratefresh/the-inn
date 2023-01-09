@@ -108,3 +108,5 @@ export const Dialog = ({
     </RadixDialog.Root>
   );
 };
+
+export { RadixDialog };
