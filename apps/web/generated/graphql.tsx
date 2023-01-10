@@ -348,6 +348,7 @@ export type NewCampaignNotification = {
   relatedId: Scalars['String'];
   type: Scalars['String'];
   updatedAt: Scalars['String'];
+  user: User;
 };
 
 export type NonExistingUserError = IError & {
@@ -609,7 +610,7 @@ export type CampaignFullFragment = { __typename?: 'Campaign', id: string, create
 
 export type CampaignSnippetFragment = { __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> };
 
-export type NotificationSnippetFragment = { __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string } };
+export type NotificationSnippetFragment = { __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } };
 
 export type UserSnippetFragment = { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null };
 
@@ -734,12 +735,12 @@ export type GetCampaignsIdQuery = { __typename?: 'Query', getCampaignsId: Array<
 export type GetAllNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string } }> };
+export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } }> };
 
 export type GetUnreadNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUnreadNotificationsQuery = { __typename?: 'Query', getUnreadNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string } }> };
+export type GetUnreadNotificationsQuery = { __typename?: 'Query', getUnreadNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } }> };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['String'];
@@ -767,7 +768,7 @@ export type GetUsersQuery = { __typename?: 'Query', getUsers: { __typename: 'Use
 export type NewCampaignApplicationSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NewCampaignApplicationSubscription = { __typename?: 'Subscription', newCampaignApplication: { __typename?: 'NewCampaignNotification', campaignId: string, gameMasterId: string, notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string } };
+export type NewCampaignApplicationSubscription = { __typename?: 'Subscription', newCampaignApplication: { __typename?: 'NewCampaignNotification', campaignId: string, gameMasterId: string, notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string, imageUrl: string, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } } };
 
 export const CampaignFullFragmentDoc = gql`
     fragment CampaignFull on Campaign {
@@ -859,6 +860,7 @@ export const NotificationSnippetFragmentDoc = gql`
     id
     firstName
     lastName
+    imageUrl
   }
 }
     `;
@@ -1322,6 +1324,13 @@ export const NewCampaignApplicationDocument = gql`
     updatedAt
     createdAt
     relatedId
+    imageUrl
+    user {
+      id
+      firstName
+      lastName
+      imageUrl
+    }
   }
 }
     `;

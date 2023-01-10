@@ -44,8 +44,6 @@ function CardGrid(props: UseHitsProps) {
 }
 
 function CustomRefinementList(props: UseRefinementListProps) {
-  console.log("props: ", props);
-
   const { items, refine } = useRefinementList(props);
   const [value, setValue] = React.useState();
   const itemRef = React.useRef<HTMLDivElement>(null);
@@ -136,6 +134,14 @@ function useOutsideAlerter(ref, open, setOpen) {
   }, [ref, open, setOpen]);
 }
 
+interface QueryParametersProps {
+  query: string;
+  days: string[];
+  gameSystem: string[];
+  voipSystem: string[];
+  virtualTable: string[];
+}
+
 export default function FindCampaignsPage({
   serverState,
   url,
@@ -155,9 +161,13 @@ export default function FindCampaignsPage({
         indexName="dev_campaigns"
         routing={{
           router: history({
-            getLocation: () =>
-              // @ts-ignore
-              typeof window === "undefined" ? new URL(url) : window.location,
+            getLocation() {
+              if (typeof window === "undefined") {
+                return new URL(url) as unknown as Location;
+              }
+
+              return window.location;
+            },
             // @ts-ignore
             parseURL({ qsModule, location }) {
               const pathnameMatches =
@@ -176,69 +186,64 @@ export default function FindCampaignsPage({
               // `qs` does not return an array when there's a single value.
               const allDays = Array.isArray(days)
                 ? days
-                : // @ts-ignore
-                  decodeURIComponent(days).split(",");
+                : decodeURIComponent(days as string).split(",");
 
               const allGameSystem = Array.isArray(gameSystem)
                 ? gameSystem
-                : // @ts-ignore
-                  decodeURIComponent(gameSystem).split(",");
+                : decodeURIComponent(gameSystem as string).split(",");
               const allVoipSystem = Array.isArray(voipSystem)
                 ? voipSystem
-                : // @ts-ignore
-                  decodeURIComponent(voipSystem).split(",");
+                : decodeURIComponent(voipSystem as string).split(",");
               const allVirtualTable = Array.isArray(virtualTable)
                 ? virtualTable
-                : // @ts-ignore
-                  decodeURIComponent(virtualTable).split(",");
+                : decodeURIComponent(virtualTable as string).split(",");
 
               return {
-                // @ts-ignore
-                query: decodeURIComponent(query),
+                query: decodeURIComponent(query as string),
                 page,
-                // @ts-ignore
-                days: allDays.map(decodeURIComponent),
-                // @ts-ignore
-                gameSystem: allGameSystem.map(decodeURIComponent),
-                // @ts-ignore
-                virtualTable: allVirtualTable.map(decodeURIComponent),
-                // @ts-ignore
-                voipSystem: allVoipSystem.map(decodeURIComponent),
+                days: allDays.map((day) => decodeURIComponent(day)),
+                gameSystem: allGameSystem.map((system) =>
+                  decodeURIComponent(system)
+                ),
+                virtualTable: allVirtualTable.map((table) =>
+                  decodeURIComponent(table)
+                ),
+                voipSystem: allVoipSystem.map((voip) =>
+                  decodeURIComponent(voip)
+                ),
                 // category,
               };
             },
             createURL({ qsModule, location, routeState }) {
               const { origin, pathname, hash } = location;
-              console.log("routeState: ", routeState);
-              const queryParameters = {};
+
+              const queryParameters: QueryParametersProps = {
+                query: "",
+                days: null,
+                gameSystem: null,
+                voipSystem: null,
+                virtualTable: null,
+              };
               if (routeState.query) {
-                // @ts-ignore
                 queryParameters.query = encodeURIComponent(routeState.query);
               }
-              // @ts-ignore
+
               if (routeState.days?.length) {
-                // @ts-ignore
                 queryParameters.days = routeState.days.map(encodeURIComponent);
               }
-              // @ts-ignore
+
               if (routeState.gameSystem?.length) {
-                // @ts-ignore
                 queryParameters.gameSystem =
-                  // @ts-ignore
                   routeState.gameSystem.map(encodeURIComponent);
               }
-              // @ts-ignore
+
               if (routeState.voipSystem?.length) {
-                // @ts-ignore
                 queryParameters.voipSystem =
-                  // @ts-ignore
                   routeState.voipSystem.map(encodeURIComponent);
               }
-              // @ts-ignore
+
               if (routeState.virtualTable?.length) {
-                // @ts-ignore
                 queryParameters.virtualTable =
-                  // @ts-ignore
                   routeState.virtualTable.map(encodeURIComponent);
               }
 
@@ -306,7 +311,7 @@ export default function FindCampaignsPage({
         <Accordion.Root type="multiple">
           <div className="flex flex-col lg:flex-row px-4">
             {isDesktop ? (
-              <div>
+              <div className="w-80 my-16">
                 <SearchInput />
                 <Accordion.Root type="multiple">
                   <CustomRefinementList attribute="days" />

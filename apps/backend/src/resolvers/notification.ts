@@ -1,3 +1,4 @@
+import { User } from "@/models/User";
 import { Notification } from "@models/Notification";
 import { MyContext } from "@typedefs/MyContext";
 import {
@@ -45,6 +46,9 @@ export class NewCampaignNotification {
 
   @Field()
   imageUrl: string;
+
+  @Field((type) => User)
+  user: User;
 }
 
 @Resolver(Notification)

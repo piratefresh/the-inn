@@ -9,5 +9,12 @@ subscription NewCampaignApplication {
     updatedAt
     createdAt
     relatedId
+    imageUrl
+    user {
+      id
+      firstName
+      lastName
+      imageUrl
+    }
   }
 }

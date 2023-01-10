@@ -12,5 +12,6 @@ fragment NotificationSnippet on Notification {
     id
     firstName
     lastName
+    imageUrl
   }
 }

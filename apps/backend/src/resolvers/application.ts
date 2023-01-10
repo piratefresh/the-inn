@@ -219,6 +219,13 @@ export class ApplicationResolver {
           read: notification.read,
           updatedAt: notification.updatedAt,
           relatedId: notification.relatedId,
+          imageUrl: notification.imageUrl,
+          user: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            id: user.id,
+            imageUrl: user.imageUrl,
+          },
         });
 
         return Object.assign(new Campaign(), foundCampaign);

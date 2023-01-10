@@ -114,6 +114,8 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
                         .type as NotificationType,
                       userId: result.newCampaignApplication.gameMasterId,
                       __typename: "Notification",
+                      user: result.newCampaignApplication.user,
+                      imageUrl: result.newCampaignApplication.imageUrl,
                     };
                   data.getUnreadNotifications.push(newNotifications);
 
