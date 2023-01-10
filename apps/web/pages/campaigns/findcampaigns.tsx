@@ -6,24 +6,18 @@ import {
 } from "@heroicons/react/24/outline";
 import { useMediaQuery } from "@hooks/useMediaQueries";
 import { CampaignLayout } from "@layouts/CampaignLayout";
-
-import { Cross2Icon } from "@radix-ui/react-icons";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { GetServerSideProps } from "next";
 import algoliasearch from "algoliasearch/lite";
 import {
   useHits,
   UseHitsProps,
-  useInstantSearch,
   useRefinementList,
   UseRefinementListProps,
   InstantSearch,
   InstantSearchServerState,
   InstantSearchSSRProvider,
-  CurrentRefinements,
 } from "react-instantsearch-hooks-web";
-import type {} from "react-instantsearch-hooks-web";
 import { history } from "instantsearch.js/es/lib/routers/index.js";
 import { UiState } from "instantsearch.js/es/types";
 import { getServerState } from "react-instantsearch-hooks-server";
@@ -162,7 +156,9 @@ export default function FindCampaignsPage({
         routing={{
           router: history({
             getLocation: () =>
+              // @ts-ignore
               typeof window === "undefined" ? new URL(url) : window.location,
+            // @ts-ignore
             parseURL({ qsModule, location }) {
               const pathnameMatches =
                 location.pathname.match(/search\/(.*?)\/?$/);
@@ -180,24 +176,33 @@ export default function FindCampaignsPage({
               // `qs` does not return an array when there's a single value.
               const allDays = Array.isArray(days)
                 ? days
-                : decodeURIComponent(days).split(",");
+                : // @ts-ignore
+                  decodeURIComponent(days).split(",");
 
               const allGameSystem = Array.isArray(gameSystem)
                 ? gameSystem
-                : decodeURIComponent(gameSystem).split(",");
+                : // @ts-ignore
+                  decodeURIComponent(gameSystem).split(",");
               const allVoipSystem = Array.isArray(voipSystem)
                 ? voipSystem
-                : decodeURIComponent(voipSystem).split(",");
+                : // @ts-ignore
+                  decodeURIComponent(voipSystem).split(",");
               const allVirtualTable = Array.isArray(virtualTable)
                 ? virtualTable
-                : decodeURIComponent(virtualTable).split(",");
+                : // @ts-ignore
+                  decodeURIComponent(virtualTable).split(",");
 
               return {
+                // @ts-ignore
                 query: decodeURIComponent(query),
                 page,
+                // @ts-ignore
                 days: allDays.map(decodeURIComponent),
+                // @ts-ignore
                 gameSystem: allGameSystem.map(decodeURIComponent),
+                // @ts-ignore
                 virtualTable: allVirtualTable.map(decodeURIComponent),
+                // @ts-ignore
                 voipSystem: allVoipSystem.map(decodeURIComponent),
                 // category,
               };
@@ -207,21 +212,33 @@ export default function FindCampaignsPage({
               console.log("routeState: ", routeState);
               const queryParameters = {};
               if (routeState.query) {
+                // @ts-ignore
                 queryParameters.query = encodeURIComponent(routeState.query);
               }
+              // @ts-ignore
               if (routeState.days?.length) {
+                // @ts-ignore
                 queryParameters.days = routeState.days.map(encodeURIComponent);
               }
+              // @ts-ignore
               if (routeState.gameSystem?.length) {
+                // @ts-ignore
                 queryParameters.gameSystem =
+                  // @ts-ignore
                   routeState.gameSystem.map(encodeURIComponent);
               }
+              // @ts-ignore
               if (routeState.voipSystem?.length) {
+                // @ts-ignore
                 queryParameters.voipSystem =
+                  // @ts-ignore
                   routeState.voipSystem.map(encodeURIComponent);
               }
+              // @ts-ignore
               if (routeState.virtualTable?.length) {
+                // @ts-ignore
                 queryParameters.virtualTable =
+                  // @ts-ignore
                   routeState.virtualTable.map(encodeURIComponent);
               }
 
@@ -265,9 +282,6 @@ export default function FindCampaignsPage({
                   indexUiState.refinementList &&
                   indexUiState.refinementList.virtualTable,
               };
-              // const indexUiState = uiState["dev_campaigns"] || {};
-              // delete indexUiState.configure;
-              // return indexUiState;
             },
             // @ts-ignore
             routeToState(routeState: IndexUiState): IndexUiState {
