@@ -62,7 +62,6 @@ export const Nav = () => {
 
   const handleSetNotificationsRead = React.useMemo(
     () => async () => {
-      console.log("set notification");
       const { data: setRead, error } = await setNotificationsRead({
         ids: notifications.getUnreadNotifications.map((n) => n.id),
       });
