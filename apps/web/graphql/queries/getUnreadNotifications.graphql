@@ -1,12 +1,5 @@
 query GetUnreadNotifications {
   getUnreadNotifications {
-    updatedAt
-    userId
-    type
-    relatedId
-    read
-    message
-    id
-    createdAt
+    ...NotificationSnippet
   }
 }

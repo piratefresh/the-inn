@@ -131,7 +131,7 @@ export class CampaignResolver {
       },
     });
     try {
-      const formatCampaigns = campaigns.map((campaign) => ({
+      const formatCampaigns = campaigns.map((campaign: any) => ({
         id: campaign.id,
         objectID: campaign.id,
         title: campaign.title,

@@ -739,7 +739,7 @@ export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotificatio
 export type GetUnreadNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUnreadNotificationsQuery = { __typename?: 'Query', getUnreadNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any }> };
+export type GetUnreadNotificationsQuery = { __typename?: 'Query', getUnreadNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string } }> };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['String'];
@@ -1223,17 +1223,10 @@ export function useGetAllNotificationsQuery(options?: Omit<Urql.UseQueryArgs<Get
 export const GetUnreadNotificationsDocument = gql`
     query GetUnreadNotifications {
   getUnreadNotifications {
-    updatedAt
-    userId
-    type
-    relatedId
-    read
-    message
-    id
-    createdAt
+    ...NotificationSnippet
   }
 }
-    `;
+    ${NotificationSnippetFragmentDoc}`;
 
 export function useGetUnreadNotificationsQuery(options?: Omit<Urql.UseQueryArgs<GetUnreadNotificationsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUnreadNotificationsQuery, GetUnreadNotificationsQueryVariables>({ query: GetUnreadNotificationsDocument, ...options });
