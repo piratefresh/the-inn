@@ -36,66 +36,67 @@ const gold = {
 };
 
 // @ts-ignore
-export const { config, css, styled, createTheme, theme } = createStitches({
-  theme: {
-    colors: {
-      yellowBrand: "#FFD166",
-      orangeBrand: "#9f5e25",
-      whiteBrand: "#fcfcfc",
-      grayBrand: "#273435",
-      lightBlackBrand: "hsl(0, 0%, 9%)",
-      ...gray,
-      ...blue,
-      ...red,
-      ...green,
-      ...yellow,
-      ...slate,
-      ...whiteA,
-      ...blackA,
-      ...gold,
-      // Semantic colors
-      hiContrast: "$slate12",
-      loContrast: "white",
+export const { config, css, keyframes, styled, createTheme, theme } =
+  createStitches({
+    theme: {
+      colors: {
+        yellowBrand: "#FFD166",
+        orangeBrand: "#9f5e25",
+        whiteBrand: "#fcfcfc",
+        grayBrand: "#273435",
+        lightBlackBrand: "hsl(0, 0%, 9%)",
+        ...gray,
+        ...blue,
+        ...red,
+        ...green,
+        ...yellow,
+        ...slate,
+        ...whiteA,
+        ...blackA,
+        ...gold,
+        // Semantic colors
+        hiContrast: "$slate12",
+        loContrast: "white",
+      },
+      space: spacing.space,
+      fontSizes: {
+        ...font.fontSizes,
+      },
+      fonts: {
+        untitled: "Untitled Sans, apple-system, sans-serif",
+        mono: "Söhne Mono, menlo, monospace",
+        sans: font.fonts.sans,
+        serif: font.fonts.serif,
+        oldfenris: font.fonts.oldfenris,
+        alegreyasans: font.fonts.alegreyasans,
+        trejan: font.fonts.cinzel,
+        cinzel: font.fonts.cinzel,
+      },
+      fontWeights: {
+        ...font.fontWeights,
+      },
+      lineHeights: { ...font.lineHeights },
+      letterSpacings: { ...font.letterSpacings },
+      sizes: {
+        ...spacing.space,
+        ...sizes.sizes,
+      },
+      borderWidths: {
+        ...borderWidth,
+      },
+      borderStyles: { ...borderStyles },
+      radii: {
+        ...borderRadius.radii,
+      },
+      shadows: { ...shadows },
+      zIndices: { ...zIndex.zIndices },
+      // transitions: { ...transition },
     },
-    space: spacing.space,
-    fontSizes: {
-      ...font.fontSizes,
+    utils: {
+      ...utils.utils,
     },
-    fonts: {
-      untitled: "Untitled Sans, apple-system, sans-serif",
-      mono: "Söhne Mono, menlo, monospace",
-      sans: font.fonts.sans,
-      serif: font.fonts.serif,
-      oldfenris: font.fonts.oldfenris,
-      alegreyasans: font.fonts.alegreyasans,
-      trejan: font.fonts.cinzel,
-      cinzel: font.fonts.cinzel,
-    },
-    fontWeights: {
-      ...font.fontWeights,
-    },
-    lineHeights: { ...font.lineHeights },
-    letterSpacings: { ...font.letterSpacings },
-    sizes: {
-      ...spacing.space,
-      ...sizes.sizes,
-    },
-    borderWidths: {
-      ...borderWidth,
-    },
-    borderStyles: { ...borderStyles },
-    radii: {
-      ...borderRadius.radii,
-    },
-    shadows: { ...shadows },
-    zIndices: { ...zIndex.zIndices },
-    // transitions: { ...transition },
-  },
-  utils: {
-    ...utils.utils,
-  },
-  media,
-});
+    media,
+  });
 
 const darkTheme = createTheme({
   colors: {

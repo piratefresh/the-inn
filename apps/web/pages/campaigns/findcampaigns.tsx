@@ -6,28 +6,35 @@ import {
 } from "@heroicons/react/24/outline";
 import { useMediaQuery } from "@hooks/useMediaQueries";
 import { CampaignLayout } from "@layouts/CampaignLayout";
-import { Button } from "@mantine/core";
+
 import { Cross2Icon } from "@radix-ui/react-icons";
 import React from "react";
+import { renderToString } from "react-dom/server";
+import { GetServerSideProps } from "next";
+import algoliasearch from "algoliasearch/lite";
 import {
   useHits,
   UseHitsProps,
+  useInstantSearch,
   useRefinementList,
   UseRefinementListProps,
+  InstantSearch,
+  InstantSearchServerState,
+  InstantSearchSSRProvider,
+  CurrentRefinements,
 } from "react-instantsearch-hooks-web";
-import {
-  Accordion,
-  Collapsible,
-  Dialog,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuRoot,
-  DropdownMenuTrigger,
-  mediaString,
-  RadixDialog,
-  Text,
-} from "ui";
+import type {} from "react-instantsearch-hooks-web";
+import { history } from "instantsearch.js/es/lib/routers/index.js";
+import { UiState } from "instantsearch.js/es/types";
+import { getServerState } from "react-instantsearch-hooks-server";
+import { Accordion, mediaString, Button, Text } from "ui";
 import { SearchInput } from "../../components/InstantSearch";
+import { useRouter } from "next/router";
+
+type FindCampaignsProps = {
+  serverState?: InstantSearchServerState;
+  url?: string;
+};
 
 function CardGrid(props: UseHitsProps) {
   const { hits } = useHits(props);
@@ -43,6 +50,8 @@ function CardGrid(props: UseHitsProps) {
 }
 
 function CustomRefinementList(props: UseRefinementListProps) {
+  console.log("props: ", props);
+
   const { items, refine } = useRefinementList(props);
   const [value, setValue] = React.useState();
   const itemRef = React.useRef<HTMLDivElement>(null);
@@ -52,6 +61,8 @@ function CustomRefinementList(props: UseRefinementListProps) {
   };
 
   const itemState = itemRef.current?.dataset.state;
+
+  console.log("items: ", items);
 
   return (
     <Accordion.Item
@@ -64,20 +75,25 @@ function CustomRefinementList(props: UseRefinementListProps) {
           <Text color="hiContrast" size="xs" className="">
             {props.attribute.replace(/([A-Z])/g, " $1").trim()}
           </Text>
-          {itemState ? (
+          {itemState || items?.length > 0 ? (
             <PlusIcon className="h-5 w-5" />
           ) : (
             <MinusIcon className="h-5 w-5" />
           )}
         </legend>
       </Accordion.Trigger>
-      {items.map(({ label, value, count }) => (
+      {items.map(({ label, value, count, isRefined }) => (
         <Accordion.Content>
           <div
             className="flex flex-row gap-1 cursor-pointer text-white hover:outline-none"
             key={value}
           >
-            <input type="checkbox" onChange={onChange} value={value} />
+            <input
+              type="checkbox"
+              onChange={onChange}
+              value={value}
+              checked={isRefined}
+            />
             <label>{label}</label>
             <label>{count}</label>
           </div>
@@ -87,75 +103,253 @@ function CustomRefinementList(props: UseRefinementListProps) {
   );
 }
 
-const FindCampaignsPage = () => {
+const searchClient = algoliasearch(
+  process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_ID,
+  process.env.NEXT_PUBLIC_ALGOLIA_API_KEY
+);
+
+export async function getServerSideProps({ req }) {
+  const protocol = req.headers.referer?.split("://")[0] || "https";
+  const url = `${protocol}://${req.headers.host}${req.url}`;
+  const serverState = await getServerState(<FindCampaignsPage url={url} />, {
+    renderToString,
+  });
+
+  return {
+    props: {
+      serverState,
+      url,
+    },
+  };
+}
+
+function useOutsideAlerter(ref, open, setOpen) {
+  React.useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target) && open) {
+        setOpen(!open);
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref, open, setOpen]);
+}
+
+export default function FindCampaignsPage({
+  serverState,
+  url,
+}: FindCampaignsProps) {
+  const nextRouter = useRouter();
   const isDesktop = useMediaQuery(mediaString.lg);
   const [open, setOpen] = React.useState(false);
+  const wrapperRef = React.useRef(null);
+  useOutsideAlerter(wrapperRef, open, setOpen);
+
+  console.log("url: ", url);
+
   return (
-    <div className="flex flex-col lg:flex-row px-4">
-      {isDesktop ? (
-        <div>
-          <SearchInput />
-          <CustomRefinementList attribute="days" />
-          <CustomRefinementList attribute="gameSystem" />
-          <CustomRefinementList attribute="voipSystem" />
-          <CustomRefinementList attribute="virtualTable" />
-        </div>
-      ) : (
-        <div>
-          <SearchInput />
-          <RadixDialog.Root open={open} onOpenChange={setOpen}>
-            <RadixDialog.Trigger>
-              <button>
-                <AdjustmentsHorizontalIcon className="w-6 h-6 text-white" />
-              </button>
-            </RadixDialog.Trigger>
-            <RadixDialog.Portal>
-              <RadixDialog.Content
-                forceMount={true}
-                className="w-screen h-screen  bg-brandLightBlack fixed top-2/4 left-2/4 z-modal"
-                style={{
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <div className="h-screen w-screen">
-                  <RadixDialog.Close asChild>
-                    <div
-                      className="flex justify-end items-center cursor-pointer py-2 px-4"
-                      aria-label="Close"
-                    >
-                      <Cross2Icon className="w-5 h-5 text-white" />
-                    </div>
-                  </RadixDialog.Close>
-                  <Accordion.Root type="multiple">
+    <InstantSearchSSRProvider {...serverState}>
+      <InstantSearch
+        searchClient={searchClient}
+        indexName="dev_campaigns"
+        routing={{
+          router: history({
+            getLocation: () =>
+              typeof window === "undefined" ? new URL(url) : window.location,
+            parseURL({ qsModule, location }) {
+              const pathnameMatches =
+                location.pathname.match(/search\/(.*?)\/?$/);
+              // const category = getCategoryName(pathnameMatches?.[1] || "");
+              const {
+                query = "",
+                page,
+                days = [],
+                gameSystem = [],
+                voipSystem = [],
+                virtualTable = [],
+              } = qsModule.parse(location.search.slice(1));
+
+              console.log("days: ", days);
+              // `qs` does not return an array when there's a single value.
+              const allDays = Array.isArray(days)
+                ? days
+                : decodeURIComponent(days).split(",");
+
+              const allGameSystem = Array.isArray(gameSystem)
+                ? gameSystem
+                : decodeURIComponent(gameSystem).split(",");
+              const allVoipSystem = Array.isArray(voipSystem)
+                ? voipSystem
+                : decodeURIComponent(voipSystem).split(",");
+              const allVirtualTable = Array.isArray(virtualTable)
+                ? virtualTable
+                : decodeURIComponent(virtualTable).split(",");
+
+              return {
+                query: decodeURIComponent(query),
+                page,
+                days: allDays.map(decodeURIComponent),
+                gameSystem: allGameSystem.map(decodeURIComponent),
+                virtualTable: allVirtualTable.map(decodeURIComponent),
+                voipSystem: allVoipSystem.map(decodeURIComponent),
+                // category,
+              };
+            },
+            createURL({ qsModule, location, routeState }) {
+              const { origin, pathname, hash } = location;
+              console.log("routeState: ", routeState);
+              const queryParameters = {};
+              if (routeState.query) {
+                queryParameters.query = encodeURIComponent(routeState.query);
+              }
+              if (routeState.days?.length) {
+                queryParameters.days = routeState.days.map(encodeURIComponent);
+              }
+              if (routeState.gameSystem?.length) {
+                queryParameters.gameSystem =
+                  routeState.gameSystem.map(encodeURIComponent);
+              }
+              if (routeState.voipSystem?.length) {
+                queryParameters.voipSystem =
+                  routeState.voipSystem.map(encodeURIComponent);
+              }
+              if (routeState.virtualTable?.length) {
+                queryParameters.virtualTable =
+                  routeState.virtualTable.map(encodeURIComponent);
+              }
+
+              const queryString = qsModule.stringify(queryParameters, {
+                encode: true,
+                arrayFormat: "comma",
+                addQueryPrefix: true,
+              });
+
+              const encodedString = queryString // try and keep a human-friendly url, decode brackets
+                .replace(/%5B/g, "[")
+                .replace(/%5D/g, "]");
+
+              const href = `${origin}${pathname}${encodedString}${hash}`;
+
+              console.log("queryParameter: ", queryParameters);
+
+              nextRouter.push(href, undefined, { shallow: true });
+
+              return href;
+            },
+          }),
+          stateMapping: {
+            // @ts-ignore
+            stateToRoute(uiState: UiState): IndexUiState {
+              const indexUiState = uiState["dev_campaigns"] || {};
+              console.log("indexUiState: ", indexUiState);
+              return {
+                query: indexUiState?.query,
+                // page: indexUiState?.page,
+                days:
+                  indexUiState.refinementList &&
+                  indexUiState.refinementList.days,
+                gameSystem:
+                  indexUiState.refinementList &&
+                  indexUiState.refinementList.gameSystem,
+                voipSystem:
+                  indexUiState.refinementList &&
+                  indexUiState.refinementList.voipSystem,
+                virtualTable:
+                  indexUiState.refinementList &&
+                  indexUiState.refinementList.virtualTable,
+              };
+              // const indexUiState = uiState["dev_campaigns"] || {};
+              // delete indexUiState.configure;
+              // return indexUiState;
+            },
+            // @ts-ignore
+            routeToState(routeState: IndexUiState): IndexUiState {
+              console.log("routeState: ", routeState);
+              return {
+                ["dev_campaigns"]: {
+                  query: routeState.query,
+                  page: routeState.page,
+
+                  refinementList: {
+                    days: routeState.days,
+                    gameSystem: routeState.gameSystem,
+                    voipSystem: routeState.voipSystem,
+                    virtualTable: routeState.virtualTable,
+                  },
+                },
+              };
+            },
+          },
+        }}
+      >
+        <Accordion.Root type="multiple">
+          <div className="flex flex-col lg:flex-row px-4">
+            {isDesktop ? (
+              <div>
+                <SearchInput />
+                <Accordion.Root type="multiple">
+                  <CustomRefinementList attribute="days" />
+                  <CustomRefinementList attribute="gameSystem" />
+                  <CustomRefinementList attribute="voipSystem" />
+                  <CustomRefinementList attribute="virtualTable" />
+                </Accordion.Root>
+              </div>
+            ) : (
+              <div>
+                <div className="flex flex-row items-center gap-4">
+                  <SearchInput />
+                  <Button onClick={() => setOpen(!open)}>
+                    <AdjustmentsHorizontalIcon className="w-6 h-6 text-white" />
+                  </Button>
+                </div>
+
+                <div
+                  ref={wrapperRef}
+                  className={`algoliaSheet ${open ? "visible" : "invisible"} `}
+                >
+                  <div className="fixed bottom-0 left-0 w-full bg-brandLightBlack border border-brandYellow">
                     <CustomRefinementList attribute="days" />
                     <CustomRefinementList attribute="gameSystem" />
                     <CustomRefinementList attribute="voipSystem" />
                     <CustomRefinementList attribute="virtualTable" />
-                  </Accordion.Root>
+                  </div>
                 </div>
-                <RadixDialog.Close asChild></RadixDialog.Close>
-              </RadixDialog.Content>
-            </RadixDialog.Portal>
-          </RadixDialog.Root>
-        </div>
-      )}
+              </div>
+            )}
 
-      <div className="lg:max-w-7xl mx-auto w-full">
-        <Text
-          as="h2"
-          size="7xl"
-          color="lightContrast"
-          className="font-oldFenris my-16"
-        >
-          Campaigns
-        </Text>
-        <CardGrid />
-      </div>
-    </div>
+            <div className="lg:max-w-7xl mx-auto w-full">
+              <Text
+                as="h2"
+                size="7xl"
+                color="lightContrast"
+                className="font-oldFenris my-16"
+              >
+                Campaigns
+              </Text>
+              <CardGrid />
+            </div>
+          </div>
+        </Accordion.Root>
+      </InstantSearch>
+    </InstantSearchSSRProvider>
   );
-};
+}
+
+export function VirtualFilters() {
+  useRefinementList({ attribute: "days" });
+  useRefinementList({ attribute: "gameSystem" });
+  useRefinementList({ attribute: "voipSystem" });
+  useRefinementList({ attribute: "virtualTable" });
+
+  return null;
+}
 
 FindCampaignsPage.layoutProps = {
   meta: {
@@ -163,5 +357,3 @@ FindCampaignsPage.layoutProps = {
   },
   Layout: CampaignLayout,
 };
-
-export default FindCampaignsPage;

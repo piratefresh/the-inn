@@ -162,6 +162,13 @@ module.exports = {
             opacity: 0.12,
           },
         },
+        ".border-b-brandYellowGradient": {
+          borderBottom: "3px solid transparent",
+          backgroundImage:
+            "linear-gradient(#181818, #181818),linear-gradient(90deg, #ffd166, #9f5e25)",
+          backgroundOrigin: "border-box",
+          backgroundClip: "padding-box, border-box",
+        },
       });
     }),
   ],

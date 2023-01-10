@@ -42,6 +42,9 @@ export class NewCampaignNotification {
 
   @Field()
   read: boolean;
+
+  @Field()
+  imageUrl: string;
 }
 
 @Resolver(Notification)
@@ -52,6 +55,9 @@ export class NotificationResolver {
       where: {
         userId: req.session.userId,
       },
+      include: {
+        user: true,
+      },
     });
   }
   @Query(() => [Notification])
@@ -60,6 +66,15 @@ export class NotificationResolver {
       where: {
         userId: req.session.userId,
         read: false,
+      },
+    });
+  }
+  @Query(() => [Notification])
+  async getReadNotifications(@Ctx() { prisma, req }: MyContext) {
+    return prisma.notification.findMany({
+      where: {
+        userId: req.session.userId,
+        read: true,
       },
     });
   }

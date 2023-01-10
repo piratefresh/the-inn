@@ -1,4 +1,4 @@
-import { useGetCampaignQuery } from "@generated/graphql";
+import { MembershipRole, useGetCampaignQuery } from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
 import { useRouter } from "next/router";
 import { HeroImage, Text, mediaString, Avatar } from "ui";
@@ -38,6 +38,10 @@ const Campaign = () => {
   if (fetching && !campaign) return <Loader />;
 
   const isOwner = session?.id === campaign?.getCampaign.gmId;
+  const isMember = campaign?.getCampaign.memberships.filter(
+    (member) =>
+      member.user.id.includes(session?.id) && member.role !== MembershipRole.Gm
+  );
 
   return (
     <>
@@ -45,12 +49,14 @@ const Campaign = () => {
         <CampaignBottomCard
           campaign={campaign?.getCampaign}
           isOwner={isOwner}
+          isMember={!!isMember}
           onSubmit={handleJoinCampaign}
         />
       ) : (
         <CampaignSideCard
           campaign={campaign?.getCampaign}
           isOwner={isOwner}
+          isMember={!!isMember}
           onSubmit={handleJoinCampaign}
         />
       )}
@@ -87,7 +93,7 @@ const Campaign = () => {
           </div>
 
           <div className="flex flex-row">
-            {campaign?.getCampaign.memberships.map((member) => (
+            {campaign?.getCampaign.memberships.slice(0, 5).map((member) => (
               <div className="flex flex-col items-center" key={member.user.id}>
                 <Avatar
                   imageUrl={member.user.imageUrl}

@@ -9,9 +9,17 @@ import {
   useNewCampaignApplicationSubscription,
   useGetUnreadNotificationsQuery,
   useSetNotificationsReadMutation,
+  useGetAllNotificationsQuery,
 } from "@generated/graphql";
 import { BellIcon, TicketIcon, UserIcon } from "@heroicons/react/24/solid";
-import { Menu, HeadlessMenu, Text, mediaString } from "ui";
+import {
+  Menu,
+  HeadlessMenu,
+  Text,
+  mediaString,
+  Popover,
+  Notification,
+} from "ui";
 import { useMediaQuery } from "@hooks/useMediaQueries";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useLockScroll } from "@hooks/useLockScroll";
@@ -42,8 +50,10 @@ export const Nav = () => {
   const { data: session } = useSession();
   const [open, setOpen] = React.useState(false);
   const [subMenu, setSubMenu] = React.useState(null);
+  // const [{ data: notifications, fetching: fetchingNotifications }] =
+  //   useGetUnreadNotificationsQuery();
   const [{ data: notifications, fetching: fetchingNotifications }] =
-    useGetUnreadNotificationsQuery();
+    useGetAllNotificationsQuery();
   const [{ data: _newNotifications }] = useNewCampaignApplicationSubscription();
   const [_, setNotificationsRead] = useSetNotificationsReadMutation();
 
@@ -54,7 +64,7 @@ export const Nav = () => {
     () => async () => {
       console.log("set notification");
       const { data: setRead, error } = await setNotificationsRead({
-        ids: notifications.getUnreadNotifications.map((n) => n.id),
+        ids: notifications.getAllNotifications.map((n) => n.id),
       });
 
       console.log("data: ", setRead);
@@ -71,29 +81,43 @@ export const Nav = () => {
       session?.user ? (
         <div className="flex items-center relative">
           <div className="mx-8">
-            <Menu
-              onClick={handleSetNotificationsRead}
-              trigger={
-                <>
+            <Popover.Root>
+              <Popover.Trigger asChild>
+                <div>
                   <div className="absolute top-0 rounded-full bg-red-500 px-2 z-10">
-                    {notifications?.getUnreadNotifications.length}
+                    {notifications?.getAllNotifications.length}
                   </div>
-                  <BellIcon className="h-6 w-6" />
-                </>
-              }
-            >
-              <div className="p-4">
-                {notifications?.getUnreadNotifications.length > 0 ? (
-                  notifications.getUnreadNotifications.map((notification) => (
-                    <a href={`/campaign/${notification.relatedId}`}>
-                      {notification.message}
-                    </a>
-                  ))
-                ) : (
-                  <Text color="hiContrast">No Notification</Text>
-                )}
-              </div>
-            </Menu>
+                  <BellIcon className="h-6 w-6 text-white" />
+                </div>
+              </Popover.Trigger>
+              <Popover.Anchor />
+              <Popover.Portal>
+                <Popover.Content>
+                  {notifications?.getAllNotifications.map((notification) => (
+                    <Notification
+                      key={notification.id}
+                      imageSrc={
+                        notification.imageUrl ??
+                        "https://source.unsplash.com/random/300×150/?abstract"
+                      }
+                      {...notification}
+                    >
+                      <div>
+                        <p className="text-sm text-white">
+                          Just created an application for{" "}
+                          <span className="text-bold underline cursor-pointer">
+                            Long Live the King - Royal Politics
+                          </span>
+                        </p>
+                      </div>
+                    </Notification>
+                  ))}
+
+                  <Popover.Close />
+                  <Popover.Arrow />
+                </Popover.Content>
+              </Popover.Portal>
+            </Popover.Root>
           </div>
           <div className="text-white mr-4">
             <Link href={`/user/${session.id}`}>{session.user.name}</Link>
@@ -176,6 +200,13 @@ export const Nav = () => {
         {open && (
           <div className="bg-brandLightBlack h-screen w-screen p-4">
             <ul>
+              <li>
+                <NavItemLink
+                  onClick={handleCloseNav}
+                  label="The Inn"
+                  href="/"
+                />
+              </li>
               <li>
                 <Text color="loContrast" size="2xl" className="font-oldFenris">
                   Campaign

@@ -187,6 +187,7 @@ export class ApplicationResolver {
             type: NotificationType.Campaign,
             relatedId: foundCampaign.id,
             userId: foundCampaign.gameMaster.id,
+            imageUrl: foundCampaign.imageUrl,
           },
           include: {
             user: true,

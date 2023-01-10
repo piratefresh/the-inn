@@ -108,8 +108,6 @@ export const nextAuthOptions = (req, res) => ({
     },
 
     async session({ session, token, user }) {
-      console.log("session: ", session);
-      console.log("token: ", token);
       const newSession: Session = {
         ...session,
         expires: token.exp,

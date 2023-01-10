@@ -23,6 +23,9 @@ export class Notification {
   @Field()
   userId: string;
 
+  @Field({ nullable: true })
+  imageUrl?: string;
+
   @Field()
   createdAt: Date;
 

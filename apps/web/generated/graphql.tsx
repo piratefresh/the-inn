@@ -341,6 +341,7 @@ export type NewCampaignNotification = {
   campaignId: Scalars['String'];
   createdAt: Scalars['String'];
   gameMasterId: Scalars['String'];
+  imageUrl: Scalars['String'];
   message: Scalars['String'];
   notificationId: Scalars['String'];
   read: Scalars['Boolean'];
@@ -358,6 +359,7 @@ export type Notification = {
   __typename?: 'Notification';
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
+  imageUrl?: Maybe<Scalars['String']>;
   message: Scalars['String'];
   read: Scalars['Boolean'];
   relatedId: Scalars['String'];
@@ -418,6 +420,7 @@ export type Query = {
   getCampaigns: Array<Campaign>;
   getCampaignsPagination: CampaignPagination;
   getOnlineUsers: Array<User>;
+  getReadNotifications: Array<Notification>;
   getUnreadNotifications: Array<Notification>;
   getUser: User;
   getUserCampaign: Array<Campaign>;
@@ -427,6 +430,7 @@ export type Query = {
   hellogame: Scalars['String'];
   helloworld: Scalars['String'];
   me: Scalars['String'];
+  updateAlgoliaCampaigns: Array<Campaign>;
 };
 
 
@@ -604,6 +608,8 @@ export type CampaignFullFragment = { __typename?: 'Campaign', id: string, create
 
 export type CampaignSnippetFragment = { __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> };
 
+export type NotificationSnippetFragment = { __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string } };
+
 export type UserSnippetFragment = { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null };
 
 export type AddPlayerApplicationMutationVariables = Exact<{
@@ -719,6 +725,11 @@ export type GetCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> }> };
 
+export type GetAllNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string } }> };
+
 export type GetUnreadNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -824,6 +835,24 @@ export const CampaignSnippetFragmentDoc = gql`
       lastName
       imageUrl
     }
+  }
+}
+    `;
+export const NotificationSnippetFragmentDoc = gql`
+    fragment NotificationSnippet on Notification {
+  updatedAt
+  userId
+  type
+  relatedId
+  read
+  message
+  id
+  createdAt
+  imageUrl
+  user {
+    id
+    firstName
+    lastName
   }
 }
     `;
@@ -1162,6 +1191,17 @@ export const GetCampaignsDocument = gql`
 
 export function useGetCampaignsQuery(options?: Omit<Urql.UseQueryArgs<GetCampaignsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCampaignsQuery, GetCampaignsQueryVariables>({ query: GetCampaignsDocument, ...options });
+};
+export const GetAllNotificationsDocument = gql`
+    query GetAllNotifications {
+  getAllNotifications {
+    ...NotificationSnippet
+  }
+}
+    ${NotificationSnippetFragmentDoc}`;
+
+export function useGetAllNotificationsQuery(options?: Omit<Urql.UseQueryArgs<GetAllNotificationsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAllNotificationsQuery, GetAllNotificationsQueryVariables>({ query: GetAllNotificationsDocument, ...options });
 };
 export const GetUnreadNotificationsDocument = gql`
     query GetUnreadNotifications {

@@ -10,7 +10,7 @@ module.exports = withBundleAnalyzer(
   withTM({
     reactStrictMode: true,
     images: {
-      domains: ["res.cloudinary.com"],
+      domains: ["res.cloudinary.com", "unsplash.com"],
     },
     sassOptions: {
       includePaths: [path.join(__dirname, "styles")],

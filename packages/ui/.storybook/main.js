@@ -1,5 +1,3 @@
-import postcss from "postcss";
-
 module.exports = {
   stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: [
@@ -10,7 +8,7 @@ module.exports = {
       name: "@storybook/addon-postcss",
       options: {
         postcssLoaderOptions: {
-          implementation: postcss,
+          implementation: require("postcss"),
         },
       },
     },

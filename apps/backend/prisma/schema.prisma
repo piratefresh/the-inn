@@ -227,6 +227,7 @@ model Notification {
   relatedId String
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+  imageUrl  String?
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
   read      Boolean          @default(false)
