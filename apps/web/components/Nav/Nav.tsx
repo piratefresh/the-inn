@@ -64,7 +64,7 @@ export const Nav = () => {
     () => async () => {
       console.log("set notification");
       const { data: setRead, error } = await setNotificationsRead({
-        ids: notifications.getAllNotifications.map((n) => n.id),
+        ids: notifications.getUnreadNotifications.map((n) => n.id),
       });
 
       console.log("data: ", setRead);
