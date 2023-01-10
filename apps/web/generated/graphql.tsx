@@ -418,6 +418,7 @@ export type Query = {
   getApplicationCampaign: ApplicationConnection;
   getCampaign: Campaign;
   getCampaigns: Array<Campaign>;
+  getCampaignsId: Array<Campaign>;
   getCampaignsPagination: CampaignPagination;
   getOnlineUsers: Array<User>;
   getReadNotifications: Array<Notification>;
@@ -724,6 +725,11 @@ export type GetCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> }> };
+
+export type GetCampaignsIdQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCampaignsIdQuery = { __typename?: 'Query', getCampaignsId: Array<{ __typename?: 'Campaign', id: string }> };
 
 export type GetAllNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1191,6 +1197,17 @@ export const GetCampaignsDocument = gql`
 
 export function useGetCampaignsQuery(options?: Omit<Urql.UseQueryArgs<GetCampaignsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCampaignsQuery, GetCampaignsQueryVariables>({ query: GetCampaignsDocument, ...options });
+};
+export const GetCampaignsIdDocument = gql`
+    query GetCampaignsId {
+  getCampaignsId {
+    id
+  }
+}
+    `;
+
+export function useGetCampaignsIdQuery(options?: Omit<Urql.UseQueryArgs<GetCampaignsIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetCampaignsIdQuery, GetCampaignsIdQueryVariables>({ query: GetCampaignsIdDocument, ...options });
 };
 export const GetAllNotificationsDocument = gql`
     query GetAllNotifications {

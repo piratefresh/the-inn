@@ -189,13 +189,19 @@ export class CampaignResolver {
         gameMaster: true,
       },
     });
-    try {
-      await theInnIndex.saveObjects(campaigns, {
-        autoGenerateObjectIDIfNotExist: true,
-      });
-    } catch (err) {
-      console.log("err: ", err);
-    }
+
+    return campaigns;
+  }
+  @Query(() => [Campaign])
+  async getCampaignsId(@Ctx() { prisma, theInnIndex }: MyContext) {
+    const campaigns = await prisma.campaign.findMany({
+      orderBy: {
+        updatedAt: "desc",
+      },
+      select: {
+        id: true,
+      },
+    });
 
     return campaigns;
   }

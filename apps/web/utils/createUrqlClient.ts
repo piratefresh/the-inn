@@ -36,7 +36,9 @@ const wsClient = () =>
     url: process.env.NEXT_PUBLIC_WS_URL,
   });
 
-const ssrExchange: SSRExchange = UrqlSSRExchange({ isClient: !isServer });
+export const ssrExchange: SSRExchange = UrqlSSRExchange({
+  isClient: !isServer,
+});
 
 const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
   let cookie = "";

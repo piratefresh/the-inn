@@ -50,10 +50,10 @@ export const Nav = () => {
   const { data: session } = useSession();
   const [open, setOpen] = React.useState(false);
   const [subMenu, setSubMenu] = React.useState(null);
-  // const [{ data: notifications, fetching: fetchingNotifications }] =
-  //   useGetUnreadNotificationsQuery();
   const [{ data: notifications, fetching: fetchingNotifications }] =
-    useGetAllNotificationsQuery();
+    useGetUnreadNotificationsQuery();
+  // const [{ data: notifications, fetching: fetchingNotifications }] =
+  //   useGetAllNotificationsQuery();
   const [{ data: _newNotifications }] = useNewCampaignApplicationSubscription();
   const [_, setNotificationsRead] = useSetNotificationsReadMutation();
 
@@ -85,7 +85,7 @@ export const Nav = () => {
               <Popover.Trigger asChild>
                 <div>
                   <div className="absolute top-0 rounded-full bg-red-500 px-2 z-10">
-                    {notifications?.getAllNotifications.length}
+                    {notifications?.getUnreadNotifications.length}
                   </div>
                   <BellIcon className="h-6 w-6 text-white" />
                 </div>
@@ -93,25 +93,30 @@ export const Nav = () => {
               <Popover.Anchor />
               <Popover.Portal>
                 <Popover.Content>
-                  {notifications?.getAllNotifications.map((notification) => (
-                    <Notification
-                      key={notification.id}
-                      imageSrc={
-                        notification.imageUrl ??
-                        "https://source.unsplash.com/random/300×150/?abstract"
-                      }
-                      {...notification}
-                    >
-                      <div>
-                        <p className="text-sm text-white">
-                          Just created an application for{" "}
-                          <span className="text-bold underline cursor-pointer">
-                            Long Live the King - Royal Politics
-                          </span>
-                        </p>
-                      </div>
-                    </Notification>
-                  ))}
+                  <div className="flex flex-col gap-2">
+                    {notifications?.getUnreadNotifications.map(
+                      (notification) => (
+                        <Notification
+                          key={notification.id}
+                          sender={`${notification.user.firstName} ${notification.user.lastName}`}
+                          imageSrc={
+                            notification.imageUrl ??
+                            "https://source.unsplash.com/random/300×150/?abstract"
+                          }
+                          {...notification}
+                        >
+                          <div>
+                            <p className="text-sm text-white">
+                              Just created an application for{" "}
+                              <span className="text-bold underline cursor-pointer">
+                                Long Live the King - Royal Politics
+                              </span>
+                            </p>
+                          </div>
+                        </Notification>
+                      )
+                    )}
+                  </div>
 
                   <Popover.Close />
                   <Popover.Arrow />

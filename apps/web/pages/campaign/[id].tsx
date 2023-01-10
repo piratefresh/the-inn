@@ -1,4 +1,13 @@
-import { MembershipRole, useGetCampaignQuery } from "@generated/graphql";
+import {
+  GetCampaignDocument,
+  GetCampaignQuery,
+  GetCampaignQueryVariables,
+  MembershipRole,
+  useGetCampaignQuery,
+  GetCampaignsIdQuery,
+  GetCampaignsIdQueryVariables,
+  GetCampaignsIdDocument,
+} from "@generated/graphql";
 import { CampaignLayout } from "@layouts/CampaignLayout";
 import { useRouter } from "next/router";
 import { HeroImage, Text, mediaString, Avatar } from "ui";
@@ -11,9 +20,47 @@ import { CampaignSideCard } from "@components/CampaignSideCard/CampaignSideCard"
 import { useMediaQuery } from "@hooks/useMediaQueries";
 import { CampaignBottomCard } from "@components/CampaignBottomCard";
 import { Loader } from "@components/Loader";
-import { SimilarCampaigns } from "@components/SimilarCampaings";
 import { useSession } from "next-auth/react";
-import { Media } from "@utils/responsive";
+import { initUrqlClient } from "@utils/initUrqlClient";
+import { GetStaticPropsContext } from "next";
+
+export async function getStaticProps({ params }: GetStaticPropsContext) {
+  const { urqlClient, ssrCache } = initUrqlClient(
+    process.env.NEXT_PUBLIC_API_URL as string
+  );
+
+  const campaign = await urqlClient
+    .query<GetCampaignQuery, GetCampaignQueryVariables>(GetCampaignDocument, {
+      id: params.id as string,
+    })
+    .toPromise();
+
+  return {
+    props: {
+      urqlState: ssrCache.extractData(),
+    },
+    revalidate: 10, // In seconds
+  };
+}
+
+export async function getStaticPaths() {
+  const { urqlClient } = initUrqlClient(
+    process.env.NEXT_PUBLIC_API_URL as string
+  );
+
+  const campaigns = await urqlClient
+    .query<GetCampaignsIdQuery, GetCampaignsIdQueryVariables>(
+      GetCampaignsIdDocument,
+      {}
+    )
+    .toPromise();
+
+  const paths = campaigns.data.getCampaignsId.map((campaign) => ({
+    params: { id: campaign.id },
+  }));
+
+  return { paths, fallback: "blocking" };
+}
 
 const Campaign = () => {
   const router = useRouter();

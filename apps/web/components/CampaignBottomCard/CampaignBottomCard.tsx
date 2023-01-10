@@ -7,6 +7,7 @@ import { styled, Text, Button, Spoiler } from "ui";
 interface CampaignBottomCardProps {
   campaign: CreateCampaignState | GetCampaignQuery["getCampaign"];
   isOwner?: boolean;
+  isMember?: boolean;
   onSubmit?: () => void;
   submitText?: string;
 }
@@ -33,6 +34,7 @@ const SideCard = styled("div", {
 
 export const CampaignBottomCard = ({
   isOwner = false,
+  isMember = false,
   campaign,
   onSubmit,
   submitText,
@@ -102,7 +104,7 @@ export const CampaignBottomCard = ({
         </div>
       </Spoiler>
 
-      {onSubmit && !isOwner && (
+      {onSubmit && !isOwner && !isMember && (
         <div className="my-2 w-full">
           <Button size="large" fullWidth onClick={onSubmit}>
             {submitText ? submitText : "Join Campaign"}
@@ -120,6 +122,7 @@ export const CampaignBottomCard = ({
           </Link>
         </Button>
       )}
+      {isMember && <div className="my-2 w-full">Already Joined or Applied</div>}
     </SideCard>
   );
 };

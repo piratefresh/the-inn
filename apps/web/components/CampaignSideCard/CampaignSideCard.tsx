@@ -113,7 +113,11 @@ export const CampaignSideCard = ({
           </Button>
         </div>
       )}
-      {isMember && <div className="my-2 w-full">Already Joined or Applied</div>}
+      {isMember && (
+        <div className="my-2 w-full">
+          <Text>Already Joined or Applied</Text>
+        </div>
+      )}
     </SideCard>
   );
 };
