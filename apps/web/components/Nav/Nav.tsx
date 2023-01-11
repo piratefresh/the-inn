@@ -257,7 +257,7 @@ export const Nav = () => {
             href="/campaigns/"
             onClick={() => setSubMenu("campaigns")}
           />
-          <NavItemButton
+          {/* <NavItemButton
             label="Homebrews"
             href="/homebrews"
             onClick={() => setSubMenu("homebrews")}
@@ -266,7 +266,7 @@ export const Nav = () => {
             label="Game rules"
             href="/gamerules"
             onClick={() => setSubMenu("gamerules")}
-          />
+          /> */}
           <NavItemButton
             label="Members"
             href="/members/all"
