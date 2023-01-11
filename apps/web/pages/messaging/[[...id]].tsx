@@ -5,7 +5,7 @@ import { UserPageLayout } from "@layouts/UserPageLayout";
 import { useSession } from "next-auth/react";
 import { styled, Text, mediaString } from "ui";
 
-const Users = () => {
+const Messaging = () => {
   const { data: session } = useSession();
 
   const isDesktop = useMediaQuery(mediaString.lg);
@@ -21,11 +21,11 @@ const Users = () => {
   );
 };
 
-Users.layoutProps = {
+Messaging.layoutProps = {
   meta: {
-    title: "Users",
+    title: "Messaging",
   },
   Layout: UserPageLayout,
 };
 
-export default Users;
+export default Messaging;
