@@ -43,8 +43,6 @@ export const HeaderSettings = ({ session, user }: SettingsProps) => {
       const { signature, timestamp } = signatureData.createImageSignature;
       imageUrl = await uploadImage(data.image, signature, timestamp);
 
-      console.log("image: ", imageUrl);
-
       await updateUserProfile({
         updateProfileArgs: { imageUrl: imageUrl.secure_url },
       });
@@ -67,7 +65,7 @@ export const HeaderSettings = ({ session, user }: SettingsProps) => {
           control={control}
           render={({ field }) => (
             <AvatarUpload
-              defaultSrc={user.imageUrl}
+              defaultSrc={user.imageUrl ?? ""}
               onChange={handleOnChange}
               image={image}
             />

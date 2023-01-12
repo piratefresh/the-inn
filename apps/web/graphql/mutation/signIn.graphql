@@ -10,8 +10,8 @@ mutation SignIn($usernameOrEmail: String!, $password: String!) {
         provider
         providerAccountId
         type
-        expiresAt
-        refreshToken
+        expires_at
+        refresh_token
         userId
       }
     }

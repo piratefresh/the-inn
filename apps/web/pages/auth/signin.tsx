@@ -33,12 +33,6 @@ const SignIn = () => {
     });
 
     if (!res.error) {
-      console.log("session: ", session);
-      const name = `${session?.user.name}`;
-      showNotification({
-        title: `Welcome back ${name}`,
-        message: "Enjoy your stay",
-      });
       router.push("/");
     }
     if (res.error) {
@@ -48,6 +42,12 @@ const SignIn = () => {
         color: "red",
       });
     }
+  };
+
+  const handleGoogleSign = async () => {
+    const res = await signIn("google", {});
+
+    console.log("res: ", res);
   };
 
   return (
@@ -68,6 +68,7 @@ const SignIn = () => {
         <Text as="h3" size="lg" className="text-brandBlack dark:text-white">
           Welcome back! Please enter your details below
         </Text>
+
         <InputGroup
           className="my-8"
           label="*Username or email"
@@ -111,6 +112,9 @@ const SignIn = () => {
           </span>
         </p>
       </form>
+      <Button onClick={handleGoogleSign} className="bg-white px-4">
+        Google Login
+      </Button>
     </div>
   );
 };

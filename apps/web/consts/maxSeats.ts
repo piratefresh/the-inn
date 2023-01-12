@@ -4,5 +4,5 @@ export const MAX_PARTY = [
   { name: "3 Player", value: "3" },
   { name: "4 Player", value: "4" },
   { name: "5 Player", value: "5" },
-  { name: "6 Player", value: "7" },
+  { name: "6 Player", value: "6" },
 ];

@@ -433,7 +433,7 @@ export const General = ({ campaign }: GeneralProps) => {
           </InputGroup>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 my-12">
+        <div className="grid gap-12 my-12">
           <InputGroup label="*Time" error={errors?.timePeriods}>
             <Controller
               name="timePeriods"
@@ -486,7 +486,7 @@ export const General = ({ campaign }: GeneralProps) => {
             />
           </InputGroup>
         </div>
-        <div className="grid lg:grid-cols-2 gap-12 my-12">
+        <div className="grid gap-12 my-12">
           <InputGroup label="*Days" error={errors?.days}>
             <Controller
               name="days"

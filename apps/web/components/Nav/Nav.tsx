@@ -81,14 +81,16 @@ export const Nav = () => {
         <div className="flex items-center relative">
           <div className="mx-8">
             <Popover.Root>
-              <Popover.Trigger asChild>
-                <div>
-                  <div className="absolute top-0 rounded-full bg-red-500 px-2 z-10">
-                    {notifications?.getUnreadNotifications.length}
+              {!!notifications?.getUnreadNotifications.length && (
+                <Popover.Trigger asChild>
+                  <div>
+                    <div className="absolute top-0 rounded-full bg-red-500 px-2 z-10">
+                      {notifications?.getUnreadNotifications.length}
+                    </div>
+                    <BellIcon className="h-6 w-6 text-white" />
                   </div>
-                  <BellIcon className="h-6 w-6 text-white" />
-                </div>
-              </Popover.Trigger>
+                </Popover.Trigger>
+              )}
               <Popover.Anchor />
               <Popover.Portal>
                 <Popover.Content>

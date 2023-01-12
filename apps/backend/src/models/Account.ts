@@ -1,4 +1,4 @@
-import { Field, ObjectType, InputType, ID } from "type-graphql";
+import { Field, ObjectType, InputType, ID, Int } from "type-graphql";
 import { User } from "./User";
 
 @InputType("AccountInput")
@@ -6,6 +6,9 @@ import { User } from "./User";
 export class Account {
   @Field((_type) => ID)
   id: string;
+
+  @Field()
+  userId: string;
 
   @Field()
   type: string;
@@ -17,34 +20,25 @@ export class Account {
   providerAccountId: string;
 
   @Field({ nullable: true })
-  refreshToken?: string;
+  refresh_token?: string;
 
   @Field({ nullable: true })
-  accessToken?: string;
+  access_token?: string;
+
+  @Field((_type) => Int, { nullable: true })
+  expires_at?: number;
 
   @Field({ nullable: true })
-  expiresAt?: number;
-
-  @Field({ nullable: true })
-  tokenType?: string;
+  token_type?: string;
 
   @Field({ nullable: true })
   scope?: string;
 
   @Field({ nullable: true })
-  idToken?: string;
+  id_token?: string;
 
   @Field({ nullable: true })
-  sessionState?: string;
-
-  @Field({ nullable: true })
-  oauthTokenSecret?: string;
-
-  @Field({ nullable: true })
-  oauthToken?: string;
-
-  @Field()
-  userId: string;
+  session_state?: string;
 
   @Field((_type) => User)
   user: User;

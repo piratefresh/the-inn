@@ -119,7 +119,7 @@ export class Campaign {
   @Field((_type) => [Membership])
   memberships: Membership[];
 
-  @Field((_type) => [CampaignMessage])
+  @Field((_type) => [CampaignMessage], { nullable: true })
   campaignMessage: CampaignMessage[];
 
   // skip overwrite 👇

@@ -32,10 +32,11 @@ type FindCampaignsProps = {
 
 function CardGrid(props: UseHitsProps) {
   const { hits } = useHits(props);
+  console.log("hits: ", hits);
   return (
     <div className="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       {hits?.map((campaign: any) => (
-        <div style={{ maxWidth: "275px" }} key={campaign.title}>
+        <div style={{ maxWidth: "275px" }} key={campaign.id}>
           <CampaignCard campaign={campaign} />
         </div>
       ))}
@@ -53,8 +54,6 @@ function CustomRefinementList(props: UseRefinementListProps) {
   };
 
   const itemState = itemRef.current?.dataset.state;
-
-  console.log("items: ", items);
 
   return (
     <Accordion.Item

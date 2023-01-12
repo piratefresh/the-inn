@@ -314,7 +314,7 @@ export const Location = ({ campaign }: LocationProps) => {
           </Button>
 
           <Button size="large" type="submit">
-            Submit
+            Preview
           </Button>
         </Box>
       </form>
