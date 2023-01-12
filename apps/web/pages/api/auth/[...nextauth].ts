@@ -2,19 +2,16 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import NextAuth, { Session } from "next-auth";
+import NextAuth, { Session, SessionOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { createUrqlClient } from "@utils/createUrqlClient";
-import { SignInDocument, SignoutDocument } from "@generated/graphql";
-import { createClient } from "urql";
-
-const urqlConfig = createUrqlClient();
-const client = createClient({
-  url: process.env.NEXT_PUBLIC_API_URL as string,
-  fetchOptions: {
-    credentials: "include" as const,
-  },
-});
+import GoogleProvider from "next-auth/providers/google";
+import { prisma } from "../../../lib/prismadb";
+import { PrismaAdapter } from "@lib/prismaAdapter";
+import Cookies from "cookies";
+import { setCookie } from "nookies";
+import { decode, encode } from "next-auth/jwt";
+import { randomUUID } from "crypto";
+import jwt from "jsonwebtoken";
 
 const SIGN_IN_MUTATION = `
 mutation SignIn($usernameOrEmail: String!, $password: String!) {
@@ -25,19 +22,14 @@ mutation SignIn($usernameOrEmail: String!, $password: String!) {
             firstName
             lastName
             imageUrl
-            accounts {
-              provider
-              providerAccountId
-              type
-              expiresAt
-              refreshToken
-              userId
-            }
           }
         }
       }
 `;
 
+const SET_SESSION_SOCIAL = `mutation SetSessionSocial($usernameOrEmail: String!) {
+  setSessionSocial(usernameOrEmail: $usernameOrEmail)
+}`;
 const SIGN_OUT_MUTATION = `mutation Logout {
   logout
 }`;
@@ -47,10 +39,23 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   return await NextAuth(req, res, nextAuthOptions(req, res));
 }
 
+const session: Partial<SessionOptions> = {
+  strategy: "database",
+  maxAge: 30 * 24 * 60 * 60, // 30 days
+  updateAge: 24 * 60 * 60, // 24 hours
+};
+
+const adapter = PrismaAdapter(prisma);
+
 // To generate session
 export const nextAuthOptions = (req, res) => ({
   debug: true,
+  adapter: adapter,
   providers: [
+    GoogleProvider({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+    }),
     CredentialsProvider({
       credentials: {
         email: {
@@ -62,65 +67,122 @@ export const nextAuthOptions = (req, res) => ({
       authorize: async (credentials, req) => {
         const { email, password } = credentials;
 
-        const response = await axios.post(
-          process.env.NEXT_PUBLIC_API_URL as string,
-          {
-            query: SIGN_IN_MUTATION,
-            variables: {
-              usernameOrEmail: email,
-              password: password,
-            },
-          }
-        );
+        try {
+          const response = await axios.post(
+            process.env.NEXT_PUBLIC_API_URL as string,
+            {
+              query: SIGN_IN_MUTATION,
+              variables: {
+                usernameOrEmail: email,
+                password: password,
+              },
+            }
+          );
 
-        if (response.data.data.signin) {
-          console.log("headers: ", response.headers);
-          console.log(response.headers["set-cookie"]);
-
-          const cookies = response.headers["set-cookie"];
-          res.setHeader("Set-Cookie", cookies);
+          console.log("response: ", response);
 
           return response.data.data.signin;
+        } catch (err) {
+          console.log("err3: ", err);
+          throw new Error(err);
         }
-
-        throw new Error(response.data.data.signin.message);
       },
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user }) {
+      if (
+        req.query.nextauth?.includes("callback") &&
+        req.query.nextauth?.includes("credentials") &&
+        req.method === "POST"
+      ) {
+        if (user && "id" in user) {
+          const sessionToken = randomUUID();
+          const sessionExpiry = new Date(Date.now() + session.maxAge! * 1000);
+
+          await adapter.createSession({
+            sessionToken,
+            userId: user.id,
+            expires: sessionExpiry,
+          } as any);
+
+          const cookies = new Cookies(req, res);
+          cookies.set("next-auth.session-token", sessionToken, {
+            expires: sessionExpiry,
+            httpOnly: true,
+            sameSite: "lax",
+            path: "/",
+            secure: process.env.NODE_ENV === "production",
+          });
+        }
+      }
+
       return true;
     },
     async redirect({ url, baseUrl }) {
       return `${baseUrl}`;
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
-      if (user) {
-        console.log("user: ", user);
-        token.id = user.id;
-        token.name = `${user.firstName} ${user.lastName}`;
-        token.picture = user.imageUrl ?? "";
-        token.accessToken = user.accounts.refreshToken;
-        token.expiresAt = user.accounts.expiresAt;
-      }
-
-      return token;
-    },
 
     async session({ session, token, user }) {
-      const newSession: Session = {
+      let newSession: Session;
+      newSession = {
         ...session,
-        expires: token.exp,
-        id: token?.id,
+        id: user?.id,
         user: {
-          ...session.user,
-          image: session.user.image ?? null,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          imageUrl: user.imageUrl,
+          id: user.id,
         },
       };
+
+      // SET SESSION COOKIE FROM SERVER
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL as string,
+        {
+          query: SET_SESSION_SOCIAL,
+          variables: {
+            usernameOrEmail: user.email,
+          },
+        }
+      );
+      if (response.data.data.setSessionSocial) {
+        const cookies = response.headers["set-cookie"];
+        res.setHeader("Set-Cookie", cookies);
+      }
 
       return newSession;
     },
   },
+  jwt: {
+    encode(params) {
+      if (
+        req.query.nextauth?.includes("callback") &&
+        req.query.nextauth?.includes("credentials") &&
+        req.method === "POST"
+      ) {
+        const cookies = new Cookies(req, res);
+        const cookie = cookies.get("next-auth.session-token");
+
+        if (cookie) return cookie;
+        else return "";
+      }
+      // Revert to default behaviour when not in the credentials provider callback flow
+      return encode(params);
+    },
+    async decode(params) {
+      if (
+        req.query.nextauth?.includes("callback") &&
+        req.query.nextauth?.includes("credentials") &&
+        req.method === "POST"
+      ) {
+        return null;
+      }
+      // Revert to default behaviour when not in the credentials provider callback flow
+      return decode(params);
+    },
+  },
+  session,
   pages: {
     signIn: "/auth/signin",
   },

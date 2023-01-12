@@ -28,6 +28,7 @@ import { issueToken, sendConfirmationEmail } from "@utils/sendEmailUtils";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { EdgeType } from "typegraphql-relay-connections";
 import { PageInfo } from "@typedefs/relay/PageInfo";
+import { v4 as uuidv4 } from "uuid";
 
 export const AuthResult = createUnionType({
   name: "AuthResult",
@@ -91,6 +92,8 @@ export class UpdateProfileArgs {
   twitter?: string;
   @Field({ nullable: true })
   youtube?: string;
+  @Field({ nullable: true })
+  instagram?: string;
   @Field(() => [String], { nullable: true })
   tags: string[];
 }
@@ -285,7 +288,7 @@ export class UserResolver {
     // if (inputPassword.length > 0)
     //   return FieldsValidationError.from(inputPassword);
     try {
-      const user = await prisma.user.findUnique({
+      let user = await prisma.user.findUnique({
         where: {
           email: usernameOrEmail,
         },
@@ -299,8 +302,7 @@ export class UserResolver {
 
       await prisma.account.upsert({
         where: {
-          provider_providerAccountId_userId: {
-            userId: user.id,
+          provider_providerAccountId: {
             provider: "Credentials",
             providerAccountId: user.id,
           },
@@ -312,8 +314,8 @@ export class UserResolver {
           providerAccountId: user.id,
         },
         update: {
-          refreshToken,
-          expiresAt: (decoded as JWTPayload).accessTokenExpires,
+          refresh_token: refreshToken,
+          expires_at: (decoded as JWTPayload).accessTokenExpires,
         },
       });
 
@@ -323,13 +325,61 @@ export class UserResolver {
 
       if (!authenticated) return new BadCredentialsError();
 
+      // Refetch user without password
+      const userSnippet = await prisma.user.findUnique({
+        where: {
+          email: usernameOrEmail,
+        },
+        select: {
+          email: true,
+          firstName: true,
+          lastName: true,
+          id: true,
+          imageUrl: true,
+        },
+      });
+
       setToken(user, res);
 
       req.session.userId = await user.id;
 
-      return Object.assign(new User(), user);
+      return Object.assign(new User(), userSnippet);
     } catch (err) {
       console.log("err: ", err);
+    }
+  }
+  @Mutation((_type) => Boolean)
+  async setSessionSocial(
+    @Arg("usernameOrEmail") usernameOrEmail: string,
+    @Ctx() { prisma, res, req }: MyContext
+  ) {
+    // const inputUserEmailErrors = await validate(usernameOrEmail);
+    // if (inputUserEmailErrors.length > 0)
+    //   return FieldsValidationError.from(inputUserEmailErrors);
+    // const inputPassword = await validate(password);
+    // if (inputPassword.length > 0)
+    //   return FieldsValidationError.from(inputPassword);
+    try {
+      let user = await prisma.user.findUnique({
+        where: {
+          email: usernameOrEmail,
+        },
+        include: {
+          accounts: true,
+          sessions: true,
+        },
+      });
+
+      if (!user) return new NonExistingUserError();
+
+      setToken(user, res);
+
+      req.session.userId = user.id;
+
+      return true;
+    } catch (err) {
+      console.log("err: ", err);
+      return false;
     }
   }
 
@@ -337,6 +387,7 @@ export class UserResolver {
   signout(@Ctx() { req, res }: MyContext) {
     return new Promise((resolve) =>
       req.session.destroy((err) => {
+        console.log("SIGNING OUT");
         res.clearCookie(process.env.JWT_COOKIE_NAME);
         if (err) {
           console.log(err);
@@ -357,6 +408,21 @@ export class UserResolver {
   ) {
     const userId = req.session.userId;
 
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    console.log(user.email);
+
+    // remove email field so prisma dosen't throw unique error
+    if (user.email === updateProfileArgs.email) {
+      delete updateProfileArgs.email;
+
+      console.log("updateProfileArgs: ", updateProfileArgs);
+    }
+
     return await prisma.user.update({
       where: {
         id: userId,
@@ -374,6 +440,8 @@ export class UserResolver {
     @Ctx() { prisma, req }: MyContext
   ) {
     const userId = req.session.userId;
+
+    console.log("req.session: ", req.session);
 
     const user = await prisma.user.findUnique({
       where: {

@@ -12,6 +12,7 @@ type Story = StoryObj<typeof Popover>;
 
 const notifications = [
   {
+    id: "1",
     createdAt: "2023-01-06T03:31:17.977Z",
     imageSrc:
       "https://res.cloudinary.com/film-it/image/upload/v1659574786/the-inn/campaignmedia/l1uazkitrvby7ijxwhcn.jpg",
@@ -41,7 +42,7 @@ export const Primary: Story = {
           <Popover.Portal>
             <Popover.Content>
               {notifications.map((notification) => (
-                <Notification {...notification} />
+                <Notification {...notification} key={notification.id} />
               ))}
 
               <Popover.Close />

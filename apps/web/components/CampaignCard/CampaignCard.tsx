@@ -80,7 +80,7 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
       <CardSection style={{ flex: 1 }}>
         <div className="flex flex-col my-2">
           <StyledText size="sm" weight="medium">
-            {campaign.gameMaster.firstName} {campaign.gameMaster.lastName}
+            {campaign.gameMaster?.firstName} {campaign.gameMaster?.lastName}
           </StyledText>
           <StyledText size="sm" weight="medium">
             {campaign.gameSystem}

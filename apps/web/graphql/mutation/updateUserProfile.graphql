@@ -1,13 +1,9 @@
 mutation UpdateUserProfile($updateProfileArgs: UpdateProfileArgs) {
   updateUserProfile(updateProfileArgs: $updateProfileArgs) {
     id
-    password
     createdAt
     updatedAt
     email
-    emailVerified
-    emailVerifyToken
-    passwordResetToken
     imageUrl
     firstName
     lastName

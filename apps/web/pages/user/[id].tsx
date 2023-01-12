@@ -122,14 +122,16 @@ const UserPage = () => {
               </Text>
             </div>
           </div>
-          <div className="flex justify-center items-center">
-            <StyledUserImage
-              src={data.getUser.imageUrl}
-              width={400}
-              height={400}
-              objectFit="cover"
-            />
-          </div>
+          {data.getUser.imageUrl && (
+            <div className="flex justify-center items-center">
+              <StyledUserImage
+                src={data.getUser.imageUrl}
+                width={400}
+                height={400}
+                objectFit="cover"
+              />
+            </div>
+          )}
         </div>
 
         {/* <StyledUl>

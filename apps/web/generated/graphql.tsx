@@ -19,18 +19,16 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
-  accessToken?: Maybe<Scalars['String']>;
-  expiresAt?: Maybe<Scalars['Float']>;
+  access_token?: Maybe<Scalars['String']>;
+  expires_at?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
-  idToken?: Maybe<Scalars['String']>;
-  oauthToken?: Maybe<Scalars['String']>;
-  oauthTokenSecret?: Maybe<Scalars['String']>;
+  id_token?: Maybe<Scalars['String']>;
   provider: Scalars['String'];
   providerAccountId: Scalars['String'];
-  refreshToken?: Maybe<Scalars['String']>;
+  refresh_token?: Maybe<Scalars['String']>;
   scope?: Maybe<Scalars['String']>;
-  sessionState?: Maybe<Scalars['String']>;
-  tokenType?: Maybe<Scalars['String']>;
+  session_state?: Maybe<Scalars['String']>;
+  token_type?: Maybe<Scalars['String']>;
   type: Scalars['String'];
   user: User;
   userId: Scalars['String'];
@@ -262,6 +260,7 @@ export type Mutation = {
   deleteCampaign: Scalars['Boolean'];
   setNotificationsRead: Array<Notification>;
   signin: AuthResult;
+  signinSocial: AuthResult;
   signout: Scalars['Boolean'];
   signup: CreateUserResult;
   updateCampaign: CreateCampaignResult;
@@ -312,6 +311,11 @@ export type MutationSetNotificationsReadArgs = {
 
 export type MutationSigninArgs = {
   password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationSigninSocialArgs = {
   usernameOrEmail: Scalars['String'];
 };
 
@@ -530,6 +534,7 @@ export type UpdateProfileArgs = {
   htmlGmStyle?: InputMaybe<Scalars['String']>;
   htmlPlayStyle?: InputMaybe<Scalars['String']>;
   imageUrl?: InputMaybe<Scalars['String']>;
+  instagram?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
   playStyle?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
@@ -561,9 +566,9 @@ export type User = {
   id: Scalars['ID'];
   imageUrl?: Maybe<Scalars['String']>;
   instagram?: Maybe<Scalars['String']>;
-  lastName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
   memberships: Array<Membership>;
-  password: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
   passwordResetToken?: Maybe<Scalars['String']>;
   playStyle?: Maybe<Scalars['String']>;
   profileCSS?: Maybe<Scalars['String']>;
@@ -608,18 +613,18 @@ export type UsernamePasswordInput = {
 
 export type CampaignFullFragment = { __typename?: 'Campaign', id: string, createdAt: any, updatedAt: any, title: string, summary: string, jsonSummary: string, additionalDetails?: string | null, jsonAdditionalDetails?: string | null, note?: string | null, imageUrl: string, isOnline: boolean, campaignType: string, city?: string | null, state?: string | null, area?: string | null, lat?: number | null, lng?: number | null, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, timezone: string, gmId: string, experience: Experience, voipSystem?: string | null, gameSystem: string, virtualTable?: string | null, maxSeats: number, isActive: boolean, puzzles: Difficulty, combat: Difficulty, roleplay: Difficulty, tags: Array<string>, price?: number | null, gallery: Array<string> };
 
-export type CampaignSnippetFragment = { __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> };
+export type CampaignSnippetFragment = { __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName?: string | null, imageUrl?: string | null } }> };
 
-export type NotificationSnippetFragment = { __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } };
+export type NotificationSnippetFragment = { __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } };
 
-export type UserSnippetFragment = { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null };
+export type UserSnippetFragment = { __typename?: 'User', id: string, firstName: string, lastName?: string | null, email: string, imageUrl?: string | null };
 
 export type AddPlayerApplicationMutationVariables = Exact<{
   campaignApplicationInput: CampaignApplicationInput;
 }>;
 
 
-export type AddPlayerApplicationMutation = { __typename?: 'Mutation', addPlayerApplication: { __typename?: 'Campaign', id: string, title: string, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, id: string }, application: Array<{ __typename?: 'Application', message: string, jsonMessage: string, id: string, fitsSchedule: boolean, timePeriods: Array<string> }> }> } | { __typename?: 'FieldsValidationError' } };
+export type AddPlayerApplicationMutation = { __typename?: 'Mutation', addPlayerApplication: { __typename?: 'Campaign', id: string, title: string, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName?: string | null, id: string }, application: Array<{ __typename?: 'Application', message: string, jsonMessage: string, id: string, fitsSchedule: boolean, timePeriods: Array<string> }> }> } | { __typename?: 'FieldsValidationError' } };
 
 export type CreateCampaignMutationVariables = Exact<{
   createCampaignInput: CreateCampaignInput;
@@ -660,7 +665,7 @@ export type SignInMutationVariables = Exact<{
 }>;
 
 
-export type SignInMutation = { __typename?: 'Mutation', signin: { __typename?: 'BadCredentialsError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'NonExistingUserError', message: string } | { __typename?: 'User', id: string, email: string, firstName: string, lastName: string, imageUrl?: string | null, accounts: Array<{ __typename?: 'Account', provider: string, providerAccountId: string, type: string, expiresAt?: number | null, refreshToken?: string | null, userId: string }> } };
+export type SignInMutation = { __typename?: 'Mutation', signin: { __typename?: 'BadCredentialsError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'NonExistingUserError', message: string } | { __typename?: 'User', id: string, email: string, firstName: string, lastName?: string | null, imageUrl?: string | null, accounts: Array<{ __typename?: 'Account', provider: string, providerAccountId: string, type: string, expires_at?: number | null, refresh_token?: string | null, userId: string }> } };
 
 export type SignoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -675,7 +680,7 @@ export type SignUpMutationVariables = Exact<{
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'ExistingUserError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } };
+export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'ExistingUserError', message: string } | { __typename?: 'FieldsValidationError', message: string } | { __typename?: 'User', id: string, email: string, firstName: string, lastName?: string | null } };
 
 export type UpdateCampaignMutationVariables = Exact<{
   campaignId: Scalars['String'];
@@ -690,14 +695,14 @@ export type UpdateUserPasswordMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserPasswordMutation = { __typename?: 'Mutation', updateUserPassword: { __typename?: 'User', id: string, password: string, createdAt: any, updatedAt: any, email: string, emailVerified?: any | null, emailVerifyToken?: string | null, passwordResetToken?: string | null, imageUrl?: string | null, firstName: string, lastName: string, aboutMe?: string | null, htmlAboutMe?: string | null, experience: Experience, twitter?: string | null, facebook?: string | null, discord?: string | null, youtube?: string | null, instagram?: string | null, twitch?: string | null, status: StatusType } };
+export type UpdateUserPasswordMutation = { __typename?: 'Mutation', updateUserPassword: { __typename?: 'User', id: string, password?: string | null, createdAt: any, updatedAt: any, email: string, emailVerified?: any | null, emailVerifyToken?: string | null, passwordResetToken?: string | null, imageUrl?: string | null, firstName: string, lastName?: string | null, aboutMe?: string | null, htmlAboutMe?: string | null, experience: Experience, twitter?: string | null, facebook?: string | null, discord?: string | null, youtube?: string | null, instagram?: string | null, twitch?: string | null, status: StatusType } };
 
 export type UpdateUserProfileMutationVariables = Exact<{
   updateProfileArgs?: InputMaybe<UpdateProfileArgs>;
 }>;
 
 
-export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile: { __typename?: 'User', id: string, password: string, createdAt: any, updatedAt: any, email: string, emailVerified?: any | null, emailVerifyToken?: string | null, passwordResetToken?: string | null, imageUrl?: string | null, firstName: string, lastName: string, aboutMe?: string | null, htmlAboutMe?: string | null, experience: Experience, twitter?: string | null, facebook?: string | null, discord?: string | null, youtube?: string | null, instagram?: string | null, twitch?: string | null, status: StatusType } };
+export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, email: string, imageUrl?: string | null, firstName: string, lastName?: string | null, aboutMe?: string | null, htmlAboutMe?: string | null, experience: Experience, twitter?: string | null, facebook?: string | null, discord?: string | null, youtube?: string | null, instagram?: string | null, twitch?: string | null, status: StatusType } };
 
 export type QueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -713,19 +718,19 @@ export type GetApplicationCampaignQueryVariables = Exact<{
 }>;
 
 
-export type GetApplicationCampaignQuery = { __typename?: 'Query', getApplicationCampaign: { __typename?: 'ApplicationConnection', totalCount: number, pageCount: number, applications: Array<{ __typename?: 'Application', id: string, membershipId: string, campaignId: string, userId: string, firstName: string, lastName: string, gamesPlayed: number, message: string, jsonMessage: string, fitsSchedule: boolean, days: Array<string>, timePeriods: Array<string>, experience: Experience, createdAt: any, updatedAt: any, membership: { __typename?: 'Membership', role: MembershipRole }, user: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null } }> } };
+export type GetApplicationCampaignQuery = { __typename?: 'Query', getApplicationCampaign: { __typename?: 'ApplicationConnection', totalCount: number, pageCount: number, applications: Array<{ __typename?: 'Application', id: string, membershipId: string, campaignId: string, userId: string, firstName: string, lastName: string, gamesPlayed: number, message: string, jsonMessage: string, fitsSchedule: boolean, days: Array<string>, timePeriods: Array<string>, experience: Experience, createdAt: any, updatedAt: any, membership: { __typename?: 'Membership', role: MembershipRole }, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, email: string, imageUrl?: string | null } }> } };
 
 export type GetCampaignQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type GetCampaignQuery = { __typename?: 'Query', getCampaign: { __typename?: 'Campaign', id: string, createdAt: any, updatedAt: any, title: string, summary: string, jsonSummary: string, additionalDetails?: string | null, jsonAdditionalDetails?: string | null, note?: string | null, imageUrl: string, isOnline: boolean, campaignType: string, city?: string | null, state?: string | null, area?: string | null, lat?: number | null, lng?: number | null, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, timezone: string, gmId: string, experience: Experience, voipSystem?: string | null, gameSystem: string, virtualTable?: string | null, maxSeats: number, isActive: boolean, puzzles: Difficulty, combat: Difficulty, roleplay: Difficulty, tags: Array<string>, price?: number | null, gallery: Array<string>, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } }>, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } } };
+export type GetCampaignQuery = { __typename?: 'Query', getCampaign: { __typename?: 'Campaign', id: string, createdAt: any, updatedAt: any, title: string, summary: string, jsonSummary: string, additionalDetails?: string | null, jsonAdditionalDetails?: string | null, note?: string | null, imageUrl: string, isOnline: boolean, campaignType: string, city?: string | null, state?: string | null, area?: string | null, lat?: number | null, lng?: number | null, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, timezone: string, gmId: string, experience: Experience, voipSystem?: string | null, gameSystem: string, virtualTable?: string | null, maxSeats: number, isActive: boolean, puzzles: Difficulty, combat: Difficulty, roleplay: Difficulty, tags: Array<string>, price?: number | null, gallery: Array<string>, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } }>, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } } };
 
 export type GetCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> }> };
+export type GetCampaignsQuery = { __typename?: 'Query', getCampaigns: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName?: string | null, imageUrl?: string | null } }> }> };
 
 export type GetCampaignsIdQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -735,24 +740,24 @@ export type GetCampaignsIdQuery = { __typename?: 'Query', getCampaignsId: Array<
 export type GetAllNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } }> };
+export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } }> };
 
 export type GetUnreadNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUnreadNotificationsQuery = { __typename?: 'Query', getUnreadNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } }> };
+export type GetUnreadNotificationsQuery = { __typename?: 'Query', getUnreadNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } }> };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', aboutMe?: string | null, htmlPlayStyle?: string | null, playStyle?: string | null, htmlGmStyle?: string | null, gmStyle?: string | null, htmlAboutMe?: string | null, tags: Array<string>, profileCSS?: string | null, twitch?: string | null, instagram?: string | null, facebook?: string | null, youtube?: string | null, discord?: string | null, id: string, firstName: string, lastName: string, email: string, imageUrl?: string | null, memberships: Array<{ __typename?: 'Membership', campaignId: string, role: MembershipRole }> } };
+export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', aboutMe?: string | null, htmlPlayStyle?: string | null, playStyle?: string | null, htmlGmStyle?: string | null, gmStyle?: string | null, htmlAboutMe?: string | null, tags: Array<string>, profileCSS?: string | null, twitch?: string | null, instagram?: string | null, facebook?: string | null, youtube?: string | null, discord?: string | null, id: string, firstName: string, lastName?: string | null, email: string, imageUrl?: string | null, memberships: Array<{ __typename?: 'Membership', campaignId: string, role: MembershipRole }> } };
 
 export type GetUserCampaignQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserCampaignQuery = { __typename?: 'Query', getUserCampaign: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName: string, imageUrl?: string | null } }> }> };
+export type GetUserCampaignQuery = { __typename?: 'Query', getUserCampaign: Array<{ __typename?: 'Campaign', id: string, title: string, summary: string, city?: string | null, state?: string | null, imageUrl: string, jsonSummary: string, gameSystem: string, startDate: any, endDate?: any | null, days: Array<string>, timePeriods: Array<string>, createdAt: any, updatedAt: any, tags: Array<string>, maxSeats: number, gmId: string, gameMaster: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null }, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName?: string | null, imageUrl?: string | null } }> }> };
 
 export type GetUsersQueryVariables = Exact<{
   last?: InputMaybe<Scalars['Int']>;
@@ -763,12 +768,12 @@ export type GetUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', getUsers: { __typename: 'UserConnection', edges: Array<{ __typename: 'UserEdge', cursor: any, node: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, aboutMe?: string | null, imageUrl?: string | null, createdAt: any, memberships: Array<{ __typename?: 'Membership', campaignId: string }> } }>, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type GetUsersQuery = { __typename?: 'Query', getUsers: { __typename: 'UserConnection', edges: Array<{ __typename: 'UserEdge', cursor: any, node: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, email: string, aboutMe?: string | null, imageUrl?: string | null, createdAt: any, memberships: Array<{ __typename?: 'Membership', campaignId: string }> } }>, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type NewCampaignApplicationSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NewCampaignApplicationSubscription = { __typename?: 'Subscription', newCampaignApplication: { __typename?: 'NewCampaignNotification', campaignId: string, gameMasterId: string, notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string, imageUrl: string, user: { __typename?: 'User', id: string, firstName: string, lastName: string, imageUrl?: string | null } } };
+export type NewCampaignApplicationSubscription = { __typename?: 'Subscription', newCampaignApplication: { __typename?: 'NewCampaignNotification', campaignId: string, gameMasterId: string, notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string, imageUrl: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } } };
 
 export const CampaignFullFragmentDoc = gql`
     fragment CampaignFull on Campaign {
@@ -974,8 +979,8 @@ export const SignInDocument = gql`
         provider
         providerAccountId
         type
-        expiresAt
-        refreshToken
+        expires_at
+        refresh_token
         userId
       }
     }
@@ -1079,13 +1084,9 @@ export const UpdateUserProfileDocument = gql`
     mutation UpdateUserProfile($updateProfileArgs: UpdateProfileArgs) {
   updateUserProfile(updateProfileArgs: $updateProfileArgs) {
     id
-    password
     createdAt
     updatedAt
     email
-    emailVerified
-    emailVerifyToken
-    passwordResetToken
     imageUrl
     firstName
     lastName

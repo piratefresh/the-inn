@@ -1,5 +1,4 @@
-import { UserFullType, UserType } from "@typedefs/Prisma";
-import cookie from "cookie";
+import { UserType } from "@typedefs/Prisma";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 
@@ -17,13 +16,10 @@ export const setToken = (user: UserType, res: Response): void => {
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
-    accessTokenExpires:
-      Date.now() + parseInt(process.env.TOKEN_REFRESH_PERIOD) * 1000,
+    accessTokenExpires: 30 * 24 * 60 * 60,
   };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
-
-  console.log("token: ", token);
 
   res.cookie("rid", token, {
     httpOnly: true,
@@ -36,8 +32,7 @@ export const createToken = (user: UserType): string => {
     firstName: user.firstName,
     lastName: user.lastName,
     id: user.id,
-    accessTokenExpires:
-      Date.now() + parseInt(process.env.TOKEN_REFRESH_PERIOD) * 1000,
+    accessTokenExpires: 30 * 24 * 60 * 60,
   };
   // return jwt
   const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
@@ -51,8 +46,7 @@ export const createRefreshToken = (user: UserType) => {
     firstName: user.firstName,
     lastName: user.lastName,
     id: user.id,
-    accessTokenExpires:
-      Date.now() + parseInt(process.env.TOKEN_REFRESH_PERIOD) * 1000,
+    accessTokenExpires: 30 * 24 * 60 * 60,
   };
   // return jwt
   const refreshToken = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
@@ -62,21 +56,3 @@ export const createRefreshToken = (user: UserType) => {
 
   return refreshToken;
 };
-
-// export const setCookie = (user: UserType, res: Response): void => {
-//   const payload: JWTPayload = {
-//     email: user.email,
-//     firstName: user.firstName,
-//     lastName: user.lastName,
-//     id: user.id,
-//   };
-//   // return jwt
-//   const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
-//   res.setHeader("Set-Cookie", cookie.serialize("theinntoken", token), {
-//     httpOnly: true,
-//     maxAge: 6 * 60 * 60,
-//     path: "/",
-//     sameSite: "lax",
-//     secure: process.env.NODE_ENV === "production",
-//   });
-// };

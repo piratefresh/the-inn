@@ -34,7 +34,6 @@ export const BasicSettings = ({ session, user }: BasicSettingsProps) => {
       discord: prepandHttps(user.discord),
       facebook: prepandHttps(user.facebook),
       instagram: prepandHttps(user.instagram),
-      password: "randompassword",
     };
   }, [user]);
 
@@ -55,6 +54,7 @@ export const BasicSettings = ({ session, user }: BasicSettingsProps) => {
   };
 
   const onSubmit: SubmitHandler<AccountSettingsProps> = async (data) => {
+    console.log("data: ", data);
     await updateUserProfile({
       updateProfileArgs: { ...data },
     });

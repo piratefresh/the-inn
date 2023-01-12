@@ -28,6 +28,8 @@ import { NotificationType } from "@typedefs/NotificationType";
 import { User } from "@models/User";
 import { Membership } from "@models/Membership";
 import { Prisma } from "@prisma/client";
+import { Experience } from "@/typedefs/Experience";
+import { Difficulty } from "@/typedefs/Difficulty";
 
 cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -76,23 +78,41 @@ class CampaignPagination {
 }
 
 // FIX TYPE
-interface GenerateAlgoliaCampaignsProps {
-  campaigns: any;
-}
-
-const generateAlgoliaCampaigns = async ({
-  campaigns,
-}: GenerateAlgoliaCampaignsProps) => {
-  return await Promise.all(
-    campaigns.map(async (campaign: any) => {
-      return {
-        ...campaign,
-        objectID: campaign.id,
-        members: 0,
-        pending: 0,
-      };
-    })
-  );
+const formatCampaigns = (campaigns: any) => {
+  return campaigns.map((campaign: any) => ({
+    id: campaign.id,
+    objectID: campaign.id,
+    title: campaign.title,
+    createdAt: campaign.createdAt,
+    updatedAt: campaign.updatedAt,
+    summary: campaign.summary,
+    // additionalDetails: campaign.additionalDetails,
+    imageUrl: campaign.imageUrl,
+    campaignType: campaign.campaignType,
+    city: campaign.city,
+    state: campaign.state,
+    area: campaign.area,
+    lat: campaign.lat,
+    lng: campaign.lng,
+    startDate: campaign.startDate,
+    days: campaign.days,
+    timePeriods: campaign.timePeriods,
+    timezone: campaign.timezone,
+    gmId: campaign.gmId,
+    experience: campaign.experience as Experience,
+    voipSystem: campaign.voipSystem,
+    gameSystem: campaign.gameSystem,
+    virtualTable: campaign.virtualTable,
+    maxSeats: campaign.maxSeats,
+    isActive: campaign.isActive,
+    puzzles: campaign.puzzles as Difficulty,
+    combat: campaign.combat as Difficulty,
+    roleplay: campaign.roleplay as Difficulty,
+    tags: campaign.tags,
+    price: campaign.price,
+    memberships: campaign.memberships,
+    gameMaster: campaign.gameMaster,
+  }));
 };
 
 @Resolver(Campaign)
@@ -324,7 +344,26 @@ export class CampaignResolver {
           },
         },
         include: {
-          memberships: true,
+          memberships: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+          gameMaster: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              imageUrl: true,
+            },
+          },
         },
       });
 
@@ -332,12 +371,9 @@ export class CampaignResolver {
         // Fix later
         (member: any) => member.role === MembershipRole.PLAYER
       );
-
+      const algoliaCampaign = formatCampaigns([campaign])[0];
       await theInnIndex.saveObject({
-        ...campaign,
-        objectID: campaign.id,
-        members: players.length,
-        pending: 0,
+        ...algoliaCampaign,
       });
 
       return Object.assign(new Campaign(), campaign);

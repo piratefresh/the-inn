@@ -14,25 +14,44 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// model Account {
+//   id                String  @id @default(cuid())
+//   type              String
+//   provider          String
+//   providerAccountId String
+//   refreshToken      String?
+//   accessToken       String?
+//   expiresAt         BigInt?
+//   tokenType         String?
+//   scope             String?
+//   idToken           String?
+//   sessionState      String?
+//   oauthTokenSecret  String?
+//   oauthToken        String?
+//   userId            String
+//   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@unique([provider, providerAccountId, userId])
+//   @@map("accounts")
+// }
+
 model Account {
   id                String  @id @default(cuid())
+  userId            String
   type              String
   provider          String
   providerAccountId String
-  refreshToken      String?
-  accessToken       String?
-  expiresAt         BigInt?
-  tokenType         String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        BigInt?
+  token_type        String?
   scope             String?
-  idToken           String?
-  sessionState      String?
-  oauthTokenSecret  String?
-  oauthToken        String?
-  userId            String
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id_token          String? @db.Text
+  session_state     String?
 
-  @@unique([provider, providerAccountId, userId])
-  @@map("accounts")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId], name: "provider_providerAccountId")
 }
 
 model Session {
@@ -41,8 +60,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
 }
 
 model VerificationToken {
@@ -51,12 +68,11 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@map("verificationtokens")
 }
 
 model User {
   id                 String       @id @default(uuid())
-  password           String
+  password           String?
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
   email              String       @unique
@@ -65,7 +81,7 @@ model User {
   passwordResetToken String?
   imageUrl           String?
   firstName          String
-  lastName           String
+  lastName           String?      @default("")
   aboutMe            String?
   htmlAboutMe        String?
   playStyle          String?
@@ -95,8 +111,6 @@ model User {
   receivedPrivateMessage PrivateMessage[]  @relation("receivedPrivateMessage")
   Notification           Notification[]
   Application            Application[]
-
-  @@map("users")
 }
 
 model Membership {
