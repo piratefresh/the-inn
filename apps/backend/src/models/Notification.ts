@@ -1,6 +1,10 @@
 import { Field, ObjectType, ID, InputType } from "type-graphql";
+import { DateTimeResolver } from "graphql-scalars";
 import { NotificationType } from "../typedefs/NotificationType";
 import { User } from "./User";
+
+// This fixes the "duplicate scalar name" error
+DateTimeResolver.name = "DateTimeResolver";
 
 @InputType("notificationInput")
 @ObjectType()

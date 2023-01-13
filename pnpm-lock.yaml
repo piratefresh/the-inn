@@ -49,6 +49,7 @@ importers:
       express-session: ^1.17.2
       graphql: ^16.6.0
       graphql-redis-subscriptions: ^2.4.2
+      graphql-scalars: ^1.20.1
       graphql-subscriptions: ^2.0.0
       graphql-tag: ^2.12.6
       graphql-tools: ^8.3.14
@@ -98,6 +99,7 @@ importers:
       express-session: 1.17.3
       graphql: 16.6.0
       graphql-redis-subscriptions: 2.6.0_nsv4zbviaf54hk5nfhl4slig7i
+      graphql-scalars: 1.20.1_graphql@16.6.0
       graphql-subscriptions: 2.0.0_graphql@16.6.0
       graphql-tag: 2.12.6_graphql@16.6.0
       graphql-tools: 8.3.14_bjgwlwebsm7ulvpmjq4c2w36jm
@@ -220,7 +222,6 @@ importers:
       graphql: ^16.6.0
       graphql-fields: ^2.0.3
       graphql-request: ^5.1.0
-      graphql-scalars: ^1.17.0
       graphql-ws: ^5.11.2
       immer: ^9.0.17
       immutability-helper: ^3.1.1
@@ -330,7 +331,6 @@ importers:
       graphql: 16.6.0
       graphql-fields: 2.0.3
       graphql-request: 5.1.0_graphql@16.6.0
-      graphql-scalars: 1.20.1_graphql@16.6.0
       graphql-ws: 5.11.2_graphql@16.6.0
       immer: 9.0.17
       immutability-helper: 3.1.1

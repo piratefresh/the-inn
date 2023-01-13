@@ -4,7 +4,7 @@ import type * as Stitches from "@stitches/react";
 
 const StyledButton = styled("button", {
   // Reset
-  all: "unset",
+
   alignItems: "center",
   boxSizing: "border-box",
   cursor: "pointer",
@@ -47,15 +47,13 @@ const StyledButton = styled("button", {
     size: {
       small: {
         fontSize: "13px",
-        height: "25px",
-        paddingRight: "$space$4",
-        paddingLeft: "$space$4",
+
+        padding: "$space$4",
       },
       large: {
         fontSize: "15px",
-        height: "35px",
-        paddingLeft: "$space$8",
-        paddingRight: "$space$8",
+
+        padding: "$space$8",
       },
     },
     fullWidth: {
@@ -84,6 +82,7 @@ export interface ButtonProps
   css?: Stitches.CSS;
   fullWidth?: boolean;
   outlined?: "primary";
+  className?: string;
 }
 
 export const Button = ({
@@ -93,6 +92,7 @@ export const Button = ({
   children,
   fullWidth,
   outlined,
+  className,
   ...props
 }: ButtonProps) => {
   return (
@@ -102,6 +102,7 @@ export const Button = ({
       color={color}
       fullWidth={fullWidth}
       outlined={outlined}
+      className={className}
       {...props}
     >
       {children}
