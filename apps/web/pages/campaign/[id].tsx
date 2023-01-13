@@ -43,24 +43,24 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   };
 }
 
-export async function getStaticPaths() {
-  const { urqlClient } = initUrqlClient(
-    process.env.NEXT_PUBLIC_API_URL as string
-  );
+// export async function getStaticPaths() {
+//   const { urqlClient } = initUrqlClient(
+//     process.env.NEXT_PUBLIC_API_URL as string
+//   );
 
-  const campaigns = await urqlClient
-    .query<GetCampaignsIdQuery, GetCampaignsIdQueryVariables>(
-      GetCampaignsIdDocument,
-      {}
-    )
-    .toPromise();
+//   const campaigns = await urqlClient
+//     .query<GetCampaignsIdQuery, GetCampaignsIdQueryVariables>(
+//       GetCampaignsIdDocument,
+//       {}
+//     )
+//     .toPromise();
 
-  const paths = campaigns.data.getCampaignsId.map((campaign) => ({
-    params: { id: campaign.id },
-  }));
+//   const paths = campaigns.data.getCampaignsId.map((campaign) => ({
+//     params: { id: campaign.id },
+//   }));
 
-  return { paths, fallback: "blocking" };
-}
+//   return { paths, fallback: "blocking" };
+// }
 
 const Campaign = () => {
   const router = useRouter();
