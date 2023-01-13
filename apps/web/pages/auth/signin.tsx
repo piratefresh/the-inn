@@ -127,9 +127,6 @@ const SignIn = () => {
           Google Login
         </button>
       </form>
-      <Button onClick={handleGoogleSign} className="bg-white px-4">
-        Google Login
-      </Button>
     </div>
   );
 };
