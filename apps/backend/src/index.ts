@@ -25,6 +25,7 @@ import { redis } from "services/redis";
 import { sessionMiddleware } from "middlewares/sessionConfig";
 import algoliasearch from "algoliasearch";
 import { ApplicationResolver } from "@resolvers/application";
+import cookieParser from "cookie-parser";
 import { seedDB, seedDBApplication } from "../prisma/seed";
 
 dotenv.config();
@@ -66,6 +67,8 @@ const startServer = async () => {
     app.set("trust proxy", 1);
 
     // app.use(rateLimiter);
+
+    app.use(cookieParser());
 
     app.use(sessionMiddleware);
 

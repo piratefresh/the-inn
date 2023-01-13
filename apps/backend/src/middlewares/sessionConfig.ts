@@ -14,10 +14,9 @@ export const sessionMiddleware = session({
   }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
-    httpOnly: false,
-    sameSite: "none", // csrf
-    secure: __prod__, // cookie only works in https
-    domain: __prod__ ? process.env.PRODUCTION_FRONTEND_URL : undefined,
+    httpOnly: true,
+    secure: true, // cookie only works in https
+    sameSite: "lax",
   },
   secret: process.env.SESSION_SECRET,
   resave: false,
