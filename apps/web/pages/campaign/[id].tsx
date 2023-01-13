@@ -24,24 +24,24 @@ import { useSession } from "next-auth/react";
 import { initUrqlClient } from "@utils/initUrqlClient";
 import { GetStaticPropsContext } from "next";
 
-export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const { urqlClient, ssrCache } = initUrqlClient(
-    process.env.NEXT_PUBLIC_API_URL as string
-  );
+// export async function getStaticProps({ params }: GetStaticPropsContext) {
+//   const { urqlClient, ssrCache } = initUrqlClient(
+//     process.env.NEXT_PUBLIC_API_URL as string
+//   );
 
-  const campaign = await urqlClient
-    .query<GetCampaignQuery, GetCampaignQueryVariables>(GetCampaignDocument, {
-      id: params.id as string,
-    })
-    .toPromise();
+//   const campaign = await urqlClient
+//     .query<GetCampaignQuery, GetCampaignQueryVariables>(GetCampaignDocument, {
+//       id: params.id as string,
+//     })
+//     .toPromise();
 
-  return {
-    props: {
-      urqlState: ssrCache.extractData(),
-    },
-    revalidate: 10, // In seconds
-  };
-}
+//   return {
+//     props: {
+//       urqlState: ssrCache.extractData(),
+//     },
+//     revalidate: 10, // In seconds
+//   };
+// }
 
 // export async function getStaticPaths() {
 //   const { urqlClient } = initUrqlClient(
