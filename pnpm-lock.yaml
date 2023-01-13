@@ -226,7 +226,6 @@ importers:
       immer: ^9.0.17
       immutability-helper: ^3.1.1
       instantsearch.js: ^4.49.4
-      jsonwebtoken: ^9.0.0
       logging-service: ^1.0.1
       lottie-react: ^2.3.1
       mime: ^3.0.0
@@ -236,7 +235,6 @@ importers:
       next-themes: ^0.2.1
       next-transpile-modules: 9.0.0
       next-urql: ^4.0.0
-      nookies: ^2.5.2
       postcss: ^8.4.12
       postcss-import: ^14.1.0
       prettier: ^2.6.2
@@ -335,7 +333,6 @@ importers:
       immer: 9.0.17
       immutability-helper: 3.1.1
       instantsearch.js: 4.49.4_algoliasearch@4.14.3
-      jsonwebtoken: 9.0.0
       logging-service: 1.0.1
       lottie-react: 2.3.1_biqbaboplfbrettd7655fr4n2y
       mime: 3.0.0
@@ -344,7 +341,6 @@ importers:
       next-query-params: 4.1.0_eewoeppmipoo5pt2rifwqcgas4
       next-themes: 0.2.1_bhgafntz2ozm43l35i5qtimxry
       next-urql: 4.0.2_react@18.2.0+urql@3.0.3
-      nookies: 2.5.2
       prosemirror-model: 1.18.3
       prosemirror-state: 1.4.2
       react: 18.2.0
@@ -8028,7 +8024,7 @@ packages:
     peerDependencies:
       tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
     dependencies:
-      tailwindcss: 3.2.4_postcss@8.4.20
+      tailwindcss: 3.2.4_ra2vnoek4vhbzktaezawwqbin4
     dev: true
 
   /@tailwindcss/typography/0.5.8_tailwindcss@3.2.4:
@@ -8040,7 +8036,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.2.4_postcss@8.4.20
+      tailwindcss: 3.2.4_ra2vnoek4vhbzktaezawwqbin4
 
   /@tanstack/react-table/8.7.4_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-4Q1OV3kUSxbtekclS3sqjCyCDowqCPruUCfHm1nGoPSmVLRCHoQ1E2rmzTVGeocEKgV9TDnj39tOgGwcADPuPA==}
@@ -15911,13 +15907,6 @@ packages:
       undefsafe: 2.0.5
     dev: true
 
-  /nookies/2.5.2:
-    resolution: {integrity: sha512-x0TRSaosAEonNKyCrShoUaJ5rrT5KHRNZ5DwPCuizjgrnkpE5DRf3VL7AyyQin4htict92X1EQ7ejDbaHDVdYA==}
-    dependencies:
-      cookie: 0.4.2
-      set-cookie-parser: 2.5.1
-    dev: false
-
   /nopt/1.0.10:
     resolution: {integrity: sha512-NWmpvLSqUrgrAC9HCuxEvb+PSloHpqVu+FqcO4eeF2h5qYRhA7ev6KvelyQAKtegUbC6RypJnlEOhd8vloNKYg==}
     hasBin: true
@@ -16660,6 +16649,7 @@ packages:
       lilconfig: 2.0.6
       postcss: 8.4.20
       yaml: 1.10.2
+    dev: true
 
   /postcss-load-config/3.1.4_ra2vnoek4vhbzktaezawwqbin4:
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
@@ -16677,7 +16667,6 @@ packages:
       postcss: 8.4.20
       ts-node: 10.9.1_zpb5kzpnyozdjq4cwaojlul57u
       yaml: 1.10.2
-    dev: true
 
   /postcss-load-config/3.1.4_ts-node@10.9.1:
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
@@ -18281,10 +18270,6 @@ packages:
   /set-blocking/2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
 
-  /set-cookie-parser/2.5.1:
-    resolution: {integrity: sha512-1jeBGaKNGdEq4FgIrORu/N570dwoPYio8lSoYLWmX7sQ//0JY08Xh9o5pBcgmHQ/MbsYp/aZnOe1s1lIsbLprQ==}
-    dev: false
-
   /set-value/2.0.1:
     resolution: {integrity: sha512-JxHc1weCN68wRY0fhCoXpyK55m/XPHafOmK4UWD7m2CI14GMcFypt4w/0+NV5f/ZMby2F6S2wwA7fgynh9gWSw==}
     engines: {node: '>=0.10.0'}
@@ -18912,6 +18897,7 @@ packages:
       resolve: 1.22.1
     transitivePeerDependencies:
       - ts-node
+    dev: true
 
   /tailwindcss/3.2.4_ra2vnoek4vhbzktaezawwqbin4:
     resolution: {integrity: sha512-AhwtHCKMtR71JgeYDaswmZXhPcW9iuI9Sp2LvZPo9upDZ7231ZJ7eA9RaURbhpXGVlrjX4cFNlB4ieTetEb7hQ==}
@@ -18945,7 +18931,6 @@ packages:
       resolve: 1.22.1
     transitivePeerDependencies:
       - ts-node
-    dev: true
 
   /tapable/2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -19353,7 +19338,6 @@ packages:
       typescript: 4.9.4
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    dev: true
 
   /ts-pattern/4.0.6:
     resolution: {integrity: sha512-sFHQYD4KoysBi7e7a2mzDPvRBeqA4w+vEyRE+P5MU9VLq8eEYxgKCgD9RNEAT+itGRWUTYN+hry94GDPLb1/Yw==}
