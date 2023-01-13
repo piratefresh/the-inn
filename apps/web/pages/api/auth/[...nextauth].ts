@@ -8,10 +8,8 @@ import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "../../../lib/prismadb";
 import { PrismaAdapter } from "@lib/prismaAdapter";
 import Cookies from "cookies";
-import { setCookie } from "nookies";
 import { decode, encode } from "next-auth/jwt";
 import { randomUUID } from "crypto";
-import jwt from "jsonwebtoken";
 
 const SIGN_IN_MUTATION = `
 mutation SignIn($usernameOrEmail: String!, $password: String!) {
