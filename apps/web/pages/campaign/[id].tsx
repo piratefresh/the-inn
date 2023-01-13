@@ -44,22 +44,27 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
 }
 
 export async function getStaticPaths() {
-  const { urqlClient } = initUrqlClient(
-    process.env.NEXT_PUBLIC_API_URL as string
-  );
+  try {
+    const { urqlClient } = initUrqlClient(
+      process.env.NEXT_PUBLIC_API_URL as string
+    );
 
-  const campaigns = await urqlClient
-    .query<GetCampaignsIdQuery, GetCampaignsIdQueryVariables>(
-      GetCampaignsIdDocument,
-      {}
-    )
-    .toPromise();
+    const campaigns = await urqlClient
+      .query<GetCampaignsIdQuery, GetCampaignsIdQueryVariables>(
+        GetCampaignsIdDocument,
+        {}
+      )
+      .toPromise();
 
-  const paths = campaigns.data.getCampaignsId.map((campaign) => ({
-    params: { id: campaign.id },
-  }));
+    const paths = campaigns.data.getCampaignsId.map((campaign) => ({
+      params: { id: campaign.id },
+    }));
 
-  return { paths, fallback: true };
+    return { paths: paths ?? [], fallback: true };
+  } catch (err) {
+    console.log("err: ", err);
+    return { paths: [], fallback: true };
+  }
 }
 
 const Campaign = () => {
