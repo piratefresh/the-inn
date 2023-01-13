@@ -117,6 +117,7 @@ export class PrivateMessageResolver {
   @Query((_type) => [PrivateMessage])
   async getUserPrivateMessages(@Ctx() { req, res, prisma }: MyContext) {
     const userId = req.session.userId;
+    console.log("userId: ", userId);
     try {
       const messages = await prisma.privateMessage.findMany({
         where: {
