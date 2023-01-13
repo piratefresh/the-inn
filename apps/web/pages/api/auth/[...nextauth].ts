@@ -77,8 +77,6 @@ export const nextAuthOptions = (req, res) => ({
             }
           );
 
-          console.log("response: ", response);
-
           return response.data.data.signin;
         } catch (err) {
           console.log("err3: ", err);
