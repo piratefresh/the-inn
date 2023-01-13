@@ -20,7 +20,7 @@ export class User {
   id: string;
 
   @Field({ nullable: true })
-  password: string;
+  password?: string;
 
   @Field()
   createdAt: Date;
@@ -47,7 +47,7 @@ export class User {
   firstName: string;
 
   @Field({ nullable: true })
-  lastName: string;
+  lastName?: string;
 
   @Field({ nullable: true })
   aboutMe?: string;

@@ -1,0 +1,5 @@
+query GetUserPrivateMessages {
+  getUserPrivateMessages {
+    ...PrivateMessageSnippet
+  }
+}

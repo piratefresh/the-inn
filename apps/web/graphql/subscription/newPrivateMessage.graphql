@@ -1,0 +1,21 @@
+subscription NewPrivateMessage {
+  newPrivateMessage {
+    id
+    createdAt
+    recipient {
+      firstName
+      lastName
+      id
+      imageUrl
+    }
+    sender {
+      firstName
+      lastName
+      id
+      imageUrl
+    }
+    senderId
+    recipientId
+    message
+  }
+}

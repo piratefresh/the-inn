@@ -10,15 +10,13 @@ import { Types } from "ably";
 import { NextPageWithLayout } from "Types/LayoutPage";
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import { Loader } from "@components/Loader";
+import { useSession } from "next-auth/react";
 
 const Home: NextPageWithLayout = () => {
+  const { data: session } = useSession();
   const [{ data: campaigns, fetching, error }] = useGetCampaignsQuery();
 
-  const [messages, updateMessages] = React.useState<Types.Message[]>([]);
-  const [channel, ably] = useChannel("getting-started", (message) => {
-    updateMessages((prev) => [...prev, message]);
-  });
-  const [presenceData, updateStatus] = usePresence("getting-started");
+  const [presenceData, updateStatus] = usePresence(`online`);
 
   const peers = presenceData.map((msg, index) => (
     <li key={index}>

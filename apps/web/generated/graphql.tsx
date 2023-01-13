@@ -77,7 +77,7 @@ export type Campaign = {
   __typename?: 'Campaign';
   additionalDetails?: Maybe<Scalars['String']>;
   area?: Maybe<Scalars['String']>;
-  campaignMessage: Array<CampaignMessage>;
+  campaignMessage?: Maybe<Array<CampaignMessage>>;
   campaignType: Scalars['String'];
   city?: Maybe<Scalars['String']>;
   combat: Difficulty;
@@ -259,8 +259,8 @@ export type Mutation = {
   deactivateCampaign: Scalars['Boolean'];
   deleteCampaign: Scalars['Boolean'];
   setNotificationsRead: Array<Notification>;
+  setSessionSocial: Scalars['Boolean'];
   signin: AuthResult;
-  signinSocial: AuthResult;
   signout: Scalars['Boolean'];
   signup: CreateUserResult;
   updateCampaign: CreateCampaignResult;
@@ -309,13 +309,13 @@ export type MutationSetNotificationsReadArgs = {
 };
 
 
-export type MutationSigninArgs = {
-  password: Scalars['String'];
+export type MutationSetSessionSocialArgs = {
   usernameOrEmail: Scalars['String'];
 };
 
 
-export type MutationSigninSocialArgs = {
+export type MutationSigninArgs = {
+  password: Scalars['String'];
   usernameOrEmail: Scalars['String'];
 };
 
@@ -416,6 +416,18 @@ export type PrivateMessageInput = {
   senderId: Scalars['String'];
 };
 
+export type PrivateMessagePayload = {
+  __typename?: 'PrivateMessagePayload';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  message: Scalars['String'];
+  recipient: UserLite;
+  recipientId: Scalars['String'];
+  sender: UserLite;
+  senderId: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllNotifications: Array<Notification>;
@@ -427,6 +439,7 @@ export type Query = {
   getCampaignsPagination: CampaignPagination;
   getOnlineUsers: Array<User>;
   getReadNotifications: Array<Notification>;
+  getThreadMessages: Array<PrivateMessage>;
   getUnreadNotifications: Array<Notification>;
   getUser: User;
   getUserCampaign: Array<Campaign>;
@@ -463,6 +476,11 @@ export type QueryGetCampaignsPaginationArgs = {
 export type QueryGetOnlineUsersArgs = {
   message: Scalars['String'];
   username: Scalars['String'];
+};
+
+
+export type QueryGetThreadMessagesArgs = {
+  threadId: Scalars['String'];
 };
 
 
@@ -514,7 +532,7 @@ export enum StatusType {
 export type Subscription = {
   __typename?: 'Subscription';
   newCampaignApplication: NewCampaignNotification;
-  newPrivateMessage: PrivateMessage;
+  newPrivateMessage: PrivateMessagePayload;
   subscription: Scalars['String'];
 };
 
@@ -604,6 +622,14 @@ export type UserEdge = {
   node: User;
 };
 
+export type UserLite = {
+  __typename?: 'UserLite';
+  firstName: Scalars['String'];
+  id: Scalars['String'];
+  imageUrl: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
 export type UsernamePasswordInput = {
   email: Scalars['String'];
   firstName: Scalars['String'];
@@ -617,6 +643,8 @@ export type CampaignSnippetFragment = { __typename?: 'Campaign', id: string, tit
 
 export type NotificationSnippetFragment = { __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } };
 
+export type PrivateMessageSnippetFragment = { __typename?: 'PrivateMessage', id: string, createdAt: any, senderId: string, recipientId: string, message: string, recipient: { __typename?: 'User', firstName: string, lastName?: string | null, id: string, imageUrl?: string | null }, sender: { __typename?: 'User', firstName: string, lastName?: string | null, id: string, imageUrl?: string | null } };
+
 export type UserSnippetFragment = { __typename?: 'User', id: string, firstName: string, lastName?: string | null, email: string, imageUrl?: string | null };
 
 export type AddPlayerApplicationMutationVariables = Exact<{
@@ -625,6 +653,13 @@ export type AddPlayerApplicationMutationVariables = Exact<{
 
 
 export type AddPlayerApplicationMutation = { __typename?: 'Mutation', addPlayerApplication: { __typename?: 'Campaign', id: string, title: string, memberships: Array<{ __typename?: 'Membership', role: MembershipRole, user: { __typename?: 'User', firstName: string, lastName?: string | null, id: string }, application: Array<{ __typename?: 'Application', message: string, jsonMessage: string, id: string, fitsSchedule: boolean, timePeriods: Array<string> }> }> } | { __typename?: 'FieldsValidationError' } };
+
+export type AddPrivateMessageMutationVariables = Exact<{
+  addPrivateMessageInput: PrivateMessageInput;
+}>;
+
+
+export type AddPrivateMessageMutation = { __typename?: 'Mutation', addPrivateMessage: { __typename?: 'PrivateMessage', id: string, createdAt: any, senderId: string, recipientId: string, message: string, recipient: { __typename?: 'User', firstName: string, lastName?: string | null, id: string, imageUrl?: string | null }, sender: { __typename?: 'User', firstName: string, lastName?: string | null, id: string, imageUrl?: string | null } } };
 
 export type CreateCampaignMutationVariables = Exact<{
   createCampaignInput: CreateCampaignInput;
@@ -742,6 +777,13 @@ export type GetAllNotificationsQueryVariables = Exact<{ [key: string]: never; }>
 
 export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', updatedAt: any, userId: string, type: NotificationType, relatedId: string, read: boolean, message: string, id: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } }> };
 
+export type GetThreadMessagesQueryVariables = Exact<{
+  threadId: Scalars['String'];
+}>;
+
+
+export type GetThreadMessagesQuery = { __typename?: 'Query', getThreadMessages: Array<{ __typename?: 'PrivateMessage', id: string, createdAt: any, senderId: string, recipientId: string, message: string, recipient: { __typename?: 'User', firstName: string, lastName?: string | null, id: string, imageUrl?: string | null }, sender: { __typename?: 'User', firstName: string, lastName?: string | null, id: string, imageUrl?: string | null } }> };
+
 export type GetUnreadNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -770,10 +812,20 @@ export type GetUsersQueryVariables = Exact<{
 
 export type GetUsersQuery = { __typename?: 'Query', getUsers: { __typename: 'UserConnection', edges: Array<{ __typename: 'UserEdge', cursor: any, node: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, email: string, aboutMe?: string | null, imageUrl?: string | null, createdAt: any, memberships: Array<{ __typename?: 'Membership', campaignId: string }> } }>, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
+export type GetUserPrivateMessagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserPrivateMessagesQuery = { __typename?: 'Query', getUserPrivateMessages: Array<{ __typename?: 'PrivateMessage', id: string, createdAt: any, senderId: string, recipientId: string, message: string, recipient: { __typename?: 'User', firstName: string, lastName?: string | null, id: string, imageUrl?: string | null }, sender: { __typename?: 'User', firstName: string, lastName?: string | null, id: string, imageUrl?: string | null } }> };
+
 export type NewCampaignApplicationSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type NewCampaignApplicationSubscription = { __typename?: 'Subscription', newCampaignApplication: { __typename?: 'NewCampaignNotification', campaignId: string, gameMasterId: string, notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string, imageUrl: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } } };
+
+export type NewPrivateMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewPrivateMessageSubscription = { __typename?: 'Subscription', newPrivateMessage: { __typename?: 'PrivateMessagePayload', id: string, createdAt: any, senderId: string, recipientId: string, message: string, recipient: { __typename?: 'UserLite', firstName: string, lastName: string, id: string, imageUrl: string }, sender: { __typename?: 'UserLite', firstName: string, lastName: string, id: string, imageUrl: string } } };
 
 export const CampaignFullFragmentDoc = gql`
     fragment CampaignFull on Campaign {
@@ -869,6 +921,27 @@ export const NotificationSnippetFragmentDoc = gql`
   }
 }
     `;
+export const PrivateMessageSnippetFragmentDoc = gql`
+    fragment PrivateMessageSnippet on PrivateMessage {
+  id
+  createdAt
+  senderId
+  recipientId
+  recipient {
+    firstName
+    lastName
+    id
+    imageUrl
+  }
+  sender {
+    firstName
+    lastName
+    id
+    imageUrl
+  }
+  message
+}
+    `;
 export const UserSnippetFragmentDoc = gql`
     fragment UserSnippet on User {
   id
@@ -906,6 +979,17 @@ export const AddPlayerApplicationDocument = gql`
 
 export function useAddPlayerApplicationMutation() {
   return Urql.useMutation<AddPlayerApplicationMutation, AddPlayerApplicationMutationVariables>(AddPlayerApplicationDocument);
+};
+export const AddPrivateMessageDocument = gql`
+    mutation AddPrivateMessage($addPrivateMessageInput: PrivateMessageInput!) {
+  addPrivateMessage(AddPrivateMessageInput: $addPrivateMessageInput) {
+    ...PrivateMessageSnippet
+  }
+}
+    ${PrivateMessageSnippetFragmentDoc}`;
+
+export function useAddPrivateMessageMutation() {
+  return Urql.useMutation<AddPrivateMessageMutation, AddPrivateMessageMutationVariables>(AddPrivateMessageDocument);
 };
 export const CreateCampaignDocument = gql`
     mutation createCampaign($createCampaignInput: CreateCampaignInput!) {
@@ -1223,6 +1307,17 @@ export const GetAllNotificationsDocument = gql`
 export function useGetAllNotificationsQuery(options?: Omit<Urql.UseQueryArgs<GetAllNotificationsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetAllNotificationsQuery, GetAllNotificationsQueryVariables>({ query: GetAllNotificationsDocument, ...options });
 };
+export const GetThreadMessagesDocument = gql`
+    query GetThreadMessages($threadId: String!) {
+  getThreadMessages(threadId: $threadId) {
+    ...PrivateMessageSnippet
+  }
+}
+    ${PrivateMessageSnippetFragmentDoc}`;
+
+export function useGetThreadMessagesQuery(options: Omit<Urql.UseQueryArgs<GetThreadMessagesQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetThreadMessagesQuery, GetThreadMessagesQueryVariables>({ query: GetThreadMessagesDocument, ...options });
+};
 export const GetUnreadNotificationsDocument = gql`
     query GetUnreadNotifications {
   getUnreadNotifications {
@@ -1313,6 +1408,17 @@ export const GetUsersDocument = gql`
 export function useGetUsersQuery(options?: Omit<Urql.UseQueryArgs<GetUsersQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUsersQuery, GetUsersQueryVariables>({ query: GetUsersDocument, ...options });
 };
+export const GetUserPrivateMessagesDocument = gql`
+    query GetUserPrivateMessages {
+  getUserPrivateMessages {
+    ...PrivateMessageSnippet
+  }
+}
+    ${PrivateMessageSnippetFragmentDoc}`;
+
+export function useGetUserPrivateMessagesQuery(options?: Omit<Urql.UseQueryArgs<GetUserPrivateMessagesQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUserPrivateMessagesQuery, GetUserPrivateMessagesQueryVariables>({ query: GetUserPrivateMessagesDocument, ...options });
+};
 export const NewCampaignApplicationDocument = gql`
     subscription NewCampaignApplication {
   newCampaignApplication {
@@ -1338,4 +1444,31 @@ export const NewCampaignApplicationDocument = gql`
 
 export function useNewCampaignApplicationSubscription<TData = NewCampaignApplicationSubscription>(options: Omit<Urql.UseSubscriptionArgs<NewCampaignApplicationSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<NewCampaignApplicationSubscription, TData>) {
   return Urql.useSubscription<NewCampaignApplicationSubscription, TData, NewCampaignApplicationSubscriptionVariables>({ query: NewCampaignApplicationDocument, ...options }, handler);
+};
+export const NewPrivateMessageDocument = gql`
+    subscription NewPrivateMessage {
+  newPrivateMessage {
+    id
+    createdAt
+    recipient {
+      firstName
+      lastName
+      id
+      imageUrl
+    }
+    sender {
+      firstName
+      lastName
+      id
+      imageUrl
+    }
+    senderId
+    recipientId
+    message
+  }
+}
+    `;
+
+export function useNewPrivateMessageSubscription<TData = NewPrivateMessageSubscription>(options: Omit<Urql.UseSubscriptionArgs<NewPrivateMessageSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<NewPrivateMessageSubscription, TData>) {
+  return Urql.useSubscription<NewPrivateMessageSubscription, TData, NewPrivateMessageSubscriptionVariables>({ query: NewPrivateMessageDocument, ...options }, handler);
 };

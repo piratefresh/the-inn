@@ -1,0 +1,19 @@
+fragment PrivateMessageSnippet on PrivateMessage {
+  id
+  createdAt
+  senderId
+  recipientId
+  recipient {
+    firstName
+    lastName
+    id
+    imageUrl
+  }
+  sender {
+    firstName
+    lastName
+    id
+    imageUrl
+  }
+  message
+}
