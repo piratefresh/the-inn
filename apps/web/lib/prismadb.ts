@@ -6,4 +6,4 @@ declare global {
 
 export const prisma = global.prisma || new prismaBackend.PrismaClient();
 
-if (process.env.NODE_ENV !== "production") global.prisma = prisma;
+if (process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") global.prisma = prisma;

@@ -108,7 +108,7 @@ export const nextAuthOptions = (req, res) => ({
             httpOnly: true,
             sameSite: "none",
             path: "/",
-            secure: process.env.NODE_ENV === "production",
+            secure: process.env.NEXT_PUBLIC_VERCEL_ENV === "production",
           });
         }
       }
