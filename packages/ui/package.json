@@ -10,8 +10,8 @@
     "dist/**"
   ],
   "scripts": {
-    "dev": "npx tailwindcss -i ./styles/tailwind.css -o ./dist/output.css --watch",
-    "build": "npx tailwindcss -i ./styles/tailwind.css -o ./dist/output.css",
+    "dev": "pnpx tailwindcss -i ./styles/tailwind.css -o ./dist/output.css --watch",
+    "build": "pnpx tailwindcss -i ./styles/tailwind.css -o ./dist/output.css",
     "lint": "eslint \"src/**/*.ts*\"",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "storybook": "storybook dev -p 6006",
