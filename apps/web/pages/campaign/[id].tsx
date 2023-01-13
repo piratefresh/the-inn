@@ -59,7 +59,7 @@ export async function getStaticPaths() {
     params: { id: campaign.id },
   }));
 
-  return { paths, fallback: "blocking" };
+  return { paths, fallback: true };
 }
 
 const Campaign = () => {
@@ -81,6 +81,10 @@ const Campaign = () => {
   const handleJoinCampaign = () => {
     router.push(`/join/${id}`);
   };
+
+  if (router.isFallback) {
+    return <div>loading...</div>;
+  }
 
   if (fetching && !campaign) return <Loader />;
 
