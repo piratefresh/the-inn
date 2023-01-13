@@ -1,0 +1,5 @@
+mutation AddPrivateMessage($addPrivateMessageInput: PrivateMessageInput!) {
+  addPrivateMessage(AddPrivateMessageInput: $addPrivateMessageInput) {
+    ...PrivateMessageSnippet
+  }
+}

@@ -7,6 +7,7 @@ import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import Image from "next/image";
 
 export interface SignInFormValues {
   usernameOrEmail: string;
@@ -100,7 +101,7 @@ const SignIn = () => {
           />
         </InputGroup>
 
-        <Button size="large" fullWidth type="submit">
+        <Button className="font-bold" size="large" fullWidth type="submit">
           Sign-In
         </Button>
 
@@ -110,6 +111,20 @@ const SignIn = () => {
             <Link href="/auth/signup">Sign up here</Link>
           </span>
         </p>
+
+        <button
+          type="button"
+          onClick={handleGoogleSign}
+          className="flex gap-4 items-center justify-center p-4 bg-white w-full rounded-md font-bold"
+        >
+          <Image
+            src="/images/Google_Logo.svg"
+            width={24}
+            height={24}
+            alt="Google login button"
+          />
+          Google Login
+        </button>
       </form>
     </div>
   );

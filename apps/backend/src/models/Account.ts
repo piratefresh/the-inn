@@ -23,7 +23,7 @@ export class Account {
   accessToken?: string;
 
   @Field({ nullable: true })
-  expiresAt?: number;
+  expires_at?: number;
 
   @Field({ nullable: true })
   tokenType?: string;

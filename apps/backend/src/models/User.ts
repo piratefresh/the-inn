@@ -19,8 +19,8 @@ export class User {
   @Field((_type) => ID)
   id: string;
 
-  @Field()
-  password: string;
+  @Field({ nullable: true })
+  password?: string;
 
   @Field()
   createdAt: Date;
@@ -46,8 +46,8 @@ export class User {
   @Field()
   firstName: string;
 
-  @Field()
-  lastName: string;
+  @Field({ nullable: true })
+  lastName?: string;
 
   @Field({ nullable: true })
   aboutMe?: string;
