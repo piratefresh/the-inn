@@ -107,7 +107,7 @@ export const nextAuthOptions = (req, res) => ({
           cookies.set("next-auth.session-token", sessionToken, {
             expires: sessionExpiry,
             httpOnly: true,
-            sameSite: "none",
+            sameSite: "lax",
             path: "/",
             secure: process.env.NEXT_PUBLIC_VERCEL_ENV === "production",
           });

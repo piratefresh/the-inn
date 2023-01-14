@@ -23,7 +23,7 @@ export const setToken = (user: UserType, res: Response): void => {
 
   res.cookie("rid", token, {
     httpOnly: true,
-    sameSite: "none",
+    sameSite: "lax",
   });
 };
 
