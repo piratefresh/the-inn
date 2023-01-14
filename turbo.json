@@ -1,11 +1,12 @@
 {
   "pipeline": {
     "build": {
-      "dependsOn": ["^db:generate", "^db:migration:deploy"],
+      "dependsOn": ["^build", "^db:generate", "^db:migration:deploy"],
       "outputs": ["dist/**", ".next/**"]
     },
     "db:generate": {
-      "dependsOn": ["^db:generate"]
+      "dependsOn": ["^db:generate"],
+      "cache": false
     },
     "lint": {
       "outputs": []
@@ -23,6 +24,8 @@
     "db:migration:deploy": {
       "cache": false
     },
-    "db:migrate:deploy": {}
+    "db:migrate:deploy": {
+      "cache": false
+    }
   }
 }

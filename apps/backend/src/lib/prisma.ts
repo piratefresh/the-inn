@@ -1,11 +1,26 @@
-import * as prisma from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
-// declare global {
-//   var prisma: PrismaClient | undefined;
-// }
+export * from "@prisma/client";
 
-// export const prisma = global.prisma || new PrismaClient();
+export { Decimal } from "@prisma/client/runtime";
 
-// if (process.env.NODE_ENV !== "production") global.prisma = prisma;
+let prisma: PrismaClient;
+
+declare module globalThis {
+  let prisma: PrismaClient;
+}
+
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient({
+    errorFormat: "minimal",
+  });
+} else {
+  globalThis.prisma =
+    globalThis.prisma ||
+    new PrismaClient({
+      errorFormat: "pretty",
+    });
+  prisma = globalThis.prisma;
+}
 
 export { prisma };
