@@ -339,9 +339,9 @@ export class UserResolver {
         },
       });
 
-      setToken(user, res);
+      // setToken(user, res);
 
-      req.session.userId = await user.id;
+      req.session.userId = user.id;
 
       return Object.assign(new User(), userSnippet);
     } catch (err) {

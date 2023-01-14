@@ -139,19 +139,19 @@ export const nextAuthOptions = (req, res) => ({
       };
 
       // SET SESSION COOKIE FROM SERVER
-      const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL as string,
-        {
-          query: SET_SESSION_SOCIAL,
-          variables: {
-            usernameOrEmail: user.email,
-          },
-        }
-      );
-      if (response.data.data.setSessionSocial) {
-        const cookies = response.headers["set-cookie"];
-        res.setHeader("Set-Cookie", cookies);
-      }
+      // const response = await axios.post(
+      //   process.env.NEXT_PUBLIC_API_URL as string,
+      //   {
+      //     query: SET_SESSION_SOCIAL,
+      //     variables: {
+      //       usernameOrEmail: user.email,
+      //     },
+      //   }
+      // );
+      // if (response.data.data.setSessionSocial) {
+      //   const cookies = response.headers["set-cookie"];
+      //   res.setHeader("Set-Cookie", cookies);
+      // }
 
       return newSession;
     },
