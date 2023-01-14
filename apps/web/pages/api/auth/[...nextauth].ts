@@ -47,7 +47,7 @@ const session: Partial<SessionOptions> = {
 const adapter = PrismaAdapter(prisma);
 
 // To generate session
-export const nextAuthOptions = (req: NextApiRequest, res: NextApiResponse) => ({
+export const nextAuthOptions = (req, res) => ({
   debug: true,
   adapter: adapter,
   providers: [
