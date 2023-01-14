@@ -59,9 +59,7 @@ const checkServerSession = (
     console.log("verified: ", verified);
     return next();
   } catch (err) {
-    response.status(401).json({
-      error: new Error("Invalid request!"),
-    });
+    return next();
   }
 };
 
