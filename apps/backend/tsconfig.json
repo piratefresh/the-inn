@@ -13,6 +13,8 @@
     "forceConsistentCasingInFileNames": true,
     "removeComments": true,
     "sourceMap": true,
+    // pnpm type errors
+    "preserveSymlinks": true,
     "outDir": "./dist",
     "rootDir": ".",
     "baseUrl": "src",
