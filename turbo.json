@@ -1,7 +1,7 @@
 {
   "pipeline": {
     "build": {
-      "dependsOn": ["^build", "^db:generate", "^db:migration:deploy"],
+      "dependsOn": ["^db:generate", "^db:migration:deploy"],
       "outputs": ["dist/**", ".next/**"]
     },
     "db:generate": {
