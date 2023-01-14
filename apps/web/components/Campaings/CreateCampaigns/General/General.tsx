@@ -13,7 +13,9 @@ import { Input, InputAddon } from "ui/src/Input";
 import { Chip } from "ui/src/Chip";
 import { ChipGroup } from "ui/src/Chip/ChipGroup";
 import { asUploadButton } from "@rpldy/upload-button";
-import { useItemFinishListener, useUploady } from "@rpldy/uploady";
+// Type error here somehow
+//@ts-ignore
+import Uploady, { useItemFinishListener, useUploady } from "@rpldy/uploady";
 import InputGroup from "@components/ui/InputGroup";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 import router from "next/router";
