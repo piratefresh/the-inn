@@ -8,7 +8,7 @@ import { UserResolver } from "@resolvers/user";
 import { CampaignResolver } from "@resolvers/campaign";
 import { ReviewResolver } from "@resolvers/review";
 import { PrivateMessageResolver } from "@resolvers/privateMessage";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
@@ -26,6 +26,7 @@ import { sessionMiddleware } from "middlewares/sessionConfig";
 import algoliasearch from "algoliasearch";
 import { ApplicationResolver } from "@resolvers/application";
 import { seedDB, seedDBApplication } from "../prisma/seed";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -40,6 +41,29 @@ const algoliaClient = algoliasearch(
 const theInnIndex = algoliaClient.initIndex("dev_campaigns");
 
 const pubsub = new AblyPubSub({ key: process.env.ABLY_API_KEY });
+
+const checkServerSession = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log("req: ", request.headers.authorization);
+    console.log("req: ", request.query);
+    console.log("req: ", request.session);
+    const verified = jwt.verify(
+      request.headers.authorization.split(" ")[1],
+      process.env.JWT_SECRET_KEY_
+    );
+
+    console.log("verified: ", verified);
+    return next();
+  } catch (err) {
+    response.status(401).json({
+      error: new Error("Invalid request!"),
+    });
+  }
+};
 
 const startServer = async () => {
   try {
@@ -70,6 +94,8 @@ const startServer = async () => {
     // app.use(cookieParser());
 
     app.use(sessionMiddleware);
+
+    app.use(checkServerSession);
 
     const httpServer = createServer(app);
 

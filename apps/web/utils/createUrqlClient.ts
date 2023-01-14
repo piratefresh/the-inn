@@ -140,14 +140,8 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
             const session = await getSession();
             console.log("session: ", session);
 
-            if (session) {
-              const payload = await {
-                userId: session.id,
-                email: session.user.email,
-                expiresAt: 30 * 24 * 60 * 60,
-              };
-
-              return { token: payload };
+            if (session?.token) {
+              return { token: session.token };
             }
             return null;
           }
@@ -167,7 +161,7 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
           if (!authState?.token) {
             return operation;
           }
-
+          console.log("authstate: ", authState);
           const fetchOptions =
             typeof operation.context.fetchOptions === "function"
               ? operation.context.fetchOptions()

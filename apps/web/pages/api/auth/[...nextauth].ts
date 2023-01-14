@@ -10,6 +10,7 @@ import { PrismaAdapter } from "@lib/prismaAdapter";
 import Cookies from "cookies";
 import { decode, encode } from "next-auth/jwt";
 import { randomUUID } from "crypto";
+import jwt from "jsonwebtoken";
 
 const SIGN_IN_MUTATION = `
 mutation SignIn($usernameOrEmail: String!, $password: String!) {
@@ -121,9 +122,14 @@ export const nextAuthOptions = (req, res) => ({
 
     async session({ session, token, user }) {
       let newSession: Session;
+      const jwtToken = jwt.sign(
+        { userId: user?.id },
+        process.env.JWT_SECRET_KEY
+      );
       newSession = {
         ...session,
         id: user?.id,
+        token: jwtToken,
         user: {
           name: `${user.firstName} ${user.lastName}`,
           email: user.email,

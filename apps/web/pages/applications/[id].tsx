@@ -109,7 +109,7 @@ const COLUMNS: ColumnDef<Person, any>[] = [
     footer: (info) => info.column.id,
     cell: (info) => (
       <div className="flex flex-row items-center gap-8">
-        <Link href={`/user/${info.getValue()}`}>
+        <Link href={`/user/${info.getValue()}`} legacyBehavior>
           <Button size="large">View</Button>
         </Link>
 

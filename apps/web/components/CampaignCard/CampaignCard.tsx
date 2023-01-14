@@ -68,7 +68,7 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
         className="cursor-pointer"
         passHref
         href={`/campaign/${campaign.id}`}
-      >
+        legacyBehavior>
         <StyledCardImage
           gold
           width="100%"
@@ -101,7 +101,7 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
           passHref
           href={`/campaign/${campaign.id}`}
           style={{ cursor: "pointer" }}
-        >
+          legacyBehavior>
           <Header className="font-oldFenris break-words" size="xl">
             {campaign.title}
           </Header>

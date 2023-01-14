@@ -73,7 +73,7 @@ export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
       />
       <div className="flex flex-col h-full p-4">
         <div className="my-4">
-          <Link passHref href={`/campaign/${campaign.id}`}>
+          <Link passHref href={`/campaign/${campaign.id}`} legacyBehavior>
             <Text size="lg" style={{ fontFamily: "oldFenris" }}>
               {campaign.title}
             </Text>
@@ -122,7 +122,7 @@ export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
 
         <div className="flex flex-row flex-wrap items-center justify-between gap-4 ml-2">
           <Button outlined="primary">
-            <Link href={`/user/editcampaign/general?id=${campaign.id}`}>
+            <Link href={`/user/editcampaign/general?id=${campaign.id}`} legacyBehavior>
               <Text className="whitespace-nowrap">Edit</Text>
             </Link>
           </Button>
@@ -138,9 +138,9 @@ export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
           </Button>
           <Button outlined="primary">
             <Link href={`/applications/${campaign.id}`}>
-              <a>
-                <Text className="whitespace-nowrap">View Applications</Text>
-              </a>
+
+              <Text className="whitespace-nowrap">View Applications</Text>
+
             </Link>
           </Button>
         </div>

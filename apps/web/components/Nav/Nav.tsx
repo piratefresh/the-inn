@@ -126,7 +126,7 @@ export const Nav = () => {
             </Popover.Root>
           </div>
           <div className="text-white mr-4">
-            <Link href={`/user/${session.id}`}>{session.user.name}</Link>
+            <Link href={`/user/${session.id}`} legacyBehavior>{session.user.name}</Link>
           </div>
 
           <Menu
@@ -138,7 +138,7 @@ export const Nav = () => {
                 href="/user/settings"
                 className="flex flex-row items-center justify-center px-2 py-2"
                 passHref
-              >
+                legacyBehavior>
                 <UserIcon className="h-6 w-6" />
                 Account Settings
               </Link>
@@ -148,7 +148,7 @@ export const Nav = () => {
                 href="/user/games"
                 className="flex flex-row items-center justify-center px-2 py-2"
                 passHref
-              >
+                legacyBehavior>
                 <TicketIcon className="h-6 w-6" /> My Adventures
               </Link>
             </HeadlessMenu.Item>
@@ -247,53 +247,51 @@ export const Nav = () => {
         )}
       </>
     );
-  return (
-    <>
-      <nav className={`${NavStyles["nav"]}`}>
-        <Link href="/">
-          <div className="font-oldFenris uppercase text-5xl text-brandBlack dark:text-white col-start-1 col-end-3 whitespace-nowrap">
-            The Inn
-          </div>
-        </Link>
-        <div className="flex justify-center col-start-5 col-end-9">
-          <NavItemButton
-            label="Campaigns"
-            href="/campaigns/"
-            onClick={() => setSubMenu("campaigns")}
-          />
-          {/* <NavItemButton
-            label="Homebrews"
-            href="/homebrews"
-            onClick={() => setSubMenu("homebrews")}
-          />
-          <NavItemButton
-            label="Game rules"
-            href="/gamerules"
-            onClick={() => setSubMenu("gamerules")}
-          /> */}
-          <NavItemButton
-            label="Members"
-            href="/members/all"
-            onClick={() => setSubMenu("members")}
-          />
+  return <>
+    <nav className={`${NavStyles["nav"]}`}>
+      <Link href="/" legacyBehavior>
+        <div className="font-oldFenris uppercase text-5xl text-brandBlack dark:text-white col-start-1 col-end-3 whitespace-nowrap">
+          The Inn
         </div>
+      </Link>
+      <div className="flex justify-center col-start-5 col-end-9">
+        <NavItemButton
+          label="Campaigns"
+          href="/campaigns/"
+          onClick={() => setSubMenu("campaigns")}
+        />
+        {/* <NavItemButton
+          label="Homebrews"
+          href="/homebrews"
+          onClick={() => setSubMenu("homebrews")}
+        />
+        <NavItemButton
+          label="Game rules"
+          href="/gamerules"
+          onClick={() => setSubMenu("gamerules")}
+        /> */}
+        <NavItemButton
+          label="Members"
+          href="/members/all"
+          onClick={() => setSubMenu("members")}
+        />
+      </div>
 
-        <div className="flex justify-end col-start-11 col-end-13">
-          {userInfo}
+      <div className="flex justify-end col-start-11 col-end-13">
+        {userInfo}
+      </div>
+    </nav>
+    {subMenu && (
+      <nav
+        className={`${NavStyles["nav"]}`}
+        onMouseLeave={() => setSubMenu(null)}
+      >
+        <div className="flex justify-center col-start-5 col-end-9">
+          {navSubItems[subMenu].map((item) => (
+            <NavItemLink label={item.label} href={item.href} />
+          ))}
         </div>
       </nav>
-      {subMenu && (
-        <nav
-          className={`${NavStyles["nav"]}`}
-          onMouseLeave={() => setSubMenu(null)}
-        >
-          <div className="flex justify-center col-start-5 col-end-9">
-            {navSubItems[subMenu].map((item) => (
-              <NavItemLink label={item.label} href={item.href} />
-            ))}
-          </div>
-        </nav>
-      )}
-    </>
-  );
+    )}
+  </>;
 };

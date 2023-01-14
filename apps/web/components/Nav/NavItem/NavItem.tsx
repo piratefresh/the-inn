@@ -31,7 +31,7 @@ export const NavItemLink = ({ label, onClick, href = "" }: NavItemProps) => {
         href={href ? href : `/${labelLowercase}`}
         className="bold text-lg"
         onClick={onClick}
-      >
+        legacyBehavior>
         {label}
       </Link>
     </li>
