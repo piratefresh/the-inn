@@ -1,8 +1,5 @@
-import { CampaignApplication } from "@components/CampaignApplication";
-import { CampaignSideCard } from "@components/CampaignSideCard";
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from "@consts/paging";
 import {
-  useAddPlayerApplicationMutation,
   useGetApplicationCampaignQuery,
   useGetCampaignQuery,
 } from "@generated/graphql";
@@ -109,7 +106,7 @@ const COLUMNS: ColumnDef<Person, any>[] = [
     footer: (info) => info.column.id,
     cell: (info) => (
       <div className="flex flex-row items-center gap-8">
-        <Link href={`/user/${info.getValue()}`} legacyBehavior>
+        <Link passHref href={`/user/${info.getValue()}`} legacyBehavior>
           <Button size="large">View</Button>
         </Link>
 
@@ -120,28 +117,6 @@ const COLUMNS: ColumnDef<Person, any>[] = [
     ),
   }),
 ];
-
-export async function getServerSideProps({
-  req,
-  res,
-}: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    req,
-    res,
-    nextAuthOptions(req, res)
-  );
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/auth/signin",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { session },
-  };
-}
 
 interface GetPaginedDataProps extends OnChangeProps {
   data: any;
