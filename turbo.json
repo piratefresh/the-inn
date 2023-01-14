@@ -4,6 +4,9 @@
       "dependsOn": ["^build", "^db:generate", "^db:migration:deploy"],
       "outputs": ["dist/**", ".next/**"]
     },
+    "db:generate": {
+      "dependsOn": ["^db:generate"]
+    },
     "lint": {
       "outputs": []
     },
@@ -14,14 +17,12 @@
     "storybook": {
       "cache": false
     },
-    "db:generate": {
-      "cache": false
-    },
     "db:push": {
       "cache": false
     },
     "db:migration:deploy": {
       "cache": false
-    }
+    },
+    "db:migrate:deploy": {}
   }
 }

@@ -19,7 +19,8 @@
     "gen:web": "pnpm --filter web run gen",
     "build:backend": "turbo run build --scope=backend",
     "build:frontend": "turbo run build --filter=frontend",
-    "heroku-postbuild": "if [ $CLIENT_ENV ]; then pnpm run prod-frontend; elif [ $SERVER_ENV ]; then pnpm run prod-backend; else echo no environment detected, please set CLIENT_ENV or SERVER_ENV; fi",
+    "db:migrate:deploy": "turbo run db:migrate:deploy",
+    "db:generate": "turbo run db:generate",
     "prod-frontend": "pnpm run build:frontend",
     "prod-backend": "pnpm run build:backend"
   },
