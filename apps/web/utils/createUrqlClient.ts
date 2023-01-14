@@ -138,9 +138,9 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
         getAuth: async ({ authState, mutate }: any) => {
           if (!authState) {
             const session = await getSession();
-            console.log("session: ", session);
-
+            // @ts-ignore
             if (session?.token) {
+              // @ts-ignore
               return { token: session.token };
             }
             return null;

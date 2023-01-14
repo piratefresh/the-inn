@@ -14,27 +14,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// model Account {
-//   id                String  @id @default(cuid())
-//   type              String
-//   provider          String
-//   providerAccountId String
-//   refreshToken      String?
-//   accessToken       String?
-//   expiresAt         BigInt?
-//   tokenType         String?
-//   scope             String?
-//   idToken           String?
-//   sessionState      String?
-//   oauthTokenSecret  String?
-//   oauthToken        String?
-//   userId            String
-//   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-//   @@unique([provider, providerAccountId, userId])
-//   @@map("accounts")
-// }
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
