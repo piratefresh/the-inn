@@ -1,3 +1,4 @@
+import { __prod__ } from "@/constants";
 import { UserType } from "@typedefs/Prisma";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
@@ -24,6 +25,7 @@ export const setToken = (user: UserType, res: Response): void => {
   res.cookie("rid", token, {
     httpOnly: true,
     sameSite: "lax",
+    secure: __prod__,
   });
 };
 
