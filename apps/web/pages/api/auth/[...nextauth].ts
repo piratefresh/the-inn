@@ -34,12 +34,12 @@ const SIGN_OUT_MUTATION = `mutation Logout {
   logout
 }`;
 
-type JSONResponse = {
-  data?: {
-    signin: Omit<SignInMutation, "fetchedAt">;
-  };
-  errors?: Array<{ message: string }>;
-};
+// type JSONResponse = {
+//   data?: {
+//     signin: Omit<SignInMutation, "fetchedAt">;
+//   };
+//   errors?: Array<{ message: string }>;
+// };
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Do whatever you want here, before the request is passed down to `NextAuth`
@@ -85,7 +85,7 @@ export const nextAuthOptions = (req, res) => ({
             credentials: "include",
           });
 
-          const { data, errors }: JSONResponse = await response.json();
+          const { data, errors } = await response.json();
           console.log("data: ", data);
           if (data.signin) {
             const cookie = res.headers.get("set-cookie");
@@ -134,15 +134,15 @@ export const nextAuthOptions = (req, res) => ({
 
           const cookies = new Cookies(req, res);
 
-          // cookies.set("next-auth.session-token", sessionToken, {
-          //   expires: sessionExpiry,
-          //   httpOnly: true,
-          //   sameSite: "lax",
-          //   secure: true,
-          //   domain: process.env.NEXT_PUBLIC_VERCEL_URL
-          //     ? ".theinn.app"
-          //     : undefined,
-          // });
+          cookies.set("next-auth.session-token", sessionToken, {
+            expires: sessionExpiry,
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+            domain: process.env.NEXT_PUBLIC_VERCEL_URL
+              ? ".theinn.app"
+              : undefined,
+          });
         }
       }
 
