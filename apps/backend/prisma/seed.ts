@@ -69,8 +69,6 @@ export async function seedDBApplication() {
     },
   });
 
-  console.log("users: ", users);
-
   users.map(async (user) => {
     const message = faker.lorem.paragraphs(randomIntFromInterval(1, 3));
     const fitsSchedule = faker.datatype.boolean();
