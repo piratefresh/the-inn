@@ -67,16 +67,32 @@ export const nextAuthOptions = (req, res) => ({
         const { email, password } = credentials;
 
         try {
-          const response = await axios.post(
-            process.env.NEXT_PUBLIC_API_URL as string,
-            {
-              query: SIGN_IN_MUTATION,
-              variables: {
-                usernameOrEmail: email,
-                password: password,
-              },
-            }
-          );
+          const response = await fetch(process.env.NEXT_PUBLIC_API_URL, {
+            method: "POST",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: SIGN_OUT_MUTATION }),
+          });
+
+          const cookie = res.headers.get("set-cookie");
+
+          res.setHeader("Set-Cookie", cookie);
+          // const response = await axios.post(
+          //   process.env.NEXT_PUBLIC_API_URL as string,
+          //   {
+          //     query: SIGN_IN_MUTATION,
+          //     headers: {
+          //       "Access-Control-Allow-Origin": "*",
+          //       "Content-Type": "application/json",
+          //     },
+          //     variables: {
+          //       usernameOrEmail: email,
+          //       password: password,
+          //     },
+          //   }
+          // );
 
           return response.data.data.signin;
         } catch (err) {
@@ -104,6 +120,7 @@ export const nextAuthOptions = (req, res) => ({
           } as any);
 
           const cookies = new Cookies(req, res);
+
           // cookies.set("next-auth.session-token", sessionToken, {
           //   expires: sessionExpiry,
           //   httpOnly: true,
@@ -196,6 +213,10 @@ export const nextAuthOptions = (req, res) => ({
     async signOut() {
       await axios.post(process.env.NEXT_PUBLIC_API_URL as string, {
         query: SIGN_OUT_MUTATION,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
       });
       res.setHeader(
         "Set-Cookie",
