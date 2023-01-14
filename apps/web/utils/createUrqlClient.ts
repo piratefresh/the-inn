@@ -134,54 +134,54 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
           },
         },
       }),
-      authExchange({
-        getAuth: async ({ authState, mutate }: any) => {
-          if (!authState) {
-            const session = await getSession();
-            // @ts-ignore
-            if (session?.token) {
-              // @ts-ignore
-              return { token: session.token };
-            }
-            return null;
-          }
-        },
-        willAuthError: ({ authState }) => {
-          if (!authState) return true;
-          // e.g. check for expiration, existence of auth etc
-          return false;
-        },
-        addAuthToOperation: ({
-          authState,
-          operation,
-        }: {
-          authState: any;
-          operation: Operation;
-        }) => {
-          if (!authState?.token) {
-            return operation;
-          }
-          console.log("authstate: ", authState);
-          const fetchOptions =
-            typeof operation.context.fetchOptions === "function"
-              ? operation.context.fetchOptions()
-              : operation.context.fetchOptions || {};
-          return makeOperation(operation.kind, operation, {
-            ...operation.context,
-            fetchOptions: {
-              ...fetchOptions,
-              headers: {
-                ...fetchOptions.headers,
-                Authorization: `Bearer ${authState.token}`,
-              },
-            },
-          });
-        },
-        didAuthError: (params) => {
-          console.error("didAuthError", params);
-          return params.error.message.includes("JWT");
-        },
-      }),
+      // authExchange({
+      //   getAuth: async ({ authState, mutate }: any) => {
+      //     if (!authState) {
+      //       const session = await getSession();
+      //       // @ts-ignore
+      //       if (session?.token) {
+      //         // @ts-ignore
+      //         return { token: session.token };
+      //       }
+      //       return null;
+      //     }
+      //   },
+      //   willAuthError: ({ authState }) => {
+      //     if (!authState) return true;
+      //     // e.g. check for expiration, existence of auth etc
+      //     return false;
+      //   },
+      //   addAuthToOperation: ({
+      //     authState,
+      //     operation,
+      //   }: {
+      //     authState: any;
+      //     operation: Operation;
+      //   }) => {
+      //     if (!authState?.token) {
+      //       return operation;
+      //     }
+      //     console.log("authstate: ", authState);
+      //     const fetchOptions =
+      //       typeof operation.context.fetchOptions === "function"
+      //         ? operation.context.fetchOptions()
+      //         : operation.context.fetchOptions || {};
+      //     return makeOperation(operation.kind, operation, {
+      //       ...operation.context,
+      //       fetchOptions: {
+      //         ...fetchOptions,
+      //         headers: {
+      //           ...fetchOptions.headers,
+      //           Authorization: `Bearer ${authState.token}`,
+      //         },
+      //       },
+      //     });
+      //   },
+      //   didAuthError: (params) => {
+      //     console.error("didAuthError", params);
+      //     return params.error.message.includes("JWT");
+      //   },
+      // }),
       errorExchange,
       ssrExchange,
       fetchExchange,
