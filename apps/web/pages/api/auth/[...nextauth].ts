@@ -106,10 +106,12 @@ export const nextAuthOptions = (req, res) => ({
           const cookies = new Cookies(req, res);
           cookies.set("next-auth.session-token", sessionToken, {
             expires: sessionExpiry,
-            httpOnly: false,
+            httpOnly: true,
             sameSite: "lax",
-            path: "/",
             secure: true,
+            domain: process.env.NEXT_PUBLIC_VERCEL_URL
+              ? ".theinn.app"
+              : undefined,
           });
         }
       }

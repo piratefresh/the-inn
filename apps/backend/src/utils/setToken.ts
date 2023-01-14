@@ -26,6 +26,7 @@ export const setToken = (user: UserType, res: Response): void => {
     httpOnly: true,
     sameSite: "lax",
     secure: __prod__,
+    domain: __prod__ ? ".theinn.app" : undefined,
   });
 };
 

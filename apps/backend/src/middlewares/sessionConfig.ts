@@ -14,9 +14,10 @@ export const sessionMiddleware = session({
   }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
-    httpOnly: false,
+    httpOnly: true,
     secure: __prod__,
     sameSite: "lax",
+    domain: __prod__ ? ".theinn.app" : undefined,
   },
   secret: process.env.SESSION_SECRET,
   resave: false,
