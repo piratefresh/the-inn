@@ -1,4 +1,4 @@
-import { prisma as prismaBackend } from "backend";
+import * as prismaBackend from "backend";
 
 declare global {
   var prisma: prismaBackend.PrismaClient | undefined;

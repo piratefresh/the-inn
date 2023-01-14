@@ -129,6 +129,7 @@ const UserPage = () => {
                 width={400}
                 height={400}
                 objectFit="cover"
+                alt="user image"
               />
             </div>
           )}
