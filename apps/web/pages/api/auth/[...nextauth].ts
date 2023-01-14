@@ -103,14 +103,14 @@ export const nextAuthOptions = (req, res) => ({
             expires: sessionExpiry,
           } as any);
 
-          const cookies = new Cookies(req, res);
-          cookies.set("next-auth.session-token", sessionToken, {
-            expires: sessionExpiry,
-            httpOnly: true,
-            sameSite: "lax",
-            path: "/",
-            secure: process.env.NEXT_PUBLIC_VERCEL_ENV === "production",
-          });
+          // const cookies = new Cookies(req, res);
+          // cookies.set("next-auth.session-token", sessionToken, {
+          //   expires: sessionExpiry,
+          //   httpOnly: false,
+          //   sameSite: "lax",
+          //   path: "/",
+          //   secure: process.env.NEXT_PUBLIC_VERCEL_ENV === "production",
+          // });
         }
       }
 
