@@ -23,7 +23,7 @@
     "@devoxa/prisma-relay-cursor-connection": "^2.2.2",
     "@faker-js/faker": "^7.6.0",
     "@graphql-tools/schema": "^9.0.12",
-    "@prisma/client": "^4.8.1",
+    "@prisma/client": "latest",
     "@sendgrid/mail": "^7.7.0",
     "@upstash/ratelimit": "^0.1.5",
     "@upstash/redis": "^1.18.1",
