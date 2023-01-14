@@ -16,7 +16,7 @@ export const sessionMiddleware = session({
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
     httpOnly: true,
     secure: __prod__,
-    sameSite: __prod__ ? "none" : "lax",
+    sameSite: "none",
   },
   secret: process.env.SESSION_SECRET,
   resave: false,

@@ -97,12 +97,14 @@ export const CampaignCard = ({ campaign, hideTags }: CampaignCardProps) => {
             Pending requests {pendingMember}
           </StyledText>
         </div>
-        <Link href={`/campaign/${campaign.id}`}>
-          <a style={{ cursor: "pointer" }}>
-            <Header className="font-oldFenris break-words" size="xl">
-              {campaign.title}
-            </Header>
-          </a>
+        <Link
+          passHref
+          href={`/campaign/${campaign.id}`}
+          style={{ cursor: "pointer" }}
+        >
+          <Header className="font-oldFenris break-words" size="xl">
+            {campaign.title}
+          </Header>
         </Link>
         <div className="my-2">
           <StyledText size="sm">

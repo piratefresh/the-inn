@@ -83,9 +83,7 @@ const COLUMNS: ColumnDef<Person, any>[] = [
     footer: (info) => info.column.id,
     cell: (info) => (
       <Link href={`/user/${info.getValue()}`}>
-        <a>
-          <Button size="large">View</Button>
-        </a>
+        <Button size="large">View</Button>
       </Link>
     ),
   }),

@@ -119,13 +119,17 @@ const Thread = () => {
               <ArrowLeftIcon className="h-5 w-5 " />
             </Button>
 
-            <Link href={`$/user/${id}`} passHref>
-              <a className="flex flex-row gap-2 items-center">
+            <Link
+              href={`$/user/${id}`}
+              className="flex flex-row gap-2 items-center"
+              passHref
+            >
+              <>
                 {otherUserOnline && (
                   <div className="rounded-full w-2 h-2 bg-green-500" />
                 )}{" "}
                 <Text>{`${firstName} ${lastName}`}</Text>
-              </a>
+              </>
             </Link>
           </div>
 

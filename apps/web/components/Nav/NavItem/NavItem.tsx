@@ -27,10 +27,12 @@ export const NavItemLink = ({ label, onClick, href = "" }: NavItemProps) => {
         isSelected ? "font-bold" : ""
       }`}
     >
-      <Link href={href ? href : `/${labelLowercase}`}>
-        <a className="bold text-lg" onClick={onClick}>
-          {label}
-        </a>
+      <Link
+        href={href ? href : `/${labelLowercase}`}
+        className="bold text-lg"
+        onClick={onClick}
+      >
+        {label}
       </Link>
     </li>
   );

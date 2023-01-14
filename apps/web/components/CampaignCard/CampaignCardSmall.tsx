@@ -73,12 +73,10 @@ export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
       />
       <div className="flex flex-col h-full p-4">
         <div className="my-4">
-          <Link href={`/campaign/${campaign.id}`}>
-            <a>
-              <Text size="lg" style={{ fontFamily: "oldFenris" }}>
-                {campaign.title}
-              </Text>
-            </a>
+          <Link passHref href={`/campaign/${campaign.id}`}>
+            <Text size="lg" style={{ fontFamily: "oldFenris" }}>
+              {campaign.title}
+            </Text>
           </Link>
         </div>
 
@@ -125,9 +123,7 @@ export const CampaignCardSmall = ({ campaign }: CampaignCardSmallProps) => {
         <div className="flex flex-row flex-wrap items-center justify-between gap-4 ml-2">
           <Button outlined="primary">
             <Link href={`/user/editcampaign/general?id=${campaign.id}`}>
-              <a>
-                <Text className="whitespace-nowrap">Edit</Text>
-              </a>
+              <Text className="whitespace-nowrap">Edit</Text>
             </Link>
           </Button>
           <Button outlined="primary" onClick={handleDeactivateCampaign}>

@@ -134,18 +134,22 @@ export const Nav = () => {
             trigger={<Avatar src={session.user.image} />}
           >
             <HeadlessMenu.Item>
-              <Link href="/user/settings">
-                <a className="flex flex-row items-center justify-center px-2 py-2">
-                  <UserIcon className="h-6 w-6" />
-                  Account Settings
-                </a>
+              <Link
+                href="/user/settings"
+                className="flex flex-row items-center justify-center px-2 py-2"
+                passHref
+              >
+                <UserIcon className="h-6 w-6" />
+                Account Settings
               </Link>
             </HeadlessMenu.Item>
             <HeadlessMenu.Item>
-              <Link href="/user/games">
-                <a className="flex flex-row items-center justify-center px-2 py-2">
-                  <TicketIcon className="h-6 w-6" /> My Adventures
-                </a>
+              <Link
+                href="/user/games"
+                className="flex flex-row items-center justify-center px-2 py-2"
+                passHref
+              >
+                <TicketIcon className="h-6 w-6" /> My Adventures
               </Link>
             </HeadlessMenu.Item>
           </Menu>
@@ -247,11 +251,9 @@ export const Nav = () => {
     <>
       <nav className={`${NavStyles["nav"]}`}>
         <Link href="/">
-          <a>
-            <div className="font-oldFenris uppercase text-5xl text-brandBlack dark:text-white col-start-1 col-end-3 whitespace-nowrap">
-              The Inn
-            </div>
-          </a>
+          <div className="font-oldFenris uppercase text-5xl text-brandBlack dark:text-white col-start-1 col-end-3 whitespace-nowrap">
+            The Inn
+          </div>
         </Link>
         <div className="flex justify-center col-start-5 col-end-9">
           <NavItemButton

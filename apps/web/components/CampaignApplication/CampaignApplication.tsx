@@ -235,9 +235,7 @@ export const CampaignApplication = ({ campaign }: CampaignApplicationProps) => {
         <FormDivider label="" />
         <div className="flex gap-4 mt-4">
           <Button size="large" type="button">
-            <Link href={`/campaign/${campaign.id}`}>
-              <a>Back</a>
-            </Link>
+            <Link href={`/campaign/${campaign.id}`}>Back</Link>
           </Button>
           <Button size="large" type="submit">
             Confirm

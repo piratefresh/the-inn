@@ -58,10 +58,12 @@ const SignUp = () => {
 
   return (
     <div className="flex flex-col place-items-center justify-center items-center h-screen">
-      <Link href="/">
-        <a className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack">
-          The Inn
-        </a>
+      <Link
+        passHref
+        href="/"
+        className="font-oldFenris uppercase text-5xl text-white dark:text-brandBlack"
+      >
+        The Inn
       </Link>
       <form
         className="flex flex-col mt-8 space-y-6 max-w-xl"

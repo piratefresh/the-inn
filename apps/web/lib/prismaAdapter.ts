@@ -41,7 +41,6 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
       return { user, session };
     },
     createSession: (data) => {
-      console.log("CREATE SESSION data: ", data);
       return p.session.create({ data });
     },
     updateSession: (data) =>

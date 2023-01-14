@@ -118,7 +118,7 @@ export const CampaignBottomCard = ({
               (campaign as GetCampaignQuery["getCampaign"]).id
             }`}
           >
-            <a>Edit</a>
+            Edit
           </Link>
         </Button>
       )}

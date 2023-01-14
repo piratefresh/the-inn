@@ -53,10 +53,12 @@ const SignIn = () => {
 
   return (
     <div className="flex flex-col place-items-center justify-center items-center h-screen">
-      <Link href="/">
-        <a className="font-oldFenris uppercase text-5xl text-brandBlack dark:text-white">
-          The Inn
-        </a>
+      <Link
+        passHref
+        href="/"
+        className="font-oldFenris uppercase text-5xl text-brandBlack dark:text-white"
+      >
+        The Inn
       </Link>
       <form
         className="flex flex-col mt-8 space-y-6 w-100 max-w-xl"

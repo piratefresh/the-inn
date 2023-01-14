@@ -3,11 +3,13 @@ import {
   fetchExchange,
   subscriptionExchange,
   errorExchange as urqlErrorExchange,
-  createClient,
   ssrExchange as UrqlSSRExchange,
+  Operation,
 } from "urql";
+import { makeOperation } from "@urql/core";
 import { cacheExchange } from "@urql/exchange-graphcache";
 import { relayPagination } from "@urql/exchange-graphcache/extras";
+import { authExchange } from "@urql/exchange-auth";
 import { devtoolsExchange } from "@urql/devtools";
 import Router from "next/router";
 import { createClient as createWSClient } from "graphql-ws";
@@ -19,6 +21,12 @@ import {
 } from "@generated/graphql";
 import { isServer } from "./isServer";
 import { SSRExchange } from "next-urql";
+import { getSession } from "next-auth/react";
+import jwt from "jsonwebtoken";
+
+type AuthState = {
+  token: string;
+} | null;
 
 export const errorExchange = urqlErrorExchange({
   onError: (error) => {
@@ -124,6 +132,60 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
               );
             },
           },
+        },
+      }),
+      authExchange({
+        getAuth: async ({ authState, mutate }: any) => {
+          if (!authState) {
+            const session = await getSession();
+            console.log("session: ", session);
+
+            if (session) {
+              const payload = await {
+                userId: session.id,
+                email: session.user.email,
+                expiresAt: 30 * 24 * 60 * 60,
+              };
+
+              return { token: payload };
+            }
+            return null;
+          }
+        },
+        willAuthError: ({ authState }) => {
+          if (!authState) return true;
+          // e.g. check for expiration, existence of auth etc
+          return false;
+        },
+        addAuthToOperation: ({
+          authState,
+          operation,
+        }: {
+          authState: any;
+          operation: Operation;
+        }) => {
+          if (!authState?.token) {
+            return operation;
+          }
+
+          const fetchOptions =
+            typeof operation.context.fetchOptions === "function"
+              ? operation.context.fetchOptions()
+              : operation.context.fetchOptions || {};
+          return makeOperation(operation.kind, operation, {
+            ...operation.context,
+            fetchOptions: {
+              ...fetchOptions,
+              headers: {
+                ...fetchOptions.headers,
+                Authorization: `Bearer ${authState.token}`,
+              },
+            },
+          });
+        },
+        didAuthError: (params) => {
+          console.error("didAuthError", params);
+          return params.error.message.includes("JWT");
         },
       }),
       errorExchange,

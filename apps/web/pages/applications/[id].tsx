@@ -110,9 +110,7 @@ const COLUMNS: ColumnDef<Person, any>[] = [
     cell: (info) => (
       <div className="flex flex-row items-center gap-8">
         <Link href={`/user/${info.getValue()}`}>
-          <a>
-            <Button size="large">View</Button>
-          </a>
+          <Button size="large">View</Button>
         </Link>
 
         <Button color="blue" size="large">
