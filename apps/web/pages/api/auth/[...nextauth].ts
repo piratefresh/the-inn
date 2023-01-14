@@ -47,7 +47,7 @@ const session: Partial<SessionOptions> = {
 const adapter = PrismaAdapter(prisma);
 
 // To generate session
-export const nextAuthOptions = (req, res) => ({
+export const nextAuthOptions = (req: NextApiRequest, res: NextApiResponse) => ({
   debug: true,
   adapter: adapter,
   providers: [
@@ -103,14 +103,14 @@ export const nextAuthOptions = (req, res) => ({
             expires: sessionExpiry,
           } as any);
 
-          // const cookies = new Cookies(req, res);
-          // cookies.set("next-auth.session-token", sessionToken, {
-          //   expires: sessionExpiry,
-          //   httpOnly: false,
-          //   sameSite: "lax",
-          //   path: "/",
-          //   secure: process.env.NEXT_PUBLIC_VERCEL_ENV === "production",
-          // });
+          const cookies = new Cookies(req, res);
+          cookies.set("next-auth.session-token", sessionToken, {
+            expires: sessionExpiry,
+            httpOnly: false,
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+          });
         }
       }
 
@@ -195,11 +195,10 @@ export const nextAuthOptions = (req, res) => ({
       await axios.post(process.env.NEXT_PUBLIC_API_URL as string, {
         query: SIGN_OUT_MUTATION,
       });
-      res.setHeader("Set-Cookie", [
-        `rid=''; expires=${new Date(
-          0
-        )}; HttpOnly; Max-Age=0; Path=/; SameSite=Lax`,
-      ]);
+      res.setHeader(
+        "Set-Cookie",
+        `token=${process.env.JWT_COOKIE_NAME}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+      );
     },
   },
 });

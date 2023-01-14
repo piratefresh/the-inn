@@ -387,7 +387,6 @@ export class UserResolver {
   signout(@Ctx() { req, res }: MyContext) {
     return new Promise((resolve) =>
       req.session.destroy((err) => {
-        console.log("SIGNING OUT");
         res.clearCookie(process.env.JWT_COOKIE_NAME);
         if (err) {
           console.log(err);

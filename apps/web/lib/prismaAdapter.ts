@@ -45,8 +45,9 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     },
     updateSession: (data) =>
       p.session.update({ where: { sessionToken: data.sessionToken }, data }),
-    deleteSession: (sessionToken) =>
-      p.session.delete({ where: { sessionToken } }),
+    deleteSession: (sessionToken) => {
+      return p.session.delete({ where: { sessionToken } });
+    },
     async createVerificationToken(data) {
       const verificationToken = await p.verificationToken.create({ data });
       // @ts-expect-errors // MongoDB needs an ID, but we don't
