@@ -11,6 +11,7 @@ import Cookies from "cookies";
 import { decode, encode } from "next-auth/jwt";
 import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
+import { SignInMutation } from "@generated/graphql";
 
 const SIGN_IN_MUTATION = `
 mutation SignIn($usernameOrEmail: String!, $password: String!) {
@@ -32,6 +33,13 @@ const SET_SESSION_SOCIAL = `mutation SetSessionSocial($usernameOrEmail: String!)
 const SIGN_OUT_MUTATION = `mutation Logout {
   logout
 }`;
+
+type JSONResponse = {
+  data?: {
+    signin: Omit<SignInMutation, "fetchedAt">;
+  };
+  errors?: Array<{ message: string }>;
+};
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Do whatever you want here, before the request is passed down to `NextAuth`
@@ -74,27 +82,32 @@ export const nextAuthOptions = (req, res) => ({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ query: SIGN_OUT_MUTATION }),
+            credentials: "include",
           });
 
-          const cookie = res.headers.get("set-cookie");
+          const { data, errors }: JSONResponse = await response.json();
+          console.log("data: ", data);
+          if (data.signin) {
+            const cookie = res.headers.get("set-cookie");
 
-          res.setHeader("Set-Cookie", cookie);
-          // const response = await axios.post(
-          //   process.env.NEXT_PUBLIC_API_URL as string,
-          //   {
-          //     query: SIGN_IN_MUTATION,
-          //     headers: {
-          //       "Access-Control-Allow-Origin": "*",
-          //       "Content-Type": "application/json",
-          //     },
-          //     variables: {
-          //       usernameOrEmail: email,
-          //       password: password,
-          //     },
-          //   }
-          // );
+            res.setHeader("Set-Cookie", cookie);
+            // const response = await axios.post(
+            //   process.env.NEXT_PUBLIC_API_URL as string,
+            //   {
+            //     query: SIGN_IN_MUTATION,
+            //     headers: {
+            //       "Access-Control-Allow-Origin": "*",
+            //       "Content-Type": "application/json",
+            //     },
+            //     variables: {
+            //       usernameOrEmail: email,
+            //       password: password,
+            //     },
+            //   }
+            // );
 
-          return response.data.data.signin;
+            return data.signin;
+          }
         } catch (err) {
           console.log("err3: ", err);
           throw new Error(err);
@@ -158,19 +171,20 @@ export const nextAuthOptions = (req, res) => ({
       };
 
       // SET SESSION COOKIE FROM SERVER
-      // const response = await axios.post(
-      //   process.env.NEXT_PUBLIC_API_URL as string,
-      //   {
-      //     query: SET_SESSION_SOCIAL,
-      //     variables: {
-      //       usernameOrEmail: user.email,
-      //     },
-      //   }
-      // );
-      // if (response.data.data.setSessionSocial) {
-      //   const cookies = response.headers["set-cookie"];
-      //   res.setHeader("Set-Cookie", cookies);
-      // }
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL as string,
+        {
+          query: SET_SESSION_SOCIAL,
+          variables: {
+            usernameOrEmail: user.email,
+          },
+          withCredentials: true,
+        }
+      );
+      if (response.data.data.setSessionSocial) {
+        const cookies = response.headers["set-cookie"];
+        res.setHeader("Set-Cookie", cookies);
+      }
 
       return newSession;
     },
@@ -213,6 +227,7 @@ export const nextAuthOptions = (req, res) => ({
     async signOut() {
       await axios.post(process.env.NEXT_PUBLIC_API_URL as string, {
         query: SIGN_OUT_MUTATION,
+        withCredentials: true,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
