@@ -11,9 +11,8 @@
     "build": "rm -rf dist && prisma migrate deploy && tsup index.ts --format cjs",
     "start": "node dist/index.js",
     "start2": "ts-node src/index.ts",
-    "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
-    "db:migration:generate": "prisma migrate dev --create-only",
+    "db:generate": "prisma migrate dev --create-only",
     "db:migration:run": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "studio": "prisma studio"
