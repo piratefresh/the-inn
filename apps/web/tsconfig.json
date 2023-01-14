@@ -4,6 +4,8 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "baseUrl": "./",
+    // pnpm type errors
+    "preserveSymlinks": true,
     "paths": {
       "@lib/*": ["lib/*"],
       "@utils/*": ["utils/*"],
