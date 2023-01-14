@@ -158,6 +158,7 @@ const startServer = async () => {
           "http://localhost:4000",
           "http://localhost:4000/graphql",
           "https://theinn.app",
+          "https://server.theinn.app/graphql",
         ],
         credentials: true,
       }),
