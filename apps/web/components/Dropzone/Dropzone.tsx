@@ -5,6 +5,7 @@ import update from "immutability-helper";
 import { DndProvider } from "react-dnd";
 import { v4 as uuidv4 } from "uuid";
 import DropZoneStyles from "./Dropzone.module.scss";
+// @ts-ignore
 import { useRequestPreSend } from "@rpldy/uploady";
 import { DropZone } from "./TargetBox";
 import { FileCard } from "./FileCard";

@@ -1,5 +1,6 @@
 import { Input } from "@components/ui/Input";
 import { FilePlusIcon } from "@radix-ui/react-icons";
+// @ts-ignore
 import { useUploady } from "@rpldy/uploady";
 import React from "react";
 import { DropTargetMonitor, useDrop } from "react-dnd";

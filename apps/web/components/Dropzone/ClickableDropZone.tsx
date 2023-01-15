@@ -1,4 +1,5 @@
 import UploadDropZone from "@rpldy/upload-drop-zone";
+// @ts-ignore
 import { useBatchAddListener, useRequestPreSend } from "@rpldy/uploady";
 import clsx from "clsx";
 import { forwardRef, useCallback, useEffect, useState } from "react";

@@ -42,5 +42,5 @@ module.exports = withBundleAnalyzer({
     includePaths: [path.join(__dirname, "styles")],
   },
   transpilePackages: ["ui", "backend"],
-  serverComponentsExternalPackages: ["@prisma/client", "prisma"],
+  serverComponentsExternalPackages: ["@prisma/client", "@rpldy/uploady"],
 });
