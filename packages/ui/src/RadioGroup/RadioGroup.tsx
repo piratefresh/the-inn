@@ -71,6 +71,7 @@ export interface RadioGroupProps
   onChange: (v: string) => void;
   options: OptionProps[];
   direction?: "column" | "row";
+  className?: string;
 }
 
 export const RadioGroup = ({
@@ -80,6 +81,7 @@ export const RadioGroup = ({
   height,
   width,
   direction,
+  className,
   ...props
 }: RadioGroupProps) => {
   //   const [value, setValue] = React.useState<string>("Low");
@@ -88,6 +90,7 @@ export const RadioGroup = ({
       value={value}
       onValueChange={(v) => onChange(v)}
       direction={direction}
+      className={className}
       {...props}
     >
       {options.map((option) => (
