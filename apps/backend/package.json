@@ -8,7 +8,7 @@
     "build:swc:2": "rm -rf dist && prisma migrate deploy && swc src -d dist --source-maps --copy-files",
     "build:tsc": "rm -rf dist && prisma migrate deploy && tsc && tsc-alias -p tsconfig.json",
     "build:swc": "swc . -d dist",
-    "build": "rm -rf dist && prisma migrate deploy && prisma generate && tsup index.ts --format cjs",
+    "build": "rm -rf dist && prisma migrate deploy && tsup index.ts --format cjs",
     "start": "node dist/index.js",
     "start2": "ts-node src/index.ts",
     "db:push": "prisma db push --skip-generate",
