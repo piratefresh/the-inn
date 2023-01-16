@@ -17,8 +17,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "composite": false,
-    "declaration": false,
-    "declarationMap": false,
+    "declaration": true,
+    "declarationMap": true,
     "target": "ES6"
   },
   "exclude": ["node_modules"]
