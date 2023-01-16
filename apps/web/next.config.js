@@ -1,6 +1,17 @@
 // @ts-expect-error idk why
 const path = require("path");
-const fs = require("fs");
+
+const headers = [
+  "Accept",
+  "Accept-Version",
+  "Content-Length",
+  "Content-MD5",
+  "Content-Type",
+  "Date",
+  "X-Api-Version",
+  "X-CSRF-Token",
+  "X-Requested-With",
+];
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
@@ -20,11 +31,11 @@ const nextConfig = {
           { key: "Access-Control-Allow-Credentials", value: "true" },
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://rest.payamak-panel.com/",
+            value: "https://server.theinn.app",
           },
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://api.idpay.ir/v1.1/payment",
+            value: "https://server.theinn.app/graphql",
           },
           { key: "Access-Control-Allow-Headers", value: headers.join(", ") },
           {
