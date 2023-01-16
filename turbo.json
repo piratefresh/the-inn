@@ -5,8 +5,7 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "db:generate": {
-      "dependsOn": ["^db:generate"],
-      "cache": false
+      "dependsOn": ["^db:generate"]
     },
     "lint": {
       "outputs": []
