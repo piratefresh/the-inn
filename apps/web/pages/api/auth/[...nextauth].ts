@@ -2,7 +2,8 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import NextAuth, { Session, SessionOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Session, SessionOptions } from "next-auth";
+import type { CookieOption } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "backend";
@@ -225,7 +226,7 @@ export const nextAuthOptions = (req, res) => ({
           : `next-auth.session-token`,
       options: {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "none" as "none",
         path: "/",
         secure: process.env.NODE_ENV === "production" ? true : false,
       },
