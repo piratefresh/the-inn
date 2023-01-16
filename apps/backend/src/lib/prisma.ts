@@ -1,26 +1,32 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
+// src/server/db/client.ts
 import { PrismaClient } from "@prisma/client";
 
-export * from "@prisma/client";
+// import { queryHandler } from 'prisma-query-inspector'
 
-export { Decimal } from "@prisma/client/runtime";
-
-let prisma: PrismaClient;
-
-declare module globalThis {
-  let prisma: PrismaClient;
+declare global {
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined;
 }
 
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient({
-    errorFormat: "minimal",
-  });
-} else {
-  globalThis.prisma =
-    globalThis.prisma ||
-    new PrismaClient({
-      errorFormat: "pretty",
-    });
-  prisma = globalThis.prisma;
-}
+const generateClient = () =>
+  process.env.SEED
+    ? new PrismaClient()
+    : new PrismaClient({
+        log: [
+          {
+            emit: "event",
+            level: "query",
+          },
+        ],
+      });
 
-export { prisma };
+export const prisma = global.prisma || generateClient();
+if (!process.env.SEED) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // prisma.$on('query', queryHandler)
+}
+if (process.env.NODE_ENV !== "production") {
+  global.prisma = prisma;
+}

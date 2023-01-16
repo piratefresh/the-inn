@@ -5,7 +5,7 @@ import axios from "axios";
 import NextAuth, { Session, SessionOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { prisma } from "../../../lib/prismadb";
+import { prisma } from "backend";
 import { PrismaAdapter } from "@lib/prismaAdapter";
 import Cookies from "cookies";
 import { decode, encode } from "next-auth/jwt";
