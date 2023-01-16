@@ -1,7 +1,7 @@
-import type { Prisma } from "backend";
+import type { PrismaClient, Prisma } from "backend";
 import type { Adapter, AdapterAccount } from "next-auth/adapters";
 
-export function PrismaAdapter(p: Prisma.PrismaClient): Adapter {
+export function PrismaAdapter(p: PrismaClient): Adapter {
   return {
     createUser: (data) =>
       p.user.create({

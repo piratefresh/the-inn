@@ -6,6 +6,7 @@ const StyledHeroImage = styled(Image, {
   fontFamily: "$fonts$trejanSans",
   textTransform: "uppercase",
   color: "$hiContrast",
+  objectFit: "cover",
 });
 
 const StyledRoot = styled("div", {
@@ -28,8 +29,8 @@ interface HeroImageProps extends ImageProps {
   src: string;
   className?: string;
   style?: React.CSSProperties;
-  width?: number | string;
-  height?: number | string;
+  width?: number;
+  height?: number;
   gold?: boolean;
 }
 

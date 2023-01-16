@@ -120,11 +120,11 @@ const Campaign = () => {
         <div className="relative aspect-w-16 aspect-h-9 flex flex-col justify-center items-center">
           <HeroImage
             className=""
-            style={{ minHeight: "500px" }}
-            layout="fill"
-            objectFit="cover"
+            style={{ minHeight: "500px", objectFit: "cover" }}
+            fill
             width={1240}
             src={campaign?.getCampaign.imageUrl}
+            alt="Campaign Hero Image"
             gold
           />
         </div>

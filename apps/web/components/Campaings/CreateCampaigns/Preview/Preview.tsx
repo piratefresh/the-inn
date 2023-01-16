@@ -120,7 +120,7 @@ export const Preview = ({ campaign }: LocationProps) => {
         <HeroImage
           height={500}
           width={1280}
-          objectFit="cover"
+          alt="hero image"
           gold
           src={createCampaignData.imageUrl}
         />
