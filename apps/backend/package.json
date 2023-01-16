@@ -12,7 +12,7 @@
     "start": "node dist/index.js",
     "start2": "ts-node src/index.ts",
     "db:push": "prisma db push --skip-generate",
-    "db:generate": "prisma migrate dev --create-only",
+    "db:generate": "prisma generate",
     "db:migration:run": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "studio": "prisma studio"
