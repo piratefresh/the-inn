@@ -1,4 +1,6 @@
+// @ts-expect-error idk why
 const path = require("path");
+const fs = require("fs");
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
@@ -8,6 +10,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  reactStrictMode: true,
   async headers() {
     return [
       {
@@ -45,7 +48,7 @@ const nextConfig = {
     includePaths: [path.join(__dirname, "styles")],
   },
   transpilePackages: ["ui", "backend"],
-  serverComponentsExternalPackages: ["@prisma/client", "backend"],
+  serverComponentsExternalPackages: ["prisma", "@prisma/client"],
 };
 
 module.exports = nextConfig;

@@ -13,8 +13,8 @@
     "start2": "ts-node src/index.ts",
     "db:push": "prisma db push --skip-generate",
     "db:generate": "prisma generate",
-    "db:migration:run": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
     "studio": "prisma studio"
   },
   "dependencies": {

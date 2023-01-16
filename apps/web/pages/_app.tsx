@@ -20,9 +20,6 @@ import { configureAbly } from "@ably-labs/react-hooks";
 import { AppPropsWithLayout } from "Types/LayoutPage";
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import { MediaContextProvider } from "@utils/responsive";
-// pnpm error with default cannot be named without a reference
-import {} from "ui/node_modules/next";
-import type {} from "ui/node_modules/next";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_ID,
