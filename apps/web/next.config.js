@@ -4,7 +4,10 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-module.exports = withBundleAnalyzer({
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
   async headers() {
     return [
       {
@@ -43,4 +46,6 @@ module.exports = withBundleAnalyzer({
   },
   transpilePackages: ["ui", "backend"],
   serverComponentsExternalPackages: ["@prisma/client", "backend"],
-});
+};
+
+module.exports = nextConfig;
