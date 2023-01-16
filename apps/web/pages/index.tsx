@@ -59,11 +59,12 @@ const Home: NextPageWithLayout = () => {
           </div>
           <div className="block w-full" style={{ height: "700px" }}>
             <HeroImage
-              fill
+              objectFit="cover"
+              layout="fill"
               gold
-              className="aspect-w-16 aspect-h-9 w-full object-cover"
+              className="aspect-w-16 aspect-h-9 w-full"
               src="https://res.cloudinary.com/film-it/image/upload/v1671827083/the-inn/dnd2up.png"
-              alt="Hero Image"
+              alt="Hero Home Page Image"
             />
           </div>
         </div>

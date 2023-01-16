@@ -1,4 +1,4 @@
-import Image, { ImageProps } from "next/image";
+import Image, { ImageProps } from "next/legacy/image";
 import { styled } from "../theme";
 
 const StyledHeroImage = styled(Image, {
@@ -43,13 +43,7 @@ export const HeroImage = ({
 }: HeroImageProps) => {
   return (
     <StyledRoot gold={gold}>
-      <StyledHeroImage
-        height={height}
-        width={width}
-        layout="responsive"
-        src={src}
-        {...props}
-      />
+      <StyledHeroImage layout="responsive" src={src} {...props} />
     </StyledRoot>
   );
 };
