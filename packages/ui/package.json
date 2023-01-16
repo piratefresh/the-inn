@@ -93,7 +93,7 @@
     "@storybook/addon-postcss": "^2.0.0",
     "@tanstack/react-table": "^8.7.4",
     "date-fns": "^2.29.3",
-    "next": "12",
+    "next": "^13.1.2",
     "react-aria": "^3.18.0",
     "react-select": "^5.7.0",
     "react-stately": "^3.20.0",
