@@ -50,7 +50,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     },
     async createVerificationToken(data) {
       const verificationToken = await p.verificationToken.create({ data });
-      // @ts-expect-errors // MongoDB needs an ID, but we don't
+      // @ts-ignore// MongoDB needs an ID, but we don't
       if (verificationToken.id) delete verificationToken.id;
       return verificationToken;
     },
@@ -59,7 +59,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
         const verificationToken = await p.verificationToken.delete({
           where: { identifier_token },
         });
-        // @ts-expect-errors // MongoDB needs an ID, but we don't
+        // @ts-ignore// MongoDB needs an ID, but we don't
         if (verificationToken.id) delete verificationToken.id;
         return verificationToken;
       } catch (error) {
