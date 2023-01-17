@@ -62,6 +62,7 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
         ? {
             cookie,
             "X-Forwarded-Proto": "https",
+            "Access-Control-Allow-Origin": "*",
           }
         : undefined,
     },
