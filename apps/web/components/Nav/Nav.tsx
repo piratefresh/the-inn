@@ -150,7 +150,7 @@ export const Nav = () => {
               </Link>
             </HeadlessMenu.Item>
             <HeadlessMenu.Item>
-              <Link href="/user/messages" passHref legacyBehavior>
+              <Link href="/user/messages/thread" passHref legacyBehavior>
                 <div className="flex flex-row gap-2 items-center cursor-pointer p-2">
                   <ChatBubbleBottomCenterIcon className="h-6 w-6" /> My Messages
                 </div>
