@@ -304,7 +304,6 @@ export class CampaignResolver {
   }
   @Query(() => [Campaign])
   async getUserCampaign(@Ctx() { prisma, res, req }: MyContext) {
-    console.log("user ID: ", req.session.userId);
     return prisma.campaign.findMany({
       where: {
         gameMaster: {
