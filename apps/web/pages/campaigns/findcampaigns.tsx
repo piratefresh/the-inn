@@ -23,7 +23,7 @@ import { UiState } from "instantsearch.js/es/types";
 import { getServerState } from "react-instantsearch-hooks-server";
 import { Accordion, mediaString, Button, Text } from "ui";
 import { SearchInput } from "../../components/InstantSearch";
-import { useRouter } from "next/router";
+import { useRouter } from "next/compat/router";
 
 type FindCampaignsProps = {
   serverState?: InstantSearchServerState;
@@ -308,7 +308,7 @@ export default function FindCampaignsPage({
         }}
       >
         <Accordion.Root type="multiple">
-          <div className="flex flex-col lg:flex-row px-4">
+          <div className="flex flex-col gap-8 lg:flex-row px-4">
             {isDesktop ? (
               <div className="w-80 my-16">
                 <SearchInput />
