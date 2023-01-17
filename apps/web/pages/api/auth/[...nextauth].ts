@@ -141,7 +141,7 @@ export const nextAuthOptions = (req, res) => ({
             expires: sessionExpiry,
           } as any);
 
-          const cookies = new Cookies(req, res);
+          const cookies = new Cookies(req, res, { secure: true });
 
           cookies.set("next-auth.session-token", sessionToken, {
             expires: sessionExpiry,
