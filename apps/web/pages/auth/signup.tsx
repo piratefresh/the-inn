@@ -24,10 +24,9 @@ const SignUp = () => {
     handleSubmit,
   } = useForm<SignUpFormValues>();
 
-  const [_, signUp] = useSignUpMutation();
+  const [{ fetching }, signUp] = useSignUpMutation();
 
   const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
-    console.log("data: ", data);
     const { email, password, firstName, lastName } = data;
 
     const res = await signUp({
@@ -137,7 +136,7 @@ const SignUp = () => {
           />
         </InputGroup>
 
-        <Button size="large" fullWidth type="submit">
+        <Button size="large" disabled={fetching} fullWidth type="submit">
           Create Account
         </Button>
 

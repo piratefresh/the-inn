@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Image from "next/image";
+import React from "react";
 
 export interface SignInFormValues {
   usernameOrEmail: string;
@@ -16,6 +17,7 @@ export interface SignInFormValues {
 
 const SignIn = () => {
   const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
   const { data: session } = useSession();
   const {
     formState: { errors },
@@ -24,24 +26,29 @@ const SignIn = () => {
   } = useForm<SignInFormValues>();
 
   const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
-    const { usernameOrEmail, password } = data;
-
-    // For authenticating with next-auth
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: usernameOrEmail,
-      password,
-    });
-
-    if (!res.error) {
-      router.push("/");
-    }
-    if (res.error) {
-      showNotification({
-        title: `Only accepted adventures can enter`,
-        message: `Reason for not accepted inn: ${res.error}`,
-        color: "red",
+    try {
+      const { usernameOrEmail, password } = data;
+      setLoading(true);
+      // For authenticating with next-auth
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: usernameOrEmail,
+        password,
       });
+
+      if (!res.error) {
+        router.push("/");
+      }
+      if (res.error) {
+        showNotification({
+          title: `Only accepted adventures can enter`,
+          message: `Reason for not accepted inn: ${res.error}`,
+          color: "red",
+        });
+      }
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
     }
   };
 
@@ -104,7 +111,13 @@ const SignIn = () => {
           />
         </InputGroup>
 
-        <Button className="font-bold" size="large" fullWidth type="submit">
+        <Button
+          className="font-bold"
+          size="large"
+          disabled={loading}
+          fullWidth
+          type="submit"
+        >
           Sign-In
         </Button>
 

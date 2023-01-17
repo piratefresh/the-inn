@@ -1,6 +1,7 @@
 import { blackA } from "@radix-ui/colors";
 import { styled } from "../theme";
 import type * as Stitches from "@stitches/react";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 const StyledButton = styled("button", {
   // Reset
@@ -105,6 +106,9 @@ export const Button = ({
       className={className}
       {...props}
     >
+      {props.disabled && (
+        <ArrowPathIcon className="animate-spin h-5 w-5 mr-3" />
+      )}
       {children}
     </StyledButton>
   );
