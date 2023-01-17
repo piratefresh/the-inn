@@ -175,12 +175,21 @@ export const nextAuthOptions = (req, res) => ({
         return false;
       }
 
-      const existingUser = await prisma.user.findUnique({ email: user.email });
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          email: user.email,
+        },
+      });
 
       if (existingUser) {
         // User account already exists, check if it's linked to the account
         const linkedAccount = await prisma.account.findUnique({
-          userId: existingUser.id,
+          where: {
+            provider_providerAccountId: {
+              provider: "google",
+              providerAccountId: existingUser.id,
+            },
+          },
         });
 
         if (linkedAccount) {
@@ -298,7 +307,7 @@ export const nextAuthOptions = (req, res) => ({
   },
 });
 
-const linkAccount = async (user: User, account: Account, adapter: Adapter) => {
+const linkAccount = async (user: any, account: Account, adapter: Adapter) => {
   return await adapter.linkAccount({
     providerAccountId: account.providerAccountId,
     userId: user.id,
