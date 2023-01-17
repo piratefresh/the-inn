@@ -82,16 +82,24 @@ export const nextAuthOptions = (req, res) => ({
               "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query: SIGN_OUT_MUTATION }),
+            body: JSON.stringify({
+              query: SIGN_IN_MUTATION,
+              variables: {
+                usernameOrEmail: email,
+                password: password,
+              },
+            }),
             credentials: "include",
           });
 
-          const { data, errors } = await response.json();
+          const data = await response.json();
           console.log("data: ", data);
-          if (data.signin) {
-            const cookie = res.headers.get("set-cookie");
+          if (data.data.signin) {
+            console.log("res: ", res.headers);
+            // const cookie = res.headers.get("set-cookie");
 
-            res.setHeader("Set-Cookie", cookie);
+            // res.setHeader("Set-Cookie", cookie);
+
             // const response = await axios.post(
             //   process.env.NEXT_PUBLIC_API_URL as string,
             //   {
@@ -107,7 +115,7 @@ export const nextAuthOptions = (req, res) => ({
             //   }
             // );
 
-            return data.signin;
+            return data.data.signin;
           }
         } catch (err) {
           console.log("err3: ", err);
@@ -138,8 +146,9 @@ export const nextAuthOptions = (req, res) => ({
           cookies.set("next-auth.session-token", sessionToken, {
             expires: sessionExpiry,
             httpOnly: true,
-            sameSite: "none",
-            secure: true,
+            sameSite: "none" as "none",
+            path: "/",
+            secure: process.env.NODE_ENV === "production" ? true : false,
             domain: process.env.NEXT_PUBLIC_VERCEL_URL
               ? ".theinn.app"
               : undefined,
