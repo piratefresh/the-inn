@@ -105,14 +105,14 @@ const Campaign = () => {
         <CampaignBottomCard
           campaign={campaign?.getCampaign}
           isOwner={isOwner}
-          isMember={!!isMember}
+          isMember={!isMember}
           onSubmit={handleJoinCampaign}
         />
       ) : (
         <CampaignSideCard
           campaign={campaign?.getCampaign}
           isOwner={isOwner}
-          isMember={!!isMember}
+          isMember={!isMember}
           onSubmit={handleJoinCampaign}
         />
       )}
