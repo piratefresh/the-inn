@@ -177,10 +177,10 @@ export const Nav = () => {
       ) : (
         <div className="flex flex-row text-white">
           <div className="mr-4">
-            <Link href="./auth/signin">Sign In</Link>
+            <Link href="/auth/signin">Sign In</Link>
           </div>
           <div>
-            <Link href="./auth/signup">Sign Up</Link>
+            <Link href="/auth/signup">Sign Up</Link>
           </div>
         </div>
       ),
