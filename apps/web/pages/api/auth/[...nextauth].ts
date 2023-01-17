@@ -168,6 +168,8 @@ export const nextAuthOptions = (req, res) => ({
                 : undefined,
             }
           );
+
+          return true;
         }
       }
 
