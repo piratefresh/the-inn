@@ -3,8 +3,6 @@
 }
 
 .mainLayout {
-  @apply bg-black;
-  display: grid;
-  grid-template-columns: auto 1fr;
+  @apply bg-black grid lg:grid-cols2;
   gap: 20px;
 }

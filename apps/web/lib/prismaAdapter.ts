@@ -11,15 +11,15 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
         },
       }),
     getUser: (id) => {
-      console.log("id: ", id);
       return p.user.findUnique({ where: { id } });
     },
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
     async getUserByAccount(provider_providerAccountId) {
-      const account = await p.account.findUnique({
+      let account = await p.account.findUnique({
         where: { provider_providerAccountId },
         select: { user: true },
       });
+
       return account?.user ?? null;
     },
     updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }),

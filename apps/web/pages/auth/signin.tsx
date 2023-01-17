@@ -1,7 +1,7 @@
 import { Input } from "@components/ui/Input";
 import InputGroup from "@components/ui/InputGroup";
 import { AuthLayout } from "@layouts/AuthLayout";
-import { Button, Text } from "ui";
+import { Button, mediaString, Text } from "ui";
 import { showNotification } from "@mantine/notifications";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Image from "next/image";
 import React from "react";
+import { useMediaQuery } from "@hooks/useMediaQueries";
 
 export interface SignInFormValues {
   usernameOrEmail: string;
@@ -19,6 +20,7 @@ const SignIn = () => {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const { data: session } = useSession();
+
   const {
     formState: { errors },
     control,
@@ -69,7 +71,6 @@ const SignIn = () => {
       </Link>
       <form
         className="flex flex-col mt-8 space-y-6 w-100 max-w-xl"
-        style={{ width: "600px" }}
         onSubmit={handleSubmit(onSubmit)}
       >
         <Text as="h2" size="2xl" className="text-brandBlack dark:text-white">

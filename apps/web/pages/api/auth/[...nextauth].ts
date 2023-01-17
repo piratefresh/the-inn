@@ -12,7 +12,8 @@ import Cookies from "cookies";
 import { decode, encode } from "next-auth/jwt";
 import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
-import { SignInMutation } from "@generated/graphql";
+import { Account, SignInMutation, User } from "@generated/graphql";
+import { Adapter } from "next-auth/adapters";
 
 const SIGN_IN_MUTATION = `
 mutation SignIn($usernameOrEmail: String!, $password: String!) {
@@ -125,7 +126,15 @@ export const nextAuthOptions = (req, res) => ({
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account, email }) {
+      console.log("user: ", user);
+      console.log("email: ", email);
+      console.log("account: ", account);
+
+      if (!user.email) {
+        return false;
+      }
+
       if (
         req.query.nextauth?.includes("callback") &&
         req.query.nextauth?.includes("credentials") &&
@@ -162,6 +171,24 @@ export const nextAuthOptions = (req, res) => ({
         }
       }
 
+      if (account.provider != "github" && account.provider != "google") {
+        return false;
+      }
+
+      const existingUser = await prisma.user.findUnique({ email: user.email });
+
+      if (existingUser) {
+        // User account already exists, check if it's linked to the account
+        const linkedAccount = await prisma.account.findUnique({
+          userId: existingUser.id,
+        });
+
+        if (linkedAccount) {
+          return true;
+        }
+
+        await linkAccount(existingUser, account, adapter);
+      }
       return true;
     },
     async redirect({ url, baseUrl }) {
@@ -270,3 +297,15 @@ export const nextAuthOptions = (req, res) => ({
     },
   },
 });
+
+const linkAccount = async (user: User, account: Account, adapter: Adapter) => {
+  return await adapter.linkAccount({
+    providerAccountId: account.providerAccountId,
+    userId: user.id,
+    provider: account.provider,
+    type: "oauth",
+    scope: account.scope,
+    token_type: account.token_type,
+    access_token: account.access_token,
+  });
+};
