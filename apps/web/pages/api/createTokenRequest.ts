@@ -11,12 +11,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const client = new Ably.Realtime(process.env.ABLY_CLIENT_API_KEY);
+
   const authOptions = nextAuthOptions(req, res);
   const session = await unstable_getServerSession(req, res, authOptions);
 
-  const client = new Ably.Realtime(process.env.NEXT_PUBLIC_ABLY_API_KEY!);
   const tokenRequestData = await client.auth.createTokenRequest({
     clientId: session ? session.id : generateRandomId(),
   });
+
   res.status(200).json(tokenRequestData);
 }
