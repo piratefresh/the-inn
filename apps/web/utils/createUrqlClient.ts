@@ -7,7 +7,7 @@ import {
   Operation,
 } from "urql";
 import { makeOperation } from "@urql/core";
-import { cacheExchange } from "@urql/exchange-graphcache";
+import { cacheExchange, Cache } from "@urql/exchange-graphcache";
 import { relayPagination } from "@urql/exchange-graphcache/extras";
 import { authExchange } from "@urql/exchange-auth";
 import { devtoolsExchange } from "@urql/devtools";
@@ -48,6 +48,16 @@ export const ssrExchange: SSRExchange = UrqlSSRExchange({
   isClient: !isServer,
 });
 
+function invalidateAllCampaigns(cache: Cache) {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName === "getCampaigns"
+  );
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "getCampaigns", fi.arguments || {});
+  });
+}
+
 const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
   let cookie = "";
   if (isServer()) {
@@ -82,6 +92,9 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
         },
         updates: {
           Mutation: {
+            createCampaign: (_result, args, cache, info) => {
+              invalidateAllCampaigns(cache);
+            },
             setNotificationsRead(_result, args, cache, _info) {
               const fields = cache
                 .inspectFields("Query")

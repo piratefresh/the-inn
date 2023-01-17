@@ -24,6 +24,7 @@ import { useMediaQuery } from "@hooks/useMediaQueries";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useLockScroll } from "@hooks/useLockScroll";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
 
 const navSubItems = {
   campaigns: [
@@ -134,24 +135,25 @@ export const Nav = () => {
             trigger={<Avatar src={session.user.image} />}
           >
             <HeadlessMenu.Item>
-              <Link
-                href="/user/settings"
-                className="flex flex-row items-center justify-center px-2 py-2"
-                passHref
-                legacyBehavior
-              >
-                <UserIcon className="h-6 w-6" />
-                Account Settings
+              <Link href="/user/settings" passHref legacyBehavior>
+                <div className="flex flex-row gap-2 items-center cursor-pointer p-2">
+                  <UserIcon className="h-6 w-6" />
+                  Account Settings
+                </div>
               </Link>
             </HeadlessMenu.Item>
             <HeadlessMenu.Item>
-              <Link
-                href="/user/games"
-                className="flex flex-row items-center justify-center px-2 py-2"
-                passHref
-                legacyBehavior
-              >
-                <TicketIcon className="h-6 w-6" /> My Adventures
+              <Link href="/user/games" passHref legacyBehavior>
+                <div className="flex flex-row gap-2 items-center cursor-pointer p-2">
+                  <TicketIcon className="h-6 w-6" /> My Adventures
+                </div>
+              </Link>
+            </HeadlessMenu.Item>
+            <HeadlessMenu.Item>
+              <Link href="/user/messages" passHref legacyBehavior>
+                <div className="flex flex-row gap-2 items-center cursor-pointer p-2">
+                  <ChatBubbleBottomCenterIcon className="h-6 w-6" /> My Messages
+                </div>
               </Link>
             </HeadlessMenu.Item>
           </Menu>

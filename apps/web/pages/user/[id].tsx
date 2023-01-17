@@ -20,7 +20,7 @@ const StyledPreviousGameContainer = styled("div", {
   display: "flex",
   flexDirection: "column",
   margin: "0 auto",
-  height: "700px",
+  maxHeight: "100%",
   width: "100%",
   background:
     "linear-gradient(180deg, rgba(39, 52, 53, 0) 0%, rgba(39, 52, 53, 0.506667) 40.9%, #273435 70.88%)",
@@ -86,7 +86,7 @@ const UserPage = () => {
     <div>Loading...</div>
   ) : (
     <div className="my-14 mx-auto">
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {campaigns?.getCampaigns.slice(0, 4).map((campaign) => (
           <div style={{ maxWidth: "275px" }} key={campaign.title}>
             <CampaignCard campaign={campaign} />
@@ -107,7 +107,7 @@ const UserPage = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto p-4">
         <div className="grid grid-cols-2 gap-8 my-24">
           <div>
             <Text className="font-oldFenris" size="6xl" color="gold">
@@ -156,8 +156,8 @@ const UserPage = () => {
       <StyledMiddleContainer>
         <StyledFlame1 />
         <div className="flex flex-col mx-auto">
-          <div className="flex flex-row justify-around items-center">
-            <div className="flex flex-col">
+          <div className="flex flex-col gap-16 mx-auto lg:justify-around lg:flex-row lg:items-center">
+            <div className="flex flex-col gap-1">
               <Text size="7xl" color="loContrast" className="font-trejanSans">
                 {hostedGames.length}
               </Text>
