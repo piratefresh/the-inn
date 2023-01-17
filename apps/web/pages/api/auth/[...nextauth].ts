@@ -143,16 +143,22 @@ export const nextAuthOptions = (req, res) => ({
 
           const cookies = new Cookies(req, res, { secure: true });
 
-          cookies.set("next-auth.session-token", sessionToken, {
-            expires: sessionExpiry,
-            httpOnly: true,
-            sameSite: "none" as "none",
-            path: "/",
-            secure: process.env.NODE_ENV === "production" ? true : false,
-            domain: process.env.NEXT_PUBLIC_VERCEL_URL
-              ? ".theinn.app"
-              : undefined,
-          });
+          cookies.set(
+            process.env.NODE_ENV === "production"
+              ? `__Secure-next-auth.session-token`
+              : `next-auth.session-token`,
+            sessionToken,
+            {
+              expires: sessionExpiry,
+              httpOnly: true,
+              sameSite: "none" as "none",
+              path: "/",
+              secure: process.env.NODE_ENV === "production" ? true : false,
+              domain: process.env.NEXT_PUBLIC_VERCEL_URL
+                ? ".theinn.app"
+                : undefined,
+            }
+          );
         }
       }
 
