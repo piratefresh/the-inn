@@ -510,6 +510,7 @@ importers:
       '@types/node': ^17.0.31
       '@types/react': ^18.0.26
       '@types/react-dom': ^17.0.18
+      '@types/three': ^0.148.0
       '@types/uuid': ^9.0.0
       autoprefixer: ^10.4.13
       babel-loader: ^8.3.0
@@ -615,6 +616,7 @@ importers:
       '@types/node': 17.0.45
       '@types/react': 18.0.26
       '@types/react-dom': 17.0.18
+      '@types/three': 0.148.0
       '@types/uuid': 9.0.0
       autoprefixer: 10.4.13_postcss@8.4.20
       babel-loader: 8.3.0_la66t7xldg4uecmyawueag5wkm
@@ -10010,6 +10012,12 @@ packages:
       '@types/mime': 3.0.1
       '@types/node': 18.11.18
 
+  /@types/three/0.148.0:
+    resolution: {integrity: sha512-1GiErjt1pJMadO8EhaxNrtULzdn+f3BbM3YTukiiXBVeRvvx4CXc2rpYdEuEBU/ouCX7Rc95j1HoVG9kFQXQJw==}
+    dependencies:
+      '@types/webxr': 0.5.0
+    dev: true
+
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: true
@@ -10023,6 +10031,10 @@ packages:
 
   /@types/webpack-env/1.18.0:
     resolution: {integrity: sha512-56/MAlX5WMsPVbOg7tAxnYvNYMMWr/QJiIp6BxVSW3JJXUVzzOn64qW8TzQyMSqSUFM2+PVI4aUHcHOzIz/1tg==}
+    dev: true
+
+  /@types/webxr/0.5.0:
+    resolution: {integrity: sha512-IUMDPSXnYIbEO2IereEFcgcqfDREOgmbGqtrMpVPpACTU6pltYLwHgVkrnYv0XhWEcjio9sYEfIEzgn3c7nDqA==}
     dev: true
 
   /@types/ws/8.5.4:

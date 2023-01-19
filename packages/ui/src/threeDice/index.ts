@@ -1,1 +1,1 @@
-export { threeDice } from "./3d";
+export { ThreeDice } from "./ThreeDice";

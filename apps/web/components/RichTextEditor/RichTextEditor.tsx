@@ -1,3 +1,5 @@
+// Menubar Inspired https://github.com/michelson/Dante/tree/8f47a29179a37762998f6b4b540e5ad2761db9cf/packages/dante3/src
+
 import React from "react";
 import {
   BubbleMenu,
@@ -211,7 +213,10 @@ export const RichTextEditor = React.forwardRef(
       <>
         <div className={classes.join(" ")}>
           {editorToolbar}
-          <BubbleMenu className="p-4 bg-white" editor={editor}>
+          <BubbleMenu
+            className="p-4 bg-white shadow-md rounded-md"
+            editor={editor}
+          >
             <MenuBar fixed={true} editor={editor} />
           </BubbleMenu>
           <EditorContent
