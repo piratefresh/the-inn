@@ -12,6 +12,9 @@ import { UploadFn, uploadImagePlugin } from "../upload-image";
 const CustomImage = (uploadFn: UploadFn) =>
   Image.extend({
     selectable: true,
+    group: "block",
+
+    draggable: true,
     addAttributes() {
       return {
         // Inherit all the attrs of the Image extension
@@ -52,10 +55,7 @@ const CustomImage = (uploadFn: UploadFn) =>
     addNodeView() {
       return ReactNodeViewRenderer(ResizeImageComponent);
     },
-    onFocus({ event }) {
-      // The editor is focused.
-      console.log("onFOCUS IMAGE: ", event);
-    },
+    onFocus({ event }) {},
 
     addProseMirrorPlugins() {
       return [uploadImagePlugin(uploadFn)];

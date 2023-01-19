@@ -32,7 +32,7 @@ export const ColumnExtension = Extension.create<ColumnExtensionOptions>({
         props: {
           handleDOMEvents: {
             mouseover(view, event) {
-              // do whatever you want
+              console.log("Hover: ");
             },
           },
         },

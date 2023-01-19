@@ -1,5 +1,3 @@
-import "./Component.scss";
-
 import { NodeViewWrapper } from "@tiptap/react";
 import React, { useCallback, useEffect, useState } from "react";
 

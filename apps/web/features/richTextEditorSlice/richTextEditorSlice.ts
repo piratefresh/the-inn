@@ -1,22 +1,26 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "@store/store";
 
-export interface IFontOption {
-  label: string;
+export interface IOption {
+  name: string;
   value: string;
-  id: number | string;
+  id?: number | string;
 }
 
 // Define a type for the slice state
 export interface RichTextEditorState {
   activeEffect: string[];
-  fontSize: IFontOption;
+  fontSize: IOption;
+  fontFamily: IOption;
+  textType: IOption;
 }
 
 // Define the initial state using that type
 const initialState: RichTextEditorState = {
   activeEffect: [],
-  fontSize: { label: "12px", value: "12", id: 2 },
+  fontSize: { value: "14px", name: "14px" },
+  fontFamily: { value: "Roboto", name: "Roboto" },
+  textType: { value: "paragraph", name: "Paragraph" },
 };
 
 export const richTextEditorSlice = createSlice({
@@ -35,14 +39,25 @@ export const richTextEditorSlice = createSlice({
 
       state.activeEffect = filteredActiveEffect;
     },
-    setFontSize: (state, action: PayloadAction<{ font: IFontOption }>) => {
+    setFontSize: (state, action: PayloadAction<{ font: IOption }>) => {
       state.fontSize = action.payload.font;
+    },
+    setFontFamily: (state, action: PayloadAction<{ font: IOption }>) => {
+      state.fontFamily = action.payload.font;
+    },
+    setTextType: (state, action: PayloadAction<{ textType: IOption }>) => {
+      state.textType = action.payload.textType;
     },
   },
 });
 
-export const { addActive, removeActive, setFontSize } =
-  richTextEditorSlice.actions;
+export const {
+  addActive,
+  removeActive,
+  setFontSize,
+  setFontFamily,
+  setTextType,
+} = richTextEditorSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectRichTextEditorState = (state: RootState) =>

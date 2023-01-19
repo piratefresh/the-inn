@@ -17,8 +17,8 @@ import {
   LeftAlignment,
   RightAlignment,
 } from "./Buttons/AlignmentButtons";
-import { FontFamilyButton } from "./Buttons/FontFamilyButton";
-import { FontSizeButton } from "./Buttons/FontSizeButton";
+import { FontFamilyDropdown } from "./Dropdown/FontFamilyDropdown";
+import { FontSizeDropdown } from "./Dropdown/FontSizeDropdown";
 import { DefaultToolbarButton } from "./Buttons/ListStyleButtons";
 import { ToggleQuote } from "./Buttons/QuoteButtons";
 import {
@@ -28,7 +28,10 @@ import {
   UnderlineButton,
 } from "./Buttons/TextStyleButtons";
 import ToolbarStyles from "./Toolbar.module.scss";
-import { HeadlessMenu, Menu, Text } from "ui";
+import { HeadlessMenu, Menu, SelectOption, Text } from "ui";
+import { TextTypeDropdown } from "./Dropdown/TextTypeDropdown";
+
+type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 const Toolbar = ({ editor }: { editor: Editor }) => {
   let classes = [ToolbarStyles["root"]];
@@ -87,15 +90,27 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
     [fileInput]
   );
 
-  const onFontSizeChange = (fontSize: string | null) => {
-    editor.chain().focus().setFontSize(`${fontSize}px`).run();
+  const onTextTypeChange = (textType: SelectOption) => {
+    console.log("textType: ", textType);
+    if (textType.value === "paragraph") {
+      editor.chain().focus().setParagraph().run();
+    } else {
+      editor
+        .chain()
+        .focus()
+        .toggleHeading({ level: parseInt(textType.value) as Level })
+        .run();
+    }
+  };
+  const onFontSizeChange = (fontSize: SelectOption) => {
+    editor.chain().focus().setFontSize(fontSize.value).run();
     editor.chain().focus().run();
   };
-  const onFontFamilyChange = (fontFamily: string | null) => {
+  const onFontFamilyChange = (fontFamily: SelectOption) => {
     editor
       .chain()
       .focus()
-      .setFontFamily(fontFamily as string)
+      .setFontFamily(fontFamily.value as string)
       .run();
     editor.chain().focus().run();
   };
@@ -154,6 +169,9 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
   const setColumns = (n: number) => {
     editor.chain().focus().setColumns(n).run();
   };
+  const onColumns = (n: number) => {
+    editor.isActive("columns");
+  };
 
   if (!editor) {
     return null;
@@ -201,11 +219,14 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
 
       <div className="flex flex-row mr-4">
         {/* FONT SIZE AND FAMILY */}
+        <Tooltip label="Text Type" position="bottom" withArrow>
+          <TextTypeDropdown editor={editor} onChange={onTextTypeChange} />
+        </Tooltip>
         <Tooltip label="Font Size" position="bottom" withArrow>
-          <FontSizeButton editor={editor} onChange={onFontSizeChange} />
+          <FontSizeDropdown editor={editor} onChange={onFontSizeChange} />
         </Tooltip>
         <Tooltip label="Font Family" position="bottom" withArrow>
-          <FontFamilyButton onChange={onFontFamilyChange} editor={editor} />
+          <FontFamilyDropdown onChange={onFontFamilyChange} editor={editor} />
         </Tooltip>
       </div>
 
@@ -311,6 +332,10 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
             </div>
           </HeadlessMenu.Item>
         </Menu>
+      </div>
+
+      <div onClick={() => editor.chain().focus().toggleBookmark().run()}>
+        Bookmark
       </div>
 
       <input

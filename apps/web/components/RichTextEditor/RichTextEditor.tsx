@@ -1,15 +1,26 @@
 import React from "react";
-import { Content, Editor, EditorContent, useEditor } from "@tiptap/react";
+import {
+  BubbleMenu,
+  Content,
+  Editor,
+  EditorContent,
+  useEditor,
+} from "@tiptap/react";
 import { useCreateImageSignatureMutation } from "generated/graphql";
 import { ControllerRenderProps } from "react-hook-form";
 import RichTextEditorStyles from "./RichTextEditor.module.scss";
 import Toolbar from "./Toolbar";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import { setFontSize } from "@features/richTextEditorSlice/richTextEditorSlice";
+import {
+  setFontFamily,
+  setFontSize,
+  setTextType,
+} from "@features/richTextEditorSlice/richTextEditorSlice";
 import { ParseOptions } from "prosemirror-model";
 import { uploadImage } from "@utils/uploadImage";
 import clsx from "clsx";
 import { extensions } from "./Extensions";
+import { MenuBar } from "./Popovers/MenuBar";
 
 interface GetSelectedNodesProps {
   editor: Editor;
@@ -62,6 +73,73 @@ export const RichTextEditor = React.forwardRef(
       },
       onUpdate: ({ editor }) => {
         onChange(editor.getHTML());
+      },
+      onTransaction: ({ editor, transaction }) => {
+        if (editor) {
+          // Less intensive way to check what font size is on selected node
+
+          const headerLevel = editor.getAttributes("heading").level;
+          const isParagraph = editor.getAttributes("paragraph");
+          const currentFontSize = editor.getAttributes("textStyle").fontSize;
+
+          console.log("fontFamilySize: ", currentFontSize);
+
+          const currentFontFamily =
+            editor.getAttributes("textStyle").fontFamily;
+          if (headerLevel)
+            return dispatch(
+              setTextType({
+                textType: {
+                  name: `Heading ${headerLevel}`,
+                  value: headerLevel,
+                },
+              })
+            );
+          if (isParagraph)
+            dispatch(
+              setTextType({
+                textType: { value: "paragraph", name: "Paragraph" },
+              })
+            );
+          if (currentFontSize) {
+            dispatch(
+              setFontSize({
+                font: {
+                  value: currentFontSize,
+                  name: currentFontSize,
+                },
+              })
+            );
+          } else {
+            dispatch(
+              setFontSize({
+                font: {
+                  value: "12px",
+                  name: "12px",
+                },
+              })
+            );
+          }
+          if (currentFontFamily) {
+            dispatch(
+              setFontFamily({
+                font: {
+                  value: currentFontFamily,
+                  name: currentFontFamily,
+                },
+              })
+            );
+          } else {
+            dispatch(
+              setFontFamily({
+                font: {
+                  value: "Roboto",
+                  name: "Roboto",
+                },
+              })
+            );
+          }
+        }
       },
       parseOptions: {
         preserveWhitespace: true,
@@ -124,35 +202,6 @@ export const RichTextEditor = React.forwardRef(
       }
     }
 
-    const handleOnClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (editor) {
-        // Less intensive way to check what font size is on selected node
-        const currentFontSize = editor.getAttributes("textStyle").fontSize;
-        if (currentFontSize) {
-          const sizeValue = currentFontSize.replace(/^\D+/g, "");
-          dispatch(
-            setFontSize({
-              font: {
-                value: sizeValue,
-                label: currentFontSize,
-                id: sizeValue,
-              },
-            })
-          );
-        } else {
-          dispatch(
-            setFontSize({
-              font: {
-                value: "12",
-                label: "12px",
-                id: "12",
-              },
-            })
-          );
-        }
-      }
-    };
-
     const editorToolbar = editor ? <Toolbar editor={editor} /> : null;
 
     if (!editor) return null;
@@ -162,13 +211,14 @@ export const RichTextEditor = React.forwardRef(
       <>
         <div className={classes.join(" ")}>
           {editorToolbar}
-
+          <BubbleMenu className="p-4 bg-white" editor={editor}>
+            <MenuBar fixed={true} editor={editor} />
+          </BubbleMenu>
           <EditorContent
             className={clsx({
               [RichTextEditorStyles["root"]]: true,
             })}
             editor={editor}
-            onClick={handleOnClick}
             onKeyDown={(e) => {
               pressedKeys.current[e.key] = e.key;
               if (

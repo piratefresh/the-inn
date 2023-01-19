@@ -59,7 +59,7 @@ const nextConfig = {
     includePaths: [path.join(__dirname, "styles")],
   },
   transpilePackages: ["ui", "backend"],
-  serverComponentsExternalPackages: ["prisma", "@prisma/client"],
+  serverComponentsExternalPackages: ["backend", "@prisma/client"],
 };
 
 module.exports = nextConfig;
