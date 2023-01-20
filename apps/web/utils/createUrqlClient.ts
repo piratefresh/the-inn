@@ -16,7 +16,10 @@ import { createClient as createWSClient } from "graphql-ws";
 import {
   GetUnreadNotificationsDocument,
   GetUnreadNotificationsQuery,
+  GetUserPrivateMessagesDocument,
+  GetUserPrivateMessagesQuery,
   NewCampaignApplicationSubscription,
+  NewPrivateMessageSubscription,
   NotificationType,
 } from "@generated/graphql";
 import { isServer } from "./isServer";
@@ -146,57 +149,49 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
                 }
               );
             },
+            newPrivateMessage: async (
+              result: NewPrivateMessageSubscription,
+              variables,
+              cache,
+              info
+            ) => {
+              cache.updateQuery<GetUserPrivateMessagesQuery>(
+                {
+                  query: GetUserPrivateMessagesDocument,
+                },
+                (data) => {
+                  if (!data) return null;
+                  const matchingMessage = data.getUserPrivateMessages.find(
+                    (message) => {
+                      return (
+                        (message.senderId ===
+                          result.newPrivateMessage.senderId &&
+                          message.recipientId ===
+                            result.newPrivateMessage.recipientId) ||
+                        (message.senderId ===
+                          result.newPrivateMessage.recipientId &&
+                          message.recipientId ===
+                            result.newPrivateMessage.senderId)
+                      );
+                    }
+                  );
+
+                  if (matchingMessage) {
+                    Object.assign(matchingMessage, result.newPrivateMessage);
+                  } else {
+                    // @ts-ignore
+                    data.getUserPrivateMessages.push(result.newPrivateMessage);
+                  }
+
+                  console.log("data: ", data);
+
+                  return data;
+                }
+              );
+            },
           },
         },
       }),
-      // authExchange({
-      //   getAuth: async ({ authState, mutate }: any) => {
-      //     if (!authState) {
-      //       const session = await getSession();
-      //       // @ts-ignore
-      //       if (session?.token) {
-      //         // @ts-ignore
-      //         return { token: session.token };
-      //       }
-      //       return null;
-      //     }
-      //   },
-      //   willAuthError: ({ authState }) => {
-      //     if (!authState) return true;
-      //     // e.g. check for expiration, existence of auth etc
-      //     return false;
-      //   },
-      //   addAuthToOperation: ({
-      //     authState,
-      //     operation,
-      //   }: {
-      //     authState: any;
-      //     operation: Operation;
-      //   }) => {
-      //     if (!authState?.token) {
-      //       return operation;
-      //     }
-      //     console.log("authstate: ", authState);
-      //     const fetchOptions =
-      //       typeof operation.context.fetchOptions === "function"
-      //         ? operation.context.fetchOptions()
-      //         : operation.context.fetchOptions || {};
-      //     return makeOperation(operation.kind, operation, {
-      //       ...operation.context,
-      //       fetchOptions: {
-      //         ...fetchOptions,
-      //         headers: {
-      //           ...fetchOptions.headers,
-      //           Authorization: `Bearer ${authState.token}`,
-      //         },
-      //       },
-      //     });
-      //   },
-      //   didAuthError: (params) => {
-      //     console.error("didAuthError", params);
-      //     return params.error.message.includes("JWT");
-      //   },
-      // }),
       errorExchange,
       ssrExchange,
       fetchExchange,

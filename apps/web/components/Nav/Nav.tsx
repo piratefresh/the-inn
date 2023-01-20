@@ -58,6 +58,8 @@ export const Nav = () => {
   const [{ data: _newNotifications }] = useNewCampaignApplicationSubscription();
   const [_, setNotificationsRead] = useSetNotificationsReadMutation();
 
+  console.log("session: ", session);
+
   const router = useRouter();
   const isDesktop = useMediaQuery(mediaString.lg);
 

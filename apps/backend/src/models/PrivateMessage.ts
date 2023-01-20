@@ -1,6 +1,7 @@
-import { Field, ObjectType, ID } from "type-graphql";
+import { Field, ObjectType, ID, InputType } from "type-graphql";
 import { User } from "./User";
 
+@InputType("privateMessage")
 @ObjectType()
 export class PrivateMessage {
   @Field()

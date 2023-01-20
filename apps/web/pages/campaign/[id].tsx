@@ -23,6 +23,7 @@ import { Loader } from "@components/Loader";
 import { useSession } from "next-auth/react";
 import { initUrqlClient } from "@utils/initUrqlClient";
 import { GetStaticPropsContext } from "next";
+import Link from "next/link";
 
 // export async function getStaticProps({ params }: GetStaticPropsContext) {
 //   const { urqlClient, ssrCache } = initUrqlClient(
@@ -150,13 +151,17 @@ const Campaign = () => {
 
           <div className="flex flex-row">
             {campaign?.getCampaign.memberships.slice(0, 5).map((member) => (
-              <div className="flex flex-col items-center" key={member.user.id}>
+              <Link
+                className="flex flex-col items-center"
+                href={`/user/${member.user.id}`}
+                key={member.user.id}
+              >
                 <Avatar
                   imageUrl={member.user.imageUrl}
                   name={member.user.firstName}
                 />
                 <Text>{member.role}</Text>
-              </div>
+              </Link>
             ))}
           </div>
           {isDesktop && (

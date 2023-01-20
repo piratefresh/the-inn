@@ -8,7 +8,7 @@ import { UserResolver } from "@resolvers/user";
 import { CampaignResolver } from "@resolvers/campaign";
 import { ReviewResolver } from "@resolvers/review";
 import { PrivateMessageResolver } from "@resolvers/privateMessage";
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
@@ -42,27 +42,6 @@ const theInnIndex = algoliaClient.initIndex("dev_campaigns");
 
 const pubsub = new AblyPubSub({ key: process.env.ABLY_API_KEY });
 
-const checkServerSession = (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  try {
-    console.log("req: ", request.headers.authorization);
-    console.log("req: ", request.query);
-    console.log("req: ", request.session);
-    const verified = jwt.verify(
-      request.headers.authorization.split(" ")[1],
-      process.env.JWT_SECRET_KEY_
-    );
-
-    console.log("verified: ", verified);
-    return next();
-  } catch (err) {
-    return next();
-  }
-};
-
 const startServer = async () => {
   try {
     const PORT: number = parseInt(process.env.PORT) ?? 4000;
@@ -87,13 +66,7 @@ const startServer = async () => {
 
     app.set("trust proxy", 1);
 
-    // app.use(rateLimiter);
-
-    // app.use(cookieParser());
-
     app.use(sessionMiddleware);
-
-    app.use(checkServerSession);
 
     const httpServer = createServer(app);
 

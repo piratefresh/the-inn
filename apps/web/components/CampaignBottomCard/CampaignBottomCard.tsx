@@ -104,8 +104,20 @@ export const CampaignBottomCard = ({
         </div>
       </Spoiler>
 
-      {onSubmit && !isOwner && !isMember && (
-        <div className="my-2 w-full">
+      {!isOwner && !isMember && onSubmit && (
+        <div className="flex flex-col gap-2 my-4">
+          {(campaign as GetCampaignQuery["getCampaign"]).gmId && (
+            <Button outlined="primary" size="large">
+              <Link
+                href={`/user/messages/thread?id=${
+                  (campaign as GetCampaignQuery["getCampaign"]).gmId
+                }`}
+              >
+                <Text>Message GM</Text>
+              </Link>
+            </Button>
+          )}
+
           <Button size="large" fullWidth onClick={onSubmit}>
             {submitText ? submitText : "Join Campaign"}
           </Button>

@@ -1,6 +1,7 @@
 import { CreateCampaignState } from "@features/createCampaign/createCampaignSlice";
 import { GetCampaignQuery } from "@generated/graphql";
 import { styled, Text, Button, Spoiler } from "ui";
+import Link from "next/link";
 
 interface CampaignSideCardProps {
   campaign: CreateCampaignState | GetCampaignQuery["getCampaign"];
@@ -77,7 +78,7 @@ export const CampaignSideCard = ({
             <Text color="lightContrast">{campaign.experience}</Text>
           </Text>
         </div>
-        <div>
+        <div className="mb-4">
           {campaign.isOnline ? (
             <>
               <Text size="sm" color="loContrast" className="font-trejanSans">
@@ -107,11 +108,34 @@ export const CampaignSideCard = ({
       </Spoiler>
 
       {!isOwner && !isMember && onSubmit && (
-        <div className="my-2 w-full">
+        <div className="flex flex-col gap-2 my-4">
+          {(campaign as GetCampaignQuery["getCampaign"]).gmId && (
+            <Button outlined="primary" size="large">
+              <Link
+                href={`/user/messages/thread?id=${
+                  (campaign as GetCampaignQuery["getCampaign"]).gmId
+                }`}
+              >
+                <Text>Message GM</Text>
+              </Link>
+            </Button>
+          )}
+
           <Button size="large" fullWidth onClick={onSubmit}>
             {submitText ? submitText : "Join Campaign"}
           </Button>
         </div>
+      )}
+      {isOwner && (
+        <Button size="large" fullWidth type="button">
+          <Link
+            href={`/user/editcampaign/general?id=${
+              (campaign as GetCampaignQuery["getCampaign"]).id
+            }`}
+          >
+            Edit
+          </Link>
+        </Button>
       )}
       {isMember && (
         <div className="my-2 w-full">

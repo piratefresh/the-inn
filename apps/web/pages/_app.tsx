@@ -75,7 +75,12 @@ function App({
         <ThemeProvider attribute="class" defaultTheme="dark">
           <MantineProvider withGlobalStyles withNormalizeCSS key="mantine">
             <MediaContextProvider disableDynamicMediaQueries>
-              <QueryParamProvider adapter={NextAdapter}>
+              <QueryParamProvider
+                options={{
+                  removeDefaultsFromUrl: true,
+                }}
+                adapter={NextAdapter}
+              >
                 <Provider store={store}>
                   <InstantSearch
                     searchClient={searchClient}

@@ -9,7 +9,9 @@ import { UserPageLayout } from "@layouts/UserPageLayout";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Loader } from "@components/Loader";
-import { Note, styled, Text } from "ui";
+import { Button, Note, styled, Text } from "ui";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const StyledMiddleContainer = styled("div", {
   background:
@@ -69,6 +71,7 @@ const StyledUserImage = styled(Image, {
 });
 
 const UserPage = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const { id } = router.query;
 
@@ -105,6 +108,8 @@ const UserPage = () => {
     (member) => member.role === MembershipRole.Player
   );
 
+  console.log("session: ", session);
+
   return (
     <>
       <div className="max-w-7xl mx-auto p-4">
@@ -117,6 +122,14 @@ const UserPage = () => {
               <Text className="font-alegreyaSans my-8" size="lg" color="gold">
                 Good guy | 0 reviews
               </Text>
+              {data.getUser.id !== session.id && (
+                <Button>
+                  <Link href={`/user/messages/thread?id=${data.getUser.id}`}>
+                    Message
+                  </Link>
+                </Button>
+              )}
+
               <Text color="loContrast" size="lg">
                 <ReadOnly textString={data.getUser.htmlAboutMe} />
               </Text>
@@ -134,24 +147,16 @@ const UserPage = () => {
             </div>
           )}
         </div>
-
-        {/* <StyledUl>
-          <StyledListItem>
-            <Text size="4xl" color="loContrast"></Text>
-          </StyledListItem>
-          <StyledListItem>
+        {data.getUser.htmlGmStyle && (
+          <>
             <Text size="4xl" color="loContrast">
-              Game Master
+              Game Master Style
             </Text>
-          </StyledListItem>
-        </StyledUl> */}
-
-        <Text size="4xl" color="loContrast">
-          Game Master Style
-        </Text>
-        <Text color="loContrast" size="lg">
-          <ReadOnly textString={data.getUser.htmlGmStyle} />
-        </Text>
+            <Text color="loContrast" size="lg">
+              <ReadOnly textString={data.getUser.htmlGmStyle} />
+            </Text>
+          </>
+        )}
       </div>
       <StyledMiddleContainer>
         <StyledFlame1 />

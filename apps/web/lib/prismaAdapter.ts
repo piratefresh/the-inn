@@ -13,7 +13,9 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     getUser: (id) => {
       return p.user.findUnique({ where: { id } });
     },
-    getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
+    getUserByEmail: (email) => {
+      return p.user.findUnique({ where: { email } });
+    },
     async getUserByAccount(provider_providerAccountId) {
       let account = await p.account.findUnique({
         where: { provider_providerAccountId },
@@ -24,13 +26,16 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     },
     updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }),
     deleteUser: (id) => p.user.delete({ where: { id } }),
-    linkAccount: (data) =>
-      p.account.create({ data }) as unknown as AdapterAccount,
+    linkAccount: (data) => {
+      console.log("link account");
+      return p.account.create({ data }) as unknown as AdapterAccount;
+    },
     unlinkAccount: (provider_providerAccountId) =>
       p.account.delete({
         where: { provider_providerAccountId },
       }) as unknown as AdapterAccount,
     async getSessionAndUser(sessionToken) {
+      console.log("sessionToken ", sessionToken);
       const userAndSession = await p.session.findUnique({
         where: { sessionToken },
         include: { user: true },
@@ -41,6 +46,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
       return { user, session };
     },
     createSession: (data) => {
+      console.log("createSession ", data);
       return p.session.create({ data });
     },
     updateSession: (data) =>

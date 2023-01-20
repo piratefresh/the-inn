@@ -1,6 +1,4 @@
 import { PrivateMessage } from "@models/PrivateMessage";
-import { User } from "@models/User";
-import { Prisma } from "@prisma/client";
 import { MyContext } from "@typedefs/MyContext";
 import {
   Arg,
@@ -117,23 +115,43 @@ export class PrivateMessageResolver {
   @Query((_type) => [PrivateMessage])
   async getUserPrivateMessages(@Ctx() { req, res, prisma }: MyContext) {
     const userId = req.session.userId;
-    console.log("userId: ", userId);
     try {
       const messages = await prisma.privateMessage.findMany({
         where: {
-          OR: [{ recipient: { id: userId } }, { sender: { id: userId } }],
+          OR: [
+            {
+              AND: [{ senderId: userId }],
+            },
+            {
+              AND: [{ recipientId: userId }],
+            },
+          ],
         },
         orderBy: { createdAt: "desc" },
-        take: 1,
-        distinct: ["senderId", "recipientId"],
         include: {
           sender: true,
           recipient: true,
         },
       });
 
-      console.log("messages: ", messages);
-      return messages;
+      const latestMessages = messages.reduce((acc: any, message) => {
+        // Make sure key is the unique otherUserId
+        const otherUserId =
+          message.senderId === userId ? message.recipientId : message.senderId;
+        if (
+          // if the key dosent exist make it else if an newer message exists override it
+          !acc[otherUserId] ||
+          message.createdAt > acc[otherUserId].createdAt
+        ) {
+          acc[otherUserId] = message;
+        }
+        return acc;
+      }, {});
+
+      // values are inside unique user key now, get from valus
+      console.log(Object.values(latestMessages));
+
+      return Object.values(latestMessages);
     } catch (err) {
       console.log("err: ", err);
     }
@@ -146,12 +164,6 @@ export class PrivateMessageResolver {
     const userId = req.session.userId;
     return await prisma.privateMessage.findMany({
       where: {
-        // recipientId: {
-        //   in: [userId, threadId],
-        // },
-        // senderId: {
-        //   in: [userId, threadId],
-        // },
         OR: [
           {
             recipientId: userId,
@@ -178,7 +190,6 @@ export class PrivateMessageResolver {
     @PubSub() pubSub: PubSubEngine
   ) {
     try {
-      const userId = req.session.userId;
       // Create or update chat
       const message = await prisma.privateMessage.create({
         data: {
@@ -209,16 +220,11 @@ export class PrivateMessageResolver {
       payload: PrivateMessage;
       args: any;
       context: MyContext;
-    }) => {
-      console.log("userId: ", context.req.session.userId);
-      return (
-        context.req.session.userId === payload.senderId ||
-        context.req.session.userId === payload.recipientId
-      );
-    },
+    }) =>
+      context.req.session.userId === payload.senderId ||
+      context.req.session.userId === payload.recipientId,
   })
   newPrivateMessage(@Root() data: PrivateMessage): PrivateMessagePayload {
-    console.log("data: ", data);
     return Object.assign(new PrivateMessagePayload(), {
       createdAt: new Date(data.createdAt),
       id: data.id,

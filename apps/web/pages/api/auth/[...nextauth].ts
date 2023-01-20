@@ -52,18 +52,23 @@ const session: Partial<SessionOptions> = {
   strategy: "database",
   maxAge: 30 * 24 * 60 * 60, // 30 days
   updateAge: 24 * 60 * 60, // 24 hours
+  // The session token is usually either a random UUID or string, however if you
+  // need a more customized session token string, you can define your own generate function.
+  generateSessionToken: () => {
+    return randomUUID?.();
+  },
 };
 
 const adapter = PrismaAdapter(prisma);
 
 // To generate session
 export const nextAuthOptions = (req, res) => ({
-  debug: true,
   adapter: adapter,
   providers: [
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       credentials: {
@@ -75,7 +80,6 @@ export const nextAuthOptions = (req, res) => ({
       },
       authorize: async (credentials, req) => {
         const { email, password } = credentials;
-
         try {
           const response = await fetch(process.env.NEXT_PUBLIC_API_URL, {
             method: "POST",
@@ -92,45 +96,24 @@ export const nextAuthOptions = (req, res) => ({
             }),
             credentials: "include",
           });
-
           const data = await response.json();
-          console.log("data: ", data);
-          if (data.data.signin) {
-            console.log("res: ", res.headers);
-            // const cookie = res.headers.get("set-cookie");
 
-            // res.setHeader("Set-Cookie", cookie);
+          const emailAlreadyUsed = await adapter.getUserByEmail(email);
 
-            // const response = await axios.post(
-            //   process.env.NEXT_PUBLIC_API_URL as string,
-            //   {
-            //     query: SIGN_IN_MUTATION,
-            //     headers: {
-            //       "Access-Control-Allow-Origin": "*",
-            //       "Content-Type": "application/json",
-            //     },
-            //     variables: {
-            //       usernameOrEmail: email,
-            //       password: password,
-            //     },
-            //   }
-            // );
-
+          if (data.data?.signin) {
             return data.data.signin;
           }
+
+          if (emailAlreadyUsed)
+            throw new Error("Email already used in different login provider");
         } catch (err) {
-          console.log("err3: ", err);
           throw new Error(err);
         }
       },
     }),
   ],
   callbacks: {
-    async signIn({ user, account, email }) {
-      console.log("user: ", user);
-      console.log("email: ", email);
-      console.log("account: ", account);
-
+    async signIn({ user, account, email, credentials }) {
       if (!user.email) {
         return false;
       }
@@ -150,94 +133,78 @@ export const nextAuthOptions = (req, res) => ({
             expires: sessionExpiry,
           } as any);
 
-          const cookies = new Cookies(req, res, { secure: true });
+          const cookies = new Cookies(req, res);
 
-          cookies.set(
-            process.env.NODE_ENV === "production"
-              ? `__Secure-next-auth.session-token`
-              : `next-auth.session-token`,
-            sessionToken,
-            {
-              expires: sessionExpiry,
-              httpOnly: true,
-              sameSite: "none" as "none",
-              path: "/",
-              secure: process.env.NODE_ENV === "production" ? true : false,
-              domain: process.env.NEXT_PUBLIC_VERCEL_URL
-                ? ".theinn.app"
-                : undefined,
-            }
-          );
+          cookies.set("next-auth.session-token", sessionToken, {
+            expires: sessionExpiry,
+          });
 
-          return true;
+          // const cookies = new Cookies(req, res, {
+          //   secure: process.env.NODE_ENV === "production" ? true : false,
+          // });
+          // cookies.set(`next-auth.session-token`, sessionToken, {
+          //   expires: sessionExpiry,
+          //   httpOnly: true,
+          //   sameSite: "none" as "none",
+          //   path: "/",
+          //   secure: process.env.NODE_ENV === "production" ? true : false,
+          //   domain: process.env.NEXT_PUBLIC_VERCEL_URL
+          //     ? ".theinn.app"
+          //     : undefined,
+          // });
+          // return true;
         }
       }
 
-      if (account.provider != "github" && account.provider != "google") {
-        return false;
-      }
-
-      const existingUser = await prisma.user.findUnique({
-        where: {
-          email: user.email,
-        },
-      });
-
-      if (existingUser) {
-        // User account already exists, check if it's linked to the account
-        const linkedAccount = await prisma.account.findUnique({
-          where: {
-            provider_providerAccountId: {
-              provider: "google",
-              providerAccountId: existingUser.id,
-            },
-          },
-        });
-
-        if (linkedAccount) {
-          return true;
-        }
-
-        await linkAccount(existingUser, account, adapter);
-      }
       return true;
     },
     async redirect({ url, baseUrl }) {
       return `${baseUrl}`;
     },
+    async jwt({ token, account, profile }) {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (account.provider === "google") {
+        token.accessToken = account.access_token;
+        token.id = token.sub;
+        token.imageUrl = profile.token;
+        token.name = profile.name;
+        token.email = profile.email;
 
+        return token;
+      }
+
+      return token;
+    },
     async session({ session, token, user }) {
       let newSession: Session;
-      const jwtToken = jwt.sign(
-        { userId: user?.id },
-        process.env.JWT_SECRET_KEY
-      );
-      newSession = {
-        ...session,
-        id: user?.id,
-        token: jwtToken,
-        user: {
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          imageUrl: user.imageUrl,
-          id: user.id,
-        },
-      };
 
-      // SET SESSION COOKIE FROM SERVER
-      const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL as string,
-        {
-          query: SET_SESSION_SOCIAL,
-          variables: {
-            usernameOrEmail: user.email,
-          },
-          withCredentials: true,
+      if (user) {
+        // SET SESSION COOKIE FROM SERVER
+        const response = await axios.post(
+          process.env.NEXT_PUBLIC_API_URL as string,
+          {
+            query: SET_SESSION_SOCIAL,
+            variables: {
+              usernameOrEmail: user.email,
+            },
+            withCredentials: true,
+          }
+        );
+        if (response.data.data.setSessionSocial) {
+          const cookies = response.headers["set-cookie"];
+          res.setHeader("Set-Cookie", cookies);
         }
-      );
-      if (response.data.data.setSessionSocial) {
-        const cookies = response.headers["set-cookie"];
-        res.setHeader("Set-Cookie", cookies);
+
+        newSession = {
+          ...session,
+          id: user.id,
+          user: {
+            name: `${user.firstName} ${user.lastName ?? ""}`,
+            email: user.email,
+            image: user.imageUrl,
+            id: user.id,
+          },
+        };
       }
 
       return newSession;
@@ -253,8 +220,9 @@ export const nextAuthOptions = (req, res) => ({
         const cookies = new Cookies(req, res);
         const cookie = cookies.get("next-auth.session-token");
 
-        if (cookie) return cookie;
-        else return "";
+        if (cookie) {
+          return cookie;
+        } else return "";
       }
       // Revert to default behaviour when not in the credentials provider callback flow
       return encode(params);
@@ -267,22 +235,9 @@ export const nextAuthOptions = (req, res) => ({
       ) {
         return null;
       }
+
       // Revert to default behaviour when not in the credentials provider callback flow
       return decode(params);
-    },
-  },
-  cookies: {
-    sessionToken: {
-      name:
-        process.env.NODE_ENV === "production"
-          ? `__Secure-next-auth.session-token`
-          : `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "none" as "none",
-        path: "/",
-        secure: process.env.NODE_ENV === "production" ? true : false,
-      },
     },
   },
   session,
@@ -293,14 +248,18 @@ export const nextAuthOptions = (req, res) => ({
 
   events: {
     async signOut() {
-      await axios.post(process.env.NEXT_PUBLIC_API_URL as string, {
-        query: SIGN_OUT_MUTATION,
-        withCredentials: true,
+      await fetch(process.env.NEXT_PUBLIC_API_URL, {
+        method: "POST",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          query: SIGN_OUT_MUTATION,
+        }),
+        credentials: "include",
       });
+
       res.setHeader(
         "Set-Cookie",
         `token=${process.env.JWT_COOKIE_NAME}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
@@ -308,15 +267,3 @@ export const nextAuthOptions = (req, res) => ({
     },
   },
 });
-
-const linkAccount = async (user: any, account: Account, adapter: Adapter) => {
-  return await adapter.linkAccount({
-    providerAccountId: account.providerAccountId,
-    userId: user.id,
-    provider: account.provider,
-    type: "oauth",
-    scope: account.scope,
-    token_type: account.token_type,
-    access_token: account.access_token,
-  });
-};

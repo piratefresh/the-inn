@@ -33,13 +33,16 @@ const Thread = () => {
   const { data: session } = useSession();
   const isDesktop = useMediaQuery(mediaString.lg);
 
-  const [{ data: userMessagesList, fetching: MessageListFetching }] =
-    useGetUserPrivateMessagesQuery();
+  const [
+    { data: userMessagesList, fetching: MessageListFetching },
+    reexecuteQuery,
+  ] = useGetUserPrivateMessagesQuery();
 
   const [{ fetching }, addPrivateMessageMutation] =
     useAddPrivateMessageMutation();
 
   const threadId = React.useMemo(() => {
+    console.log("memoed id: ", id);
     if (id) return id as string;
     const message = userMessagesList?.getUserPrivateMessages[0];
 
@@ -50,23 +53,14 @@ const Thread = () => {
     } else {
       return null;
     }
-  }, [id, session, userMessagesList?.getUserPrivateMessages]);
-
-  const otherUser = React.useMemo(() => {
-    const message = userMessagesList?.getUserPrivateMessages[0];
-
-    if (!message) return null;
-
-    return message?.sender.id === session?.id
-      ? message.recipient
-      : message.sender;
-  }, [userMessagesList, session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, session]);
 
   const [{ data: otherUserData, fetching: otherUserFetching }] =
     useGetUserQuery({
-      pause: !otherUser?.id,
+      pause: !id,
       variables: {
-        id: otherUser?.id,
+        id: id,
       },
     });
 
@@ -90,7 +84,7 @@ const Thread = () => {
       query: NewPrivateMessageDocument,
       pause: queryResult.fetching,
     },
-    (prev = queryResult.data as any, item) => {
+    (prev = (queryResult.data as any) ?? [], item) => {
       if (item && prev.length) return [...prev, item.newPrivateMessage];
       if (item && prev.getThreadMessages.length)
         return [...prev.getThreadMessages, item.newPrivateMessage];
@@ -101,6 +95,7 @@ const Thread = () => {
 
   const {
     control,
+    reset,
     register,
     handleSubmit,
     watch,
@@ -114,6 +109,8 @@ const Thread = () => {
         senderId: session.id,
       },
     });
+
+    reset();
   };
 
   const [presenceData, updateStatus] = usePresence(`online`);
@@ -132,6 +129,7 @@ const Thread = () => {
       <div className="p-4">
         {userMessagesList?.getUserPrivateMessages && !id && (
           <MessageList
+            threadId={id}
             userId={session.id}
             messages={userMessagesList.getUserPrivateMessages}
           />
@@ -188,9 +186,10 @@ const Thread = () => {
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-2 p-4">
+      <div className="grid grid-cols-2 gap-8 p-4">
         {userMessagesList?.getUserPrivateMessages && (
           <MessageList
+            threadId={id}
             userId={session.id}
             messages={userMessagesList.getUserPrivateMessages}
           />

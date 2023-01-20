@@ -1,5 +1,6 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { styled } from "../theme";
+import { Tooltip } from "../Tooltip";
 import { getInitials } from "../utils/getInitials";
 
 export interface AvatarProps {
@@ -46,12 +47,14 @@ const Flex = styled("div", { display: "flex" });
 export const Avatar = ({ name, imageUrl }: AvatarProps) => {
   const initials = getInitials(name);
   return (
-    <AvatarRoot>
-      {imageUrl && (
-        <AvatarImage className="AvatarImage" src={imageUrl} alt={name} />
-      )}
+    <Tooltip content={name}>
+      <AvatarRoot>
+        {imageUrl && (
+          <AvatarImage className="AvatarImage" src={imageUrl} alt={name} />
+        )}
 
-      <AvatarFallback>{initials}</AvatarFallback>
-    </AvatarRoot>
+        <AvatarFallback>{initials}</AvatarFallback>
+      </AvatarRoot>
+    </Tooltip>
   );
 };

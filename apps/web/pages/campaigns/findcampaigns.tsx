@@ -24,6 +24,7 @@ import { getServerState } from "react-instantsearch-hooks-server";
 import { Accordion, mediaString, Button, Text } from "ui";
 import { SearchInput } from "../../components/InstantSearch";
 import { useRouter } from "next/compat/router";
+import { v4 as uuidv4 } from "uuid";
 
 type FindCampaignsProps = {
   serverState?: InstantSearchServerState;
@@ -32,7 +33,6 @@ type FindCampaignsProps = {
 
 function CardGrid(props: UseHitsProps) {
   const { hits } = useHits(props);
-  console.log("hits: ", hits);
   return (
     <div className="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       {hits?.map((campaign: any) => (
@@ -151,11 +151,10 @@ export default function FindCampaignsPage({
   const wrapperRef = React.useRef(null);
   useOutsideAlerter(wrapperRef, open, setOpen);
 
-  console.log("url: ", url);
-
   return (
     <InstantSearchSSRProvider {...serverState}>
       <InstantSearch
+        key={nextRouter?.pathname}
         searchClient={searchClient}
         indexName="dev_campaigns"
         routing={{
@@ -181,7 +180,6 @@ export default function FindCampaignsPage({
                 virtualTable = [],
               } = qsModule.parse(location.search.slice(1));
 
-              console.log("days: ", days);
               // `qs` does not return an array when there's a single value.
               const allDays = Array.isArray(days)
                 ? days
@@ -210,18 +208,17 @@ export default function FindCampaignsPage({
                 voipSystem: allVoipSystem.map((voip) =>
                   decodeURIComponent(voip)
                 ),
-                // category,
               };
             },
             createURL({ qsModule, location, routeState }) {
               const { origin, pathname, hash } = location;
 
               const queryParameters: QueryParametersProps = {
-                query: "",
-                days: null,
-                gameSystem: null,
-                voipSystem: null,
-                virtualTable: null,
+                query: undefined,
+                days: undefined,
+                gameSystem: undefined,
+                voipSystem: undefined,
+                virtualTable: undefined,
               };
               if (routeState.query) {
                 queryParameters.query = encodeURIComponent(routeState.query);
