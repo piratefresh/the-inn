@@ -8,7 +8,7 @@ import { usePresence } from "@ably-labs/react-hooks";
 interface MessageListProps {
   userId: string;
   messages: GetUserPrivateMessagesQuery["getUserPrivateMessages"];
-  threadId: string;
+  threadId?: string;
 }
 
 export const MessageList = ({
@@ -34,9 +34,7 @@ export const MessageList = ({
       {messages.map((message) => {
         const otherUser =
           message.sender.id === userId ? message.recipient : message.sender;
-        console.log("otheruser: ", otherUser.id);
-        console.log("threadId: ", threadId);
-        // if (message.senderId !== userId) return null;
+
         return (
           <div
             className={`bg-brandLightBlack p-4 rounded-lg hover:brand hover:border-brandYellow ${
