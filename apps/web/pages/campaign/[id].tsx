@@ -118,15 +118,15 @@ const Campaign = () => {
         />
       )}
       <div className="mt-16 max-w-7xl mx-auto relative px-4">
-        <div className="relative aspect-w-16 aspect-h-9 flex flex-col justify-center items-center">
+        <div
+          className="relative"
+          style={{ width: "100%", minHeight: "500px", height: "500px" }}
+        >
           <HeroImage
-            className=""
-            style={{ minHeight: "500px" }}
-            layout="fill"
-            objectFit="cover"
-            width={1240}
             src={campaign?.getCampaign.imageUrl}
+            fill
             gold
+            alt={`Header image for ${campaign.getCampaign.title}`}
           />
         </div>
         <div className="relative mt-12">

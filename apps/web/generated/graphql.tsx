@@ -340,11 +340,11 @@ export type MutationUpdateUserProfileArgs = {
   updateProfileArgs?: InputMaybe<UpdateProfileArgs>;
 };
 
-export type NewCampaignNotification = {
-  __typename?: 'NewCampaignNotification';
-  campaignId: Scalars['String'];
+export type NewNotification = {
+  __typename?: 'NewNotification';
+  campaignId?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
-  gameMasterId: Scalars['String'];
+  gameMasterId?: Maybe<Scalars['String']>;
   imageUrl: Scalars['String'];
   message: Scalars['String'];
   notificationId: Scalars['String'];
@@ -447,7 +447,6 @@ export type Query = {
   getUsers: UserConnection;
   getUsersById: Array<User>;
   hellogame: Scalars['String'];
-  helloworld: Scalars['String'];
   me: Scalars['String'];
   updateAlgoliaCampaigns: Array<Campaign>;
 };
@@ -531,8 +530,9 @@ export enum StatusType {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  newCampaignApplication: NewCampaignNotification;
+  newCampaignApplication: NewNotification;
   newPrivateMessage: PrivateMessagePayload;
+  newPrivateMessageNotification: NewNotification;
   subscription: Scalars['String'];
 };
 
@@ -820,12 +820,17 @@ export type GetUserPrivateMessagesQuery = { __typename?: 'Query', getUserPrivate
 export type NewCampaignApplicationSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NewCampaignApplicationSubscription = { __typename?: 'Subscription', newCampaignApplication: { __typename?: 'NewCampaignNotification', campaignId: string, gameMasterId: string, notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string, imageUrl: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } } };
+export type NewCampaignApplicationSubscription = { __typename?: 'Subscription', newCampaignApplication: { __typename?: 'NewNotification', campaignId?: string | null, gameMasterId?: string | null, notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string, imageUrl: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } } };
 
 export type NewPrivateMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type NewPrivateMessageSubscription = { __typename?: 'Subscription', newPrivateMessage: { __typename?: 'PrivateMessagePayload', id: string, createdAt: any, senderId: string, recipientId: string, message: string, recipient: { __typename?: 'UserLite', firstName: string, lastName: string, id: string, imageUrl: string }, sender: { __typename?: 'UserLite', firstName: string, lastName: string, id: string, imageUrl: string } } };
+
+export type NewPrivateMessageNotificationSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewPrivateMessageNotificationSubscription = { __typename?: 'Subscription', newPrivateMessageNotification: { __typename?: 'NewNotification', notificationId: string, message: string, type: string, read: boolean, updatedAt: string, createdAt: string, relatedId: string, imageUrl: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, imageUrl?: string | null } } };
 
 export const CampaignFullFragmentDoc = gql`
     fragment CampaignFull on Campaign {
@@ -1471,4 +1476,28 @@ export const NewPrivateMessageDocument = gql`
 
 export function useNewPrivateMessageSubscription<TData = NewPrivateMessageSubscription>(options: Omit<Urql.UseSubscriptionArgs<NewPrivateMessageSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<NewPrivateMessageSubscription, TData>) {
   return Urql.useSubscription<NewPrivateMessageSubscription, TData, NewPrivateMessageSubscriptionVariables>({ query: NewPrivateMessageDocument, ...options }, handler);
+};
+export const NewPrivateMessageNotificationDocument = gql`
+    subscription NewPrivateMessageNotification {
+  newPrivateMessageNotification {
+    notificationId
+    message
+    type
+    read
+    updatedAt
+    createdAt
+    relatedId
+    imageUrl
+    user {
+      id
+      firstName
+      lastName
+      imageUrl
+    }
+  }
+}
+    `;
+
+export function useNewPrivateMessageNotificationSubscription<TData = NewPrivateMessageNotificationSubscription>(options: Omit<Urql.UseSubscriptionArgs<NewPrivateMessageNotificationSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<NewPrivateMessageNotificationSubscription, TData>) {
+  return Urql.useSubscription<NewPrivateMessageNotificationSubscription, TData, NewPrivateMessageNotificationSubscriptionVariables>({ query: NewPrivateMessageNotificationDocument, ...options }, handler);
 };

@@ -133,33 +133,6 @@ export class UserConnection {
 @Resolver()
 export class UserResolver {
   @Query(() => String)
-  async helloworld(@Ctx() { prisma, req, res, pusher }: MyContext) {
-    // @ts-ignore
-    pusher.trigger("my-channel", "my-event", {
-      message: "hello world",
-    });
-
-    const userInfo = await prisma.user.findUnique({
-      where: {
-        id: req.session.userId,
-      },
-    });
-
-    // Replace this with code to retrieve the actual user id and info
-    const user = {
-      // @ts-ignore
-      id: req.session.userId,
-      user_info: {
-        ...userInfo,
-      },
-      watchlist: ["another_id_1", "another_id_2"],
-    };
-
-    const authResponse = pusher.authenticateUser(req.session.userId, user);
-
-    return `hello world ${authResponse}`;
-  }
-  @Query(() => String)
   async me(@Ctx() { req }: MyContext) {
     return req.session.userId;
   }
@@ -240,6 +213,7 @@ export class UserResolver {
       const user = await prisma.user.create({
         data: {
           ...options,
+          email: options.email.toLowerCase(), //Email is not case sensetive
           experience: "Beginner",
           password: hashedPassword,
         },

@@ -1,4 +1,4 @@
-import Image, { ImageProps } from "next/legacy/image";
+import Image, { ImageProps } from "next/image";
 import { styled } from "../theme";
 
 const StyledHeroImage = styled(Image, {
@@ -10,7 +10,10 @@ const StyledHeroImage = styled(Image, {
 });
 
 const StyledRoot = styled("div", {
+  position: "relative",
   borderRadius: "$radii$md",
+  height: "100%",
+  width: "auto",
 
   variants: {
     gold: {
@@ -29,21 +32,13 @@ interface HeroImageProps extends ImageProps {
   src: string;
   className?: string;
   style?: React.CSSProperties;
-  width?: number;
-  height?: number;
   gold?: boolean;
 }
 
-export const HeroImage = ({
-  src,
-  gold = false,
-  height,
-  width,
-  ...props
-}: HeroImageProps) => {
+export const HeroImage = ({ src, gold = false, ...props }: HeroImageProps) => {
   return (
     <StyledRoot gold={gold}>
-      <StyledHeroImage layout="responsive" src={src} {...props} />
+      <StyledHeroImage src={src} {...props} />
     </StyledRoot>
   );
 };

@@ -217,7 +217,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         </Tooltip>
       </div>
 
-      <div className="flex flex-row mr-4">
+      <div className="flex flex-row mr-4 gap-2">
         {/* FONT SIZE AND FAMILY */}
         <Tooltip label="Text Type" position="bottom" withArrow>
           <TextTypeDropdown editor={editor} onChange={onTextTypeChange} />

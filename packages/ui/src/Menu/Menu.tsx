@@ -31,7 +31,7 @@ export function Menu({ children, trigger, ...props }: MenuProps) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <HeadlessMenu.Items className="inline-flex flex-col z-tooltip absolute left-0 mt-2 w-48 bg-white lg:w-56 origin-top-right divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <HeadlessMenu.Items className="inline-flex flex-col z-tooltip absolute right-0 mt-2 w-48 bg-white lg:w-56 origin-top-right divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           {children}
         </HeadlessMenu.Items>
       </Transition>

@@ -29,6 +29,7 @@ export const MessageList = ({
       ),
     [presenceData, messages, userId]
   );
+
   return (
     <div>
       {messages.map((message) => {
@@ -37,7 +38,7 @@ export const MessageList = ({
 
         return (
           <div
-            className={`bg-brandLightBlack p-4 rounded-lg hover:brand hover:border-brandYellow ${
+            className={`bg-brandLightBlack p-4 mb-4 rounded-lg hover:border hover:border-brandYellow ${
               otherUser.id === threadId ? "border border-brandYellow" : null
             }`}
           >

@@ -16,18 +16,6 @@ export interface IInputProps
   iconPlacement?: "left" | "right" | "none";
   gold?: boolean;
 }
-export interface ITextAreaProps
-  extends React.InputHTMLAttributes<HTMLTextAreaElement> {
-  required?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
-  disabled?: boolean;
-  error?: string;
-  inputRef?: string;
-  name?: string;
-  cols?: number;
-  rows?: number;
-}
 
 export const Input = ({
   gold,

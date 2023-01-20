@@ -1,3 +1,4 @@
+import { PrivateMessage } from "@/models/PrivateMessage";
 import { User } from "@/models/User";
 import { Notification } from "@models/Notification";
 import { MyContext } from "@typedefs/MyContext";
@@ -16,11 +17,11 @@ import {
 } from "type-graphql";
 
 @ObjectType()
-export class NewCampaignNotification {
-  @Field()
+export class NewNotification {
+  @Field({ nullable: true })
   gameMasterId: string;
 
-  @Field()
+  @Field({ nullable: true })
   campaignId?: string;
 
   @Field()
@@ -109,7 +110,7 @@ export class NotificationResolver {
       args,
       context,
     }: {
-      payload: NewCampaignNotification;
+      payload: NewNotification;
       args: any;
       context: MyContext;
     }) => {
@@ -118,13 +119,31 @@ export class NotificationResolver {
   })
   newCampaignApplication(
     @Root()
-    data: NewCampaignNotification,
+    data: NewNotification,
     @Ctx() { prisma, res, req }: MyContext
-  ): NewCampaignNotification {
-    console.log("SENDING NOTIFICATION: ", req.session.userId);
+  ): NewNotification {
+    return data;
+  }
 
-    console.log("data: ", data);
-
+  @Subscription({
+    topics: "NEW_NOTIFICATION_PRIVATE_MESSAGE",
+    filter: ({
+      payload,
+      args,
+      context,
+    }: {
+      payload: NewNotification;
+      args: any;
+      context: MyContext;
+    }) => {
+      return context.req.session.userId === payload.relatedId;
+    },
+  })
+  newPrivateMessageNotification(
+    @Root()
+    data: NewNotification,
+    @Ctx() { prisma, res, req }: MyContext
+  ): NewNotification {
     return data;
   }
 }

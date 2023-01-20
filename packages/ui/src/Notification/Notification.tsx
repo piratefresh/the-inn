@@ -19,7 +19,7 @@ export const Notification = ({
 }: NotificationProps) => {
   return (
     <div
-      className="relative rounded-xl bg-brandLightBlack border-b-brandYellowGradient lg:w-52"
+      className="relative rounded-xl bg-brandLightBlack border-b-brandYellowGradient"
       style={{ maxWidth: 440 }}
     >
       <a

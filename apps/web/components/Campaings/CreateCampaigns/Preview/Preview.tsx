@@ -112,18 +112,21 @@ export const Preview = ({ campaign }: LocationProps) => {
         />
       )}
 
-      <div className="lg:max-w-7xl mx-auto w-full relative mb-40">
+      <div className="lg:max-w-7xl mx-auto relative mb-40">
         {createCampaignData.price && (
           <PriceButton>${createCampaignData.price}</PriceButton>
         )}
-
-        <HeroImage
-          height={500}
-          width={1280}
-          alt="hero image"
-          gold
-          src={createCampaignData.imageUrl}
-        />
+        <div className="relative" style={{ height: "500px", width: "1280px" }}>
+          <HeroImage
+            alt="hero image"
+            fill
+            sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
+            gold
+            src={createCampaignData.imageUrl}
+          />
+        </div>
 
         <div className="flex flex-row flex-wrap my-16">
           <CampaignTags tags={createCampaignData.tags} />

@@ -17,7 +17,7 @@ const SideCard = styled("div", {
   position: "fixed",
   top: "auto",
   bottom: 0,
-  right: "auto",
+  right: 0,
   width: "100%",
   flexDirection: "column",
   padding: "$4",

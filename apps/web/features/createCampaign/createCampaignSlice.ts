@@ -149,7 +149,7 @@ export const createCampaignSlice = createSlice({
         action.payload.tags?.length > 0
           ? action.payload.tags.map((option) => option.value)
           : [];
-      state.tags = tags;
+      state.tags = tags.filter((tag) => tag);
       state.voipSystem = action.payload.voipSystem;
       state.virtualTable = action.payload.virtualTable;
       state.isOnline = action.payload.isOnline;

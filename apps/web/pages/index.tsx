@@ -1,12 +1,10 @@
 import { useGetCampaignsQuery } from "@generated/graphql";
 import { HeroImage, Text } from "ui";
-import { configureAbly, useChannel, usePresence } from "@ably-labs/react-hooks";
-
+import { usePresence } from "@ably-labs/react-hooks";
 import { CampaignCard } from "@components/CampaignCard";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import React from "react";
-import { Types } from "ably";
 import { NextPageWithLayout } from "Types/LayoutPage";
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import { Loader } from "@components/Loader";
@@ -57,12 +55,12 @@ const Home: NextPageWithLayout = () => {
               </Text>
             </div>
           </div>
-          <div className="block w-full" style={{ height: "700px" }}>
+          <div
+            className="block w-full relative"
+            style={{ height: "700px", width: "100%" }}
+          >
             <HeroImage
-              objectFit="cover"
-              layout="fill"
-              gold
-              className="aspect-w-16 aspect-h-9 w-full"
+              fill
               src="https://res.cloudinary.com/film-it/image/upload/v1671827083/the-inn/dnd2up.png"
               alt="Hero Home Page Image"
             />

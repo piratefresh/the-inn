@@ -1,0 +1,18 @@
+subscription NewPrivateMessageNotification {
+  newPrivateMessageNotification {
+    notificationId
+    message
+    type
+    read
+    updatedAt
+    createdAt
+    relatedId
+    imageUrl
+    user {
+      id
+      firstName
+      lastName
+      imageUrl
+    }
+  }
+}

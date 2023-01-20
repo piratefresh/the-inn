@@ -30,7 +30,9 @@ export const MessageBubble = ({
             right ? "bg-[#324345]" : "bg-brandLightBlack"
           }`}
         >
-          <Text size="sm">{senderMessage}</Text>
+          <Text size="sm" className="whitespace-pre-wrap">
+            {senderMessage}
+          </Text>
         </div>
       </div>
     </div>

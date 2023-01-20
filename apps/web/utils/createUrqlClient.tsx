@@ -4,12 +4,10 @@ import {
   subscriptionExchange,
   errorExchange as urqlErrorExchange,
   ssrExchange as UrqlSSRExchange,
-  Operation,
+  Provider as UrqlProvider,
 } from "urql";
-import { makeOperation } from "@urql/core";
 import { cacheExchange, Cache } from "@urql/exchange-graphcache";
 import { relayPagination } from "@urql/exchange-graphcache/extras";
-import { authExchange } from "@urql/exchange-auth";
 import { devtoolsExchange } from "@urql/devtools";
 import Router from "next/router";
 import { createClient as createWSClient } from "graphql-ws";
@@ -24,12 +22,7 @@ import {
 } from "@generated/graphql";
 import { isServer } from "./isServer";
 import { SSRExchange } from "next-urql";
-import { getSession } from "next-auth/react";
-import jwt from "jsonwebtoken";
-
-type AuthState = {
-  token: string;
-} | null;
+import React from "react";
 
 export const errorExchange = urqlErrorExchange({
   onError: (error) => {
@@ -51,13 +44,11 @@ export const ssrExchange: SSRExchange = UrqlSSRExchange({
   isClient: !isServer,
 });
 
-function invalidateAllCampaigns(cache: Cache) {
+function invalidateQuery(cache: Cache, queryName: string) {
   const allFields = cache.inspectFields("Query");
-  const fieldInfos = allFields.filter(
-    (info) => info.fieldName === "getCampaigns"
-  );
-  fieldInfos.forEach((fi) => {
-    cache.invalidate("Query", "getCampaigns", fi.arguments || {});
+  const fieldInfos = allFields.filter((info) => info.fieldName === queryName);
+  fieldInfos.map((field) => {
+    cache.invalidate("Query", queryName, field.arguments);
   });
 }
 
@@ -96,7 +87,7 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
         updates: {
           Mutation: {
             createCampaign: (_result, args, cache, info) => {
-              invalidateAllCampaigns(cache);
+              invalidateQuery(cache, "getCampaigns");
             },
             setNotificationsRead(_result, args, cache, _info) {
               const fields = cache
@@ -205,5 +196,11 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
     ],
   };
 };
+
+type Context = {
+  resetUrqlClient?: () => any;
+};
+
+export const UrqlContext = React.createContext<Context>(null);
 
 export { createUrqlClient };

@@ -1,3 +1,4 @@
+import { NotificationType } from "@/typedefs/NotificationType";
 import { PrivateMessage } from "@models/PrivateMessage";
 import { MyContext } from "@typedefs/MyContext";
 import {
@@ -202,6 +203,21 @@ export class PrivateMessageResolver {
       });
 
       pubSub.publish("NEW_PRIVATE_MESSAGE", message);
+
+      const notification = await prisma.notification.create({
+        data: {
+          message: message.message,
+          type: NotificationType.PrivateMessage,
+          relatedId: message.recipientId,
+          userId: req.session.userId,
+          imageUrl: "",
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      pubSub.publish("NEW_NOTIFICATION_PRIVATE_MESSAGE", notification);
 
       return message;
     } catch (err) {

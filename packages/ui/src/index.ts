@@ -90,3 +90,4 @@ export {
   SheetDescription,
 } from "./Sheet";
 export { Notification } from "./Notification";
+export { TextArea } from "./TextArea";

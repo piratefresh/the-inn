@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import { WithUrqlProps } from "next-urql";
 import type { AppProps } from "next/app";
 
 export type TMeta = {
@@ -24,4 +25,5 @@ export type NextPageWithLayout = NextPage & {
 
 export type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
+  resetUrqlClient: WithUrqlProps["resetUrqlClient"];
 };

@@ -1,7 +1,6 @@
 import { usePresence } from "@ably-labs/react-hooks";
 import { MessageBubble } from "@components/MessageBubble";
 import {
-  GetThreadMessagesQuery,
   NewPrivateMessageDocument,
   useAddPrivateMessageMutation,
   useGetThreadMessagesQuery,
@@ -12,15 +11,17 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { UserPageLayout } from "@layouts/UserPageLayout";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { Button, Input, Text, mediaString } from "ui";
+import { Button, Text, mediaString, TextArea } from "ui";
 import { useSubscription } from "urql";
 import { MessageList } from "@components/MessageList";
 import { Loader } from "@components/Loader";
 import { useQueryParam, StringParam, withDefault } from "use-query-params";
 import { useMediaQuery } from "@hooks/useMediaQueries";
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { useIsAuth } from "@utils/useIsAuth";
+import { Session } from "next-auth";
 
 interface AddPlayerMutationArgs {
   senderId: string;
@@ -29,20 +30,23 @@ interface AddPlayerMutationArgs {
 }
 
 const Thread = () => {
+  useIsAuth();
   const [id, setId] = useQueryParam("id", withDefault(StringParam, ""));
   const { data: session } = useSession();
   const isDesktop = useMediaQuery(mediaString.lg);
+  const messagesEndRef = React.useRef(null);
 
   const [
     { data: userMessagesList, fetching: MessageListFetching },
     reexecuteQuery,
   ] = useGetUserPrivateMessagesQuery();
 
-  const [{ fetching }, addPrivateMessageMutation] =
-    useAddPrivateMessageMutation();
+  const [
+    { data: newMessageData, fetching: addMessageLoading },
+    addPrivateMessageMutation,
+  ] = useAddPrivateMessageMutation();
 
   const threadId = React.useMemo(() => {
-    console.log("memoed id: ", id);
     if (id) return id as string;
     const message = userMessagesList?.getUserPrivateMessages[0];
 
@@ -68,7 +72,7 @@ const Thread = () => {
     async function fetchData() {
       setId(threadId);
     }
-    if (!isDesktop) fetchData();
+    if (isDesktop) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [threadId, isDesktop]);
 
@@ -85,23 +89,36 @@ const Thread = () => {
       pause: queryResult.fetching,
     },
     (prev = (queryResult.data as any) ?? [], item) => {
-      if (item && prev.length) return [...prev, item.newPrivateMessage];
-      if (item && prev.getThreadMessages.length)
-        return [...prev.getThreadMessages, item.newPrivateMessage];
+      return [...prev.getThreadMessages, item.newPrivateMessage];
+      // console.log("prev: ", prev.getTh);
+      // if (item && prev.length) return [...prev, item.newPrivateMessage];
+      // if (item && prev.getThreadMessages)
+      //   return [...prev.getThreadMessages, item.newPrivateMessage];
     }
   );
 
   const data = subscriptionResult.data || queryResult.data?.getThreadMessages;
 
-  const {
-    control,
-    reset,
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<AddPlayerMutationArgs>();
-  const onSubmit: SubmitHandler<AddPlayerMutationArgs> = (data) => {
+  React.useEffect(() => {
+    // 👇️ scroll to bottom every time messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [data]);
+
+  const { control, reset, register, handleSubmit, watch, formState } =
+    useForm<AddPlayerMutationArgs>({
+      defaultValues: {
+        message: "",
+        recipientId: id as string,
+        senderId: session?.id,
+      },
+    });
+  const onSubmit: SubmitHandler<AddPlayerMutationArgs> = (
+    data,
+    e: React.SyntheticEvent
+  ) => {
+    // Stop for re-rendering on submit
+    e.preventDefault();
+
     addPrivateMessageMutation({
       addPrivateMessageInput: {
         message: data.message,
@@ -122,8 +139,14 @@ const Thread = () => {
 
   if (!session) return <div>Please Login</div>;
 
-  if (fetching || MessageListFetching) return <Loader />;
+  if (MessageListFetching) return <Loader />;
 
+  if (!data?.length)
+    return (
+      <div className="p-4">
+        <Text>No messages recieved</Text>
+      </div>
+    );
   if (!isDesktop)
     return (
       <div className="p-4">
@@ -139,8 +162,8 @@ const Thread = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col p-4">
               <div className="flex gap-8 items-center whitespace-nowrap">
-                <Button onClick={() => setId("")}>
-                  <ArrowLeftIcon className="h-5 w-5 " />
+                <Button type="button" onClick={() => setId("")}>
+                  <ArrowLeftIcon className="h-7 w-7" />
                 </Button>
 
                 <Link
@@ -161,23 +184,34 @@ const Thread = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
-              {data?.map((message) => {
-                return (
-                  <MessageBubble
-                    message={message}
-                    right={message.sender.id === session.id}
-                    key={message.id}
-                  />
-                );
-              })}
+            <Messages
+              messages={data}
+              messagesEndRef={messagesEndRef}
+              isDesktop={isDesktop}
+              session={session}
+            />
+
+            <div className="flex flex-row items-center">
               <Controller
                 name="message"
                 control={control}
-                render={({ field }) => <Input gold {...field} />}
+                render={({ field }) => (
+                  <TextArea
+                    minRows={2}
+                    maxRows={4}
+                    placeholder="Message"
+                    gold
+                    value={field.value}
+                    onChange={field.onChange}
+                    {...field}
+                  />
+                )}
               />
-
-              <Button>Send</Button>
+              <div className="flex shrink-0 justify-end items-end ml-2 mt-2">
+                <Button disabled={addMessageLoading}>
+                  <PaperAirplaneIcon className="h-7 w-7" />
+                </Button>
+              </div>
             </div>
           </form>
         )}
@@ -222,26 +256,77 @@ const Thread = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {data?.map((message) => {
-              return (
-                <MessageBubble
-                  message={message}
-                  right={message.sender.id === session.id}
-                  key={message.id}
-                />
-              );
-            })}
-            <Controller
-              name="message"
-              control={control}
-              render={({ field }) => <Input gold {...field} />}
-            />
+          <Messages
+            messages={data}
+            messagesEndRef={messagesEndRef}
+            isDesktop={isDesktop}
+            session={session}
+          />
 
-            <Button>Send</Button>
+          <Controller
+            name="message"
+            control={control}
+            render={({ field }) => (
+              <TextArea
+                minRows={2}
+                maxRows={4}
+                gold
+                value={field.value}
+                onChange={field.onChange}
+                {...field}
+              />
+            )}
+          />
+          <div className="flex flex-1 justify-end mt-2">
+            <Button
+              css={{
+                maxWidth: "100px",
+              }}
+              size="large"
+              disabled={addMessageLoading}
+              fullWidth
+            >
+              Send
+            </Button>
           </div>
         </form>
       </div>
+    </div>
+  );
+};
+
+/* 
+  Fix typescript
+*/
+interface MessagesProps {
+  messages: any;
+  messagesEndRef: any;
+  isDesktop: boolean;
+  session: Session;
+}
+
+const Messages = ({
+  messages,
+  messagesEndRef,
+  isDesktop,
+  session,
+}: MessagesProps) => {
+  if (messages) return <Text>No messages received yet</Text>;
+  return (
+    <div
+      className="flex flex-col gap-4 overflow-y-auto mb-8"
+      style={{ height: isDesktop ? "55vh" : "65vh" }}
+    >
+      {messages?.map((message) => {
+        return (
+          <MessageBubble
+            message={message}
+            right={message.sender.id === session.id}
+            key={message.id}
+          />
+        );
+      })}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

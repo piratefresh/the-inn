@@ -25,6 +25,8 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useLockScroll } from "@hooks/useLockScroll";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
+import { WithUrqlProps } from "next-urql";
+import { UrqlContext } from "@utils/createUrqlClient";
 
 const navSubItems = {
   campaigns: [
@@ -48,6 +50,7 @@ const navSubItems = {
 };
 
 export const Nav = () => {
+  const { resetUrqlClient } = React.useContext(UrqlContext);
   const { data: session } = useSession();
   const [open, setOpen] = React.useState(false);
   const [subMenu, setSubMenu] = React.useState(null);
@@ -82,7 +85,7 @@ export const Nav = () => {
         <div className="flex items-center relative">
           <div className="mx-8">
             <Popover.Root>
-              {!!notifications?.getUnreadNotifications.length && (
+              {!notifications?.getUnreadNotifications.length && (
                 <Popover.Trigger asChild>
                   <div>
                     <div className="absolute top-0 rounded-full bg-red-500 px-2 z-10">
@@ -95,15 +98,16 @@ export const Nav = () => {
               <Popover.Anchor />
               <Popover.Portal>
                 <Popover.Content>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 w-full h-full">
                     {notifications?.getUnreadNotifications.map(
                       (notification) => (
                         <Notification
                           key={notification.id}
+                          createdAt={notification.createdAt}
                           sender={`${notification.user.firstName} ${notification.user.lastName}`}
+                          relatedId={notification.relatedId}
                           imageSrc={
-                            notification.imageUrl ??
-                            "https://source.unsplash.com/random/300×150/?abstract"
+                            "https://res.cloudinary.com/film-it/image/upload/v1659574786/the-inn/campaignmedia/l1uazkitrvby7ijxwhcn.jpg"
                           }
                           {...notification}
                         >
@@ -168,7 +172,7 @@ export const Nav = () => {
                   redirect: false,
                   callbackUrl: "/auth/signin",
                 });
-
+                resetUrqlClient();
                 router.push("/auth/signin");
               }}
             >
