@@ -125,7 +125,7 @@ export const nextAuthOptions = (req, res) => ({
       ) {
         if (user && "id" in user) {
           const sessionToken = randomUUID();
-          const sessionExpiry = new Date(Date.now() + session.maxAge! * 1000);
+          const sessionExpiry = new Date(Date.now() + 30 * 86400 * 1000);
 
           await adapter.createSession({
             sessionToken,

@@ -87,13 +87,12 @@ export const StyledTextArea: any = styled(TextareaAutosize, {
 export interface ITextAreaProps extends TextareaAutosizeProps {
   required?: boolean;
   className?: string;
-  style?: React.CSSProperties;
   disabled?: boolean;
   error?: string;
   inputRef?: string;
   gold?: boolean;
 }
 
-export const TextArea = ({ gold, size, error, ...props }: ITextAreaProps) => {
+export const TextArea = ({ gold, error, ...props }: ITextAreaProps) => {
   return <StyledTextArea gold={gold} errorStyle={!!error} {...props} />;
 };

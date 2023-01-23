@@ -6,15 +6,18 @@ import { reset } from "@features/createCampaign/createCampaignSlice";
 import {
   GetCampaignQuery,
   useCreateCampaignMutation,
+  useCreateImageSignatureMutation,
   useUpdateCampaignMutation,
 } from "@generated/graphql";
-import { useAppDispatch, useAppSelector } from "@store/store";
+import { serifyOptions, useAppDispatch, useAppSelector } from "@store/store";
 import { useRouter } from "next/router";
 import React from "react";
 import { Button, HeroImage, styled, Text, mediaString } from "ui";
 import { ITimezoneOption } from "ui/src/TimeZonePicker/TimeZonePicker";
 import { useMediaQuery } from "@hooks/useMediaQueries";
 import { CampaignBottomCard } from "@components/CampaignBottomCard";
+import { deserify } from "@karmaniverous/serify-deserify";
+import { uploadImage } from "@utils/uploadImage";
 
 const PriceButton = styled("button", {
   position: "absolute",
@@ -38,6 +41,7 @@ export const Preview = ({ campaign }: LocationProps) => {
   const dispatch = useAppDispatch();
   const [_, createCampaign] = useCreateCampaignMutation();
   const [__, updateCampaign] = useUpdateCampaignMutation();
+  const [, createImageSignature] = useCreateImageSignatureMutation();
   const router = useRouter();
 
   const isDesktop = useMediaQuery(mediaString.lg);
@@ -60,12 +64,22 @@ export const Preview = ({ campaign }: LocationProps) => {
   );
 
   const onSubmit = async () => {
+    // Check if image has been edit or is new
+    // start the upload
+    let imageUrl = await createCampaignData.imageUrl;
+    const { image, ...noImageCampaignData } = await createCampaignData;
+    if (createCampaignData.image) {
+      const blob = await fetch(image).then((res) => res.blob());
+
+      imageUrl = await upload(blob as File);
+    }
     if (isEditing) {
       const { data: updatedCampaign, error } = await updateCampaign({
         createCampaignInput: {
-          ...createCampaignData,
-          startDate: createCampaignData.startDate.toString(),
+          ...noImageCampaignData,
+          startDate: deserify(createCampaignData.startDate, serifyOptions),
           timezone: JSON.stringify(createCampaignData.timezone),
+          imageUrl,
         },
         campaignId: campaign.id,
       });
@@ -78,23 +92,38 @@ export const Preview = ({ campaign }: LocationProps) => {
         return console.log("error: ", error);
       }
     } else {
-      const { data: createdCampaign, error } = await createCampaign({
-        createCampaignInput: {
-          ...createCampaignData,
-          startDate: createCampaignData.startDate.toString(),
-          timezone: JSON.stringify(createCampaignData.timezone),
-        },
-      });
+      if (imageUrl) {
+        console.log("createCampaignData: ", createCampaignData);
+        const { data: createdCampaign, error } = await createCampaign({
+          createCampaignInput: {
+            ...noImageCampaignData,
+            startDate: deserify(createCampaignData.startDate, serifyOptions),
+            timezone: JSON.stringify(createCampaignData.timezone),
+            imageUrl,
+          },
+        });
 
-      if (createdCampaign) {
-        await router.push("/");
-        dispatch(reset());
-      }
-      if (error) {
-        console.log("error: ", error);
+        if (createdCampaign) {
+          await router.push("/");
+          dispatch(reset());
+        }
+        if (error) {
+          console.log("error: ", error);
+        }
       }
     }
   };
+
+  async function upload(file: File) {
+    const { data: signatureData } = await createImageSignature({});
+
+    if (signatureData) {
+      const { signature, timestamp } = signatureData.createImageSignature;
+
+      const data = await uploadImage(file, signature, timestamp);
+      return data.secure_url;
+    }
+  }
 
   return (
     <>
@@ -116,7 +145,10 @@ export const Preview = ({ campaign }: LocationProps) => {
         {createCampaignData.price && (
           <PriceButton>${createCampaignData.price}</PriceButton>
         )}
-        <div className="relative" style={{ height: "500px", width: "1280px" }}>
+        <div
+          className="relative"
+          style={{ height: "500px", maxWidth: "1280px" }}
+        >
           <HeroImage
             alt="hero image"
             fill

@@ -13,9 +13,6 @@ import { Input, InputAddon } from "ui/src/Input";
 import { Chip } from "ui/src/Chip";
 import { ChipGroup } from "ui/src/Chip/ChipGroup";
 import { asUploadButton } from "@rpldy/upload-button";
-// Type error here somehow
-//@ts-ignore
-import Uploady, { useItemFinishListener, useUploady } from "@rpldy/uploady";
 import InputGroup from "@components/ui/InputGroup";
 import { RichTextEditor } from "@components/RichTextEditor/RichTextEditor";
 import router from "next/router";
@@ -32,7 +29,7 @@ import {
   mediaString,
 } from "ui";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { generalSchema } from "./schema";
+import { GeneralSchema } from "./schema";
 import {
   CreatableGameSelector,
   CreatableGameSelectorOption,
@@ -79,7 +76,6 @@ const MemoedTextEditor = React.memo(RichTextEditor);
 
 export const General = ({ campaign }: GeneralProps) => {
   const richTextEditorRef = React.useRef<CustomEditorProps>();
-  const { processPending } = useUploady();
   const createCampaignData = useAppSelector((state) => state.createCampaign);
   const dispatch = useAppDispatch();
   const [selectedGameSystem, setSelectedGameSystem] =
@@ -125,25 +121,7 @@ export const General = ({ campaign }: GeneralProps) => {
           ...createCampaignData,
           startDate: today(getLocalTimeZone()).toString(),
         },
-    resolver: zodResolver(generalSchema),
-  });
-
-  useItemFinishListener((item) => {
-    const secureUrl = item.uploadResponse?.data.secure_url;
-    setValue("imageUrl", secureUrl);
-
-    dispatch(
-      setImageUrl({
-        imageUrl: secureUrl,
-      })
-    );
-
-    // // Route switch happening in here
-    // // Make sure that we set the image url before next step
-    if (router.pathname.includes("editcampaign")) {
-      return router.push(`/user/editcampaign/location?id=${campaign.id}`);
-    }
-    router.push("./location");
+    resolver: zodResolver(GeneralSchema),
   });
 
   const onInvalid = (errors) => {
@@ -151,17 +129,13 @@ export const General = ({ campaign }: GeneralProps) => {
   };
 
   const onSubmit: SubmitHandler<IStep1> = async (data) => {
-    processPending();
-    dispatch(step1(data));
+    await dispatch(step1({ ...data, startDate: data.startDate }));
 
-    console.log("data: ", data);
-
-    if (createCampaignData.imageUrl) {
-      reset();
+    if (data.imageUrl) {
       if (router.pathname.includes("editcampaign")) {
         return router.push(`/user/editcampaign/location?id=${campaign.id}`);
       }
-      router.push("./location");
+      return router.push("./location");
     }
   };
 
@@ -416,6 +390,7 @@ export const General = ({ campaign }: GeneralProps) => {
                 <DatePicker
                   label="Game Starting Date"
                   onChange={(date) => {
+                    console.log("date: ", date.toString());
                     onChange(date.toString());
                   }}
                   defaultValue={

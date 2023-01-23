@@ -7,6 +7,7 @@ import { nextAuthOptions } from "pages/api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import { useGetCampaignQuery } from "@generated/graphql";
 import { Loader } from "@components/Loader";
+import Uploady from "@rpldy/uploady";
 
 const CreatePreviewCampaign = () => {
   useIsAuth();
@@ -21,11 +22,7 @@ const CreatePreviewCampaign = () => {
 
   if (fetching) return <Loader />;
 
-  return (
-    <div>
-      <Preview campaign={campaign.getCampaign} />
-    </div>
-  );
+  return <Preview campaign={campaign.getCampaign} />;
 };
 
 export async function getServerSideProps({

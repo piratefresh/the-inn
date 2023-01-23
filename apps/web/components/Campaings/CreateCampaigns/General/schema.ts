@@ -97,7 +97,7 @@ const OnlineSchema = z.object({
     }),
 });
 
-export const generalSchema = z.object({
+export const GeneralSchema = z.object({
   title: z.string().min(1, { message: "Campaign Title is Required" }),
   summary: z.string().min(1, { message: "Campaign Description is required" }),
   jsonSummary: z

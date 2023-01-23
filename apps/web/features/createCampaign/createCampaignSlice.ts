@@ -1,8 +1,6 @@
 import { PayloadAction, createSlice, createSelector } from "@reduxjs/toolkit";
 import type { RootState } from "@store/store";
 import { ITimezone } from "ui/src/TimeZonePicker/TimeZonePicker";
-import immer from "immer";
-import reselect from "reselect";
 
 export enum Experience {
   Beginner = "Beginner",
@@ -28,6 +26,7 @@ export interface CreateCampaignState {
   summary: string;
   jsonSummary?: string;
   imageUrl: string;
+  image?: FileList | string;
   gameSystem: string; // change to enum type
   campaignType: string;
   city: string | null;
@@ -91,6 +90,7 @@ const initialState: CreateCampaignState = {
   title: "",
   summary: "",
   jsonSummary: "",
+  image: null,
   imageUrl: null,
   gameSystem: "Dungeon & Dragons",
   campaignType: "Campaign",
@@ -132,6 +132,7 @@ export const createCampaignSlice = createSlice({
       state.title = action.payload.title;
       state.summary = action.payload.summary;
       state.imageUrl = action.payload.imageUrl;
+      state.image = action.payload.imageUrl;
       state.gameSystem = action.payload.gameSystem;
       state.maxSeats = action.payload.maxSeats;
       state.timezone = action.payload.timezone;
@@ -139,7 +140,6 @@ export const createCampaignSlice = createSlice({
       state.experience = action.payload.experience;
       state.campaignType = action.payload.campaignType;
       state.price = action.payload.price;
-      state.imageUrl = action.payload.imageUrl;
       state.jsonSummary = action.payload.jsonSummary;
       state.timePeriods = action.payload.timePeriods.filter((e) => e);
       state.days = action.payload.days.filter((e) => e);
