@@ -31,7 +31,7 @@ export const MessageList = ({
   );
 
   return (
-    <div>
+    <div className="md:h-[calc(100vh-145px)] overflow-y-auto">
       {messages.map((message) => {
         const otherUser =
           message.sender.id === userId ? message.recipient : message.sender;

@@ -309,7 +309,8 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         </Tooltip>
       </div>
 
-      <div className="flex flex-row mr-4">
+      {/* WIP */}
+      {/* <div className="flex flex-row mr-4">
         <Menu trigger={<Text color="hiContrast">Columns</Text>}>
           <HeadlessMenu.Item>
             <div className="flex p-4">
@@ -332,7 +333,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
             </div>
           </HeadlessMenu.Item>
         </Menu>
-      </div>
+      </div> */}
 
       <div onClick={() => editor.chain().focus().toggleBookmark().run()}>
         Bookmark

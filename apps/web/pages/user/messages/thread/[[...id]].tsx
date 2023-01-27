@@ -141,7 +141,7 @@ const Thread = () => {
 
   if (MessageListFetching) return <Loader />;
 
-  if (!data?.length)
+  if (!userMessagesList.getUserPrivateMessages.length)
     return (
       <div className="p-4">
         <Text>No messages recieved</Text>
@@ -149,7 +149,7 @@ const Thread = () => {
     );
   if (!isDesktop)
     return (
-      <div className="p-4">
+      <div className="p-4" key={threadId}>
         {userMessagesList?.getUserPrivateMessages && !id && (
           <MessageList
             threadId={id}
@@ -191,7 +191,7 @@ const Thread = () => {
               session={session}
             />
 
-            <div className="flex flex-row items-center">
+            <div className="fixed left-0 bottom-1 min-w-full flex flex-row items-center">
               <Controller
                 name="message"
                 control={control}
@@ -219,8 +219,8 @@ const Thread = () => {
     );
 
   return (
-    <div className="p-4">
-      <div className="grid grid-cols-2 gap-8 p-4">
+    <div className="p-4" key={threadId}>
+      <div className="grid grid-cols-2 gap-8 p-4 h-[calc(100vh-120px)]">
         {userMessagesList?.getUserPrivateMessages && (
           <MessageList
             threadId={id}
@@ -229,7 +229,10 @@ const Thread = () => {
           />
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="overflow-y-scroll relative"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col p-4">
             <div className="flex gap-8 items-center whitespace-nowrap">
               {id && (
@@ -263,31 +266,26 @@ const Thread = () => {
             session={session}
           />
 
-          <Controller
-            name="message"
-            control={control}
-            render={({ field }) => (
-              <TextArea
-                minRows={2}
-                maxRows={4}
-                gold
-                value={field.value}
-                onChange={field.onChange}
-                {...field}
-              />
-            )}
-          />
-          <div className="flex flex-1 justify-end mt-2">
-            <Button
-              css={{
-                maxWidth: "100px",
-              }}
-              size="large"
-              disabled={addMessageLoading}
-              fullWidth
-            >
-              Send
-            </Button>
+          <div className="sticky left-0 bottom-1 min-w-full">
+            <Controller
+              name="message"
+              control={control}
+              render={({ field }) => (
+                <TextArea
+                  minRows={2}
+                  maxRows={4}
+                  gold
+                  value={field.value}
+                  onChange={field.onChange}
+                  {...field}
+                />
+              )}
+            />
+            <div className="flex flex-1 justify-end mt-2">
+              <Button size="large" disabled={addMessageLoading} fullWidth>
+                Send
+              </Button>
+            </div>
           </div>
         </form>
       </div>
@@ -311,12 +309,9 @@ const Messages = ({
   isDesktop,
   session,
 }: MessagesProps) => {
-  if (messages) return <Text>No messages received yet</Text>;
+  if (!messages) return <Text>No messages received yet</Text>;
   return (
-    <div
-      className="flex flex-col gap-4 overflow-y-auto mb-8"
-      style={{ height: isDesktop ? "55vh" : "65vh" }}
-    >
+    <div className="flex flex-1 flex-col gap-4 overflow-y-auto mb-8">
       {messages?.map((message) => {
         return (
           <MessageBubble

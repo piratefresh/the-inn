@@ -32,6 +32,7 @@ export { RangeSlider } from "./RangeSlider";
 export { Dialog, RadixDialog } from "./Dialog";
 export { Popover } from "./Popover";
 export { Menu, HeadlessMenu } from "./Menu";
+export type { MenuItemProps, MenuLinksProps, MenuProps } from "./Menu";
 export { Avatar } from "./Avatar";
 export {
   Table,

@@ -1,16 +1,24 @@
 import React from "react";
 import layoutStyles from "./CampaignLayout.module.css";
-// import Footer from "@components/Footer";
-import { Nav } from "@components/Nav";
+import { useSession } from "next-auth/react";
+import { Menu } from "ui";
+import { MENU_DATA } from "@consts/menuLinks";
+import { useMediaQuery } from "ui/src/hooks/useMediaQuery";
 
 export interface ILayoutProps {
   children: React.ReactNode;
 }
 
 export const CampaignLayout: React.FC = ({ children }: ILayoutProps) => {
+  const { data: session } = useSession();
+  const isMobile = useMediaQuery("(max-width: 900px)");
   return (
     <div className={layoutStyles.parent}>
-      <Nav />
+      <Menu
+        logo="/images/logotheinn.svg"
+        menuLinks={isMobile ? MENU_DATA : MENU_DATA[0].children}
+        session={session}
+      />
       <div className="flex">
         <main className="relative col-span-full w-full">{children}</main>
         {/* <Footer /> */}
