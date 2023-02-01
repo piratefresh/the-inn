@@ -4,11 +4,8 @@ import {
   GetCampaignQueryVariables,
   MembershipRole,
   useGetCampaignQuery,
-  GetCampaignsIdQuery,
-  GetCampaignsIdQueryVariables,
-  GetCampaignsIdDocument,
 } from "@generated/graphql";
-import { CampaignLayout } from "@layouts/CampaignLayout";
+import { CampaignLayout } from "@layouts/index";
 import { useRouter } from "next/router";
 import { HeroImage, Text, mediaString, Avatar } from "ui";
 import React from "react";
@@ -21,52 +18,27 @@ import { useMediaQuery } from "@hooks/useMediaQueries";
 import { CampaignBottomCard } from "@components/CampaignBottomCard";
 import { Loader } from "@components/Loader";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { initUrqlClient } from "@utils/initUrqlClient";
 import { GetStaticPropsContext } from "next";
-import Link from "next/link";
 
-// export async function getStaticProps({ params }: GetStaticPropsContext) {
-//   const { urqlClient, ssrCache } = initUrqlClient(
-//     process.env.NEXT_PUBLIC_API_URL as string
-//   );
+export async function getServerSideProps({ params }: GetStaticPropsContext) {
+  const { urqlClient, ssrCache } = initUrqlClient(
+    process.env.NEXT_PUBLIC_API_URL as string,
+    {}
+  );
 
-//   const campaign = await urqlClient
-//     .query<GetCampaignQuery, GetCampaignQueryVariables>(GetCampaignDocument, {
-//       id: params.id as string,
-//     })
-//     .toPromise();
-
-//   return {
-//     props: {
-//       urqlState: ssrCache.extractData(),
-//     },
-//     revalidate: 10, // In seconds
-//   };
-// }
-
-// export async function getStaticPaths() {
-//   try {
-//     const { urqlClient } = initUrqlClient(
-//       process.env.NEXT_PUBLIC_API_URL as string
-//     );
-
-//     const campaigns = await urqlClient
-//       .query<GetCampaignsIdQuery, GetCampaignsIdQueryVariables>(
-//         GetCampaignsIdDocument,
-//         {}
-//       )
-//       .toPromise();
-
-//     const paths = campaigns.data.getCampaignsId.map((campaign) => ({
-//       params: { id: campaign.id },
-//     }));
-
-//     return { paths: paths ?? [], fallback: true };
-//   } catch (err) {
-//     console.log("err: ", err);
-//     return { paths: [], fallback: true };
-//   }
-// }
+  const campaign = await urqlClient
+    .query<GetCampaignQuery, GetCampaignQueryVariables>(GetCampaignDocument, {
+      id: params.id as string,
+    })
+    .toPromise();
+  return {
+    props: {
+      urqlState: ssrCache.extractData(),
+    },
+  };
+}
 
 const Campaign = () => {
   const router = useRouter();
@@ -80,9 +52,6 @@ const Campaign = () => {
       id: id as string,
     },
   });
-
-  // const [{ data: campaigns, fetching: fetchingCampaigns, error }] =
-  //   useGetCampaignsQuery();
 
   const handleJoinCampaign = () => {
     router.push(`/join/${id}`);

@@ -1,5 +1,5 @@
 import { UserGames } from "@components/User";
-import { UserPageLayout } from "@layouts/UserPageLayout";
+import { UserPageLayout } from "@layouts/index";
 import { GetServerSidePropsContext } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { nextAuthOptions } from "pages/api/auth/[...nextauth]";

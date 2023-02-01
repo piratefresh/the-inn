@@ -5,7 +5,7 @@ import {
   GetUserQueryVariables,
   useGetUserQuery,
 } from "@generated/graphql";
-import { UserPageLayout } from "@layouts/UserPageLayout";
+import { UserPageLayout } from "@layouts/index";
 import { useSession } from "next-auth/react";
 import { styled, Tabs, TabsContent, TabsList, TabsTrigger } from "ui";
 import { GetServerSidePropsContext } from "next";

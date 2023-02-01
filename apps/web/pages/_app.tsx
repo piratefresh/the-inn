@@ -15,10 +15,10 @@ import { QueryParamProvider } from "use-query-params";
 import { SSRProvider } from "@react-aria/ssr";
 import algoliasearch from "algoliasearch/lite";
 import { InstantSearch } from "react-instantsearch-hooks-web";
-import { createUrqlClient, UrqlContext } from "@utils/createUrqlClient";
+import { createUrqlClient } from "@utils/createUrqlClient";
 import { configureAbly } from "@ably-labs/react-hooks";
 import { AppPropsWithLayout } from "Types/LayoutPage";
-import { UserPageLayout } from "@layouts/UserPageLayout";
+import { UserPageLayout } from "@layouts/index";
 import { MediaContextProvider } from "@utils/responsive";
 
 const searchClient = algoliasearch(
@@ -46,7 +46,6 @@ function App({
   // fix later
   // @ts-ignore
   pageProps: { session, ...pageProps },
-  resetUrqlClient,
   router,
 }: AppPropsWithLayout) {
   const [navIsOpen, setNavIsOpen] = React.useState(false);
@@ -88,11 +87,9 @@ function App({
                     indexName="dev_campaigns"
                   >
                     <NotificationsProvider position="top-center">
-                      <UrqlContext.Provider value={{ resetUrqlClient }}>
-                        <Layout {...layoutProps}>
-                          <Component {...pageProps} />
-                        </Layout>
-                      </UrqlContext.Provider>
+                      <Layout {...pageProps} {...layoutProps}>
+                        <Component {...pageProps} />
+                      </Layout>
                     </NotificationsProvider>
                   </InstantSearch>
                 </Provider>

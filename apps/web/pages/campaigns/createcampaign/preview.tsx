@@ -1,5 +1,5 @@
 import { Preview } from "@components/Campaings/CreateCampaigns/Preview";
-import { CampaignLayout } from "@layouts/CampaignLayout";
+import { CampaignLayout } from "@layouts/index";
 import { useIsAuth } from "@utils/useIsAuth";
 import { unstable_getServerSession } from "next-auth";
 import { GetServerSidePropsContext } from "next";

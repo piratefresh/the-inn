@@ -1,23 +1,35 @@
 import React from "react";
 import layoutStyles from "./CampaignLayout.module.css";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { withUrqlClient } from "next-urql";
 import { Menu } from "ui";
 import { MENU_DATA } from "@consts/menuLinks";
 import { useMediaQuery } from "ui/src/hooks/useMediaQuery";
+import { useRouter } from "next/router";
+import { createUrqlClient } from "@utils/createUrqlClient";
+import { ILayoutProps } from ".";
 
-export interface ILayoutProps {
-  children: React.ReactNode;
-}
-
-export const CampaignLayout: React.FC = ({ children }: ILayoutProps) => {
+const CampaignLayout = ({ children, resetUrqlClient }: ILayoutProps) => {
   const { data: session } = useSession();
+  const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 900px)");
+
+  const handleSignOut = () => {
+    resetUrqlClient();
+    signOut({
+      redirect: false,
+      callbackUrl: "/auth/signin",
+    });
+
+    router.push("/auth/signin");
+  };
   return (
     <div className={layoutStyles.parent}>
       <Menu
         logo="/images/logotheinn.svg"
         menuLinks={isMobile ? MENU_DATA : MENU_DATA[0].children}
         session={session}
+        signOut={handleSignOut}
       />
       <div className="flex">
         <main className="relative col-span-full w-full">{children}</main>
@@ -26,3 +38,5 @@ export const CampaignLayout: React.FC = ({ children }: ILayoutProps) => {
     </div>
   );
 };
+
+export default withUrqlClient(createUrqlClient, { ssr: false })(CampaignLayout);

@@ -5,9 +5,11 @@ import { Menu } from "ui";
 import { MENU_DATA } from "@consts/menuLinks";
 import { signOut, useSession } from "next-auth/react";
 import { useMediaQuery } from "ui/src/hooks/useMediaQuery";
-import { UrqlContext } from "@utils/createUrqlClient";
+import { createUrqlClient } from "@utils/createUrqlClient";
 import { useRouter } from "next/router";
 import { useGetUnreadNotificationsQuery } from "@generated/graphql";
+import { ILayoutProps } from ".";
+import { withUrqlClient } from "next-urql";
 
 const StyledRoot = styled("div", {
   backgroundColor: "#0D0A00",
@@ -18,12 +20,11 @@ const StyledMain = styled("main", {
   gridColumn: "1 / -1",
 });
 
-export interface ILayoutProps {
-  children: React.ReactNode;
-}
-
-export const UserPageLayout: React.FC = ({ children }: ILayoutProps) => {
-  const { resetUrqlClient } = React.useContext(UrqlContext);
+const UserPageLayout = ({
+  children,
+  resetUrqlClient,
+  ...props
+}: ILayoutProps) => {
   const { data: session } = useSession();
   const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 900px)");
@@ -31,13 +32,15 @@ export const UserPageLayout: React.FC = ({ children }: ILayoutProps) => {
   const [{ data: notifications, fetching: fetchingNotifications }] =
     useGetUnreadNotificationsQuery();
 
-  const handleSignOut = () => {
-    signOut({
+  const handleSignOut = async () => {
+    console.log("props: ", props);
+    resetUrqlClient();
+    await signOut({
       redirect: false,
       callbackUrl: "/auth/signin",
     });
-    resetUrqlClient();
-    router.push("/auth/signin");
+
+    await router.push("/auth/signin");
   };
   return (
     <StyledRoot>
@@ -55,3 +58,5 @@ export const UserPageLayout: React.FC = ({ children }: ILayoutProps) => {
     </StyledRoot>
   );
 };
+
+export default withUrqlClient(createUrqlClient, { ssr: false })(UserPageLayout);

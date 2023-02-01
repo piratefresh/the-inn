@@ -1,6 +1,6 @@
 import { Input } from "@components/ui/Input";
 import InputGroup from "@components/ui/InputGroup";
-import { AuthLayout } from "@layouts/AuthLayout";
+import { AuthLayout } from "@layouts/index";
 import { Button, mediaString, Text } from "ui";
 import { showNotification } from "@mantine/notifications";
 import { signIn, useSession } from "next-auth/react";

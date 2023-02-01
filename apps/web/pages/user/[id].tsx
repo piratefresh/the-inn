@@ -5,7 +5,7 @@ import {
   useGetCampaignsQuery,
   useGetUserQuery,
 } from "@generated/graphql";
-import { UserPageLayout } from "@layouts/UserPageLayout";
+import { UserPageLayout } from "@layouts/index";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Loader } from "@components/Loader";

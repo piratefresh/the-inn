@@ -3,7 +3,7 @@ import {
   useGetApplicationCampaignQuery,
   useGetCampaignQuery,
 } from "@generated/graphql";
-import { CampaignLayout } from "@layouts/CampaignLayout";
+import { CampaignLayout } from "@layouts/index";
 import {
   ColumnDef,
   createColumnHelper,

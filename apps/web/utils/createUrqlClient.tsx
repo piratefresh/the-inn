@@ -4,7 +4,6 @@ import {
   subscriptionExchange,
   errorExchange as urqlErrorExchange,
   ssrExchange as UrqlSSRExchange,
-  Provider as UrqlProvider,
 } from "urql";
 import { cacheExchange, Cache } from "@urql/exchange-graphcache";
 import { relayPagination } from "@urql/exchange-graphcache/extras";
@@ -22,7 +21,6 @@ import {
 } from "@generated/graphql";
 import { isServer } from "./isServer";
 import { SSRExchange } from "next-urql";
-import React from "react";
 
 export const errorExchange = urqlErrorExchange({
   onError: (error) => {
@@ -52,7 +50,7 @@ function invalidateQuery(cache: Cache, queryName: string) {
   });
 }
 
-const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
+export const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
   let cookie = "";
   if (isServer()) {
     cookie = ctx?.req?.headers?.cookie;
@@ -196,11 +194,3 @@ const createUrqlClient = (ssrExchange?: any, ctx?: any) => {
     ],
   };
 };
-
-type Context = {
-  resetUrqlClient?: () => any;
-};
-
-export const UrqlContext = React.createContext<Context>(null);
-
-export { createUrqlClient };

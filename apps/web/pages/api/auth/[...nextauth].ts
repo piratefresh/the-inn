@@ -36,13 +36,6 @@ const SIGN_OUT_MUTATION = `mutation Logout {
   logout
 }`;
 
-// type JSONResponse = {
-//   data?: {
-//     signin: Omit<SignInMutation, "fetchedAt">;
-//   };
-//   errors?: Array<{ message: string }>;
-// };
-
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Do whatever you want here, before the request is passed down to `NextAuth`
   return await NextAuth(req, res, nextAuthOptions(req, res));
@@ -138,21 +131,6 @@ export const nextAuthOptions = (req, res) => ({
           cookies.set("next-auth.session-token", sessionToken, {
             expires: sessionExpiry,
           });
-
-          // const cookies = new Cookies(req, res, {
-          //   secure: process.env.NODE_ENV === "production" ? true : false,
-          // });
-          // cookies.set(`next-auth.session-token`, sessionToken, {
-          //   expires: sessionExpiry,
-          //   httpOnly: true,
-          //   sameSite: "none" as "none",
-          //   path: "/",
-          //   secure: process.env.NODE_ENV === "production" ? true : false,
-          //   domain: process.env.NEXT_PUBLIC_VERCEL_URL
-          //     ? ".theinn.app"
-          //     : undefined,
-          // });
-          // return true;
         }
       }
 

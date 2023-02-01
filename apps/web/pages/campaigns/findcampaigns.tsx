@@ -5,7 +5,7 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import { useMediaQuery } from "@hooks/useMediaQueries";
-import { CampaignLayout } from "@layouts/CampaignLayout";
+import { CampaignLayout } from "@layouts/index";
 import React from "react";
 import { renderToString } from "react-dom/server";
 import algoliasearch from "algoliasearch/lite";

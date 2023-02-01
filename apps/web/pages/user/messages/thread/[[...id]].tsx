@@ -8,7 +8,7 @@ import {
   useGetUserQuery,
 } from "@generated/graphql";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { UserPageLayout } from "@layouts/UserPageLayout";
+import { UserPageLayout } from "@layouts/index";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";

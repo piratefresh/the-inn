@@ -6,7 +6,7 @@ import {
   useGetThreadMessagesQuery,
 } from "@generated/graphql";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { UserPageLayout } from "@layouts/UserPageLayout";
+import { UserPageLayout } from "@layouts/index";
 import { formatDistanceToNow } from "date-fns";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -123,7 +123,8 @@ const Thread = () => {
               href={`$/user/${id}`}
               className="flex flex-row gap-2 items-center"
               passHref
-              legacyBehavior>
+              legacyBehavior
+            >
               <>
                 {otherUserOnline && (
                   <div className="rounded-full w-2 h-2 bg-green-500" />

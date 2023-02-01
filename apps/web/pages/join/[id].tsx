@@ -4,7 +4,7 @@ import {
   useAddPlayerApplicationMutation,
   useGetCampaignQuery,
 } from "@generated/graphql";
-import { CampaignLayout } from "@layouts/CampaignLayout";
+import { CampaignLayout } from "@layouts/index";
 import { GetServerSidePropsContext } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";

@@ -1,26 +1,42 @@
-import { useGetCampaignsQuery } from "@generated/graphql";
+import {
+  useGetCampaignsQuery,
+  GetCampaignsDocument,
+  GetCampaignsQuery,
+  GetCampaignsQueryVariables,
+} from "@generated/graphql";
 import { HeroImage, Text } from "ui";
 import { usePresence } from "@ably-labs/react-hooks";
 import { CampaignCard } from "@components/CampaignCard";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import React from "react";
-import { NextPageWithLayout } from "Types/LayoutPage";
-import { UserPageLayout } from "@layouts/UserPageLayout";
+import { UserPageLayout } from "@layouts/index";
 import { Loader } from "@components/Loader";
-import { useSession } from "next-auth/react";
+import { GetStaticPropsContext } from "next";
+import { initUrqlClient } from "@utils/initUrqlClient";
 
-const Home: NextPageWithLayout = () => {
-  const { data: session } = useSession();
+export async function getStaticProps() {
+  const { urqlClient, ssrCache } = initUrqlClient(
+    process.env.NEXT_PUBLIC_API_URL as string
+  );
+
+  const campaigns = await urqlClient
+    .query<GetCampaignsQuery, GetCampaignsQueryVariables>(
+      GetCampaignsDocument,
+      {}
+    )
+    .toPromise();
+
+  return {
+    props: {
+      urqlState: ssrCache.extractData(),
+    },
+    revalidate: 10, // In seconds
+  };
+}
+
+const Home = () => {
   const [{ data: campaigns, fetching, error }] = useGetCampaignsQuery();
-
-  const [presenceData, updateStatus] = usePresence(`online`);
-
-  const peers = presenceData.map((msg, index) => (
-    <li key={index}>
-      {msg.clientId}: {msg.data}
-    </li>
-  ));
 
   if (fetching) return <Loader />;
 
@@ -97,4 +113,4 @@ Home.layoutProps = {
   Layout: UserPageLayout,
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Home);
+export default Home;
