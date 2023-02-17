@@ -12,13 +12,10 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import { encodeSorting } from "@utils/encodeSorting";
-import { GetServerSidePropsContext } from "next";
-import { unstable_getServerSession } from "next-auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { nextAuthOptions } from "pages/api/auth/[...nextauth]";
 import React, { useEffect } from "react";
-import { css, IndeterminateCheckbox, Person, Table, Text, Button } from "ui";
+import { IndeterminateCheckbox, Person, Table, Text, Button } from "ui";
 import { OnChangeProps } from "ui/src/Table/Table";
 import {
   NumberParam,
@@ -27,11 +24,6 @@ import {
   withDefault,
 } from "use-query-params";
 import { format } from "date-fns";
-
-const root = css({
-  background:
-    "linear-gradient(179.62deg, #0E0A00 -79.35%, #25120E -3.81%, #25120E 25.17%, #0D0A00 68.63%)",
-});
 
 const columnHelper = createColumnHelper<Person>();
 
