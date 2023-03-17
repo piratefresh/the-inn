@@ -61,7 +61,7 @@ export const BasicSettings = ({ session, user }: BasicSettingsProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="text-black">
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="text-white">
       <Section
         className="grid gap-8"
         style={{ gridTemplateColumns: "1fr 2fr" }}

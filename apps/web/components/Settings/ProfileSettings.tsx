@@ -221,7 +221,7 @@ export const ProfileSettings = ({ session, user }: ProfileSettingsProps) => {
           </Text>
           <Text color="loContrast">For user to find you on other pages</Text>
         </div>
-        <section className="text-black">
+        <section className="text-slate-50">
           <InputGroup className="my-4" label="Twitch">
             <Controller
               name="twitch"

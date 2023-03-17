@@ -5,30 +5,31 @@ import { styled, theme } from "../theme";
 
 const StyledRoot = styled("div", {
   position: "relative",
-  marginTop: "$space$2",
 });
 
 const StyledButton = styled(ListboxPrimitive.Button, {
-  position: "relative",
   all: "reset",
+  position: "relative",
+  color: "$loContrast",
   border: "1px solid $yellowBrand",
-  backgroundColor: "$loContrast",
+  backgroundColor: "transparent",
   padding: "$space$4",
   width: "100%",
   borderRadius: "$radii$md",
   display: "flex",
   justifyContent: "flex-start",
   fontSize: theme.fontSizes.base.value,
+  minHeight: "38px",
 
   variants: {
     gold: {
       true: {
         borderRadius: "$radii$md",
-        border: "3px solid transparent",
-        backgroundOrigin: "border-box",
-        backgroundClip: "padding-box, border-box",
-        backgroundImage:
-          "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
+        border: "1px solid $yellowBrand",
+        // backgroundOrigin: "border-box",
+        // backgroundClip: "padding-box, border-box",
+        // backgroundImage:
+        //   "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
       },
     },
   },
@@ -42,21 +43,23 @@ const StyledOptions = styled(ListboxPrimitive.Options, {
   borderRadius: "$radii$md",
   border: "1px solid $yellowBrand",
   borderTop: "none",
-  backgroundColor: "$loContrast",
+  backgroundColor: "transparent",
   padding: "$space$4",
   maxHeight: "$sizes$5xl",
   zIndex: "$zIndices$dropdown",
   fontSize: theme.fontSizes.base.value,
+  color: "$slate1",
 
   variants: {
     gold: {
       true: {
         borderRadius: "$radii$md",
-        border: "3px solid transparent",
-        backgroundOrigin: "border-box",
-        backgroundClip: "padding-box, border-box",
-        backgroundImage:
-          "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
+        border: "1px solid $yellowBrand",
+        backgroundColor: "#0d0a00",
+        // backgroundOrigin: "border-box",
+        // backgroundClip: "padding-box, border-box",
+        // backgroundImage:
+        //   "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
       },
     },
   },

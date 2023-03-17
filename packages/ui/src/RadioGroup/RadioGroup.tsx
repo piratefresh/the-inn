@@ -1,6 +1,6 @@
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import React from "react";
-import { styled } from "../theme";
+import { styled, theme } from "../theme";
 
 const StyledRoot = styled(RadioGroupPrimitive.Root, {
   display: "flex",
@@ -20,7 +20,8 @@ const StyledRoot = styled(RadioGroupPrimitive.Root, {
 
 const StyledRadioItem = styled(RadioGroupPrimitive.Item, {
   all: "unset",
-  backgroundColor: "white",
+  color: theme.colors.loContrast,
+  backgroundColor: "transparent",
   border: "2px solid $yellowBrand",
   display: "flex",
   justifyContent: "center",
@@ -34,6 +35,7 @@ const StyledRadioItem = styled(RadioGroupPrimitive.Item, {
     checked: {
       true: {
         backgroundColor: "$yellowBrand",
+        color: theme.colors.hiContrast,
       },
     },
     size: {

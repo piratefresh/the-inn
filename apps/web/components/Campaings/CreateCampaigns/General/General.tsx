@@ -195,7 +195,7 @@ export const General = ({ campaign }: GeneralProps) => {
               <Input
                 gold
                 size="medium"
-                placeholder="Campaign Name"
+                // placeholder="Campaign Name"
                 value={field.value}
                 onChange={(e) => field.onChange(e)}
                 error={errors.title?.message}
@@ -352,15 +352,8 @@ export const General = ({ campaign }: GeneralProps) => {
               name="price"
               render={({ field }) => {
                 return (
-                  <>
-                    <RangeSlider
-                      // Value should be array
-                      value={[field.value]}
-                      min={0}
-                      max={999}
-                      onValueChange={(price) => field.onChange(price[0])}
-                    />
-                    <div className="flex bg-white goldenBorder rounded-md">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex bg-transparent goldenBorder rounded-md text-slate-50">
                       <InputAddon>$</InputAddon>
                       <Input
                         value={field.value}
@@ -375,7 +368,14 @@ export const General = ({ campaign }: GeneralProps) => {
                         maxLength={3}
                       />
                     </div>
-                  </>
+                    <RangeSlider
+                      // Value should be array
+                      value={[field.value]}
+                      min={0}
+                      max={999}
+                      onValueChange={(price) => field.onChange(price[0])}
+                    />
+                  </div>
                 );
               }}
             />
@@ -417,10 +417,13 @@ export const General = ({ campaign }: GeneralProps) => {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <ChipGroup value={value} onChange={onChange} multiple>
-                  <Chip value="Morning">
-                    <div className="flex flex-col">
-                      <Text color="hiContrast">Morning</Text>
-                      <Text color="hiContrast" size="xs">
+                  <Chip
+                    className="flex justify-center items-center"
+                    value="Morning"
+                  >
+                    <div className="flex flex-col justify-center items-center">
+                      <Text color="inherit">Morning</Text>
+                      <Text color="inherit" size="xs">
                         8am-12am
                       </Text>
                     </div>
@@ -428,32 +431,32 @@ export const General = ({ campaign }: GeneralProps) => {
 
                   <Chip value="Afternoon">
                     <div className="flex flex-col">
-                      <Text color="hiContrast">Afternoon</Text>
-                      <Text color="hiContrast" size="xs">
+                      <Text color="inherit">Afternoon</Text>
+                      <Text color="inherit" size="xs">
                         12am-5pm
                       </Text>
                     </div>
                   </Chip>
                   <Chip value="Evening">
                     <div className="flex flex-col">
-                      <Text color="hiContrast">Evening</Text>
-                      <Text color="hiContrast" size="xs">
+                      <Text color="inherit">Evening</Text>
+                      <Text color="inherit" size="xs">
                         5pm-10pm
                       </Text>
                     </div>
                   </Chip>
                   <Chip value="Night">
                     <div className="flex flex-col">
-                      <Text color="hiContrast">Night</Text>
-                      <Text color="hiContrast" size="xs">
+                      <Text color="inherit">Night</Text>
+                      <Text color="inherit" size="xs">
                         10pm-8am
                       </Text>
                     </div>
                   </Chip>
                   <Chip value="Flexible">
                     <div className="flex flex-col">
-                      <Text color="hiContrast">Flexible</Text>
-                      <Text color="hiContrast" size="xs">
+                      <Text color="inherit">Flexible</Text>
+                      <Text color="inherit" size="xs">
                         Any
                       </Text>
                     </div>

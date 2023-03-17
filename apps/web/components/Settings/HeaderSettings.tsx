@@ -36,7 +36,6 @@ export const HeaderSettings = ({ session, user }: SettingsProps) => {
   };
 
   const onSubmit: SubmitHandler<HeaderFormProps> = async (data) => {
-    console.log("onSubmit data: ", data);
     let imageUrl = null;
     if (data.image) {
       const { data: signatureData } = await createImageSignature({});
@@ -57,7 +56,7 @@ export const HeaderSettings = ({ session, user }: SettingsProps) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit, onInvalid)}
-      className="flex flex-row items-center gap-16"
+      className="flex flex-col md:flex-row items-center gap-8"
     >
       <div className="flex flex-col">
         <Controller

@@ -1,5 +1,6 @@
 // @ts-expect-error idk why
 const path = require("path");
+const { PrismaPlugin } = require("@prisma/nextjs-monorepo-workaround-plugin");
 
 const headers = [
   "Accept",
@@ -60,6 +61,13 @@ const nextConfig = {
   },
   transpilePackages: ["ui", "backend"],
   serverComponentsExternalPackages: ["backend", "@prisma/client"],
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...config.plugins, new PrismaPlugin()];
+    }
+
+    return config;
+  },
 };
 
 module.exports = nextConfig;

@@ -1,13 +1,11 @@
 import React from "react";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 import { Dialog, styled, Text } from "ui";
 import { CameraIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { AvatarUploadDialog } from "./AvatarUploadDialog";
 import { AvatarDialog } from "./AvatarDialog";
 
 const StyledImage = styled(Image, {
-  borderRadius: "$full",
-  border: "10px solid $yellowBrand",
   height: "100%",
   width: "100%",
 });
@@ -23,7 +21,6 @@ export const AvatarUpload = ({
   image,
   onChange,
 }: AvatarUploadProps) => {
-  console.log("image: ", image);
   const [open, setOpen] = React.useState(false);
   const [openCropper, setOpenCropper] = React.useState(false);
 
@@ -45,28 +42,28 @@ export const AvatarUpload = ({
     setOpenCropper(v);
   };
 
+  console.log("openCropper: ", openCropper);
+
   return (
     <div>
       <Text color="hiContrast">{openCropper}</Text>
       <div
-        className="h-40 w-40 border-4 border-brandYellow rounded-full relative cursor-pointer flex justify-center items-center "
+        className="h-40 w-40 border-4 border-brandYellow rounded-full relative cursor-pointer flex justify-center items-center overflow-hidden"
         onClick={(event) => {
           event.preventDefault();
           setOpen(true);
-          // fileInputRef.current.click();
+          setOpenCropper(true);
         }}
       >
-        {defaultSrc || preview ? (
-          <div className="h-full w-full">
+        {preview && !openCropper ? (
+          <div>
             <StyledImage
               alt="Avatar uploader"
-              width={200}
-              height={200}
-              layout="responsive"
+              fill
               src={preview}
               objectFit="cover"
             />
-            <div className="absolute bottom-0 right-5 z-10 bg-brandYellow rounded-full p-2">
+            <div className="absolute bottom-5 right-5 z-20 bg-brandYellow rounded-full p-2">
               <PencilIcon className="h5 w-5" />
             </div>
           </div>
@@ -97,7 +94,7 @@ export const AvatarUpload = ({
         title="Avatar Upload"
         description=""
       >
-        {!preview || openCropper ? (
+        {preview ? (
           <AvatarUploadDialog
             image={preview}
             onChange={onChange}

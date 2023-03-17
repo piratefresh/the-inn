@@ -13,23 +13,6 @@ export function randomIntFromInterval(min: number, max: number) {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-// const campaignData: Prisma.CampaignCreateInput[] = [
-//   {
-//     title: "test",
-//     image:
-//       "https://cdnb.artstation.com/p/assets/images/images/050/482/035/4k/ben-keeling-squareshota01.jpg?1654954786",
-//     summary: "test",
-//     city: "Philadelphia",
-//     state: "PA",
-//     isOnline: true,
-//     startDate: new Date(),
-//     endDate: new Date(),
-//     lat: 39.9526,
-//     lng: -75.134109,
-//     game_system: "Pathfinder",
-//     max_seats: 4,
-//   },
-// ];
 
 export async function seedDB() {
   const amountOfUsers = 50;

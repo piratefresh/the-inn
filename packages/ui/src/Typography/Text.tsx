@@ -37,7 +37,8 @@ export interface TextProps {
     | "gray"
     | "hiContrast"
     | "loContrast"
-    | "lightContrast";
+    | "lightContrast"
+    | "inherit";
   font?: VariantProps<typeof font.fonts>;
   weight?: VariantProps<typeof font.fontWeights>;
   style?: React.CSSProperties;
@@ -156,6 +157,9 @@ const StyledText = styled("span", {
       lightContrast: {
         color: "rgb(237, 232, 205)",
       },
+      inherit: {
+        color: "inherit",
+      },
     },
     font: {
       mono: {
@@ -223,7 +227,7 @@ export const Text = ({
   size,
   as = "p",
   weight = "normal",
-  color = "loContrast",
+  color,
   style,
   className,
   font,

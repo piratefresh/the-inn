@@ -3,6 +3,7 @@ import { styled } from "../theme";
 export const StyledInput: any = styled("input", {
   // Reset
   all: "unset",
+  color: "#fff",
   appearance: "none",
   borderWidth: "0",
   boxSizing: "border-box",
@@ -62,11 +63,7 @@ export const StyledInput: any = styled("input", {
     gold: {
       true: {
         borderRadius: "$radii$md",
-        border: "3px solid transparent",
-        backgroundOrigin: "border-box",
-        backgroundClip: "padding-box, border-box",
-        backgroundImage:
-          "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
+        border: "1px solid $yellowBrand",
       },
     },
     errorStyle: {

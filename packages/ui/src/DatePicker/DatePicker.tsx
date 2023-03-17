@@ -65,10 +65,10 @@ export function DatePicker({
           <Popover.Anchor className="relative inline-block">
             <StyledField
               onClick={onFieldClick}
-              className={`bg-white text-black group inline-flex items-center rounded-md px-4`}
+              className={`bg-transparent text-white group inline-flex items-center rounded-md px-4`}
             >
               {!hasTrigger && (
-                <CalendarIcon className=" mr-1 h-5 w-5 text-black" />
+                <CalendarIcon className=" mr-1 h-5 w-5 text-white" />
               )}
               <DateField name={props.name} {...fieldProps} />
               {state.validationState === "invalid" && (

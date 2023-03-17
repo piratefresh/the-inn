@@ -33,14 +33,11 @@ const colourStyles: StylesConfig<String, true> = {
 
     borderRadius: 6,
     cursor: "pointer",
-    border: "3px solid transparent",
-    backgroundOrigin: "border-box",
-    backgroundClip: "padding-box, border-box",
-    backgroundImage: `linear-gradient(#fcfcfc, #fcfcfc),
-      linear-gradient(#ffd166, #9f5e25)`,
+    border: "1px solid #FFD166",
+    backgroundColor: "transparent",
     boxShadow: "none",
     ":hover": {
-      borderColor: "transparent",
+      borderColor: "#FFD166",
     },
   }),
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -110,14 +107,6 @@ export const MultiSelect = ({ onChange, value, ref }: MultiSelectProps) => {
     inputValue: string,
     selectValue: OnChangeValue<IOptionType, true>
   ): boolean => {
-    console.log("inputValue: ", inputValue);
-    console.log("selectValue: ", selectValue);
-    console.log(
-      "test: ",
-      selectValue.some(
-        ({ value }) => value.toLowerCase() === inputValue.toLowerCase()
-      )
-    );
     return (
       !!inputValue &&
       selectValue.some(

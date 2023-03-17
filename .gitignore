@@ -40,3 +40,5 @@ yarn-error.log*
 # storybook
 storybook-static
 
+apps/backend/.env
+apps/web/.env

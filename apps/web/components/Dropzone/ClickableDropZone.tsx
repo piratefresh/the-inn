@@ -70,7 +70,7 @@ export const ClickableDropZone = forwardRef(
         <div
           id="drag-text"
           className={clsx(
-            "col-span-3 relative h-48 bg-white p-5 cursor-pointer rounded-md overflow-hidden",
+            "col-span-3 relative h-48 text-white p-5 cursor-pointer rounded-md overflow-hidden",
             DropZoneStyles["root"],
             DropZoneStyles["dropzoneHeight"],
             { [DropZoneStyles["error"]]: error }

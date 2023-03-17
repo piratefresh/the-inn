@@ -8,6 +8,7 @@ interface CampaignSideCardProps {
   isOwner?: boolean;
   isMember?: boolean;
   onSubmit?: () => void;
+  onBack?: (event: React.MouseEvent<HTMLElement>) => void;
   submitText?: string;
 }
 
@@ -16,12 +17,11 @@ const SideCard = styled("div", {
   flexDirection: "column",
   padding: "$4",
   position: "sticky",
-  marginTop: "64px",
-  top: "64px",
-  right: "10%",
+  top: "0%",
 
   fontSize: "$7xl",
   width: 275,
+  height: "100%",
   float: "right",
 
   borderRadius: "$radii$md",
@@ -39,6 +39,7 @@ export const CampaignSideCard = ({
   isOwner = false,
   isMember = false,
   onSubmit,
+  onBack,
   submitText,
 }: CampaignSideCardProps) => {
   return (
@@ -124,6 +125,11 @@ export const CampaignSideCard = ({
           <Button size="large" fullWidth onClick={onSubmit}>
             {submitText ? submitText : "Join Campaign"}
           </Button>
+          {onBack && (
+            <Button size="large" fullWidth onClick={onBack}>
+              Previous
+            </Button>
+          )}
         </div>
       )}
       {isOwner && (

@@ -17,15 +17,18 @@ const StyledLabel = styled("label", {
   all: "unset",
   boxSizing: "border-box",
   display: "inline-flex",
-  backgroundColor: "$loContrast",
+  backgroundColor: "transparent",
+  border: "1px solid $yellowBrand",
   borderRadius: "$radii$lg",
   padding: "$space$4 $space$10",
+  color: "$loContrast",
 
   variants: {
     checked: {
       true: {
         backgroundColor: "$yellowBrand",
         fontWeight: "bold",
+        color: "$slate12",
       },
     },
   },

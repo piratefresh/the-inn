@@ -9,16 +9,18 @@ interface CampaignBottomCardProps {
   isOwner?: boolean;
   isMember?: boolean;
   onSubmit?: () => void;
+  onBack?: (event: React.MouseEvent<HTMLElement>) => void;
   submitText?: string;
 }
 
 const SideCard = styled("div", {
   display: "flex",
-  position: "fixed",
+  position: "sticky",
   top: "auto",
   bottom: 0,
   right: 0,
   width: "100%",
+  height: "100%",
   flexDirection: "column",
   padding: "$4",
   fontSize: "$7xl",
@@ -36,6 +38,7 @@ export const CampaignBottomCard = ({
   isOwner = false,
   isMember = false,
   campaign,
+  onBack,
   onSubmit,
   submitText,
 }: CampaignBottomCardProps) => {
@@ -121,6 +124,11 @@ export const CampaignBottomCard = ({
           <Button size="large" fullWidth onClick={onSubmit}>
             {submitText ? submitText : "Join Campaign"}
           </Button>
+          {onBack && (
+            <Button size="large" fullWidth onClick={onBack}>
+              Previous
+            </Button>
+          )}
         </div>
       )}
       {isOwner && (

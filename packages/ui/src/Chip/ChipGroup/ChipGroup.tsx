@@ -17,6 +17,7 @@ const StyledGroup = styled("div", {
   display: "flex",
   flexDirection: "row",
   flexWrap: "wrap",
+  alignItems: "baseline",
   variants: {
     position: {
       left: {

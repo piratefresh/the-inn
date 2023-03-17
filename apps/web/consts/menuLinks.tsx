@@ -64,7 +64,7 @@ export const MENU_DATA: MenuLinksProps[] = [
       // },
       {
         label: "Members",
-        href: "members",
+        href: "/members/all",
       },
     ],
   },

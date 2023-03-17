@@ -71,102 +71,94 @@ const Campaign = () => {
 
   return (
     <>
-      {!isDesktop ? (
-        <CampaignBottomCard
-          campaign={campaign?.getCampaign}
-          isOwner={isOwner}
-          isMember={!isMember}
-          onSubmit={handleJoinCampaign}
-        />
-      ) : (
-        <CampaignSideCard
-          campaign={campaign?.getCampaign}
-          isOwner={isOwner}
-          isMember={!isMember}
-          onSubmit={handleJoinCampaign}
-        />
-      )}
-      <div className="mt-16 max-w-7xl mx-auto relative px-4">
-        <div
-          className="relative"
-          style={{ width: "100%", minHeight: "500px", height: "500px" }}
-        >
-          <HeroImage
-            src={campaign?.getCampaign.imageUrl}
-            fill
-            gold
-            alt={`Header image for ${campaign.getCampaign.title}`}
-          />
-        </div>
-        <div className="relative mt-12">
-          <CampaignTags tags={campaign?.getCampaign.tags} />
-          <div className="my-8">
-            <Text size="xl" color="lightContrast" className="font-trejanSans">
-              {campaign?.getCampaign.title}
-            </Text>
-          </div>
-          <div className="my-8">
-            <Text
-              style={{ fontFamily: "Alegreya Sans" }}
-              size="xl"
-              color="loContrast"
-              className="break-words"
-            >
-              {campaign?.getCampaign.gameSystem} |{" "}
-              {`${campaign?.getCampaign.maxSeats} Players `}|
-              {campaign?.getCampaign.isOnline ? " Online" : " Offline"}
-            </Text>
-          </div>
-
-          <div className="flex flex-row">
-            {campaign?.getCampaign.memberships.slice(0, 5).map((member) => (
-              <Link
-                className="flex flex-col items-center"
-                href={`/user/${member.user.id}`}
-                key={member.user.id}
-              >
-                <Avatar
-                  imageUrl={member.user.imageUrl}
-                  name={member.user.firstName}
-                />
-                <Text>{member.role}</Text>
-              </Link>
-            ))}
-          </div>
-          {isDesktop && (
-            <div className="my-8">
-              <CampaignDetails
-                city={campaign?.getCampaign.city}
-                days={campaign?.getCampaign.days}
-                experience={campaign?.getCampaign.experience}
-                state={campaign?.getCampaign.state}
-                timePeriods={campaign?.getCampaign.timePeriods}
-                timezone={
-                  campaign?.getCampaign.timezone as unknown as ITimezoneOption
-                }
-                isOnline={campaign?.getCampaign.isOnline}
-              />
-            </div>
-          )}
-
-          <div className="my-8">
-            <Text size="xl" color="lightContrast" className="font-trejanSans">
-              About the Campaign
-            </Text>
-            <ReadOnly textString={campaign?.getCampaign.jsonSummary} />
-          </div>
-
-          <div className="my-8">
-            <Text size="xl" color="lightContrast" className="font-trejanSans">
-              Additional Details
-            </Text>
-            <ReadOnly
-              textString={campaign?.getCampaign.jsonAdditionalDetails}
+      <div className="flex flex-col mt-16 max-w-7xl mx-auto relative px-4 md:flex-row">
+        <div className="flex flex-col">
+          <div
+            className="relative"
+            style={{ width: "100%", minHeight: "500px", height: "500px" }}
+          >
+            <HeroImage
+              src={campaign?.getCampaign.imageUrl}
+              fill
+              gold
+              alt={`Header image for ${campaign.getCampaign.title}`}
             />
           </div>
 
-          {/* ADD LATER FEATURE SEE REVIEWS */}
-          {/* <div className="my-14 mx-auto">
+          <div className="relative mt-12">
+            <CampaignTags tags={campaign?.getCampaign.tags} />
+            <div className="my-8">
+              <Text
+                size="6xl"
+                color="lightContrast"
+                weight="bold"
+                className="font-trejanSans break-words"
+              >
+                {campaign?.getCampaign.title}
+              </Text>
+            </div>
+            <div className="my-8">
+              <Text
+                style={{ fontFamily: "Alegreya Sans" }}
+                size="xl"
+                color="loContrast"
+                className="break-words"
+              >
+                {campaign?.getCampaign.gameSystem} |{" "}
+                {`${campaign?.getCampaign.maxSeats} Players `}|
+                {campaign?.getCampaign.isOnline ? " Online" : " Offline"}
+              </Text>
+            </div>
+
+            <div className="flex flex-row">
+              {campaign?.getCampaign.memberships.slice(0, 5).map((member) => (
+                <Link
+                  className="flex flex-col items-center"
+                  href={`/user/${member.user.id}`}
+                  key={member.user.id}
+                >
+                  <Avatar
+                    imageUrl={member.user.imageUrl}
+                    name={member.user.firstName}
+                  />
+                  <Text>{member.role}</Text>
+                </Link>
+              ))}
+            </div>
+            {isDesktop && (
+              <div className="my-8">
+                <CampaignDetails
+                  city={campaign?.getCampaign.city}
+                  days={campaign?.getCampaign.days}
+                  experience={campaign?.getCampaign.experience}
+                  state={campaign?.getCampaign.state}
+                  timePeriods={campaign?.getCampaign.timePeriods}
+                  timezone={
+                    campaign?.getCampaign.timezone as unknown as ITimezoneOption
+                  }
+                  isOnline={campaign?.getCampaign.isOnline}
+                />
+              </div>
+            )}
+
+            <div className="my-8">
+              <Text size="xl" color="lightContrast" className="font-trejanSans">
+                About the Campaign
+              </Text>
+              <ReadOnly textString={campaign?.getCampaign.jsonSummary} />
+            </div>
+
+            <div className="my-8">
+              <Text size="xl" color="lightContrast" className="font-trejanSans">
+                Additional Details
+              </Text>
+              <ReadOnly
+                textString={campaign?.getCampaign.jsonAdditionalDetails}
+              />
+            </div>
+
+            {/* ADD LATER FEATURE SEE REVIEWS */}
+            {/* <div className="my-14 mx-auto">
             <Note>
               <Text
                 style={{ lineHeight: "125%", textTransform: "uppercase" }}
@@ -182,8 +174,25 @@ const Campaign = () => {
               </Text>
             </Note>
           </div> */}
-          {/* <SimilarCampaigns campaigns={campaings.getCampaings} /> */}
+            {/* <SimilarCampaigns campaigns={campaings.getCampaings} /> */}
+          </div>
         </div>
+
+        {!isDesktop ? (
+          <CampaignBottomCard
+            campaign={campaign?.getCampaign}
+            isOwner={isOwner}
+            isMember={!isMember}
+            onSubmit={handleJoinCampaign}
+          />
+        ) : (
+          <CampaignSideCard
+            campaign={campaign?.getCampaign}
+            isOwner={isOwner}
+            isMember={!isMember}
+            onSubmit={handleJoinCampaign}
+          />
+        )}
       </div>
     </>
   );

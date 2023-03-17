@@ -55,6 +55,7 @@ const Home = () => {
             <div className="flex flex-col text-center">
               <Text
                 as="h1"
+                color="loContrast"
                 className="font-oldFenris"
                 style={{ fontSize: "96px" }}
               >
@@ -63,6 +64,7 @@ const Home = () => {
               <Text
                 as="h2"
                 size="6xl"
+                color="loContrast"
                 weight="bold"
                 className="font-alegreyaSans my-4"
               >

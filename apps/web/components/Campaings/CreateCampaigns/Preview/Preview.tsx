@@ -52,7 +52,7 @@ export const Preview = ({ campaign }: LocationProps) => {
   );
 
   const onBack = React.useCallback(
-    (e) => {
+    (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       if (router.pathname.includes("editcampaign")) {
         return router.push(`/user/editcampaign/location?id=${campaign.id}`);
@@ -127,96 +127,88 @@ export const Preview = ({ campaign }: LocationProps) => {
 
   return (
     <>
-      {!isDesktop ? (
-        <CampaignBottomCard
-          campaign={createCampaignData}
-          onSubmit={onSubmit}
-          submitText={isEditing ? "Update Campaign" : "Create Campaign"}
-        />
-      ) : (
-        <CampaignSideCard
-          campaign={createCampaignData}
-          onSubmit={onSubmit}
-          submitText={isEditing ? "Update Campaign" : "Create Campaign"}
-        />
-      )}
-
-      <div className="lg:max-w-7xl mx-auto relative mb-40">
-        {createCampaignData.price && (
-          <PriceButton>${createCampaignData.price}</PriceButton>
-        )}
-        <div
-          className="relative"
-          style={{ height: "500px", maxWidth: "1280px" }}
-        >
-          <HeroImage
-            alt="hero image"
-            fill
-            sizes="(max-width: 768px) 100vw,
+      <div className="flex flex-col lg:max-w-7xl mx-auto relative px-4 md:flex-row">
+        <div className="flex flex-col">
+          {createCampaignData.price && (
+            <PriceButton>${createCampaignData.price}</PriceButton>
+          )}
+          <div
+            className="relative"
+            style={{ height: "500px", maxWidth: "1280px" }}
+          >
+            <HeroImage
+              alt="hero image"
+              fill
+              sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 50vw,
               33vw"
-            gold
-            src={createCampaignData.imageUrl}
-          />
-        </div>
-
-        <div className="flex flex-row flex-wrap my-16">
-          <CampaignTags tags={createCampaignData.tags} />
-        </div>
-        <div className="my-16">
-          <Text size="7xl" color="lightContrast" className="font-trejanSans">
-            {createCampaignData.title}
-          </Text>
-        </div>
-        <div className="my-16">
-          <Text
-            style={{ fontFamily: "Alegreya Sans" }}
-            size="4xl"
-            color="loContrast"
-            className="break-words"
-          >
-            {createCampaignData.gameSystem} |{" "}
-            {`${createCampaignData.maxSeats} Players `}|
-            {createCampaignData.isOnline ? " Online" : " Offline"}| $
-            {createCampaignData.price}
-          </Text>
-        </div>
-
-        {!isDesktop && (
-          <div className="my-16 whitespace-pre-wrap">
-            <CampaignDetails
-              city={createCampaignData.city}
-              days={createCampaignData.days}
-              experience={createCampaignData.experience}
-              state={createCampaignData.state}
-              timePeriods={createCampaignData.timePeriods}
-              timezone={createCampaignData.timezone as ITimezoneOption}
-              isOnline={createCampaignData.isOnline}
+              gold
+              src={createCampaignData.imageUrl}
             />
           </div>
+
+          <div className="flex flex-row flex-wrap my-8">
+            <CampaignTags tags={createCampaignData.tags} />
+          </div>
+          <div className="my-8">
+            <Text size="7xl" color="lightContrast" className="font-trejanSans">
+              {createCampaignData.title}
+            </Text>
+          </div>
+          <div className="my-8">
+            <Text
+              style={{ fontFamily: "Alegreya Sans" }}
+              size="4xl"
+              color="loContrast"
+              className="break-words"
+            >
+              {createCampaignData.gameSystem} |{" "}
+              {`${createCampaignData.maxSeats} Players `}|
+              {createCampaignData.isOnline ? " Online" : " Offline"}| $
+              {createCampaignData.price}
+            </Text>
+          </div>
+
+          {!isDesktop && (
+            <div className="my-8 whitespace-pre-wrap">
+              <CampaignDetails
+                city={createCampaignData.city}
+                days={createCampaignData.days}
+                experience={createCampaignData.experience}
+                state={createCampaignData.state}
+                timePeriods={createCampaignData.timePeriods}
+                timezone={createCampaignData.timezone as ITimezoneOption}
+                isOnline={createCampaignData.isOnline}
+              />
+            </div>
+          )}
+
+          <div className="my-8">
+            <ReadOnly textString={createCampaignData.jsonSummary} />
+          </div>
+
+          <div className="my-8">
+            <Text size="4xl" color="lightContrast" className="font-trejanSans">
+              Additional Details
+            </Text>
+            <ReadOnly textString={createCampaignData.jsonAdditionalDetails} />
+          </div>
+        </div>
+        {!isDesktop ? (
+          <CampaignBottomCard
+            campaign={createCampaignData}
+            onSubmit={onSubmit}
+            onBack={onBack}
+            submitText={isEditing ? "Update Campaign" : "Create Campaign"}
+          />
+        ) : (
+          <CampaignSideCard
+            campaign={createCampaignData}
+            onSubmit={onSubmit}
+            onBack={onBack}
+            submitText={isEditing ? "Update Campaign" : "Create Campaign"}
+          />
         )}
-
-        <div className="my-16">
-          <ReadOnly textString={createCampaignData.jsonSummary} />
-        </div>
-
-        <div className="my-16">
-          <Text size="4xl" color="lightContrast" className="font-trejanSans">
-            Additional Details
-          </Text>
-          <ReadOnly textString={createCampaignData.jsonAdditionalDetails} />
-        </div>
-        <Button
-          css={{ marginRight: "$8" }}
-          size="large"
-          onClick={onBack}
-          type="button"
-        >
-          Previous
-        </Button>
-        <Button size="large" onClick={onSubmit}>
-          {isEditing ? "Update Campaign" : "Create Campaign"}
-        </Button>
       </div>
     </>
   );

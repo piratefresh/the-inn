@@ -58,8 +58,15 @@ const AllPage = () => {
   if (error) return <p className="center">Error: {error.message}</p>;
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <Text>ALL USERS</Text>
+    <div className="max-w-7xl mx-auto px-4">
+      <Text
+        as="h2"
+        size="7xl"
+        color="lightContrast"
+        className="font-oldFenris my-16"
+      >
+        Members
+      </Text>
       <div className="flex flex-1 flex-col overflow-auto mb-8">
         {data?.getUsers.edges.map(({ node }) => (
           <UserCard key={node.id} ref={setElement} user={node}></UserCard>

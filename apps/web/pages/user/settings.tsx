@@ -80,7 +80,7 @@ const SettingsPage = () => {
   return (
     <Tabs defaultValue="basic" className="text-white">
       <div
-        className="max-w-7xl mx-auto my-16 grid"
+        className="max-w-7xl mx-auto my-16 grid px-4"
         style={{ gridTemplateColumns: "auto", gridAutoRows: "max-content" }}
       >
         <HeaderSettings session={session} user={user} />

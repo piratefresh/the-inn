@@ -211,7 +211,7 @@ export const RichTextEditor = React.forwardRef(
       <>
         <div className={classes.join(" ")}>
           {editorToolbar}
-          <BubbleMenu className="p-4 bg-white" editor={editor}>
+          <BubbleMenu className="p-4" editor={editor}>
             <MenuBar fixed={true} editor={editor} />
           </BubbleMenu>
           <EditorContent

@@ -37,7 +37,7 @@ export function DateField(props: DateFieldProps) {
   const { fieldProps, labelProps } = useDateField(props, state, ref);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col border border-brandYellow rounded-md">
       {props.label && (
         <div {...props.labelProps} {...labelProps}>
           {props.label}
@@ -79,7 +79,7 @@ function DateSegment({ segment, state }: DateSegmentProps) {
       {...segmentProps}
       ref={ref}
       className={`box-content tabular-nums p-3 text-end outline-none rounded-sm focus:bg-brandYellow focus:text-white group ${
-        !segment.isEditable ? "text-gray-500" : "text-gray-800"
+        !segment.isEditable ? "text-white" : "text-gray-200"
       }`}
     >
       {segment.text}

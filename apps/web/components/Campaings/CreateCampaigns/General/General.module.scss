@@ -15,11 +15,7 @@
 }
 
 .selectInput input {
-  border: 3px solid transparent;
-  background-image: linear-gradient(#fcfcfc, #fcfcfc),
-    linear-gradient(#ffd166, #9f5e25);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
+  border: 3px solid #ffd166;
   padding: 24px 16px;
 }
 .selectInputError input {

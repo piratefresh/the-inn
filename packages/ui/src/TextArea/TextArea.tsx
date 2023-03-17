@@ -5,6 +5,7 @@ import type { TextareaAutosizeProps } from "react-textarea-autosize";
 export const StyledTextArea: any = styled(TextareaAutosize, {
   // Reset
   all: "unset",
+  color: "$slate1",
   appearance: "none",
   borderWidth: "0",
   boxSizing: "border-box",
@@ -66,11 +67,11 @@ export const StyledTextArea: any = styled(TextareaAutosize, {
     gold: {
       true: {
         borderRadius: "$radii$md",
-        border: "3px solid transparent",
-        backgroundOrigin: "border-box",
-        backgroundClip: "padding-box, border-box",
-        backgroundImage:
-          "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
+        border: "1px solid $orangeBrand",
+        // backgroundOrigin: "border-box",
+        // backgroundClip: "padding-box, border-box",
+        // backgroundImage:
+        //   "linear-gradient($whiteBrand, $whiteBrand),linear-gradient($yellowBrand, $orangeBrand)",
       },
     },
     errorStyle: {

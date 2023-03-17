@@ -305,7 +305,7 @@ export default function FindCampaignsPage({
         }}
       >
         <Accordion.Root type="multiple">
-          <div className="flex flex-col gap-8 lg:flex-row px-4">
+          <div className="flex flex-col row-gap-8 lg:flex-row px-4">
             {isDesktop ? (
               <div className="w-80 my-16">
                 <SearchInput />
@@ -318,10 +318,10 @@ export default function FindCampaignsPage({
               </div>
             ) : (
               <div>
-                <div className="flex flex-row items-center gap-4">
+                <div className="flex flex-row items-center gap-4 mt-16">
                   <SearchInput />
                   <Button onClick={() => setOpen(!open)}>
-                    <AdjustmentsHorizontalIcon className="w-6 h-6 text-white" />
+                    <AdjustmentsHorizontalIcon className="w-6 h-6 text-black" />
                   </Button>
                 </div>
 

@@ -116,11 +116,7 @@
     }
   }
   .goldenBorder {
-    border: 3px solid transparent;
-    background-image: linear-gradient(#fcfcfc, #fcfcfc),
-      linear-gradient(#ffd166, #9f5e25);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
+    border: 1px solid #ffd166;
   }
   .goldenBorder2 {
     border: 3px solid;
@@ -145,6 +141,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   background-color: #0d0a00;
+  color: "#fff";
 }
 
 a {
@@ -183,4 +180,9 @@ a {
 .ProseMirror * {
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: hsl(206 6% 63%);
 }

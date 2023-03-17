@@ -33,6 +33,7 @@ export interface MenuLinksProps extends MenuItemProps {
   children?: MenuItemProps[];
   session?: Session;
   signOut?: () => void;
+  opem?: boolean;
 }
 
 export interface MenuProps {
@@ -50,8 +51,18 @@ export const Menu = ({
   session,
   signOut,
 }: MenuProps) => {
+  const [open, setOpen] = React.useState(false);
+  const isMobile = useMediaQuery("(max-width: 900px)");
+
+  useLockScroll(open && isMobile, "html");
   return (
-    <Menubar.Root className="bg-brandGray flex items-center justify-between gap-10 bg-gray-25 p-4 text-primary-600 shadow-md md:justify-between md:rounded-md">
+    <Menubar.Root
+      onValueChange={(isOpen) => {
+        console.log("isOpen: ", isOpen);
+        setOpen(isOpen ? true : false);
+      }}
+      className="bg-brandGray flex items-center justify-between gap-10 bg-gray-25 p-4 text-primary-600 shadow-md md:justify-between md:rounded-md"
+    >
       <Link href="/" className="flex items-center gap-2">
         <Image src={logo} alt="logo" width={32} height={32} />
         <h1 className="text-md font-bold text-brandYellow uppercase font-oldFenris">
@@ -93,51 +104,49 @@ function MenuLink({
   session,
   signOut,
 }: MenuLinksProps) {
-  const isMobile = useMediaQuery("(max-width: 900px)");
-  const [open, setOpen] = React.useState(false);
-
-  useLockScroll(open, "root");
   return (
-    <Menubar.Menu>
-      {children ? (
-        <Menubar.Trigger className="text-md font-semibold text-white hover:text-brandYellow">
-          <h3 className="text-md font-semibold">{label}</h3>
-        </Menubar.Trigger>
-      ) : (
-        <Link href={href}>
-          <button className="text-md font-semibold text-white hover:text-brandYellow">
+    <div>
+      <Menubar.Menu>
+        {children ? (
+          <Menubar.Trigger className="text-md font-semibold text-white hover:text-brandYellow">
             <h3 className="text-md font-semibold">{label}</h3>
-          </button>
-        </Link>
-      )}
+          </Menubar.Trigger>
+        ) : (
+          <Link href={href}>
+            <button className="text-md font-semibold text-white hover:text-brandYellow">
+              <h3 className="text-md font-semibold">{label}</h3>
+            </button>
+          </Link>
+        )}
 
-      <Menubar.Portal>
-        <Menubar.Content
-          className="flex z-dropdown h-[calc(100vh-70px)] w-screen min-w-[200px] flex-col gap-2 overflow-y-auto text-white bg-brandLightBlack shadow-lg md:h-full md:w-auto md:rounded-b-md md:pt-4"
-          sideOffset={20}
-        >
-          {children?.map((item: MenuLinksProps) => {
-            return (
-              <MenuChild
-                key={item.href}
-                label={item.label}
-                href={item.href}
-                // eslint-disable-next-line react/no-children-prop
-                children={item.children}
-                description={item.description}
-                icon={item.icon}
-              />
-            );
-          })}
+        <Menubar.Portal>
+          <Menubar.Content
+            className="flex z-dropdown h-[calc(100vh-70px)] w-screen min-w-[200px] flex-col gap-2 overflow-y-auto text-white bg-brandLightBlack shadow-lg md:h-full md:w-auto md:rounded-b-md md:pt-4"
+            sideOffset={20}
+          >
+            {children?.map((item: MenuLinksProps) => {
+              return (
+                <MenuChild
+                  key={item.href}
+                  label={item.label}
+                  href={item.href}
+                  // eslint-disable-next-line react/no-children-prop
+                  children={item.children}
+                  description={item.description}
+                  icon={item.icon}
+                />
+              );
+            })}
 
-          <MenuMobileUser
-            notifications={notifications as any}
-            signOut={signOut as () => void}
-            session={session as Session}
-          />
-        </Menubar.Content>
-      </Menubar.Portal>
-    </Menubar.Menu>
+            <MenuMobileUser
+              notifications={notifications as any}
+              signOut={signOut as () => void}
+              session={session as Session}
+            />
+          </Menubar.Content>
+        </Menubar.Portal>
+      </Menubar.Menu>
+    </div>
   );
 }
 
@@ -203,7 +212,7 @@ function MenuUser({
             <ChatBubbleBottomCenterIcon className="h-6 w-6 text-white hover:scale-105 hover:text-brandYellow" />
           </button>
         </Link>
-        <Link href="/settings">
+        <Link href="user/settings">
           <button>
             <Cog6ToothIcon className="h-6 w-6 text-white hover:scale-105 hover:text-brandYellow" />
           </button>
@@ -233,7 +242,7 @@ function MenuUser({
   return (
     <div className="hidden items-center gap-8 md:flex">
       <Link href="/auth/signin">
-        <button className="text-md rounded-md bg-primary-50  p-2 font-semibold text-brandYellow">
+        <button className="text-md rounded-md bg-primary-50 p-2 font-semibold text-brandYellow">
           Log In
         </button>
       </Link>
@@ -274,7 +283,7 @@ function MenuMobileUser({
             <button>Messages</button>
           </Menubar.Item>
         </Link>
-        <Link href="/settings">
+        <Link href="user/settings">
           <Menubar.Item>
             <button className="flex items-center gap-4">
               <Cog6ToothIcon className="h-6 w-6" />
@@ -287,7 +296,7 @@ function MenuMobileUser({
             <button className="flex items-center gap-2">
               {session.user.image ? (
                 <Image
-                  className="inline-block h-8 w-8 rounded-full hover:scale-105"
+                  className="inline-block h-8 w-8 rounded-full object-cover hover:scale-105"
                   height={60}
                   width={60}
                   src={session.user.image}
@@ -302,7 +311,7 @@ function MenuMobileUser({
           <Menubar.Item>
             <button
               onClick={signOut}
-              className="text-md flex w-full justify-center rounded-md bg-brandYellow p-2 font-semibold text-white hover:bg-white hover:text-black hover:border hover:border-brandYellow"
+              className="text-md flex w-full justify-center rounded-md bg-yellow-400 p-2 font-semibold text-black hover:bg-brandYellow hover:text-black hover:border hover:border-brandYellow"
             >
               Log Out
             </button>
@@ -313,12 +322,12 @@ function MenuMobileUser({
   return (
     <div className="flex flex-col gap-4 px-4 py-3 md:hidden">
       <Menubar.Item className="">
-        <button className="text-md flex w-full justify-center rounded-md bg-primary-600 p-2 font-semibold text-white hover:bg-white hover:text-brandYellow">
+        <button className="text-md flex w-full justify-center rounded-md bg-brandYellow p-2 font-semibold text-black">
           Sign Up
         </button>
       </Menubar.Item>
       <Menubar.Item>
-        <button className="text-md w-full justify-center  rounded-md bg-primary-50 p-2 font-semibold text-primary-700 hover:border hover:border-primary-600 hover:bg-primary-600 hover:bg-transparent">
+        <button className="text-md w-full justify-center rounded-md bg-primary-50 p-2 font-semibold text-primary-700 hover:border hover:border-primary-600 hover:bg-primary-600 hover:bg-transparent">
           Log In
         </button>
       </Menubar.Item>
